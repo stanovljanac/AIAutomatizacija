@@ -87,6 +87,8 @@ dist/
 .env
 .env.*
 !.env.example
+# Local project config copied from pipeline/shared/config.example.json
+pipeline/shared/config.json
 **/credentials.json
 **/client_secret*.json
 **/token.json

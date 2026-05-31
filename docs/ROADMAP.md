@@ -20,7 +20,7 @@ Exit criteria:
 - [ ] `_TEMPLATE` and worked example `001-sta-je-ai` scaffolded.
 - [ ] `docs/SETUP.md` is followable on Windows.
 
-## Phase 1 — Environment & "hello pipeline"
+## Phase 1 — Environment & "hello pipeline"  ✅ complete (2026-05-31)
 
 **Goal:** tools installed; a trivial end-to-end dry run with placeholder assets.
 
@@ -33,9 +33,9 @@ Tasks:
   audio file, proving the render path works locally.
 
 Exit criteria:
-- [ ] `npx remotion studio` opens the template.
-- [ ] A dummy 10s mp4 renders locally with intro/outro + one subtitle line.
-- [ ] Schema validation runs on a sample `script.json`.
+- [x] `npx remotion studio` opens the template.
+- [x] A dummy 10s mp4 renders locally with intro/outro + one subtitle line.
+- [x] Schema validation runs on a sample `script.json`.
 
 ## Phase 2 — Voice that we can live with
 

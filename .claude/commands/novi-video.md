@@ -13,6 +13,12 @@ Examples:
 
 ## What you (the agent) do
 
+> Steps 1–3 are automated by a deterministic scaffold — run
+> `npm run new-video -- <slug> "Working title"` (or
+> `node pipeline/00-topic/new-video.mjs <slug> "Working title"`). It picks the
+> next id, copies `_TEMPLATE`, and writes a schema-valid `brief.json`. It refuses
+> to overwrite an existing folder. Then continue from step 4 (topic + research).
+
 1. **Pick the next id.** Find the highest `NNN` in `content/` and add 1
    (zero-padded to 3 digits). Combine with the slug: `content/<NNN>-<slug>/`.
 2. **Copy the template.** Duplicate `content/_TEMPLATE/` into the new folder.
