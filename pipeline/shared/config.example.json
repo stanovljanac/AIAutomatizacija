@@ -1,0 +1,43 @@
+{
+  "voice": {
+    "provider": "free_tts",
+    "free_tts": {
+      "model": "fish-speech-s2",
+      "reference_sample": "voice/reference/owner-sample.wav",
+      "compute": "colab"
+    },
+    "elevenlabs": {
+      "voice_id": "",
+      "model": "eleven_multilingual_v2"
+    },
+    "target_wpm": 160,
+    "loudness_lufs": -16
+  },
+  "render": {
+    "location": "local",
+    "fps": 30,
+    "long": { "width": 1920, "height": 1080 },
+    "short": { "width": 1080, "height": 1920 }
+  },
+  "paths": {
+    "content": "content",
+    "assets": "assets",
+    "remotion": "templates/remotion"
+  },
+  "defaults": {
+    "long_seconds": 465,
+    "short_seconds": 45
+  },
+  "stock": {
+    "pexels_enabled": true,
+    "pixabay_enabled": true
+  },
+  "youtube": {
+    "client_secret_path_env": "YOUTUBE_CLIENT_SECRET_PATH",
+    "upload_privacy": "private"
+  },
+  "review": {
+    "script_max_loops": 3,
+    "qa_auto_rerun": false
+  }
+}

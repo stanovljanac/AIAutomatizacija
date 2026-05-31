@@ -1,0 +1,12 @@
+{
+  "audio": "voice/narration.wav",
+  "duration": 138.0,
+  "_note": "ILLUSTRATIVE sample only. Real timestamps are produced by forced alignment in Phase 2 (voice-synthesis skill). Shown here so a new session sees the shape and how scene timing maps to it.",
+  "sentences": [
+    { "scene": "s01", "index": 0, "text": "Veštačka inteligencija u 2026. više nije naučna fantastika.", "start": 0.00, "end": 3.20 },
+    { "scene": "s01", "index": 1, "text": "Danas ti piše kod, pravi slike i odgovara na pitanja bolje nego ikad.", "start": 3.20, "end": 7.40 },
+    { "scene": "s01", "index": 2, "text": "Za nekih sedam minuta objasniću ti šta ona zaista jeste, šta sve može i kako da je koristiš potpuno besplatno.", "start": 7.40, "end": 13.10 },
+    { "scene": "s02", "index": 0, "text": "Ako se prvi put susrećeš sa ovim svetom, opusti se.", "start": 13.10, "end": 16.00 },
+    { "scene": "s02", "index": 1, "text": "Sve ćemo proći redom, jednostavnim rečima, bez nepotrebnih komplikacija.", "start": 16.00, "end": 19.60 }
+  ]
+}

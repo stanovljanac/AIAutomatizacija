@@ -1,0 +1,24 @@
+{
+  "pass": true,
+  "checked_at": "2026-05-31T00:00:00Z",
+  "_note": "ILLUSTRATIVE sample. The real report is produced by the qa-video skill in Phase 5 against the actual render. Shown here so a new session sees the expected shape and the critical checks.",
+  "checks": [
+    { "name": "scene-on-sentence-boundary", "pass": true, "severity": "high",
+      "detail": "Sve scene počinju/završavaju na granici rečenice iz alignment.json (tolerancija 50ms). Nijedna scena se ne menja usred rečenice." },
+    { "name": "subtitle-sync", "pass": true, "severity": "high",
+      "detail": "Titlovi prate alignment.json; nema drifta ni preklapanja; svaki cue je dovoljno dug za čitanje." },
+    { "name": "audio-continuity", "pass": true, "severity": "high",
+      "detail": "Naracija je jedan kontinuiran zapis; ukupno trajanje odgovara alignment.json; nema neplaniranih tišina." },
+    { "name": "coverage", "pass": true, "severity": "high",
+      "detail": "Svih 11 scena iz script.json je prisutno i vidljivo za svoj raspon." },
+    { "name": "no-black-frames", "pass": true, "severity": "medium",
+      "detail": "Prelazi se preklapaju; nema crnih kadrova između scena." },
+    { "name": "format", "pass": true, "severity": "medium",
+      "detail": "1920x1080 @ 30fps (long). Short varijanta 1080x1920, titlovi u sigurnoj zoni." },
+    { "name": "loudness", "pass": true, "severity": "medium",
+      "detail": "Integrisana glasnoća ~ -16 LUFS; nema klipovanja." },
+    { "name": "motion-sanity", "pass": true, "severity": "low",
+      "detail": "Nijedna scena nije statična duže od ~6s; sve imaju pokret kamere ili kinetički tekst." }
+  ],
+  "summary": "Sve provere prolaze (uzorak). Spreman za Gate 3 (ljudski pregled)."
+}

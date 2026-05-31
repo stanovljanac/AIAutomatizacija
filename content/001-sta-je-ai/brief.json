@@ -1,0 +1,14 @@
+{
+  "id": "001-sta-je-ai",
+  "title_working": "Šta je AI i šta sve može u 2026.",
+  "angle": "Beginner-friendly foundations: what AI actually is, what it can do in 2026, the major players, and how anyone can start using it for free. The channel's catch-up cornerstone video.",
+  "audience": "Serbian AI-curious viewers, leaning beginner",
+  "target_seconds": 465,
+  "format": "long+short",
+  "sources": [
+    { "title": "Anthropic — Claude (product overview)", "url": "https://www.anthropic.com/claude" },
+    { "title": "OpenAI — product/news index", "url": "https://openai.com/news/" },
+    { "title": "Google DeepMind — Gemini", "url": "https://deepmind.google/technologies/gemini/" }
+  ],
+  "status": "scripted"
+}

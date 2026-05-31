@@ -1,0 +1,168 @@
+{
+  "id": "001-sta-je-ai",
+  "language": "sr",
+  "title_working": "Šta je AI i šta sve može u 2026.",
+  "target_seconds": 465,
+  "scenes": [
+    {
+      "id": "s01",
+      "role": "hook",
+      "narration": "Veštačka inteligencija u 2026. više nije naučna fantastika. Danas ti piše kod, pravi slike i odgovara na pitanja bolje nego ikad. Za nekih sedam minuta objasniću ti šta ona zaista jeste, šta sve može i kako da je koristiš potpuno besplatno.",
+      "sentences": [
+        "Veštačka inteligencija u 2026. više nije naučna fantastika.",
+        "Danas ti piše kod, pravi slike i odgovara na pitanja bolje nego ikad.",
+        "Za nekih sedam minuta objasniću ti šta ona zaista jeste, šta sve može i kako da je koristiš potpuno besplatno."
+      ],
+      "visual_intent": "Brz montažni niz: model piše kod, generiše sliku, vodi razgovor. Energično, brend-tamna pozadina, plavi akcenat.",
+      "b_roll": ["ai coding", "ai image generation"],
+      "screen_capture": null,
+      "on_screen_text": "ŠTA JE AI — 2026"
+    },
+    {
+      "id": "s02",
+      "role": "intro",
+      "narration": "Ako se prvi put susrećeš sa ovim svetom, opusti se. Sve ćemo proći redom, jednostavnim rečima, bez nepotrebnih komplikacija.",
+      "sentences": [
+        "Ako se prvi put susrećeš sa ovim svetom, opusti se.",
+        "Sve ćemo proći redom, jednostavnim rečima, bez nepotrebnih komplikacija."
+      ],
+      "visual_intent": "Kratak brend ident, pa prelaz na mirnu tamnu pozadinu sa suptilnim gridom.",
+      "b_roll": [],
+      "screen_capture": null,
+      "on_screen_text": null
+    },
+    {
+      "id": "s03",
+      "role": "point",
+      "narration": "Krenimo od osnovnog pitanja: šta je zapravo veštačka inteligencija? Kada danas kažemo AI, najčešće mislimo na takozvane velike jezičke modele. To su programi koji su trenirani na ogromnoj količini teksta i koda. Iz svega što su pročitali, oni nauče da predvide koja reč najverovatnije dolazi sledeća.",
+      "sentences": [
+        "Krenimo od osnovnog pitanja: šta je zapravo veštačka inteligencija?",
+        "Kada danas kažemo AI, najčešće mislimo na takozvane velike jezičke modele.",
+        "To su programi koji su trenirani na ogromnoj količini teksta i koda.",
+        "Iz svega što su pročitali, oni nauče da predvide koja reč najverovatnije dolazi sledeća."
+      ],
+      "visual_intent": "Kinetička tipografija definiše pojam 'veliki jezički model'. Pa AI slika: tekst koji se pretvara u tokene koji se nižu.",
+      "b_roll": ["neural network abstract"],
+      "screen_capture": null,
+      "on_screen_text": "VELIKI JEZIČKI MODEL"
+    },
+    {
+      "id": "s04",
+      "role": "point",
+      "narration": "Zvuči jednostavno, ali baš iz tog predviđanja sledeće reči izranja nešto moćno. Model može da napiše ceo tekst, da odgovori na pitanje ili da reši zadatak. Važno je da zapamtiš jedno: model ne razmišlja kao čovek. On veoma dobro pogađa na osnovu obrazaca koje je naučio.",
+      "sentences": [
+        "Zvuči jednostavno, ali baš iz tog predviđanja sledeće reči izranja nešto moćno.",
+        "Model može da napiše ceo tekst, da odgovori na pitanje ili da reši zadatak.",
+        "Važno je da zapamtiš jedno: model ne razmišlja kao čovek.",
+        "On veoma dobro pogađa na osnovu obrazaca koje je naučio."
+      ],
+      "visual_intent": "AI slika sa parallax pokretom: apstraktni 'tok' reči. Naglasak na rečenici 'ne razmišlja kao čovek' kinetičkim tekstom.",
+      "b_roll": ["abstract data flow"],
+      "screen_capture": null,
+      "on_screen_text": "NE MISLI — PREDVIĐA"
+    },
+    {
+      "id": "s05",
+      "role": "demo",
+      "narration": "Hajde da vidimo to u praksi. Otvorim alat, ukucam pitanje običnim jezikom, i za par sekundi dobijem jasan odgovor. Isto tako mogu da tražim da mi napiše kod, da mi skrati dugačak tekst ili da mi objasni pojam koji ne razumem.",
+      "sentences": [
+        "Hajde da vidimo to u praksi.",
+        "Otvorim alat, ukucam pitanje običnim jezikom, i za par sekundi dobijem jasan odgovor.",
+        "Isto tako mogu da tražim da mi napiše kod, da mi skrati dugačak tekst ili da mi objasni pojam koji ne razumem."
+      ],
+      "visual_intent": "STVARNI snimak ekrana: kucanje pitanja u chat alat, odgovor koji se ispisuje. Zum na ključni deo odgovora.",
+      "b_roll": [],
+      "screen_capture": "cap-chat-demo",
+      "on_screen_text": null
+    },
+    {
+      "id": "s06",
+      "role": "point",
+      "narration": "A ko pravi te modele? U 2026. tri imena se najčešće pominju. Anthropic, koji stoji iza Claude-a. OpenAI, poznat po GPT i Codex modelima. I Google, sa porodicom modela koja se zove Gemini. Svaki od njih ima svoje jače i slabije strane, pa se isplati probati više njih.",
+      "sentences": [
+        "A ko pravi te modele?",
+        "U 2026. tri imena se najčešće pominju.",
+        "Anthropic, koji stoji iza Claude-a.",
+        "OpenAI, poznat po GPT i Codex modelima.",
+        "I Google, sa porodicom modela koja se zove Gemini.",
+        "Svaki od njih ima svoje jače i slabije strane, pa se isplati probati više njih."
+      ],
+      "visual_intent": "Tri brend-kartice (Anthropic / OpenAI / Google) koje ulaze jedna po jedna, sa logom-stilizacijom u brend bojama (bez zloupotrebe zaštićenih logoa — stilizovane kartice).",
+      "b_roll": [],
+      "screen_capture": null,
+      "on_screen_text": "GIGANTI 2026"
+    },
+    {
+      "id": "s07",
+      "role": "point",
+      "narration": "Dve stvari su se drastično promenile u poslednje dve godine. Prvo, modeli sada mogu da obrade mnogo više teksta odjednom. Drugo, cena korišćenja je znatno pala. To zajedno znači da je danas moćan alat dostupan skoro svakome, a ne samo velikim firmama.",
+      "sentences": [
+        "Dve stvari su se drastično promenile u poslednje dve godine.",
+        "Prvo, modeli sada mogu da obrade mnogo više teksta odjednom.",
+        "Drugo, cena korišćenja je znatno pala.",
+        "To zajedno znači da je danas moćan alat dostupan skoro svakome, a ne samo velikim firmama."
+      ],
+      "visual_intent": "Dva jednostavna animirana grafa: 'kontekst' raste, 'cena' pada. Čisto, brend boje, bez preciznih brojeva ako nisu potvrđeni.",
+      "b_roll": [],
+      "screen_capture": null,
+      "on_screen_text": "VIŠE MOĆI — MANJA CENA"
+    },
+    {
+      "id": "s08",
+      "role": "point",
+      "narration": "Ali budimo pošteni i oko mana. Model ponekad zvuči potpuno sigurno, a zapravo greši. To zovemo halucinacija. Zato uvek proveri važne informacije i ne veruj svemu na reč. Alat je tu da ti pomogne, a ne da razmišlja umesto tebe.",
+      "sentences": [
+        "Ali budimo pošteni i oko mana.",
+        "Model ponekad zvuči potpuno sigurno, a zapravo greši.",
+        "To zovemo halucinacija.",
+        "Zato uvek proveri važne informacije i ne veruj svemu na reč.",
+        "Alat je tu da ti pomogne, a ne da razmišlja umesto tebe."
+      ],
+      "visual_intent": "Kinetički naglasak na reči 'HALUCINACIJA'. Suptilan vizual upozorenja u brend žutoj.",
+      "b_roll": [],
+      "screen_capture": null,
+      "on_screen_text": "PROVERI — NE VERUJ SLEPO"
+    },
+    {
+      "id": "s09",
+      "role": "demo",
+      "narration": "Kako da počneš već danas, i to besplatno? Dovoljno je da otvoriš jedan od besplatnih alata u pregledaču i da mu postaviš prvo pitanje. Najbolji savet koji mogu da ti dam: budi jasan i konkretan. Što tačnije opišeš šta želiš, to je bolji rezultat.",
+      "sentences": [
+        "Kako da počneš već danas, i to besplatno?",
+        "Dovoljno je da otvoriš jedan od besplatnih alata u pregledaču i da mu postaviš prvo pitanje.",
+        "Najbolji savet koji mogu da ti dam: budi jasan i konkretan.",
+        "Što tačnije opišeš šta želiš, to je bolji rezultat."
+      ],
+      "visual_intent": "STVARNI snimak ekrana: otvaranje besplatnog alata i kucanje jasnog prompta, pa pan na rezultat. Lower-third sa savetom 'budi jasan i konkretan'.",
+      "b_roll": [],
+      "screen_capture": "cap-getting-started",
+      "on_screen_text": "BUDI JASAN I KONKRETAN"
+    },
+    {
+      "id": "s10",
+      "role": "cta",
+      "narration": "Ako ti je ovo bilo korisno, prijavi se na kanal. U sledećem videu pokazujem ti kako da napišeš prompt koji stvarno daje dobre rezultate.",
+      "sentences": [
+        "Ako ti je ovo bilo korisno, prijavi se na kanal.",
+        "U sledećem videu pokazujem ti kako da napišeš prompt koji stvarno daje dobre rezultate."
+      ],
+      "visual_intent": "Suptilan CTA: jedna animacija pretplate, bez napadnosti. Najava sledeće teme karticom.",
+      "b_roll": [],
+      "screen_capture": null,
+      "on_screen_text": "SLEDEĆE: DOBAR PROMPT"
+    },
+    {
+      "id": "s11",
+      "role": "outro",
+      "narration": "Hvala ti što si gledao. Vidimo se u sledećem videu.",
+      "sentences": [
+        "Hvala ti što si gledao.",
+        "Vidimo se u sledećem videu."
+      ],
+      "visual_intent": "Kratak brendiran outro (logo + tagline), ~5s, dozvoljena tiha muzika.",
+      "b_roll": [],
+      "screen_capture": null,
+      "on_screen_text": null
+    }
+  ]
+}

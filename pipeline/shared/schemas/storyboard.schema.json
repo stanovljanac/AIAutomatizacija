@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "storyboard.json",
+  "type": "object",
+  "required": ["id", "scenes"],
+  "properties": {
+    "id": { "type": "string" },
+    "captures_needed": { "type": "array", "items": { "type": "string" } },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["scene", "visual_type", "component", "camera_move"],
+        "properties": {
+          "scene": { "type": "string" },
+          "visual_type": {
+            "type": "string",
+            "enum": ["motion-text", "stock", "ai-image", "screen-capture", "hero-clip"]
+          },
+          "composition": { "type": "string" },
+          "camera_move": {
+            "type": "string",
+            "enum": ["none", "ken-burns", "parallax", "pan-to-highlight", "zoom-in"]
+          },
+          "component": { "type": "string" },
+          "on_screen_text": { "type": ["string", "null"] },
+          "assets_needed": { "type": "array", "items": { "type": "string" } },
+          "duration_hint": { "type": "number" }
+        }
+      }
+    }
+  }
+}

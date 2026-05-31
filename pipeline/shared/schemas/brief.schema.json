@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "brief.json",
+  "type": "object",
+  "required": ["id", "title_working", "target_seconds", "format", "status"],
+  "properties": {
+    "id": { "type": "string" },
+    "title_working": { "type": "string" },
+    "angle": { "type": "string" },
+    "audience": { "type": "string" },
+    "target_seconds": { "type": "number" },
+    "format": { "type": "string", "enum": ["long", "short", "long+short"] },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "url"],
+        "properties": {
+          "title": { "type": "string" },
+          "url": { "type": "string" }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new", "researched", "scripted", "script_approved", "voiced",
+        "storyboarded", "storyboard_approved", "visualized", "rendered",
+        "qa_passed", "ready", "published"
+      ]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "001-sta-je-ai",
+  "assets": [
+    { "scene": "s01", "visual_type": "stock",
+      "stock_queries": ["person coding on laptop dark", "ai generated art screen", "chat conversation interface"],
+      "aspect": "16:9", "camera_move": "zoom-in", "budget": "normal" },
+    { "scene": "s03", "visual_type": "ai-image", "asset_id": "s03-img",
+      "prompt": "Abstract visualization of a large language model: streams of glowing text fragments flowing into a sleek neural lattice, clean dark UI aesthetic, near-black background, electric-blue accent, minimal, high contrast, subtle grid, cinematic depth, lots of negative space on the right for on-screen text",
+      "negative_prompt": "text, letters, watermark, logo, clutter, garish neon, people",
+      "aspect": "16:9", "camera_move": "parallax", "budget": "normal" },
+    { "scene": "s04", "visual_type": "ai-image", "asset_id": "s04-img",
+      "prompt": "Abstract 'predicting the next word' concept: a single bright token highlighted among a drifting field of faded tokens, dark techy background, electric-blue and mint accents, minimal, depth of field, space for centered text",
+      "negative_prompt": "text, letters, watermark, clutter, neon, human faces",
+      "aspect": "16:9", "camera_move": "parallax", "budget": "normal" },
+    { "scene": "s05", "visual_type": "screen-capture", "capture_id": "cap-chat-demo", "mock": false },
+    { "scene": "s08", "visual_type": "ai-image", "asset_id": "s08-img",
+      "prompt": "Concept of an AI confidently wrong: a calm glowing orb with a subtle warning-amber halo against a dark minimal background, electric-blue base palette with one amber accent, clean, high contrast, room for centered text",
+      "negative_prompt": "text, letters, watermark, clutter, scary imagery, people",
+      "aspect": "16:9", "camera_move": "ken-burns", "budget": "normal" },
+    { "scene": "s09", "visual_type": "screen-capture", "capture_id": "cap-getting-started", "mock": false }
+  ]
+}

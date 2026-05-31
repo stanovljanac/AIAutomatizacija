@@ -1,0 +1,29 @@
+{
+  "id": "001-sta-je-ai",
+  "title_options": [
+    "Šta je AI i šta sve može u 2026. (objašnjeno jednostavno)",
+    "AI u 2026: šta je, šta može i kako da počneš besplatno",
+    "Veštačka inteligencija 2026 — sve što treba da znaš za 7 minuta"
+  ],
+  "chosen_title": null,
+  "description": "Šta je veštačka inteligencija i šta sve može u 2026? U ovom videu objašnjavam, jednostavnim rečima, šta su veliki jezički modeli, šta mogu da urade i kako da ih koristiš besplatno — bez nepotrebnih komplikacija.\n\nU videu:\n- Šta je AI i kako 'razmišlja'\n- Šta sve može (tekst, kod, slike, odgovori)\n- Ko pravi modele u 2026 (Claude, GPT/Codex, Gemini)\n- Mane i halucinacije — na šta da paziš\n- Kako da počneš već danas, besplatno\n\nPretplati se za nastavak — u sledećem videu: kako da napišeš dobar prompt.\n\n(Linkovi i izvori u zakačenom komentaru.)",
+  "tags": ["veštačka inteligencija", "AI 2026", "šta je AI", "veliki jezički modeli", "Claude", "GPT", "Gemini", "AI na srpskom", "kako koristiti AI", "AI za početnike"],
+  "chapters": [
+    { "time": "0:00", "label": "Uvod" },
+    { "time": "0:13", "label": "Šta je AI" },
+    { "time": "0:40", "label": "Šta sve može" },
+    { "time": "1:20", "label": "Ko pravi modele" },
+    { "time": "2:10", "label": "Mane i halucinacije" },
+    { "time": "2:40", "label": "Kako da počneš besplatno" },
+    { "time": "3:10", "label": "Šta dalje" }
+  ],
+  "thumbnail": { "phrase": "ŠTA JE AI?", "template": "ThumbnailTemplate" },
+  "credit_source": null,
+  "short": {
+    "title": "Šta je AI, ukratko (2026)",
+    "tags": ["AI", "veštačka inteligencija", "AI na srpskom", "shorts"]
+  },
+  "youtube_video_id": null,
+  "status": "draft_pending",
+  "_note": "ILLUSTRATIVE sample produced by youtube-publish skill. chosen_title left null because the human picks it at the final step; chapter times are placeholders until real alignment.json exists."
+}

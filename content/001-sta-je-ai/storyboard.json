@@ -1,0 +1,42 @@
+{
+  "id": "001-sta-je-ai",
+  "captures_needed": [
+    "cap-chat-demo: snimi kako kucaš pitanje u besplatni chat alat i kako se ispisuje odgovor (10-15s). Zumiraj ključni deo.",
+    "cap-getting-started: snimi otvaranje besplatnog alata u pregledaču i kucanje jednog jasnog prompta (10-15s)."
+  ],
+  "scenes": [
+    { "scene": "s01", "visual_type": "motion-text", "composition": "full-bleed",
+      "camera_move": "zoom-in", "component": "KineticText",
+      "on_screen_text": "ŠTA JE AI — 2026", "assets_needed": ["stock:ai coding", "stock:ai image generation"], "duration_hint": 12 },
+    { "scene": "s02", "visual_type": "motion-text", "composition": "card",
+      "camera_move": "none", "component": "BackgroundFX", "on_screen_text": null,
+      "assets_needed": [], "duration_hint": 6 },
+    { "scene": "s03", "visual_type": "ai-image", "composition": "full-bleed",
+      "camera_move": "parallax", "component": "ImagePan", "on_screen_text": "VELIKI JEZIČKI MODEL",
+      "assets_needed": ["ai:s03-img"], "duration_hint": 17 },
+    { "scene": "s04", "visual_type": "ai-image", "composition": "full-bleed",
+      "camera_move": "parallax", "component": "ImagePan", "on_screen_text": "NE MISLI — PREDVIĐA",
+      "assets_needed": ["ai:s04-img"], "duration_hint": 16 },
+    { "scene": "s05", "visual_type": "screen-capture", "composition": "full-bleed",
+      "camera_move": "pan-to-highlight", "component": "ScreenCapture", "on_screen_text": null,
+      "assets_needed": ["capture:cap-chat-demo"], "duration_hint": 14 },
+    { "scene": "s06", "visual_type": "motion-text", "composition": "split",
+      "camera_move": "none", "component": "ChapterCard", "on_screen_text": "GIGANTI 2026",
+      "assets_needed": [], "duration_hint": 18 },
+    { "scene": "s07", "visual_type": "motion-text", "composition": "split",
+      "camera_move": "none", "component": "KineticText", "on_screen_text": "VIŠE MOĆI — MANJA CENA",
+      "assets_needed": [], "duration_hint": 15 },
+    { "scene": "s08", "visual_type": "ai-image", "composition": "full-bleed",
+      "camera_move": "ken-burns", "component": "ImagePan", "on_screen_text": "PROVERI — NE VERUJ SLEPO",
+      "assets_needed": ["ai:s08-img"], "duration_hint": 16 },
+    { "scene": "s09", "visual_type": "screen-capture", "composition": "full-bleed",
+      "camera_move": "pan-to-highlight", "component": "ScreenCapture", "on_screen_text": "BUDI JASAN I KONKRETAN",
+      "assets_needed": ["capture:cap-getting-started"], "duration_hint": 16 },
+    { "scene": "s10", "visual_type": "motion-text", "composition": "card",
+      "camera_move": "none", "component": "ChapterCard", "on_screen_text": "SLEDEĆE: DOBAR PROMPT",
+      "assets_needed": [], "duration_hint": 8 },
+    { "scene": "s11", "visual_type": "motion-text", "composition": "full-bleed",
+      "camera_move": "none", "component": "OutroLong", "on_screen_text": null,
+      "assets_needed": [], "duration_hint": 5 }
+  ]
+}

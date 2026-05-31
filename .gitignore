@@ -1,0 +1,106 @@
+# ── Media & heavy artifacts (NEVER commit) ────────────────────────────────
+# One video = one folder under content/. Keep text/JSON/config, drop media.
+content/**/audio/
+content/**/video/
+content/**/images/
+content/**/render/
+content/**/captures/
+content/**/*.mp4
+content/**/*.mov
+content/**/*.wav
+content/**/*.mp3
+content/**/*.png
+content/**/*.jpg
+content/**/*.jpeg
+content/**/*.webm
+content/**/*.gif
+content/**/*.webp
+# Per-video voice output (segments, intermediates) — any extension.
+content/**/voice/*
+!content/**/voice/.gitkeep
+
+# Shared heavy assets
+assets/music/*
+assets/screenshots/*
+!assets/music/.gitkeep
+!assets/screenshots/.gitkeep
+# Fonts: not committed (licensing varies); keep only the folder structure.
+assets/fonts/*
+!assets/fonts/.gitkeep
+
+# Voice: models, reference samples, and the personal recording script
+# (large or personal — never commit). Keep folder structure via .gitkeep.
+voice/reference/*
+voice/models/*
+voice/RECORDING_SCRIPT.md
+!voice/**/.gitkeep
+
+# ── ML models & weights (huge; never commit — re-download / re-generate) ──
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.safetensors
+*.gguf
+*.bin
+*.h5
+*.pb
+*.npz
+
+# ── Heavy A/V binaries anywhere in the repo ───────────────────────────────
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.webm
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.flac
+*.ogg
+*.opus
+*.tiff
+
+# ── Node / Remotion ───────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-store/
+templates/remotion/out/
+templates/remotion/.cache/
+
+# ── Python ────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+
+# ── Secrets & local config (NEVER commit) ─────────────────────────────────
+.env
+.env.*
+!.env.example
+**/credentials.json
+**/client_secret*.json
+**/token.json
+*.key
+
+# ── OS / editor cruft ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# ── Logs, cache & temp ────────────────────────────────────────────────────
+*.log
+.cache/
+tmp/
+.tmp/

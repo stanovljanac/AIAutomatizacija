@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "publish.json",
+  "type": "object",
+  "required": ["id", "title_options", "description", "tags", "status"],
+  "properties": {
+    "id": { "type": "string" },
+    "title_options": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "chosen_title": { "type": ["string", "null"] },
+    "description": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "chapters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["time", "label"],
+        "properties": {
+          "time": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "thumbnail": {
+      "type": "object",
+      "properties": {
+        "phrase": { "type": "string" },
+        "template": { "type": "string" }
+      }
+    },
+    "credit_source": { "type": ["string", "null"] },
+    "short": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "youtube_video_id": { "type": ["string", "null"] },
+    "status": {
+      "type": "string",
+      "enum": ["draft_pending", "uploaded_private", "published"]
+    }
+  }
+}

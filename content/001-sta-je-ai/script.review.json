@@ -1,0 +1,13 @@
+{
+  "pass": true,
+  "checked_at": "2026-05-31T00:00:00Z",
+  "issues": [
+    { "scene": "s07", "type": "fact", "severity": "low",
+      "detail": "Tvrdnje o porastu konteksta i padu cene su tačne uopšteno, ali bez konkretnih brojeva.",
+      "suggestion": "Zadržati meko, bez preciznih brojeva dok se ne potvrde na primarnom izvoru na dan snimanja." },
+    { "scene": "s06", "type": "term-missing", "severity": "low",
+      "detail": "Imena proizvoda (Claude, GPT, Codex, Gemini) su u redu; nije potreban unos u term bank.",
+      "suggestion": "Bez izmene." }
+  ],
+  "summary": "Pass: nema high/medium problema. Dve low napomene (drži brojeve meko u s07)."
+}

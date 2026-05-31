@@ -1,0 +1,11 @@
+{
+  "name": "aiautomatizacija-remotion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reusable Remotion video template (built out in Phase 1/3).",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render"
+  },
+  "comment": "Dependencies (remotion, react) are installed in Phase 1 per docs/SETUP.md."
+}
