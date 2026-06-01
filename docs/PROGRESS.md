@@ -30,6 +30,34 @@ Format:
 
 <!-- New entries below this line, newest on top. Add as you build each phase. -->
 
+## 2026-06-01 — Phase 2: voice clone WORKS (OpenAudio S1-mini); Colab recipe + open Serbian question
+- who: agent + human (recording + Colab runs)
+- did:
+  - Owner recorded the voice sample in Audacity; analyzed both takes with a quick
+    WAV meter (16-bit mono 48kHz, ~3.4 min): **clean room** (noise floor −71..−81
+    dBFS, SNR ~37–40 dB, 0 clipping), just low level. Verdict: **usable for
+    cloning**. Kept the louder take as `voice/reference/owner-sample.wav`.
+  - **Voice cloning works:** a 22s test produced natural **Serbian** in the owner's
+    voice via **OpenAudio S1-mini** (open, free) on a free Colab GPU.
+  - Hard-won **working Colab recipe** (also in `scripts/colab/`, DECISIONS D-010):
+    clone fish-speech → `apt portaudio19-dev` → `pip install -e .` → pin
+    `torchvision==0.23.0` and `transformers==4.57.3`. The model is **gated** on HF
+    (needs a free token via Colab Secrets `HF_TOKEN`); it's **cached on Google
+    Drive** so later sessions copy it instead of re-downloading 3.6 GB.
+  - Built `scripts/colab/fish_speech_full_narration.ipynb` (v2): token login + Drive
+    cache + fast sanity check + full "Šta je AI" narration. Dropped the throwaway
+    clone-test/disguise notebooks (their job is folded in).
+- open question (OQ1): **Serbian is NOT on S1-mini's official language list** (it
+  lists ru/pl + others). The 22s test sounded right anyway (Slavic proximity), but
+  we judge the **full narration by ear** before committing. If insufficient →
+  ElevenLabs paid fallback (D-003).
+- decisions: **D-010** added.
+- next: owner finishes HF-token setup, runs the full-narration notebook, listens to
+  the whole Serbian narration → decide free vs paid. Then implement `02-voice`
+  (continuous TTS + forced alignment) or flip to ElevenLabs. Voice-disguise
+  (pitch/formant) only if owner dislikes own voice after hearing the full take.
+- blockers: none (pending the owner's listen).
+
 ## 2026-05-31 — Phase 2 started: voice recording script written
 - who: agent
 - did: wrote `voice/RECORDING_SCRIPT.md` — 8 varied sections (neutral narration,

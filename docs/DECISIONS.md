@@ -91,4 +91,22 @@ old one (don't delete history).
 - **Consequences:** Reliable agent behavior + native-quality output. The style
   guide and term bank govern the Serbian.
 
-<!-- Add D-010, D-011, … as new decisions arise. Supersede, don't delete. -->
+## D-010 — Free TTS under test is OpenAudio S1-mini; Serbian unofficial but promising (refines D-003)
+- **Context:** D-003 planned "Fish Speech S2 first." In practice the open, free,
+  low-VRAM model that runs cleanly on a Colab T4 is **OpenAudio S1-mini**
+  (`fishaudio/openaudio-s1-mini`, gated on HuggingFace). Serbian is **not** on its
+  official language list (which includes ru/pl and others), but a 22s clone produced
+  natural Serbian in the owner's voice — likely via its Slavic (Russian/Polish)
+  training. Getting it to run took a specific, fragile recipe.
+- **Decision:** Use **OpenAudio S1-mini** as the free candidate and **judge Serbian
+  by ear on a full narration** before committing. Pin the working recipe:
+  `torchvision==0.23.0`, `transformers==4.57.3`, `apt portaudio19-dev`; authenticate
+  with a HF token via Colab Secrets (`HF_TOKEN`); cache the model on Google Drive to
+  avoid re-downloading. Keep **ElevenLabs Creator (~$11/mo)** as the documented
+  fallback if Serbian quality is insufficient (D-003).
+- **Consequences:** The $0 path stays open if Serbian holds up on long text. Thanks
+  to the TTS adapter (D-003), switching to ElevenLabs later reuses the whole
+  surrounding pipeline. `config.json.voice` is set to the final choice **after** the
+  listen test (so config still shows the placeholder until then).
+
+<!-- Add D-011, D-012, … as new decisions arise. Supersede, don't delete. -->

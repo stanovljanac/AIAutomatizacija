@@ -1,47 +1,61 @@
 # scripts/colab
 
-Notebooks for the GPU-heavy steps that don't fit the local 4GB GPU — run them on
-free Colab/Kaggle GPU (see `docs/SETUP.md` §7). Inputs come from / outputs go back
-to Google Drive.
+Notebooks for the GPU-heavy steps that don't fit the local 4GB GPU — run them on a
+free Colab GPU (see `docs/SETUP.md` §7). Inputs come from / outputs go back to
+Google Drive (`MyDrive/ai-glas/`).
 
-## fish_speech_clone_test.ipynb — Phase 2 voice-clone smoke test
+## fish_speech_full_narration.ipynb — Phase 2 voice (the main one)
 
-Clones the owner's voice from `voice/reference/owner-sample.wav` and speaks a
-Serbian test paragraph, so we can decide by listening whether free TTS is good
-enough for Serbian (PRD OQ1). Backend: **OpenAudio S1-mini** (open, free) via the
-[fish-speech](https://github.com/fishaudio/fish-speech) repo.
+Clones the owner's voice from `owner-sample.wav` and speaks Serbian — first a 1-line
+sanity check, then the full "Šta je AI" narration — so we can decide by listening
+whether free TTS is good enough for Serbian (PRD OQ1, DECISIONS D-010).
 
-### Before you run
-1. Open https://colab.research.google.com/ → **File → Upload notebook** → pick this
-   `.ipynb` (or open it from GitHub once pushed).
-2. **Runtime → Change runtime type → GPU** (free T4 is fine).
-3. Put `owner-sample.wav` on your Drive at `MyDrive/ai-glas/` (the notebook reads it
-   from there; there's also an upload fallback in cell 2).
+Backend: **OpenAudio S1-mini** (`fishaudio/openaudio-s1-mini`, open & free, **gated**).
 
-### What it does (run cells top to bottom)
-1. GPU check · 2. mount Drive · 3. install fish-speech · 4. download the model ·
-5. make a ~22s reference slice + you type its exact transcript and the target
-Serbian sentence · 6–8. the 3-step inference (encode → text→tokens → decode) ·
-9. play `fake.wav` inline and save `clone-test-fish.wav` to Drive.
+### One-time setup (before the first run)
+1. Free HuggingFace account: https://huggingface.co/join
+2. Accept the model: https://huggingface.co/fishaudio/openaudio-s1-mini → **Agree and
+   access repository**.
+3. Token (Read): https://huggingface.co/settings/tokens → copy `hf_...`.
+4. In Colab: left sidebar → 🔑 **Secrets** → add `HF_TOKEN` = your token, enable
+   *Notebook access*. (Persists across all your notebooks; you never paste it again.)
+5. Put `owner-sample.wav` on Drive at `MyDrive/ai-glas/`.
 
-The reference **transcript must match** what's actually said in the 22s slice —
-that's the single biggest quality lever for zero-shot cloning.
+### Run
+Open from GitHub (File → Open notebook → GitHub → this repo →
+`scripts/colab/fish_speech_full_narration.ipynb`), set Runtime → **GPU**, then
+**Run all**. The model downloads once (~3.6 GB) and is **cached on Drive**; later
+sessions just copy it (no re-download, no token needed).
 
-### Interactive alternative (Gradio WebUI)
-Instead of cells 6–8 you can launch the UI and experiment with text/reference:
-```
-!python tools/run_webui.py
-```
-On Colab a Gradio link is needed; if the UI doesn't auto-share, prefer the scripted
-cells (they're more reliable on Colab and play the result inline).
+### Why it's structured this way
+- Colab runtimes are **ephemeral** — the VM is wiped on disconnect, so the
+  fish-speech install (~3 min) repeats every session. The **model** does not
+  re-download because it's cached on Drive.
+- Cells are split (setup / model / params / sanity / full) so a failure is isolated
+  and you re-run only that step. The **sanity** cell gives pass/fail in ~1 min before
+  committing to the long generation.
+
+### The working recipe (hard-won — keep these pins)
+`git clone fish-speech` → `apt-get install portaudio19-dev` → `pip install -e .` →
+`pip install torchvision==0.23.0 "transformers==4.57.3"`. Inference is the documented
+3-step (encode ref → text→tokens → decode), driven by subprocess so long Serbian text
+passes cleanly. (https://speech.fish.audio/inference/)
+
+### Troubleshooting
+- **`GatedRepoError 401`** → finish the one-time setup (accept model + `HF_TOKEN`).
+- **`torchvision::nms does not exist`** → `pip install torchvision==0.23.0`.
+- **tokenizer `NoneType ... encode`** → `pip install "transformers==4.57.3"`.
+- **`pyaudio` build fails** → `apt-get install portaudio19-dev` then reinstall.
+- **codec `FileNotFoundError`** → the model didn't download (see the model cell's
+  printed reason — usually the gating/token).
 
 ### After: the decision
-- **Sounds like you + natural Serbian** → proceed to full narration + forced
-  alignment (`pipeline/02-voice`), and set `config.json → voice.provider`.
-- **Bad Serbian / robotic** → try XTTS-v2 (separate notebook) and/or re-record a
-  longer, louder sample; if all free options fail the listen test, the ElevenLabs
-  paid fallback is the documented escape hatch (TOOLS §2, log in `DECISIONS.md`).
+- **Natural Serbian on the full narration** → implement `pipeline/02-voice`
+  (continuous TTS + forced alignment) and set `config.json → voice`.
+- **Bad Serbian / robotic** → ElevenLabs paid fallback (TOOLS §2 / D-003).
+- Voice disguise (pitch/formant via the `SHIFTS` param) only if the owner dislikes
+  their own voice after hearing the full take.
 
-Commands follow the official inference docs (https://speech.fish.audio/inference/);
-if a script path differs in a newer version, the notebook's *Rešavanje problema*
-cell shows how to check the installed layout.
+## fish_speech_clone_test.ipynb — minimal smoke test (kept for reference)
+The original step-by-step single-sentence clone. Superseded by the sanity cell in the
+full-narration notebook; kept as the smallest reproducible example.
