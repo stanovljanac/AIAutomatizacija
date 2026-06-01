@@ -30,6 +30,20 @@ Format:
 
 <!-- New entries below this line, newest on top. Add as you build each phase. -->
 
+## 2026-05-31 — Phase 2 started: voice recording script written
+- who: agent
+- did: wrote `voice/RECORDING_SCRIPT.md` — 8 varied sections (neutral narration,
+  lists, questions, excitement, technical terms, conversational, numbers/names,
+  CTA) in the channel "ti"-tone. Gave the owner Audacity install + recording/cleanup
+  settings (mono, 44.1/48kHz, peaks −12..−6 dB, noise reduction, export to
+  `voice/reference/owner-sample.wav`, normalize toward −16 LUFS). Script is
+  git-ignored (personal). Current text ≈ 6–8 min of speech — enough for a first
+  clone test; can extend toward ~30 min later for max quality.
+- next: owner installs Audacity now, records the sample (next session). Then Colab
+  A/B — Fish Speech S2 vs XTTS on the same paragraph — + forced alignment →
+  `alignment.json`. Pick a backend by listening; log in DECISIONS.
+- blockers: none.
+
 ## 2026-05-31 — Phase 1 COMPLETE (validator, scaffold, config)
 - who: agent
 - did: closed the remaining Phase-1 items so all three exit criteria pass.
