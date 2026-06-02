@@ -1,85 +1,37 @@
 ---
 name: video-render
-description: Use to assemble the final video in Remotion — building render props from script, alignment, storyboard, and assets, placing scenes in time from the alignment timestamps, adding burned-in animated Serbian subtitles and the reusable intro/outro, then rendering the mp4. Triggers on "render", "build the video", "renderuj", or Step 4 of the workflow.
+description: Use to assemble the final video — building render props from script, alignment, scene-plan, and assets, placing scenes in time from the alignment timestamps, playing capture-segments with auto-zoom, adding burned-in animated English subtitles and the reusable intro/outro, rendering the mp4 + a Short + 2 thumbnails via the configured engine (Remotion / HyperFrames / combo). Triggers on "render", "build the video", or Step 4 of the workflow.
 ---
 
-# Skill: Video render (Remotion)
+# Skill: Video render
 
-You assemble the final video deterministically. Timing comes from
-`alignment.json` — you **place scenes and subtitles in time to match the
-continuous audio** (PRD R11–R12, ARCHITECTURE §6). You never cut the audio.
+You assemble the final video deterministically from `script.json` + `alignment.json` +
+`scene-plan.json` + assets, via the engine in `config.render.engine`
+(`remotion` | `hyperframes` | `combo` — chosen in the Phase-2 bake-off, D-019).
 
-## Read first
-- `docs/ARCHITECTURE.md` §6 (sync) and `style/VISUAL_IDENTITY.md` (components/look).
-- The video's `script.json`, `alignment.json`, `storyboard.json`,
-  `visual-prompts.json`, and the assets in `images/` / `captures/`.
-- The Remotion project in `templates/remotion/`.
+## Build props
+- Write `render/props.json`: ordered scenes, each `{ scene_id, template, props, start,
+  end }` where `start/end` come from `alignment.json` (scene i = first sentence start →
+  last sentence end). **Never slice the audio** (PRD R11).
+- Map each `template` to its component (VISUAL_IDENTITY §5).
 
-## Inputs → Output
-- **In:** all of the above + `voice/narration.wav`.
-- **Out:** `content/<id>/render/props.json` and `content/<id>/video/final.mp4`
-  (git-ignored). For Shorts also `video/short.mp4`.
+## Compose
+- **Captions:** burned-in, animated **English**, from `alignment.json` (same timings →
+  always in sync). Large, high-contrast, word/line highlight.
+- **capture-segment scenes:** play `captures/<capture_id>.mp4` inside the scene window
+  with **auto-zoom-to-cursor + highlight** on the noted region (owner never edits).
+- **Intro/outro:** reusable, **no music on long-form** (sound-design hit only).
+- **Motion:** per VISUAL_IDENTITY §4; visual change every ~3–7s, snapped to sentences.
 
-## Step 1 — Build `render/props.json`
-A single data object driving the Remotion composition:
-```jsonc
-{
-  "fps": 30,
-  "width": 1920, "height": 1080,        // 1080x1920 for Short
-  "audio": "voice/narration.wav",
-  "duration": 467.2,                     // from alignment.json
-  "intro": { "variant": "long" },
-  "outro": { "variant": "long" },
-  "scenes": [
-    {
-      "id": "s01",
-      "start": 0.00, "end": 9.84,        // from alignment (first/last sentence)
-      "visual_type": "motion-text",
-      "component": "KineticText",
-      "props": { "text": "ŠTA JE AI — 2026", "accent": "#4F8CFF" },
-      "camera_move": "none"
-    },
-    {
-      "id": "s04",
-      "start": 38.2, "end": 49.0,
-      "visual_type": "ai-image",
-      "component": "ImagePan",
-      "props": { "src": "images/s04-img.png", "move": "parallax" }
-    }
-  ],
-  "subtitles": { "source": "alignment.json", "style": "wordHighlight" }
-}
-```
-- **Scene timing:** `scene.start` = start of its first sentence in `alignment.json`;
-  `scene.end` = end of its last sentence. This guarantees scenes change exactly on
-  sentence boundaries while audio plays continuously.
-- **Subtitles:** generated from `alignment.json` word/sentence timings → always in
-  sync. Burned-in, animated (word/line highlight), Serbian, per VISUAL_IDENTITY.
-- Map each storyboard `component`/`camera_move` to the matching Remotion component
-  (KineticText, ImagePan, ScreenCapture, ChapterCard, LowerThird, BackgroundFX).
+## Outputs
+- `video/final.mp4` (long), `video/short.mp4` (1–2 key beats, **light music allowed**),
+  `video/thumb_a.png` + `thumb_b.png` (from `visual-prompts`).
+- `render/props.json`. Set `brief.json.status: "rendered"`.
 
-## Step 2 — Render
-- Local first (`config.json.render.location = "local"`):
-  `npx remotion render <Composition> out.mp4 --props=render/props.json`.
-- If too slow for 7–8 min (OQ2), switch to cloud render.
-- Use the **long** intro/outro for long videos, **Short** variants for Shorts.
+## Engine notes (combo)
+- In `combo` mode, Remotion owns the timeline/sync/captions/intro-outro; a `template`
+  flagged for HyperFrames is rendered to an MP4 block and imported into the Remotion
+  timeline. Keep it deterministic; cache rendered blocks per scene.
 
-## Step 3 — Short variant (if `brief.json.format` includes short)
-- Reframe to 9:16, keep captions in the safe band (VISUAL_IDENTITY §6), use a
-  trimmed scene set (the key beats) or a standalone short script.
-
-## Quality bar (match the reference channels)
-- No static holds — every scene has motion (camera move or kinetic text) (D-004).
-- Readable subtitles, on-brand colors/fonts, consistent intro/outro.
-- A visible change roughly every 3–7s, snapped to sentence boundaries.
-
-## Output rules
-- Write `render/props.json` (inspectable; lets QA and humans see the timing plan).
-- Render `video/final.mp4`; set `status = "rendered"`.
-- Hand off to **qa-video** (Step 5) before any human review.
-
-## Don'ts
-- Don't compute timing yourself — read it from `alignment.json`.
-- Don't cut/resample the narration audio.
-- Don't hardcode per-video styling — use the locked components/props.
-- Don't burn text into images; render text in Remotion (crisp, editable).
+Render locally (default). If a scene is too heavy, simplify its template before
+reaching for cloud.

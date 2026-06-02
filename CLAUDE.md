@@ -7,30 +7,38 @@
 ## What this project is
 
 An automated, mostly-hands-off **YouTube content factory** that produces
-professional, Serbian-language videos about AI (news, model releases, tools,
-prompting techniques, tutorials). We take **topics/ideas** from the global AI
-scene, then write **original** Serbian scripts and build **original** visuals and
-voice — we never translate someone else's video word-for-word.
+professional, **English-language**, **faceless** videos about **boring, everyday
+AI automations** — the small back-office tasks everyone ignores while chasing big
+systems (data entry, invoicing, shift scheduling, reminder/invite emails, simple
+record-keeping). We give **ideas and small worked examples**; viewers scale them to
+their own processes. Channel: **Boring AI Automations**.
 
-Full product spec: `docs/PRD.md`
-How the system works end to end: `docs/ARCHITECTURE.md`
+We never translate or copy anyone's video. We take *topics and facts*, then build
+**original** English scripts, visuals, and voice. Every script carries an **original
+human angle** (required — it's what keeps us monetizable under YouTube's anti-"AI-slop"
+rules).
+
+Full product spec: `docs/PRD.md`. How it works end to end: `docs/ARCHITECTURE.md`.
+Why we pivoted from the old Serbian-AI channel: `docs/DECISIONS.md` (D-011…D-019).
 
 ## Your operating principles (read before any task)
 
-1. **Quality > speed > cost.** Cost target is **$0** until the channel proves
-   itself. If a step cannot be free at acceptable quality, flag it — do not
-   silently spend money.
-2. **Originality is non-negotiable.** Sources give us *topics and facts*, never
-   sentences. See `style/STYLE_GUIDE.md` → "Originality & sourcing".
-3. **Every text passes a review agent before a human sees it.** Author → review →
-   fix loop. See `.claude/skills/script-review/SKILL.md`.
-4. **Human gates are: script → storyboard → final video.** Never publish without
-   the human approving the final video. See `docs/WORKFLOW.md`.
-5. **Audio is one continuous track.** Scenes change on sentence boundaries via
-   forced-alignment timestamps; audio is never cut. See
-   `.claude/skills/voice-synthesis/SKILL.md`.
-6. **Write everything (code, docs, skills) in English.** Channel output (scripts,
-   subtitles, titles) is in **Serbian**.
+1. **Quality > speed > cost.** Target **$0**; the stack is mostly **local** now, so
+   cost risk is low. If a step can't be free at acceptable quality, flag it.
+2. **Accuracy & originality.** Examples must actually work or be clearly framed as a
+   concept; the **original human angle is mandatory** in every script. Sources give
+   topics/facts, never sentences. Demo data is **synthetic** (never real client data).
+3. **Every text passes a review agent before a human sees it.** Author → review → fix.
+   See `.claude/skills/script-review/SKILL.md`.
+4. **Three human gates: topic+angle+type → script → final video.** Storyboard is now
+   automatic (fixed templates). Never publish without the final-video approval.
+   See `docs/WORKFLOW.md`.
+5. **Audio is one continuous track.** Scenes/captions snap to forced-alignment
+   timestamps; audio is never cut. See `.claude/skills/voice-synthesis/SKILL.md`.
+6. **Never delete or overwrite a file/asset without asking first.** Writing brand-new
+   files is fine; clobbering existing ones is not. Check first, then ask — especially
+   for anything you did not create.
+7. **Write everything (code, docs, skills) AND channel output in English.**
 
 ## Where everything lives
 
@@ -40,65 +48,74 @@ How the system works end to end: `docs/ARCHITECTURE.md`
 | Understand the system / data flow    | `docs/ARCHITECTURE.md`                      |
 | Know which tool to use & why         | `docs/TOOLS.md`                             |
 | Follow the production steps          | `docs/WORKFLOW.md`                          |
-| Know what phase we're in / next      | `docs/ROADMAP.md`                           |
+| Know which phase we're in / next     | `docs/ROADMAP.md`                           |
 | Log or read progress                 | `docs/PROGRESS.md`                          |
 | Understand a past decision           | `docs/DECISIONS.md`                         |
 | Install/configure the environment    | `docs/SETUP.md`                             |
 | Write or fix the tone/language       | `style/STYLE_GUIDE.md`                      |
-| Translate an EN term to SR           | `style/TERMBANK.md`                         |
 | Match the visual look                | `style/VISUAL_IDENTITY.md`                  |
-| Know channel name/niche/SEO          | `style/CHANNEL.md`                          |
+| Know channel name/niche/SEO/account  | `style/CHANNEL.md`                          |
 
 ## The skills (auto-invoked per task)
 
-Each skill is the **single source of truth** for that step. When a task matches,
-open the skill FIRST, then act.
+Each skill is the **single source of truth** for that step. Open it FIRST, then act.
 
 | Step | Skill file |
 |------|-----------|
-| Find/validate a topic        | `.claude/skills/` *(topic logic lives in `pipeline/00-topic` + WORKFLOW.md)* |
-| Write the script             | `.claude/skills/script-writing/SKILL.md` |
+| Find/score a topic from the idea-bank | topic logic in `pipeline/00-ideas` + WORKFLOW.md |
+| Write the script (per archetype + angle) | `.claude/skills/script-writing/SKILL.md` |
 | Review/QA the script         | `.claude/skills/script-review/SKILL.md` |
-| Translate & localize text    | `.claude/skills/translation-localization/SKILL.md` |
-| Build the storyboard         | `.claude/skills/storyboard/SKILL.md` |
-| Generate image/video prompts | `.claude/skills/visual-prompts/SKILL.md` |
+| Build the scene plan (templates) | `.claude/skills/storyboard/SKILL.md` |
+| Thumbnail / occasional asset prompts | `.claude/skills/visual-prompts/SKILL.md` |
+| Plan & guide a screen-capture demo | `.claude/skills/screen-capture/SKILL.md` |
 | Synthesize voice + align     | `.claude/skills/voice-synthesis/SKILL.md` |
-| Render the video (Remotion)  | `.claude/skills/video-render/SKILL.md` |
+| Render the video (Remotion / engine) | `.claude/skills/video-render/SKILL.md` |
 | QA the final video           | `.claude/skills/qa-video/SKILL.md` |
 | Prepare & publish to YouTube | `.claude/skills/youtube-publish/SKILL.md` |
 
+> `translation-localization` is **retired** (no second language). `TERMBANK.md` is
+> retired too — see its tombstone note.
+
+## The four video archetypes
+
+The system cycles through these; I classify each topic into one and you approve it.
+Each scene gets a `template` tag mapped deterministically to a render component.
+
+1. **Ideas/Listicle** — "N ways AI can automate X", full code-driven visuals.
+2. **Mini-demo** — a trivial real example you record in OBS; auto-zoom + "scale it".
+3. **Diagram/Architecture** — narrated, code-drawn animated diagram.
+4. **Comparison** — "best tool/model for X".
+
+See `style/VISUAL_IDENTITY.md` for the scene vocabulary and components.
+
 ## The pipeline (code)
 
-Code is organized as **numbered phases** under `pipeline/`. Each phase reads the
-previous phase's output from the video's `content/<id>/` folder and writes its own.
-Phases are **idempotent and resumable** (safe to re-run; cached work is skipped).
-See `docs/ARCHITECTURE.md` → "Pipeline contract".
+Numbered phases under `pipeline/`. Each reads the previous phase's output from the
+video's `content/<id>/` folder and writes its own. Phases are **idempotent and
+resumable**. See `docs/ARCHITECTURE.md` → "Pipeline contract".
 
 ```
-pipeline/00-topic → 01-script → 02-voice → 03-visuals → 04-render → 05-qa → 06-publish
+pipeline/00-ideas → 01-script → 02-voice → 03-visuals → 04-render → 05-qa → 06-publish
 ```
 
 ## One video = one folder
 
-Every video lives in `content/<NNN>-<slug>/` (e.g. `content/001-sta-je-ai/`).
-Skeleton of that folder: `content/_TEMPLATE/`. Real example you can learn from:
-`content/001-sta-je-ai/`.
-
-**Media files (audio/video/images) are git-ignored.** Only text/JSON/config is
-committed. See `.gitignore`.
+Every video lives in `content/<NNN>-<slug>/` (skeleton: `content/_TEMPLATE/`).
+**Media files (audio/video/images/captures) are git-ignored.** Only text/JSON/config
+is committed. The old Serbian example `content/001-sta-je-ai/` is **archived**, kept
+for reference (also under git tag `serbian-ai-archive`).
 
 ## How to start a new video
 
-Run the slash command `/novi-video` (see `.claude/commands/novi-video.md`) or
-follow `docs/WORKFLOW.md` manually. Either way: copy `_TEMPLATE`, then walk the
-phases, honoring the three human gates.
+Run `/novi-video` (see `.claude/commands/novi-video.md`) or follow `docs/WORKFLOW.md`
+manually: copy `_TEMPLATE`, pick a scored idea, then walk the phases, honoring the
+three gates.
 
 ## Golden rules recap (do not violate)
 
-- Free first. Flag any cost.
-- No word-for-word translation. Original scripts only.
-- No invented words, no needless jargon, no English-spelled-as-Serbian when a
-  clean Serbian word exists (`style/TERMBANK.md` decides).
+- Free/local first. Flag any cost.
+- No word-for-word translation. Original English scripts only, each with a human angle.
 - One continuous audio track; scenes snap to sentence timestamps.
-- Review agent before human; human approves final video before publish.
+- Synthetic demo data only; review agent before human; human approves final video.
+- **Never delete/overwrite existing files or assets without asking first** (principle 6).
 - Keep this file thin. New rules go in the relevant skill or `style/` file.

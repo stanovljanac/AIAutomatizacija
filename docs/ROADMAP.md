@@ -1,130 +1,125 @@
 # ROADMAP
 
-Phased plan from zero to a repeatable, mostly-automated channel. Each phase has
-**exit criteria** — concrete, checkable conditions to move on. Target: a working
-first video in ~3–4 weeks (no hard deadline; quality first).
+Phased plan from the pivot to a repeatable, mostly-automated **Boring AI Automations**
+channel. Each phase has **exit criteria** — concrete, checkable conditions. Quality
+first; no hard deadline. Log details in `docs/PROGRESS.md`.
 
-Update the current phase and check items as you go. Log details in
-`docs/PROGRESS.md`.
+> Inherited infra (from the old project, still good): Node/Python/Remotion installed,
+> `pipeline/shared` schemas + validator, `/novi-video` scaffold, a working local
+> Remotion render path (intro → text scene → outro). We reuse these.
 
 ---
 
-## Phase 0 — Foundation (docs & structure)  ✅ being set up now
+## Phase 0 — Re-found (docs & charter)  ◀ in progress
 
-**Goal:** the repo, documentation, skills, and style files exist and are coherent
-so any session can continue without re-explaining anything.
+**Goal:** the repo's docs, skills, and style files describe the **new** channel
+coherently, and the old work is safely archived.
 
 Exit criteria:
-- [ ] Repo structure created and pushed to GitHub.
-- [ ] `CLAUDE.md` + all `docs/` + all `style/` + all `.claude/skills/` present.
-- [ ] `_TEMPLATE` and worked example `001-sta-je-ai` scaffolded.
-- [ ] `docs/SETUP.md` is followable on Windows.
+- [x] `git tag serbian-ai-archive` created (old Serbian work preserved).
+- [ ] `CLAUDE.md` + all `docs/` + all `style/` rewritten/updated for the new niche (EN).
+- [ ] `DECISIONS.md` D-011…D-019 logged.
+- [ ] Skills updated (translation-localization retired; capture + idea-bank added).
+- [ ] Schemas + `config.json` updated; `_TEMPLATE` updated; `001-sta-je-ai` archived.
+- [ ] EconVault cleared & rebranded (keywords/branding to the new niche).
 
-## Phase 1 — Environment & "hello pipeline"  ✅ complete (2026-05-31)
+## Phase 0b — Idea-bank
 
-**Goal:** tools installed; a trivial end-to-end dry run with placeholder assets.
+**Goal:** a scored, multi-tagged backlog to drive production.
 
 Tasks:
-- Install Node, Python, Remotion, OBS, Audacity (SETUP.md).
-- Create `pipeline/shared/config.json` + `.env` from examples.
-- Implement `pipeline/shared` schemas + a validator.
-- Implement `/novi-video` scaffolding.
-- Render a 10-second Remotion test (intro → one text scene → outro) with a dummy
-  audio file, proving the render path works locally.
+- Define `pipeline/00-ideas/ideas.schema.json` and `ideas.json`.
+- Seed ~50–100 ideas across task/sector/tool/archetype with a predicted-popularity
+  `score` (free search-suggest/competitor signals + judgment).
 
 Exit criteria:
-- [x] `npx remotion studio` opens the template.
-- [x] A dummy 10s mp4 renders locally with intro/outro + one subtitle line.
-- [x] Schema validation runs on a sample `script.json`.
+- [ ] `ideas.json` validates and has ≥ 50 scored, tagged ideas.
+- [ ] The top ~10 are sanity-checked for real search demand.
 
-## Phase 2 — Voice that we can live with
+## Phase 1 — Voice & thumbnail proof
 
-**Goal:** decide the voice. Record the clone sample; test free Serbian TTS;
-choose free vs ElevenLabs fallback by **listening**.
+**Goal:** lock the channel voice and the thumbnail look (cheap, fast wins).
 
 Tasks:
-- Create `voice/RECORDING_SCRIPT.md` (varied Serbian, ~30 min).
-- Record your sample in Audacity (treated room), clean it.
-- Colab notebook: run Fish Speech (and XTTS if a Serbian fine-tune exists) on the
-  same test paragraph; generate samples.
-- A/B listen. Pick backend; set `config.json.voice`.
-- Implement `02-voice`: continuous TTS + forced alignment → `alignment.json`,
-  chunked+cached, resumable.
+- Generate the same English paragraph with a few **edge-tts** voices; A/B listen.
+- Set `config.json.voice` to the chosen voice.
+- Implement `02-voice`: continuous edge-tts + forced alignment, chunked/cached.
+- Build the Remotion `ThumbnailTemplate` (2 variants).
 
 Exit criteria:
-- [ ] A 30–60s Serbian narration sounds professional (not robotic).
+- [ ] A 30–60s English narration sounds professional (not robotic). **(The Serbian
+      blocker is gone — this is the proof.)**
 - [ ] `alignment.json` has correct per-sentence timestamps for a test script.
-- [ ] If free quality is insufficient, ElevenLabs fallback documented & wired
-      (flip a config flag), decision logged in `docs/DECISIONS.md`.
+- [ ] Two on-brand thumbnail variants render from a sample title.
 
-## Phase 3 — Visual identity & the visual pipeline
+## Phase 2 — Render bake-off + template library
 
-**Goal:** lock the look (once) from your reference screenshots; build
-storyboard → prompts → assets.
+**Goal:** decide the engine, then build the fixed-template visual system once.
 
 Tasks:
-- Fill `style/VISUAL_IDENTITY.md` from your reference screenshots (colors, fonts,
-  motion language, layout) — done **once**, then reused (PRD: style pack).
-- Build reusable Remotion components: intro, outro (long + Short variants),
-  lower-thirds, kinetic-text, screenshot-with-camera-move, image-with-parallax.
-- Implement `03-visuals`: storyboard skill → visual-prompts skill → Pexels/Pixabay
-  fetch + Colab image gen (chunked+cached).
-- Define the guided **screen-capture list** flow for tool-demo videos.
+- **Bake-off:** build ONE representative scene in **Remotion** and **HyperFrames**;
+  compare agent-authoring ease, reliability, quality, integration cost. Set
+  `render.engine` (`remotion` | `hyperframes` | `combo`). (DECISIONS D-019.)
+- Lock `style/VISUAL_IDENTITY.md` values (palette/fonts/motion).
+- Build the scene-template components: `hook-card`, `section-header`, `bullet/steps`,
+  `stat-callout`, `term-highlight`, `comparison-table`, `diagram` (code-drawn),
+  `code-block`, `capture-segment` (auto-zoom), `lower-third`, `transition`, `cta-card`,
+  plus `Intro/Outro` (long + Short) and `Subtitles`.
 
 Exit criteria:
-- [ ] Intro/outro render and look on-brand.
-- [ ] One scene rendered each way: motion-text, stock, AI-image (with camera move),
-      and a screen capture — all looking dynamic (not a static slideshow).
-- [ ] `storyboard.json` + `visual-prompts.json` validate against schemas.
+- [ ] Bake-off verdict logged; `render.engine` set.
+- [ ] Each template renders on-brand and data-driven from `scene-plan.json`.
+- [ ] An animated **code-drawn diagram** renders legibly.
 
-## Phase 4 — MVP: first full video (Definition of Done)
+## Phase 3 — Pilot video (Definition of Done)
 
-**Goal:** produce **"Šta je AI i šta sve može u 2026."** end to end.
-
-Tasks:
-- Run the full workflow on `content/001-sta-je-ai/`.
-- 7–8 min, faceless, Serbian narration, hybrid dynamic visuals, burned-in animated
-  Serbian subtitles, perfect sync.
-- Implement `05-qa` checks; pass them.
-- Implement `06-publish`: title/description/tags/thumbnail + draft upload.
-- Produce **one Short** from the same script.
-
-Exit criteria (this IS the MVP done-definition, mirrors PRD §8):
-- [ ] `content/001-sta-je-ai/video/final.mp4` exists, 7–8 min.
-- [ ] Audio continuous; scenes & subtitles in sync (QA passed).
-- [ ] Human-approved at all three gates.
-- [ ] Draft (private) on YouTube with full metadata + thumbnail.
-- [ ] One Short produced from the same script.
-- [ ] Reusable intro/outro used (long + Short).
-
-## Phase 5 — Repeatability & toward automation
-
-**Goal:** make the second and third videos easy; tighten QA; start automating.
+**Goal:** produce one full video end to end — an **Ideas/Listicle or Diagram** topic
+(full-AI path, no capture).
 
 Tasks:
-- Produce videos #2 and #3 on new topics; note every manual touch and remove it.
-- Mature QA so it can **auto-reject & re-run** common failures (PRD R14).
-- Add topic-discovery automation (clean-source scanning + topic proposals).
-- Optional: introduce **n8n** to schedule full runs that stop only at gates
-  (DECISIONS D-006). Optional: move render/image gen fully to cloud.
-- Optional: design a stylized **2D avatar** (PRD §5; faceless → avatar path).
+- Run the whole workflow on the top idea.
+- Implement/confirm `05-qa` (auto-fix technical, flag content, 30s digest).
+- Implement `06-publish`: title/desc/tags/chapters/thumbnail + draft upload + 1 Short.
+
+Exit criteria (the MVP done-definition, mirrors PRD §8):
+- [ ] `content/<id>/video/final.mp4` exists; correct length for its archetype.
+- [ ] Audio continuous; scenes & captions in sync (QA passed).
+- [ ] Original human angle present; approved at all three gates.
+- [ ] Draft (private) on YouTube with full metadata + chosen thumbnail.
+- [ ] One Short produced; reusable intro/outro used.
+
+## Phase 4 — Expand archetypes
+
+**Goal:** add the remaining formats and the Shorts pipeline.
+
+Tasks:
+- **Mini-demo:** ship the OBS capture profile + click-list flow + auto-zoom/highlight.
+- **Comparison:** comparison-table component + sources discipline.
+- Auto-extract 1–2 **Shorts** per long video (light music).
 
 Exit criteria:
-- [ ] A new video can go topic → draft with human time only at the 3 gates.
-- [ ] At least one common QA failure auto-recovers without human help.
-- [ ] A documented "daily Short + video every 2–3 days" cadence is sustainable.
+- [ ] One mini-demo and one comparison video produced and approved.
+- [ ] Shorts auto-generate from a long video.
+
+## Phase 5 — Cadence & growth loop
+
+**Goal:** make videos #N easy; close the data loop.
+
+Tasks:
+- Produce in idea-bank **score order**; remove every avoidable manual touch.
+- Log CTR/retention to `PROGRESS.md` + each idea's `metrics`; **re-rank** the bank.
+- Optional later: opt-in AI images, n8n scheduling (deferred — D-006), more automation.
+
+Exit criteria:
+- [ ] A new video goes idea → draft with human time only at the 3 gates (+ capture).
+- [ ] Real metrics have re-ranked the idea-bank at least once.
+- [ ] A sustainable cadence is documented.
 
 ---
-
-## Cadence target (post-Phase 4)
-
-- Long video every 2–3 days (7–10 min), 1 Short/day (mostly repurposed).
-- Ramp toward daily long-form once Phase 5 automation is stable.
 
 ## What we deliberately deferred
 
-- n8n full automation (until manual pipeline proven) — D-006.
-- Avatar (faceless first) — D-008.
-- Per-scene generative video (hero shots only) — D-004.
-- Cloud storage migration (until local space runs low) — ARCHITECTURE §10.
-- Multi-language output — PRD §3.
+- Products/affiliate/courses — until payout rails exist (D-017).
+- AI-video (per-scene generative) and standard AI-image use — local-first (D-015).
+- Avatar — dropped permanently; faceless forever (supersedes D-008).
+- n8n full automation — until the manual pipeline is proven (D-006).

@@ -30,6 +30,32 @@ Format:
 
 <!-- New entries below this line, newest on top. Add as you build each phase. -->
 
+## 2026-06-02 — PIVOT: Serbian-AI → "Boring AI Automations" (English, faceless)
+- who: agent + owner (long decision interview)
+- did: After Serbian TTS proved an unfixable free blocker (D-010), re-founded the
+  project as an **English, faceless** channel about **boring everyday AI automations**
+  for builders/freelancers. Ran a full design interview (9 rounds) and executed the
+  Phase-0 doc migration:
+  - Tagged `serbian-ai-archive` at HEAD (old work preserved; nothing deleted).
+  - Logged **D-011…D-019** (pivot, name, archetypes+fixed-templates, edge-tts EN voice,
+    local-first compute, EconVault account, ad-RPM, human-angle rule, render bake-off).
+  - Rewrote `CLAUDE.md`, `README.md`, all `docs/` (PRD, ARCHITECTURE, WORKFLOW, ROADMAP,
+    TOOLS, SETUP) and `style/` (CHANNEL, STYLE_GUIDE, VISUAL_IDENTITY); retired
+    `TERMBANK.md` → EN note.
+  - Updated skills: retired `translation-localization`, rewrote the rest for EN +
+    4 archetypes + 3 gates, added new `screen-capture` skill.
+  - Schemas: updated `brief`/`script` (archetype, angle, template tags), added
+    `ideas` + `scene-plan`; wired the validator. Updated `config.json` (edge-tts, en,
+    `render.engine`). Renamed phase `00-topic` → `00-ideas`.
+  - Seeded the **idea-bank**: `pipeline/00-ideas/ideas.json` (50 scored, multi-tagged
+    ideas) — validates. Added a `_TEMPLATE/script.sample.json` (validates).
+- decisions: D-011…D-019 added (supersede, don't delete; D-008 avatar dropped).
+- next: **Phase 1** — A/B a few edge-tts EN voices, owner picks the channel voice;
+  build the thumbnail template. Then Phase 2 render bake-off (Remotion vs HyperFrames)
+  + the scene-template library. Owner actions: confirm EconVault access, approve name.
+- blockers: none. (`content/001-sta-je-ai` kept as an archived example.)
+
+
 ## 2026-06-01 — Phase 2: voice clone WORKS (OpenAudio S1-mini); Colab recipe + open Serbian question
 - who: agent + human (recording + Colab runs)
 - did:

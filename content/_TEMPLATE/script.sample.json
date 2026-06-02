@@ -1,0 +1,37 @@
+{
+  "id": "000-sample",
+  "language": "en",
+  "archetype": "ideas",
+  "angle": "The boring tasks nobody automates are exactly where the easy money is.",
+  "title_working": "3 Boring Tasks AI Can Automate in Google Sheets",
+  "target_seconds": 360,
+  "scenes": [
+    {
+      "id": "s01",
+      "role": "hook",
+      "template": "hook-card",
+      "narration": "Here are three boring spreadsheet jobs you never have to do by hand again.",
+      "sentences": ["Here are three boring spreadsheet jobs you never have to do by hand again."],
+      "on_screen_text": "3 boring jobs, gone",
+      "capture_id": null
+    },
+    {
+      "id": "s02",
+      "role": "point",
+      "template": "bullet-steps",
+      "narration": "First, auto-cleaning messy imported data so every row matches the same format.",
+      "sentences": ["First, auto-cleaning messy imported data so every row matches the same format."],
+      "on_screen_text": "1. Clean imports",
+      "capture_id": null
+    },
+    {
+      "id": "s03",
+      "role": "cta",
+      "template": "cta-card",
+      "narration": "Scale any of these to your own process, and subscribe for one boring automation a week.",
+      "sentences": ["Scale any of these to your own process, and subscribe for one boring automation a week."],
+      "on_screen_text": "Subscribe",
+      "capture_id": null
+    }
+  ]
+}

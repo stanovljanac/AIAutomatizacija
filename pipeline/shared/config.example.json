@@ -1,20 +1,17 @@
 {
+  "language": "en",
   "voice": {
-    "provider": "free_tts",
-    "free_tts": {
-      "model": "fish-speech-s2",
-      "reference_sample": "voice/reference/owner-sample.wav",
-      "compute": "colab"
-    },
-    "elevenlabs": {
-      "voice_id": "",
-      "model": "eleven_multilingual_v2"
+    "provider": "edge-tts",
+    "edge_tts": {
+      "voice": "en-US-AndrewNeural",
+      "rate": "+0%",
+      "pitch": "+0Hz"
     },
     "target_wpm": 160,
     "loudness_lufs": -16
   },
   "render": {
-    "location": "local",
+    "engine": "remotion",
     "fps": 30,
     "long": { "width": 1920, "height": 1080 },
     "short": { "width": 1080, "height": 1920 }
@@ -25,12 +22,16 @@
     "remotion": "templates/remotion"
   },
   "defaults": {
-    "long_seconds": 465,
-    "short_seconds": 45
+    "long_seconds": 360,
+    "short_seconds": 40
   },
   "stock": {
     "pexels_enabled": true,
     "pixabay_enabled": true
+  },
+  "ai_images": {
+    "enabled": false,
+    "compute": "colab"
   },
   "youtube": {
     "client_secret_path_env": "YOUTUBE_CLIENT_SECRET_PATH",
@@ -38,6 +39,7 @@
   },
   "review": {
     "script_max_loops": 3,
-    "qa_auto_rerun": false
+    "qa_autofix_technical": true,
+    "qa_flag_content": true
   }
 }

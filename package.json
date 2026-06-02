@@ -2,10 +2,10 @@
   "name": "aiautomatizacija",
   "version": "0.1.0",
   "private": true,
-  "description": "Serbian AI YouTube content factory — pipeline tooling (validation, scaffolding). The Remotion render project lives in templates/remotion with its own package.json.",
+  "description": "Boring AI Automations YouTube content factory — pipeline tooling (validation, scaffolding). The Remotion render project lives in templates/remotion with its own package.json.",
   "scripts": {
     "validate": "node pipeline/shared/validate.js",
-    "new-video": "node pipeline/00-topic/new-video.mjs"
+    "new-video": "node pipeline/00-ideas/new-video.mjs"
   },
   "dependencies": {
     "ajv": "^8.17.1",

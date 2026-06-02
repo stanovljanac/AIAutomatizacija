@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ideas.json",
+  "description": "The flat, multi-tagged, scored idea-bank that drives production.",
+  "type": "object",
+  "required": ["updated", "ideas"],
+  "properties": {
+    "updated": { "type": "string", "description": "ISO date this bank was last refreshed." },
+    "ideas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "archetype", "task", "score", "status"],
+        "properties": {
+          "id": { "type": "string", "description": "Stable slug, e.g. invoice-emails-sheets." },
+          "title": { "type": "string", "description": "Working video title / idea." },
+          "search_term": { "type": "string", "description": "The query a viewer would type." },
+          "task": {
+            "type": "string",
+            "description": "Painful task cluster.",
+            "enum": ["data-entry", "documents", "scheduling", "outbound-comms", "lookups-reports", "other"]
+          },
+          "sector": { "type": "string", "description": "Optional sector flavor." },
+          "tool": { "type": "string", "description": "Primary tool likely shown." },
+          "archetype": {
+            "type": "string",
+            "enum": ["ideas", "mini-demo", "diagram", "comparison"]
+          },
+          "angle_hint": { "type": "string", "description": "Seed for the original angle (refined at Gate 1)." },
+          "score": { "type": "number", "minimum": 0, "maximum": 100, "description": "Predicted popularity." },
+          "status": {
+            "type": "string",
+            "enum": ["backlog", "in-progress", "produced", "parked"]
+          },
+          "produced_video_id": { "type": ["string", "null"] },
+          "metrics": {
+            "type": "object",
+            "description": "Filled after publish; used to re-rank the bank.",
+            "properties": {
+              "ctr": { "type": "number" },
+              "avg_view_seconds": { "type": "number" },
+              "views": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

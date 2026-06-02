@@ -4,8 +4,8 @@
  * pick the next NNN id, copy content/_TEMPLATE/ into content/<NNN>-<slug>/, and
  * initialize brief.json. The agent then continues with topic + research (steps 4–6).
  *
- *   node pipeline/00-topic/new-video.mjs <slug> ["Working title"]
- *   npm run new-video -- sta-je-ai "Šta je AI i šta sve može u 2026."
+ *   node pipeline/00-ideas/new-video.mjs <slug> ["Working title"]
+ *   npm run new-video -- invoice-emails-sheets "Automate Invoice Emails in Google Sheets"
  *
  * Idempotent: refuses to overwrite an existing video folder.
  */
@@ -29,7 +29,7 @@ function die(msg) {
 }
 
 const [, , slugArg, ...titleParts] = process.argv;
-if (!slugArg) die('Usage: node pipeline/00-topic/new-video.mjs <slug> ["Working title"]');
+if (!slugArg) die('Usage: node pipeline/00-ideas/new-video.mjs <slug> ["Working title"]');
 
 const slug = slugArg
   .toLowerCase()
@@ -59,15 +59,16 @@ cpSync(TEMPLATE, dest, { recursive: true });
 const brief = {
   id,
   title_working: titleWorking,
+  archetype: "ideas",
   angle: "",
-  audience: "Serbian AI-curious viewers",
-  target_seconds: 465,
+  audience: "Builders/freelancers who automate boring back-office tasks for others",
+  target_seconds: 360,
   format: "long+short",
-  sources: [],
+  task: "",
   status: "new",
 };
 writeFileSync(join(dest, "brief.json"), JSON.stringify(brief, null, 2) + "\n");
 
 console.log(`Created content/${id}/ from _TEMPLATE.`);
 console.log(`brief.json initialized (status: "new"${titleWorking ? `, title: "${titleWorking}"` : ""}).`);
-console.log(`Next: research the topic -> sources.md, then set status "researched". See docs/WORKFLOW.md Step 0.`);
+console.log(`Next: classify archetype + draft the angle (Gate 1), then write the script. See docs/WORKFLOW.md Step 0.`);

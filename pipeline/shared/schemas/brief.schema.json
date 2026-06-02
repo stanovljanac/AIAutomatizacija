@@ -2,14 +2,23 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "brief.json",
   "type": "object",
-  "required": ["id", "title_working", "target_seconds", "format", "status"],
+  "required": ["id", "title_working", "archetype", "target_seconds", "format", "status"],
   "properties": {
     "id": { "type": "string" },
     "title_working": { "type": "string" },
-    "angle": { "type": "string" },
+    "archetype": {
+      "type": "string",
+      "enum": ["ideas", "mini-demo", "diagram", "comparison"]
+    },
+    "angle": { "type": "string", "description": "The original human take that makes this video ours." },
     "audience": { "type": "string" },
     "target_seconds": { "type": "number" },
     "format": { "type": "string", "enum": ["long", "short", "long+short"] },
+    "search_term": { "type": "string" },
+    "task": { "type": "string", "description": "The painful task being automated (data-entry, invoicing, scheduling, emailing, lookups...)." },
+    "sector": { "type": "string", "description": "Optional sector flavor (schools, accounting, hospitality...)." },
+    "tool": { "type": "string", "description": "Primary tool shown (Sheets, Excel, Outlook, Notion, Claude...)." },
+    "score": { "type": "number", "description": "Predicted popularity 0-100 (free signals + judgment)." },
     "sources": {
       "type": "array",
       "items": {
@@ -24,9 +33,8 @@
     "status": {
       "type": "string",
       "enum": [
-        "new", "researched", "scripted", "script_approved", "voiced",
-        "storyboarded", "storyboard_approved", "visualized", "rendered",
-        "qa_passed", "ready", "published"
+        "new", "ideated", "scripted", "script_approved", "voiced",
+        "planned", "captured", "rendered", "qa_passed", "ready", "published"
       ]
     }
   }

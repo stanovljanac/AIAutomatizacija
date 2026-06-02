@@ -1,174 +1,158 @@
 # SETUP (Windows)
 
-Install everything from zero on a Windows PC and configure the project. Written
-for someone who has never set this up. Commands assume **PowerShell**.
+Install everything from zero on a Windows PC and configure the project. Written for
+someone who has never set this up. Commands assume **PowerShell**.
 
-> Hardware note: this PC (GTX 1050Ti 4GB VRAM, 16GB RAM) is the **orchestrator**.
-> GPU-heavy steps (TTS, AI images) run on **free cloud GPU** (Colab/Kaggle), not
-> here. See `docs/ARCHITECTURE.md` §7.
+> Hardware note: this PC is the **orchestrator + renderer**. The core stack runs
+> **locally** (edge-tts voice, Remotion render, stock). A free cloud GPU (Colab/Kaggle)
+> is **optional, opt-in** for occasional AI images only. See `docs/ARCHITECTURE.md` §7.
 
 ---
 
 ## 0. Prerequisites overview
 
-You'll install: Git, Node.js (LTS), Python 3.11+, FFmpeg, OBS Studio, Audacity,
-and the project's Node/Python deps. Plus free accounts: Google (Colab + YouTube
-API), Kaggle, Pexels, Pixabay. Optional later: ElevenLabs.
+You'll install: Git, Node.js (LTS), Python 3.11+, FFmpeg, OBS Studio, and the project's
+Node/Python deps (including `edge-tts`). Plus free accounts: Google (YouTube API),
+Pexels, Pixabay. Optional later: Google Colab/Kaggle (only if you use AI images).
 
 ---
 
 ## 1. Core tools
 
 ### Git
-- Install: https://git-scm.com/download/win
-- Verify: `git --version`
+- Install: https://git-scm.com/download/win — verify `git --version`.
 
 ### Node.js (LTS) — for Remotion & pipeline scripts
-- Install LTS: https://nodejs.org/ (or `winget install OpenJS.NodeJS.LTS`)
-- Verify: `node --version` (want ≥ 20), `npm --version`
+- `winget install OpenJS.NodeJS.LTS` — verify `node --version` (≥ 20), `npm --version`.
 
-### Python 3.11+ — for alignment & helper scripts
-- Install: https://www.python.org/downloads/ (check "Add python.exe to PATH")
-- Verify: `python --version`, `pip --version`
+### Python 3.11+ — for TTS (edge-tts), alignment & helpers
+- https://www.python.org/downloads/ (check "Add python.exe to PATH") — verify `python --version`.
 
 ### FFmpeg — audio/video processing (Remotion & QA use it)
-- `winget install Gyan.FFmpeg` (or download static build, add to PATH)
-- Verify: `ffmpeg -version`
+- `winget install Gyan.FFmpeg` — verify `ffmpeg -version`.
 
-### OBS Studio — screen capture for tool demos
-- https://obsproject.com/ — verify it launches and can record a window.
+### OBS Studio — screen capture for mini-demo videos
+- https://obsproject.com/ — verify it launches and can record a window. The
+  `screen-capture` skill will give you a ready OBS profile + click-list per demo.
 
-### Audacity — record your voice-clone sample
-- https://www.audacityteam.org/ — verify it launches and records from your mic.
+> No Audacity / microphone needed — the channel is faceless and uses an AI voice.
 
 ---
 
 ## 2. Get the repo
 
 ```powershell
-git clone https://github.com/stanovljanac/AIAutomatizacija.git
-cd AIAutomatizacija
+git clone <your-repo-url>
+cd "AI Automatizacija"
 ```
-
-(If you're setting up the repo for the first time from these generated files,
-copy them in, then `git init`, `git remote add origin <url>`, commit, push.)
 
 ---
 
 ## 3. Node & Remotion
 
 ```powershell
-# From repo root, once package.json exists (Phase 1):
-npm install
+npm install                 # from repo root, once package.json exists
 
-# Remotion lives in templates/remotion
 cd templates/remotion
 npm install
-npx remotion studio    # should open the studio in your browser
+npx remotion studio         # should open the studio in your browser
 cd ../..
 ```
 
-If `npx remotion studio` opens, the render path works locally.
+If `npx remotion studio` opens, the render path works locally. (HyperFrames, if adopted
+in the Phase-2 bake-off, installs per its own notes — DECISIONS D-019.)
 
 ---
 
-## 4. Python environment
+## 4. Python environment (incl. edge-tts)
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install --upgrade pip
-# requirements.txt is added in Phase 1/2 (alignment, helpers)
-pip install -r requirements.txt
+pip install -r requirements.txt     # includes edge-tts, alignment deps
+
+# Quick voice sample (Phase 1 A/B test):
+edge-tts --voice en-US-AndrewNeural --text "This is a boring task, automated." --write-media sample.mp3
 ```
 
-For forced alignment you'll use WhisperX or aeneas — installed per
-`pipeline/02-voice` instructions (some parts may run on Colab instead of locally).
+Forced alignment uses WhisperX or aeneas — installed per `pipeline/02-voice` notes.
+Everything here runs **locally**; no cloud account is required for normal production.
 
 ---
 
 ## 5. Config & secrets
 
 ```powershell
-# Copy examples, then fill in real values (these copies are git-ignored):
 copy pipeline\shared\config.example.json pipeline\shared\config.json
 copy .env.example .env
 ```
 
-`.env` keys you'll need (get them in step 6):
+`.env` keys:
 ```
 PEXELS_API_KEY=...
 PIXABAY_API_KEY=...
-# YouTube OAuth: store client_secret.json outside git; path set in config.json
+# YouTube OAuth: store client_secret.json OUTSIDE git; path set in config.json
 YOUTUBE_CLIENT_SECRET_PATH=C:\secure\client_secret.json
-# Optional, only if you adopt the paid fallback:
-ELEVENLABS_API_KEY=...
 ```
 
 `config.json` important fields:
 ```jsonc
 {
-  "voice": { "provider": "free_tts" },   // or "elevenlabs"
-  "render": { "location": "local" },     // or "cloud"
+  "voice": { "provider": "edge-tts", "edge_tts": { "voice": "en-US-AndrewNeural" } },
+  "language": "en",
+  "render": { "engine": "remotion", "fps": 30 },   // remotion | hyperframes | combo
   "paths": { "content": "content", "assets": "assets" },
-  "defaults": { "long_seconds": 465, "short_seconds": 45, "fps": 30 }
+  "defaults": { "long_seconds": 360, "short_seconds": 40 }
 }
 ```
 
 **Never commit `.env`, `config.json`, or any `client_secret*.json` / `token.json`.**
-`.gitignore` already excludes them.
 
 ---
 
 ## 6. Free accounts & API keys
 
-- **Google Colab** (free GPU): just sign in at https://colab.research.google.com/
-- **Kaggle** (free ~30h/wk GPU, longer sessions): https://www.kaggle.com/ →
-  Account → create API token if running via CLI.
-- **Pexels API:** https://www.pexels.com/api/ → copy key → `.env`.
-- **Pixabay API:** https://pixabay.com/api/docs/ → copy key → `.env`.
+- **Pexels API:** https://www.pexels.com/api/ → key → `.env`.
+- **Pixabay API:** https://pixabay.com/api/docs/ → key → `.env`.
 - **YouTube Data API v3:**
   1. https://console.cloud.google.com/ → new project.
   2. Enable "YouTube Data API v3".
-  3. Create **OAuth client ID** (Desktop app) → download `client_secret.json` →
-     store it **outside** the repo; point `YOUTUBE_CLIENT_SECRET_PATH` to it.
-  4. First publish run will open a browser to authorize; a `token.json` is created
-     (also keep outside git).
-- **ElevenLabs (optional, only if free TTS loses the listen test):**
-  https://elevenlabs.io/ → Creator plan → API key → `.env`.
+  3. Create **OAuth client ID** (Desktop app) → download `client_secret.json` → store
+     **outside** the repo; point `YOUTUBE_CLIENT_SECRET_PATH` to it.
+  4. First publish run opens a browser to authorize; a `token.json` is created (keep
+     outside git).
+- **Optional (only if you use AI images):** Google Colab (sign in) / Kaggle (API token).
 
-> Security: the agent must never type secrets into code, URLs, or committed files,
-> and never create accounts or enter passwords on your behalf — you do auth steps
-> yourself.
+> Security: the agent must never type secrets into code, URLs, or committed files, and
+> never create accounts or enter passwords on your behalf — you do auth steps yourself.
 
 ---
 
-## 7. Cloud GPU usage (Colab/Kaggle)
+## 7. Optional cloud GPU (AI images only)
 
-Heavy steps ship as notebooks/scripts under `scripts/colab/` (added in Phase 2/3).
-Pattern:
-1. Open the notebook in Colab/Kaggle, set runtime to GPU.
-2. It mounts/pulls the target `content/<id>/` inputs.
-3. Runs the job **chunked + cached** (a disconnect only repeats the current chunk).
-4. Pushes results (audio/images) back; you sync them into the video folder.
-
-Use **Kaggle** for long batches (steadier, ~30h/wk). Use **Colab** for quick jobs.
+Not required for normal production (local-first, D-015). If you ever want an AI concept
+image, the opt-in notebook under `scripts/colab/` runs chunked + cached and pushes the
+image back into the video folder. Skip otherwise.
 
 ---
 
-## 8. Verify the whole setup (Phase 1 smoke test)
+## 8. Verify the setup (smoke test)
 
 ```powershell
 # 1) Schemas validate a sample script
-node pipeline/shared/validate.js content/001-sta-je-ai/script.json   # (added Phase 1)
+node pipeline/shared/validate.js content/_TEMPLATE/script.sample.json --schema script
 
-# 2) Remotion renders a 10s test with intro/outro + one subtitle
+# 2) edge-tts produces audio
+edge-tts --voice en-US-AndrewNeural --text "Automated." --write-media out.mp3
+
+# 3) Remotion renders a short test
 cd templates/remotion
 npx remotion render TestComposition out/test.mp4
 cd ../..
 ```
 
-If both succeed, you're ready for Phase 2 (voice). See `docs/ROADMAP.md`.
+If these succeed, you're ready for Phase 1 (voice & thumbnail). See `docs/ROADMAP.md`.
 
 ---
 
@@ -179,6 +163,6 @@ If both succeed, you're ready for Phase 2 (voice). See `docs/ROADMAP.md`.
 | `npx remotion` fails on Chrome/Chromium | Let Remotion download its browser; or install Chrome |
 | FFmpeg "not recognized" | Add FFmpeg `bin` to PATH, reopen PowerShell |
 | Python venv activate blocked | `Set-ExecutionPolicy -Scope Process RemoteSigned` then activate |
-| Colab disconnects | Expected; re-run the cell — cached chunks are skipped |
+| edge-tts network error | It needs internet (it calls Microsoft's voices); retry |
 | YouTube upload quota error | Uploads are quota-heavy; space them; check quota in Cloud Console |
-| Mic noisy in Audacity | Use Effect → Noise Reduction; treat the room (soft surfaces) |
+| OBS capture is black | Switch capture mode (Window vs Display); run OBS as admin if needed |

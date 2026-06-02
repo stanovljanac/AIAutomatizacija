@@ -1,73 +1,47 @@
 ---
 name: script-writing
-description: Use when writing or drafting a video script for the channel — turning a researched topic (brief.json + sources.md) into a scene-segmented, high-retention Serbian script (script.json). Triggers on "write the script", "draft the video", "napiši skriptu", or starting Step 1 of the workflow. Do NOT use for translating someone else's script (we don't do that) or for reviewing a script (use script-review).
+description: Use when writing or drafting a video script for the Boring AI Automations channel — turning an approved brief (brief.json + optional sources.md) into a scene-segmented, template-tagged, high-retention English script (script.json) for one of the four archetypes, with the original human angle baked in. Triggers on "write the script", "draft the video", or Step 1 of the workflow. Do NOT use for reviewing a script (use script-review).
 ---
 
 # Skill: Script writing
 
-You write the **original Serbian** script for a video, as scene-segmented JSON.
-This is Step 1 of `docs/WORKFLOW.md`. You are NOT translating anyone — you write
-from the *facts* in `sources.md`, in our own words and structure.
+You write the **original English** script for a video as scene-segmented, template-
+tagged JSON (`script.json`, schema `pipeline/shared/schemas/script.schema.json`).
+Read `style/STYLE_GUIDE.md` first — it is the writing law. This skill produces; it
+does not self-approve (that's `script-review`, then the human gate).
 
-## Read first
-- `style/STYLE_GUIDE.md` — the writing law (tone, hard rules, structure, scenes).
-- `style/TERMBANK.md` — EN→SR term decisions you MUST follow.
-- The video's `brief.json` (topic, angle, target_seconds, format) and `sources.md`
-  (the facts you may use).
-- Schema: `pipeline/shared/schemas/script.schema.json`.
+## Inputs
+- `brief.json` — has `archetype`, `angle`, `task`, `tool`, `target_seconds`.
+- `sources.md` — facts (Comparisons/stats only; Ideas/Demo may have none).
 
-## Inputs → Output
-- **In:** `content/<id>/brief.json`, `content/<id>/sources.md`.
-- **Out:** `content/<id>/script.json` (valid against the schema).
+## Non-negotiables (from STYLE_GUIDE §2, PRD R4/R8/R9)
+1. **Bake in the original human angle** (from `brief.angle`) — surface it in/after the
+   hook. No generic info-dump.
+2. **Ideas + minimal example**; end with "scale this to your own process." We do not
+   build full systems.
+3. **Accuracy by archetype:** Comparisons/stats trace to `sources.md`; demos use
+   **synthetic data**; pure-conceptual claims are framed as ideas, not tested fact.
+4. **One idea per sentence** (sentences are timing units).
+5. Hook lands in ≤ 10s; one subtle CTA (subscribe); short branded outro.
 
-## Method
+## Write to the archetype (STYLE_GUIDE §5)
+- **ideas:** hook → framing → N items (idea → why it pays → tiny illustration →
+  takeaway) → scale-it close.
+- **mini-demo:** hook → the boring task → `capture-segment` of the trivial example →
+  "scale it to real volume" → close.
+- **diagram:** hook → build the diagram step by step → walk the flow → caveats → close.
+- **comparison:** hook → contenders + criteria → comparison table → honest verdict
+  (with the angle) → close.
 
-1. **Internalize the facts.** List the 4–6 key facts/points from `sources.md` worth
-   covering for this `target_seconds`. Drop the rest. Never invent facts.
-2. **Plan the arc** (STYLE_GUIDE §5): hook → intro → 3–6 body points/demos →
-   payoff → subtle CTA → outro. Decide which points need a **screen capture** or
-   an **AI image** vs **motion text**.
-3. **Write scene by scene** (STYLE_GUIDE §6). For each scene:
-   - `narration`: exact spoken Serbian, obeying every hard rule.
-   - `sentences`: split narration into individual sentences (timing units).
-   - `visual_intent`: plain "what's on screen".
-   - `on_screen_text` (optional, ≤ ~6 words), `screen_capture` (id or null).
-   - `role`: hook | intro | point | demo | transition | cta | outro.
-   - Keep scenes ~1–4 sentences / ~5–20s. Don't write a 60s monologue scene.
-4. **Pace to length.** Estimate ~150–170 spoken Serbian words/min (calm pace).
-   For 7–8 min that's ~1100–1350 words total. Don't pad; trim filler.
-5. **Hook discipline.** The first ≤15s must promise a payoff or pose a sharp
-   question. No "u ovom videu ćemo…".
-6. **Self-pass** the STYLE_GUIDE §10 checklist before handing off.
+## Per-scene fields (script.schema.json)
+`id`, `role` (hook|intro|point|demo|transition|cta|outro), **`template`** (pick from
+the scene vocabulary in `style/VISUAL_IDENTITY.md` §5), `narration`, `sentences`
+(split), optional `on_screen_text` (≤6 words), `capture_id` (only for `capture-segment`).
 
-## Hard rules (from STYLE_GUIDE §2 — do not break)
-- No invented words. No needless jargon. Terms per `TERMBANK.md`.
-- No English-spelled-as-Serbian when a clean Serbian word exists.
-- Every claim maps to `sources.md`. Calm, fluent, one idea per sentence.
-- Scene-segmented so audio/visual sync works downstream.
+Guideline: 1–4 sentences / ~5–20s per scene; never a 60s wall of narration.
 
-## Output rules
-- Write valid `script.json`; fill all required fields per the schema.
-- Set `brief.json.status = "scripted"` when done (or note it for the orchestrator).
-- Then hand off to **script-review** (Step 1.3). Do not skip review.
-
-## Don'ts
-- Don't translate or closely paraphrase any source's sentences (D-002, R1–R2).
-- Don't write visuals here beyond `visual_intent` — that's the storyboard's job.
-- Don't exceed target length "to be safe"; respect pacing.
-
-## Example (one scene)
-```json
-{
-  "id": "s01",
-  "role": "hook",
-  "narration": "Veštačka inteligencija u 2026. više nije naučna fantastika — danas ti piše kod, pravi slike i odgovara na pitanja bolje nego ikad. Za sedam minuta objasniću ti šta ona zaista jeste i šta sve može.",
-  "sentences": [
-    "Veštačka inteligencija u 2026. više nije naučna fantastika — danas ti piše kod, pravi slike i odgovara na pitanja bolje nego ikad.",
-    "Za sedam minuta objasniću ti šta ona zaista jeste i šta sve može."
-  ],
-  "visual_intent": "Brz montažni niz: model piše kod, generiše sliku, vodi razgovor. Energično, brend-tamna pozadina.",
-  "on_screen_text": "ŠTA JE AI — 2026",
-  "screen_capture": null
-}
-```
+## Output & status
+- Write `script.json` (valid against the schema; `language: "en"`, include top-level
+  `archetype` and `angle`).
+- Validate: `node pipeline/shared/validate.js content/<id>/script.json`.
+- Set `brief.json.status: "scripted"`, then hand to `script-review`.

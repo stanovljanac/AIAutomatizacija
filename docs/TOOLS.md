@@ -1,174 +1,127 @@
 # TOOLS
 
-Every tool the system uses: what it does, why we picked it, whether it's free,
-its limits, and the link. **Default policy: free.** Paid tools are fallback/opt-in
-only and clearly marked. When a step could cost money, the pipeline stops and
-flags it (PRD R16).
+Every tool the system uses: what it does, why we picked it, free/paid, limits, link.
+**Default policy: free + local.** Paid/cloud is fallback/opt-in only and clearly
+marked; when a step could cost money it stops and flags it (PRD R16).
 
-> Verify versions/prices before relying on them — this space moves fast. Last
-> reviewed 2026-05-31.
+> Verify versions/prices before relying on them — this space moves fast.
+> Last reviewed 2026-06-02.
 
 ---
 
 ## Quick table
 
-| Role | Default tool | Free? | Fallback / paid | Notes |
-|------|--------------|-------|------------------|-------|
+| Role | Default tool | Free? | Fallback / alt | Notes |
+|------|--------------|-------|----------------|-------|
 | Orchestration / agent | Claude Code | In subscription | — | The brain |
-| Script / translation / QA text | Claude (via Claude Code) | In subscription | Claude API | Best Serbian quality |
-| Voice (TTS) | Open-source TTS on cloud GPU | Yes | ElevenLabs Creator ~$11/mo | Adapter; decide by listening |
-| Forced alignment | WhisperX / aeneas | Yes | — | Gives sentence/word timestamps |
-| AI images | Flux / SDXL on Colab | Yes | — | For abstract concepts |
+| Script / QA text / angle | Claude (via Claude Code) | In subscription | Claude API | Best English quality |
+| Voice (TTS) | **edge-tts** (Microsoft neural) | Yes | (none needed) | Free, local, good English; one channel voice |
+| Forced alignment | WhisperX / aeneas | Yes | — | Sentence/word timestamps |
+| Render | **Remotion** (+ HyperFrames bake-off) | Yes | Revideo | See §8; engine chosen in Phase 2 |
+| Screen capture | OBS Studio | Yes | — | You record mini-demos (synthetic data) |
 | Stock images/video | Pexels + Pixabay APIs | Yes | — | Commercial-safe, have APIs |
-| Screen capture | OBS Studio | Yes | — | You record real tool demos |
-| Video render | Remotion | Yes (individuals) | — | React-based, deterministic |
-| Cloud GPU | Google Colab + Kaggle | Yes | Colab Pro $ | Kaggle ~30h/wk, longer sessions |
-| Audio recording | Audacity | Yes | — | For your voice-clone sample |
-| Music (intro/outro) | YouTube Audio Library, Pixabay Music | Yes | — | Only intro/outro |
+| AI images (rare, opt-in) | Flux/SDXL on Colab/Kaggle | Yes | — | Optional; not a critical path |
+| Cloud GPU (opt-in) | Colab + Kaggle | Yes | — | Only for occasional AI images |
+| Music (Shorts only) | YouTube Audio Library, Pixabay Music | Yes | — | No music on long-form |
 | Publish | YouTube Data API v3 | Yes (quota) | — | Semi-auto draft upload |
-| Subtitles | Generated from alignment.json | Yes | — | Burned-in, animated, Serbian |
+| Subtitles | Generated from alignment.json | Yes | — | Burned-in, animated, English |
 
 ---
 
 ## 1. Orchestration & text — Claude Code
 
-- **Role:** Runs the whole pipeline, picks skills, writes code, and does all
-  text work (script writing, translation/localization, QA review).
-- **Why:** It's the brain; best Serbian text quality; already in your subscription
-  so effectively free within limits (DECISIONS D-001).
+- **Role:** runs the pipeline, picks skills, writes code, and does all text work
+  (script writing, the original angle, QA review).
+- **Why:** the brain; best English text; already in your subscription (D-001).
 - **Free?** Within your Claude subscription limits.
-- **Limits:** Rate/usage limits on heavy days. For batch text, space out runs.
-- **Link:** https://www.claude.com/product/claude-code
 
-## 2. Voice (TTS) — open-source first, ElevenLabs fallback
+## 2. Voice (TTS) — edge-tts (DECISIONS D-014)
 
-- **Role:** Turn the script's narration into one continuous Serbian audio track.
-- **Why this approach:** We build a **TTS adapter** (one interface, swappable
-  backends) so the pipeline doesn't depend on any single tool (ARCHITECTURE §7).
-- **Default (free):** open-source TTS on a free cloud GPU. Candidates to test for
-  Serbian quality, in order:
-  1. **Fish Speech / Fish Audio S2** — claims 80+ languages, low-memory, strong
-     cloning. Test Serbian output first. Open source.
-     https://github.com/fishaudio/fish-speech
-  2. **XTTS-v2 (Coqui)** — extremely popular cloning model, BUT **Serbian is not
-     in its official language list** (it has ru/cs/pl). Only use if a Serbian
-     fine-tune/community model proves good. https://huggingface.co/coqui/XTTS-v2
-  3. Newer open multilingual models as they appear (check
-     https://github.com/wildminder/awesome-ai-voice).
-- **Fallback (paid, opt-in):** **ElevenLabs Creator (~$11/mo)** — can speak
-  Serbian with a cloned voice, has commercial rights and professional voice
-  cloning (~100 min/mo). **Important:** ElevenLabs has **no Serbian voices in the
-  library** and **does not let you export/download the voice model** — generation
-  is cloud-only via their API, and the **free tier has no commercial rights**
-  (cannot be used on a monetized channel). So free ElevenLabs is not an option for
-  publishing; the paid Creator tier is the fallback. (DECISIONS D-003)
-  https://elevenlabs.io/pricing
-- **Decision rule:** Generate the same Serbian paragraph with each free option,
-  listen, and only pay if all free options are clearly unprofessional.
+- **Role:** turn the script narration into one continuous English audio track.
+- **Why:** **free, local, and good** — Microsoft neural voices via the `edge-tts`
+  package. With English output there is no Serbian-quality problem (the old blocker).
+- **How:** pick ONE consistent channel voice (A/B a few in Phase 1), set it in
+  `config.json.voice`. Reuse `scripts/tts_sample_edge.py` for sampling.
+- **Free?** Yes. No own-voice recording, no ElevenLabs/Fish/OpenAudio.
+- **Link:** https://github.com/rany2/edge-tts
 
-## 3. Your voice-clone sample — Audacity
+## 3. Forced alignment — WhisperX / aeneas
 
-- **Role:** Record ~30 min of clean Serbian speech to clone your voice.
-- **Why:** Free, open-source, great raw recording + built-in noise reduction.
-- **Free?** Yes. **Link:** https://www.audacityteam.org/
-- **How:** Mic close, quiet treated room, no echo. Read the varied script in
-  `voice/RECORDING_SCRIPT.md` (created in Phase 2). 30 min is ideal (not too much):
-  instant cloning needs ~1–2 min, but a professional, non-robotic clone benefits
-  from 30 min of varied intonation. Record in **Serbian** (output is Serbian).
+- **Role:** given the continuous audio + script text, produce per-sentence/word
+  timestamps → `alignment.json`. The backbone of sync (PRD R12).
+- **Free?** Yes. **Links:** https://github.com/m-bain/whisperX • https://github.com/readbeyond/aeneas
 
-## 4. Forced alignment — WhisperX / aeneas
+## 4. Screen capture — OBS Studio
 
-- **Role:** Given the continuous audio + the script text, produce timestamps for
-  each sentence/word → `alignment.json`. This is the backbone of sync (PRD R12).
-- **Why:** WhisperX gives accurate word-level timing; aeneas is a lighter
-  text↔audio aligner. Either is fine; pick by ease on your setup.
-- **Free?** Yes (open source).
-- **Links:** https://github.com/m-bain/whisperX • https://github.com/readbeyond/aeneas
+- **Role:** record real tool demos for the **mini-demo** archetype, on a trivial
+  example with **synthetic data**.
+- **How:** the `screen-capture` skill produces a precise click-list + a ready OBS
+  profile (resolution/FPS/cursor highlight); you click record and follow. The render
+  step adds auto-zoom/highlight, so you never edit.
+- **Free?** Yes. **Link:** https://obsproject.com/
 
-## 5. AI images — Flux / SDXL on Colab
+## 5. Stock — Pexels & Pixabay APIs
 
-- **Role:** Generate visuals for abstract concepts where no good stock exists.
-- **Why:** Free on cloud GPU; high quality. We animate them with camera moves in
-  Remotion so they look cinematic without true generative video.
-- **Free?** Yes, on free Colab/Kaggle GPU (won't fit your 4GB VRAM locally).
-- **Note:** Per-scene generative *video* is deferred to rare "hero" shots only —
-  too heavy/costly to be free for every scene (DECISIONS D-004).
-
-## 6. Stock — Pexels & Pixabay APIs
-
-- **Role:** Free b-roll and images, commercial-safe, with APIs for automation.
+- **Role:** occasional free b-roll/images, commercial-safe, with APIs.
 - **Free?** Yes. Get API keys; put them in `.env` (see SETUP.md).
 - **Links:** https://www.pexels.com/api/ • https://pixabay.com/api/docs/
 
-## 7. Screen capture — OBS Studio
+## 6. AI images — optional, opt-in (DECISIONS D-015)
 
-- **Role:** Record real tool demos (Claude Code running, a skill executing, a
-  benchmark page) — the "show, don't tell" that carries AI content.
-- **Why:** Free, professional, the standard. Matches the reference channels'
-  style (real footage, not slideshows).
-- **Free?** Yes. **Link:** https://obsproject.com/
-- **If you can't capture something** (no access to a tool): we recreate it as an
-  AI-generated mock or a Remotion-built UI animation (your call per video).
+- **Role:** rare concept illustrations / thumbnail backgrounds where code-visuals and
+  stock won't do.
+- **Why optional:** the channel's professionalism comes from clarity (clean
+  motion-graphics, readable diagrams, real captures), not AI b-roll, which can read as
+  "slop." So this is a side tool, never the critical path.
+- **Where:** Flux/SDXL on free Colab/Kaggle GPU (won't fit a 4GB local GPU). Chunked +
+  cached. **AI-video is deferred.**
 
-## 8. Render — Remotion
+## 7. Cloud GPU — Colab + Kaggle (opt-in)
 
-- **Role:** Assemble narration + visuals + subtitles + intro/outro into the final
-  mp4, deterministically, driven by `script.json` + `alignment.json` +
-  `storyboard.json`.
-- **Why:** Mature, huge ecosystem, deterministic ("video as code"), and **free
-  for individuals/small teams** (DECISIONS D-007). You already understand React.
-- **Free?** Yes for individuals; check the license if you ever incorporate.
-- **Link:** https://www.remotion.dev/
-- **Alternatives considered:** Revideo (good plan B, React-based, open source),
-  Rendervid (open source, has an MCP for agents but newer/less mature). Logged in
-  DECISIONS D-007.
+- **Role:** run the optional AI-image notebook only.
+- **Note:** kept available but **not required** for normal production. Local-first.
 
-## 9. Cloud GPU — Google Colab + Kaggle
+## 8. Render — Remotion (+ HyperFrames bake-off) (DECISIONS D-019, D-007)
 
-- **Role:** Run TTS and image generation that won't fit your local GPU.
-- **Why free works:** Colab free gives a T4 (~16GB) but **disconnects after
-  ~90 min idle / ~12h max**; Kaggle gives ~30h/week with **longer, steadier
-  sessions** — use Kaggle for long batches. We make every job **chunked + cached**
-  so a disconnect only repeats the current chunk (PRD R18, ARCHITECTURE §4.3).
-- **Links:** https://colab.research.google.com/ • https://www.kaggle.com/code
+- **Remotion:** React, mature, deterministic ("video as code"), free for individuals,
+  already set up. Owns timeline/sync/captions/intro-outro.
+  https://www.remotion.dev/
+- **HyperFrames** (HeyGen, open-source): HTML/CSS/JS → deterministic MP4, **agent-native**
+  (works with Claude Code skills; LLMs author HTML reliably), supports GSAP/Lottie/
+  Three.js, 50+ blocks. Candidate for flashy scene-blocks imported into Remotion.
+  https://github.com/heygen-com/hyperframes
+- **Decision:** Phase-2 bake-off → set `render.engine` to `remotion` | `hyperframes` |
+  `combo`. Revideo is the documented plan-B (React, open source).
+
+## 9. Music — Shorts only
+
+- **Role:** light background bed on **Shorts**. **No music on long-form** (clean voice +
+  subtle sound-design only). Source: YouTube Audio Library / Pixabay Music (free).
 
 ## 10. Publish — YouTube Data API v3
 
-- **Role:** Create a **private/draft** upload with title, description, tags, and
-  thumbnail prepared; you review and click publish (PRD R15, semi-auto).
-- **Why:** Free quota; keeps you in control of the final publish action.
-- **Free?** Yes within daily quota (uploads are quota-costly; fine at our volume).
-- **Setup:** OAuth client; store creds outside git (SETUP.md). Never commit
-  tokens/secrets.
+- **Role:** create a **private/draft** upload (title, description, tags, chapters,
+  thumbnail) + the Short; you review and click publish (PRD R15).
+- **Setup:** OAuth client; store creds outside git (SETUP.md). Never commit tokens.
 - **Link:** https://developers.google.com/youtube/v3
 
 ## 11. Subtitles
 
-- **Role:** Burned-in, animated Serbian captions (word/line highlight) generated
-  from `alignment.json`, rendered by Remotion.
-- **Why burned-in:** Standard for faceless content; holds attention; perfectly in
-  sync because it uses the same timestamps as the visuals.
-- **Free?** Yes (it's our own render). English auto-captions can be added later
-  via YouTube's own tools when the channel grows.
+- **Role:** burned-in, animated **English** captions from `alignment.json`, rendered by
+  the engine — perfectly in sync (same timestamps as the visuals).
 
 ---
 
-## Deferred / not used yet (with reasons)
+## Deferred / not used (with reasons)
 
-- **n8n** (free, self-hosted workflow tool): great for *full* automation later;
-  deferred to keep the moving parts minimal until the manual pipeline is proven
-  (DECISIONS D-006).
-- **Paid avatar tools** (HeyGen/Synthesia/D-ID): free tiers are watermarked demos;
-  not usable for free publishing. Avatar is deferred anyway (faceless first, then
-  a stylized 2D avatar) (PRD §5, DECISIONS D-008).
-- **YouTube transcript extractors:** **not used** — extracting transcripts breaks
-  YouTube ToS and risks building derivative content. We use clean sources instead
-  (DECISIONS D-002).
+- **ElevenLabs / Fish / OpenAudio / voice cloning** — unnecessary now that output is
+  English (edge-tts is free and good). The old Serbian-TTS struggle is closed (D-014).
+- **Audacity / own-voice recording** — retired (faceless, AI voice only).
+- **Avatar tools (HeyGen avatars/Synthesia/D-ID)** — dropped permanently (faceless).
+- **YouTube transcript extractors** — not used (ToS/derivative risk, D-002).
+- **n8n** — deferred until the manual pipeline is proven (D-006).
 
 ## Cost summary
 
-- **Today: $0.** Everything default is free or in your existing Claude subscription.
-- **First likely paid item (only if needed): ElevenLabs Creator ~$11/mo** for
-  voice, and only if free Serbian TTS is clearly not good enough.
-- **Later, success-dependent:** cloud storage (e.g. Terabox 1TB free first), maybe
-  Colab Pro for faster/longer GPU, maybe a paid render path. All opt-in.
+- **Today: $0**, fully local (edge-tts + Remotion + stock) within the Claude
+  subscription. No first-likely-paid-item anymore — the optional cloud GPU is free too.

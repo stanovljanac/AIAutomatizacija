@@ -1,10 +1,11 @@
 {
   "id": "NNN-slug",
   "title_working": "",
+  "archetype": "ideas",
   "angle": "",
-  "audience": "Serbian AI-curious viewers",
-  "target_seconds": 465,
+  "audience": "Builders/freelancers who automate boring back-office tasks for others",
+  "target_seconds": 360,
   "format": "long+short",
-  "sources": [],
+  "task": "",
   "status": "new"
 }

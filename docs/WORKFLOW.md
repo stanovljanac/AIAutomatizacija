@@ -1,64 +1,63 @@
 # WORKFLOW
 
-The end-to-end process from a topic to a published video, with the three human
-gates. This is the operational runbook. For the *why* see `docs/PRD.md`; for the
-*how it's wired* see `docs/ARCHITECTURE.md`.
+The end-to-end process from a scored idea to a published video, with the **three
+human gates**. This is the operational runbook. For the *why* see `docs/PRD.md`; for
+the *how it's wired* see `docs/ARCHITECTURE.md`.
 
 There are **two modes**:
 - **Manual mode** (now): you drive each step, the agent does the work.
-- **Auto mode** (later): the orchestrator runs steps back-to-back, stopping only
-  at the three gates. Both modes follow the same steps below.
+- **Auto mode** (later): the orchestrator runs steps back-to-back, stopping only at
+  the three gates. Both modes follow the same steps.
 
-The three human gates: **① Script · ② Storyboard · ③ Final video.**
+The three human gates: **① Topic + angle + type · ② Script · ③ Final video.**
+Storyboard is now automatic (fixed templates). The mini-demo archetype inserts a
+**capture step** between ② and ③.
 
 ---
 
-## Step 0 — Pick & validate a topic  → `pipeline/00-topic`
+## Step 0 — Pick & frame an idea  → `pipeline/00-ideas`
 
-**Goal:** choose one topic and gather *facts from clean sources* (never
-transcripts).
+**Goal:** choose one scored idea, classify its archetype, and propose the angle.
 
-1. Get a candidate topic. Two paths:
-   - **You provide it:** "Make a video about Anthropic's new skill X."
-   - **Discovery:** the agent scans clean sources (official blogs: Anthropic,
-     OpenAI, Google DeepMind; docs; GitHub releases; newsletters; subreddits/X
-     posts) and proposes topics with an angle and a why-now. YouTube channels may
-     be used **only to see what's trending as a topic**, never as a text source
-     (DECISIONS D-002).
-2. Write `brief.json`: `{ id, title_working, angle, audience, target_seconds,
-   format: "long"|"short", sources: [], status: "new" }`.
-3. Research → `sources.md`: bullet facts, each with a citable link. Paraphrased,
-   never copied. These facts are the raw material the script is built from.
-4. Set `status: "researched"`.
+1. Get a candidate idea. Two paths:
+   - **You provide it:** "Make a video about automating shift schedules."
+   - **From the idea-bank:** the agent reads `pipeline/00-ideas/ideas.json` and picks
+     the top-`score` unproduced idea (score = free search-suggest/competitor signals +
+     judgment). The agent may refresh the bank from clean sources first.
+2. The agent writes `brief.json`: `{ id, title_working, archetype, angle, audience,
+   target_seconds, format: "long+short"|"long"|"short", task, sector, tool, sources: [],
+   status: "ideated" }`, and **classifies the archetype + drafts the original angle**.
+3. If the archetype needs facts (Comparison/stats), research → `sources.md` (paraphrased
+   facts, citable links; never transcripts — D-002). Ideas/Demo may skip formal sources.
 
-**Output:** `brief.json`, `sources.md`.
+### ▶ GATE ① — You approve topic + archetype + angle
+You confirm the topic, the chosen archetype, and the angle (or tweak them). This is the
+cheapest place to redirect. On approval → continue.
+
+**Output:** `brief.json`, optional `sources.md`.
 
 ---
 
 ## Step 1 — Write the script  → `pipeline/01-script`
 
-**Goal:** a scene-segmented, high-retention Serbian script that obeys the style
-guide, then passes the review agent.
+**Goal:** a scene-segmented, template-tagged English script with the angle baked in,
+that passes the review agent.
 
-1. **Write.** Use `.claude/skills/script-writing/SKILL.md`. The script is written
-   directly in Serbian (we're not translating anyone), structured as **scenes**
-   (hook → intro → points/demos → cta → outro), each scene with `narration`,
-   `sentences`, `visual_intent`, and optional `on_screen_text`/`screen_capture`.
-   Output: `script.json` (schema in `pipeline/shared/schemas/script.schema.json`).
-2. **Localize/clean.** Apply `.claude/skills/translation-localization/SKILL.md`:
-   enforce `style/TERMBANK.md` (EN→SR terms), remove invented words and needless
-   jargon, fix any English-spelled-as-Serbian.
-3. **Review (mandatory).** Run `.claude/skills/script-review/SKILL.md`. The review
-   agent checks: factual consistency vs `sources.md`, style-guide compliance, term
-   bank, pacing, scene segmentation, retention. Output: `script.review.json` with
-   `pass: true|false` and a list of issues.
-4. **Fix loop.** If `pass: false`, the writer applies fixes and re-runs review.
-   Repeat until pass (early phase: cap at N loops, then surface to human).
-5. Set `status: "scripted"`.
+1. **Write.** Use `.claude/skills/script-writing/SKILL.md`. Structure by the brief's
+   **archetype** (STYLE_GUIDE §5), each scene with `role`, **`template`**, `narration`,
+   `sentences`, optional `on_screen_text`/`capture_id`. Output: `script.json`
+   (schema `pipeline/shared/schemas/script.schema.json`).
+2. **Review (mandatory).** Run `.claude/skills/script-review/SKILL.md`. Checks: the
+   **original human angle is present**, accuracy rule for the archetype, style/pacing,
+   scene segmentation + valid `template` tags, retention. Output: `script.review.json`
+   (`pass: true|false` + issues).
+3. **Fix loop.** If `pass: false`, the writer fixes and re-runs review (cap at N loops,
+   then surface to you).
+4. Set `status: "scripted"`.
 
-### ▶ GATE ① — Human reviews the script
-You read `script.json` (already auto-reviewed and clean). Approve or request
-changes. On approval → `status: "script_approved"`.
+### ▶ GATE ② — You review the script
+You read `script.json` (already auto-reviewed and clean). Approve or request changes.
+On approval → `status: "script_approved"`.
 
 **Output:** `script.json`, `script.review.json`.
 
@@ -66,90 +65,79 @@ changes. On approval → `status: "script_approved"`.
 
 ## Step 2 — Voice + alignment  → `pipeline/02-voice`
 
-**Goal:** one continuous Serbian narration track + precise timestamps.
+**Goal:** one continuous English narration + precise timestamps.
 
-1. **Synthesize.** Use `.claude/skills/voice-synthesis/SKILL.md`. Concatenate all
-   scene `narration` in order and TTS it as **one continuous audio**
-   (`voice/narration.wav`). Never cut the audio (PRD R11). Backend chosen via
-   `config.json` (`free_tts` default, `elevenlabs` fallback).
-2. **Align.** Run forced alignment (WhisperX/aeneas) → `alignment.json` mapping
-   each sentence (and word) to `{start, end}` seconds.
-3. **Validate.** Every sentence in `script.json` must have a timestamp. If any are
-   missing/mismatched, fail with a clear message (don't proceed).
+1. **Synthesize.** Use `.claude/skills/voice-synthesis/SKILL.md`. Concatenate all scene
+   `narration` in order and TTS it as **one continuous track** (`voice/narration.wav`)
+   via **edge-tts**, the single channel voice from `config.json.voice`. Never cut audio.
+2. **Align.** Forced alignment (WhisperX/aeneas) → `alignment.json` mapping each sentence
+   (and word) to `{start, end}` seconds.
+3. **Validate.** Every sentence in `script.json` must have a timestamp; otherwise fail
+   clearly (don't proceed).
 4. Set `status: "voiced"`.
 
 **Output:** `voice/narration.wav` (git-ignored), `alignment.json`.
 
 ---
 
-## Step 3 — Storyboard + visual prompts  → `pipeline/03-visuals`
+## Step 3 — Scene plan + assets  → `pipeline/03-visuals`
 
-**Goal:** decide what's on screen for every scene, then produce the visuals.
+**Goal:** turn each scene's `template` into concrete render props, and gather any assets.
 
-1. **Storyboard.** Use `.claude/skills/storyboard/SKILL.md`. For each scene write
-   a concrete on-screen plan: type (motion-text | stock | AI-image | screen-
-   capture | hero-clip), composition, camera move, and which `on_screen_text`
-   appears. Output: `storyboard.json`.
+1. **Scene plan (automatic — no gate).** Use `.claude/skills/storyboard/SKILL.md`: map
+   each scene `template` to its component + fill props (text, bullet lists, diagram
+   structure, comparison rows, etc.). Output: `scene-plan.json`. Because templates are
+   fixed/deterministic, this needs no human gate.
+2. **Assets:**
+   - **Code visuals / diagrams** → defined in the scene plan; no external asset.
+   - **Thumbnails / rare concept images** → `.claude/skills/visual-prompts/SKILL.md`
+     (stock via Pexels/Pixabay, or the optional Colab AI-image notebook).
+   - **Mini-demo capture** → use `.claude/skills/screen-capture/SKILL.md`: the agent
+     produces a precise OBS click-list with **synthetic data**; **you record** into
+     `captures/`. Status → `captured`.
+3. Set `status: "planned"` (or `captured` for mini-demos).
 
-### ▶ GATE ② — Human reviews the storyboard
-Cheap to change now, expensive to re-render later. You approve the per-scene plan
-(this is also where we avoid wasting free GPU time). On approval →
-`status: "storyboard_approved"`.
-
-2. **Prompts.** Use `.claude/skills/visual-prompts/SKILL.md`: turn each AI-image
-   scene into a detailed image prompt, and where a "hero" animated shot is wanted,
-   derive a video-animation prompt. Output: `visual-prompts.json`.
-3. **Acquire assets:**
-   - Stock → fetch via Pexels/Pixabay API into `images/`.
-   - AI images → generate on Colab/Kaggle (chunked+cached) into `images/`.
-   - Screen captures → you record with OBS into `captures/` (guided list the
-     agent prepares), or we build a Remotion UI mock / AI mock if you lack access.
-4. Set `status: "visualized"`.
-
-**Output:** `storyboard.json`, `visual-prompts.json`, `images/`, `captures/`.
+**Output:** `scene-plan.json`, `visual-prompts.json` (thumbnails), `images/`, `captures/`.
 
 ---
 
 ## Step 4 — Render  → `pipeline/04-render`
 
-**Goal:** assemble the final mp4.
+**Goal:** assemble the final mp4 + a Short + 2 thumbnails.
 
-1. Use `.claude/skills/video-render/SKILL.md`. Build Remotion `render/props.json`
-   from `script.json` + `alignment.json` + `storyboard.json` + asset paths.
-2. Scenes are placed in time using `alignment.json` (scene i shows from its first
-   sentence's start to its last sentence's end). Subtitles use the same timings.
-3. Add the reusable **intro/outro** (long variant) and burned-in animated Serbian
-   subtitles.
-4. Render locally first (`templates/remotion`). If too slow, move to cloud (OQ2).
-   Output: `video/final.mp4`.
+1. Use `.claude/skills/video-render/SKILL.md`. Build `render/props.json` from
+   `script.json` + `alignment.json` + `scene-plan.json` + asset paths.
+2. Scenes are placed in time from `alignment.json` (scene i = first sentence start →
+   last sentence end). Captures play inside `capture-segment` scenes with auto-zoom/
+   highlight. Subtitles use the same timings (burned-in, animated, English).
+3. Add the reusable **intro/outro** (no music on long-form). Generate **2 thumbnail
+   variants**. Render via the selected `render.engine` (Remotion / hyperframes / combo).
+4. Build the **Short** (1–2 key beats; light music allowed).
 5. Set `status: "rendered"`.
 
-**Output:** `video/final.mp4` (git-ignored), `render/props.json`.
+**Output:** `video/final.mp4`, `video/short.mp4`, `video/thumb_a.png`, `thumb_b.png`,
+`render/props.json` (media git-ignored).
 
 ---
 
 ## Step 5 — Automated QA  → `pipeline/05-qa`
 
-**Goal:** catch problems *before* the human watches (PRD R13).
+**Goal:** catch problems *before* you watch.
 
-Use `.claude/skills/qa-video/SKILL.md`. Checks:
-- **Sync:** does each scene's visible window match its sentences' timestamps?
-- **Subtitles:** do caption cues match `alignment.json` (no drift, no overlap)?
-- **Scene/audio coherence:** no scene change mid-sentence; narration continuous.
-- **Coverage:** every scene rendered; audio length ≈ sum of scenes; no black gaps.
-- **Loudness/format:** sane audio levels; correct resolution/fps; Short variant
-  vertical if applicable.
+Use `.claude/skills/qa-video/SKILL.md`. Checks: sync (scene windows match timestamps),
+subtitles (no drift/overlap), no scene change mid-sentence, coverage/no black gaps,
+**caption legibility/contrast**, **demo legibility**, loudness, format (and vertical
+Short).
 
-Output: `qa.report.json` with `pass` + issues.
-- **Early phase:** QA **flags**; human decides (PRD R14).
-- **Later phase:** QA may **auto-reject and re-run** the offending step.
+- **Technical breakage** (no audio / cut-off / missing captions) → **auto-fix and
+  re-render** that step.
+- **Content issues** → **flag** and propose a fix for you to approve (human perspective).
+- Emit a **30s digest** (key claims, the angle, sources, risk flags) for fast judgment.
 
-Set `status: "qa_passed"` when clean.
+Set `status: "qa_passed"` when clean. Output: `qa.report.json` (incl. digest).
 
----
-
-### ▶ GATE ③ — Human reviews the final video
-You watch `video/final.mp4`. This is the last gate. Approve → `status: "ready"`.
+### ▶ GATE ③ — You review the final video
+You watch `video/final.mp4` (with the digest). Last gate. Approve → `status: "ready"`.
 
 ---
 
@@ -157,17 +145,14 @@ You watch `video/final.mp4`. This is the last gate. Approve → `status: "ready"
 
 **Goal:** prepare everything and upload as a draft for your final click.
 
-1. Use `.claude/skills/youtube-publish/SKILL.md`. Generate:
-   - SEO title (Serbian, keyword-aware), description with keywords/timestamps,
-     tags, and a thumbnail spec (rendered via Remotion template).
-   - If the topic is *strictly someone's original IP* we're reviewing, the step
-     **asks** whether to credit the source (PRD R4).
-2. Build the **Short** from the same script (key beats) or as a standalone, per
-   `brief.json.format`.
-3. Upload via YouTube Data API as **private/draft** with all metadata + thumbnail.
-4. You review title/description/tags (keyword + SEO check) and **click publish**.
-5. Set `status: "published"`. Append outcome to `content/<id>/log.md` and
-   `docs/PROGRESS.md`.
+1. Use `.claude/skills/youtube-publish/SKILL.md`. Generate English SEO title,
+   description (keyword in first lines), tags, **chapters**, and pick the thumbnail
+   (your choice of the 2 variants).
+2. Upload via YouTube Data API as **private/draft** with all metadata + thumbnail, plus
+   the **Short**.
+3. You review title/description/tags and **click publish**.
+4. Set `status: "published"`. Append outcome to `content/<id>/log.md`,
+   `docs/PROGRESS.md`, and the idea's `metrics` (for re-ranking the idea-bank).
 
 **Output:** `publish.json`, draft on YouTube.
 
@@ -175,17 +160,17 @@ You watch `video/final.mp4`. This is the last gate. Approve → `status: "ready"
 
 ## Starting a video
 
-- **Slash command:** `/novi-video` (see `.claude/commands/novi-video.md`) scaffolds
-  a new `content/<NNN>-<slug>/` from `_TEMPLATE` and walks Step 0.
-- **Manually:** copy `content/_TEMPLATE` → `content/<NNN>-<slug>/`, fill
-  `brief.json`, then follow the steps.
+- **Slash command:** `/novi-video` scaffolds a new `content/<NNN>-<slug>/` from
+  `_TEMPLATE` and walks Step 0 (incl. archetype + angle).
+- **Manually:** copy `content/_TEMPLATE` → `content/<NNN>-<slug>/`, fill `brief.json`,
+  then follow the steps.
 
 ## Gate discipline (do not skip)
 
 ```
-Step1 ──► GATE ① script
-Step3.1 ─► GATE ② storyboard
+Step0 ──► GATE ① topic + angle + type
+Step1 ──► GATE ② script
 Step5 ──► GATE ③ final video ──► publish
 ```
-Never publish without Gate ③. Never render without Gate ②. Never voice without
-Gate ① (so we don't synth a bad script).
+Never publish without Gate ③. Never voice without Gate ② (so we don't synth a bad
+script). Never produce without Gate ① (so we don't build the wrong thing).

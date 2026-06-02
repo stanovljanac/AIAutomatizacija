@@ -20,7 +20,9 @@ const SCHEMA_DIR = path.join(__dirname, "schemas");
 // content filename -> schema file (the only non-obvious one is qa.report.json)
 const FILENAME_TO_SCHEMA = {
   "brief.json": "brief.schema.json",
+  "ideas.json": "ideas.schema.json",
   "script.json": "script.schema.json",
+  "scene-plan.json": "scene-plan.schema.json",
   "storyboard.json": "storyboard.schema.json",
   "visual-prompts.json": "visual-prompts.schema.json",
   "alignment.json": "alignment.schema.json",

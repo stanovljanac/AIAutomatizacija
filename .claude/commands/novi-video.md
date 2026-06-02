@@ -1,53 +1,40 @@
 # /novi-video
 
-Scaffold and start a new video. This command creates a fresh video folder from the
-template and walks Step 0 (topic + research) of `docs/WORKFLOW.md`.
+Scaffold and start a new video. Creates a fresh video folder from the template and
+walks Step 0 (pick a scored idea → archetype → angle) of `docs/WORKFLOW.md`.
 
 ## Usage
-`/novi-video <slug> [topic or "discover"]`
+`/novi-video <slug> [idea or "next"]`
 
 Examples:
-- `/novi-video sta-je-ai "Šta je AI i šta sve može u 2026."`
-- `/novi-video novi-opus "Anthropic je izbacio novi model"`
-- `/novi-video discover discover`  ← let the agent propose topics
+- `/novi-video invoice-emails-sheets "Automate Invoice Emails in Google Sheets"`
+- `/novi-video shift-scheduler "Auto-build Café Shift Schedules"`
+- `/novi-video next next`  ← take the top-scored idea from the idea-bank
 
 ## What you (the agent) do
 
 > Steps 1–3 are automated by a deterministic scaffold — run
 > `npm run new-video -- <slug> "Working title"` (or
-> `node pipeline/00-topic/new-video.mjs <slug> "Working title"`). It picks the
-> next id, copies `_TEMPLATE`, and writes a schema-valid `brief.json`. It refuses
-> to overwrite an existing folder. Then continue from step 4 (topic + research).
+> `node pipeline/00-ideas/new-video.mjs <slug> "Working title"`). It picks the next id,
+> copies `_TEMPLATE`, and writes a schema-valid `brief.json`. It refuses to overwrite an
+> existing folder. Then continue from step 4.
 
-1. **Pick the next id.** Find the highest `NNN` in `content/` and add 1
-   (zero-padded to 3 digits). Combine with the slug: `content/<NNN>-<slug>/`.
-2. **Copy the template.** Duplicate `content/_TEMPLATE/` into the new folder.
-3. **Init `brief.json`:**
-   ```json
-   {
-     "id": "<NNN>-<slug>",
-     "title_working": "<topic or empty>",
-     "angle": "",
-     "audience": "Serbian AI-curious viewers",
-     "target_seconds": 465,
-     "format": "long",
-     "sources": [],
-     "status": "new"
-   }
-   ```
-4. **Topic path:**
-   - If a topic was given → confirm the angle and why-now with the human.
-   - If `discover` → scan **clean sources** (official blogs, docs, GitHub
-     releases, newsletters; YouTube only to see what's trending as a *topic*,
-     never as a text source — D-002) and propose 3–5 topics with angle + why-now.
-5. **Research → `sources.md`.** Gather paraphrased facts, each with a citable link.
-   Never copy sentences; never use transcripts (D-002).
-6. **Set `status: "researched"`** and tell the human the next step is Step 1
-   (script-writing → script-review → Gate ①).
+1. **Pick the next id.** Highest `NNN` in `content/` + 1 (zero-padded). → `content/<NNN>-<slug>/`.
+2. **Copy the template** `content/_TEMPLATE/` into the new folder.
+3. **Init `brief.json`** (schema-valid; archetype defaults to `ideas`, status `new`).
+4. **Idea path:**
+   - If an idea was given → use it.
+   - If `next` → read `pipeline/00-ideas/ideas.json` and take the top-`score`
+     `backlog` idea; copy its `task`/`sector`/`tool`/`archetype`/`angle_hint` into the brief.
+5. **Classify + angle.** Set `brief.archetype` (ideas | mini-demo | diagram | comparison)
+   and draft the **original angle** (`brief.angle`). For Comparison/stats, research →
+   `sources.md` (paraphrased facts + links; never transcripts — D-002).
+6. **Set `status: "ideated"`**, then present topic + archetype + **angle** for
+   **GATE ①**. Do not start the script until the owner approves.
 
 ## Guardrails
-- Free by default; flag any cost.
-- Originality rules apply from the first step (PRD R1–R5).
-- Do not proceed past Gate ① (script approval) without the human.
+- Free/local by default; flag any cost.
+- Originality + the mandatory human angle apply from the first step (PRD R1–R6, D-018).
+- Synthetic demo data only. Do not proceed past a gate without the owner.
 
 See `docs/WORKFLOW.md` for the full pipeline and the three gates.

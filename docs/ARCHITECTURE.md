@@ -10,220 +10,166 @@ must honor. Read `docs/PRD.md` first for the *why*; this is the *how*.
 Three layers:
 
 1. **Orchestrator** — Claude Code on your Windows PC. It reads `CLAUDE.md`, picks
-   the right skill, and runs pipeline phases. It is the "brain"; it holds little
-   state itself.
-2. **Pipeline phases** — small, numbered, single-purpose programs under
-   `pipeline/`. Each reads the previous phase's files and writes its own. They are
-   plain Node/Python; no magic.
-3. **Compute** — light work runs locally; **GPU-heavy work runs on free cloud GPU**
-   (Google Colab / Kaggle) and writes results back into the video folder.
+   the right skill, and runs pipeline phases. It holds little state itself.
+2. **Pipeline phases** — small, numbered, single-purpose programs under `pipeline/`.
+   Each reads the previous phase's files and writes its own. Plain Node/Python.
+3. **Compute** — **the core runs locally** (edge-tts, render, stock). GPU work
+   (occasional AI images) is **optional, opt-in** on free cloud GPU (Colab/Kaggle);
+   AI-video is deferred. (DECISIONS D-015.)
 
-State lives on disk, in **one folder per video** (`content/<id>/`). This makes
-every step inspectable, resumable, and git-friendly (text/JSON committed, media
-ignored).
+State lives on disk, in **one folder per video** (`content/<id>/`) — inspectable,
+resumable, git-friendly (text/JSON committed, media ignored).
 
-## 2. Folder map (what each thing is for)
+## 2. Folder map
 
 ```
 AIAutomatizacija/
 ├── CLAUDE.md              Thin router the agent reads first.
 ├── README.md             Human onboarding.
-├── .gitignore            Keeps media out of git.
-│
-├── docs/                 The brain (prose, no code).
-│   ├── PRD.md             What & why (product).
-│   ├── ARCHITECTURE.md    This file: how it works.
-│   ├── TOOLS.md           Every tool: role, free/paid, link, limits.
-│   ├── WORKFLOW.md        Step-by-step topic→publish + the 3 gates.
-│   ├── ROADMAP.md         Phases 0→5 with concrete exit criteria.
-│   ├── PROGRESS.md        Running log (human + agent append).
-│   ├── DECISIONS.md       Why we chose X over Y (ADR-style).
-│   └── SETUP.md           Install everything from zero on Windows.
-│
+├── docs/                 The brain (prose).  PRD · ARCHITECTURE · TOOLS · WORKFLOW
+│                         · ROADMAP · PROGRESS · DECISIONS · SETUP
 ├── .claude/
-│   ├── skills/            One rulebook per step (the source of truth).
-│   │   └── <step>/SKILL.md
-│   └── commands/          Slash commands (e.g. /novi-video).
-│
-├── style/                Identity.
-│   ├── STYLE_GUIDE.md     Tone + language rules (writing law).
-│   ├── TERMBANK.md        EN→SR term decisions (you edit this).
-│   ├── VISUAL_IDENTITY.md Colors, fonts, motion language.
-│   └── CHANNEL.md         Name, niche, audience, SEO.
-│
-├── pipeline/             The code, as numbered phases.
-│   ├── 00-topic/          Discover/validate a topic; gather sources.
-│   ├── 01-script/         Write script (scene-segmented) + run review.
-│   ├── 02-voice/          TTS (adapter) + forced alignment → timestamps.
-│   ├── 03-visuals/        Storyboard → prompts → images/clips/captures.
-│   ├── 04-render/         Feed everything into Remotion; output mp4.
-│   ├── 05-qa/             Automated sync/subtitle/scene checks.
-│   ├── 06-publish/        Title/desc/tags/thumb + YouTube draft upload.
-│   └── shared/            Config, schemas, utils used by all phases.
-│
-├── templates/remotion/   Reusable Remotion project (intro/outro/scenes).
-│
-├── content/              One folder per video.
-│   ├── _TEMPLATE/         Empty skeleton to copy.
-│   └── 001-sta-je-ai/     Worked example.
-│
-├── assets/               Shared fonts/music/screenshots (media git-ignored).
-└── scripts/              Helper scripts (setup, batch, colab launchers).
+│   ├── skills/<step>/SKILL.md    One rulebook per step (source of truth).
+│   └── commands/                 Slash commands (e.g. /novi-video).
+├── style/                STYLE_GUIDE · VISUAL_IDENTITY · CHANNEL   (TERMBANK retired)
+├── pipeline/             The code, as numbered phases (see §8) + shared/.
+├── templates/remotion/   Reusable render project (intro/outro/scene templates).
+├── content/              One folder per video (_TEMPLATE skeleton; 001 archived).
+├── assets/               Shared fonts/sfx/icons (media git-ignored).
+└── scripts/              Helper scripts (setup, OBS profile, optional colab).
 ```
 
-## 3. One video = one folder (the canonical layout)
-
-Everything about a single video lives here. Phases read/write these files.
+## 3. One video = one folder (canonical layout)
 
 ```
 content/<NNN>-<slug>/
-├── brief.json            Topic, angle, target length, sources, status.
-├── sources.md            Researched facts + citable links (NOT transcripts).
-├── script.json           The script as an ordered list of SCENES (see §5).
-├── script.review.json    Review agent's findings + pass/fail.
-├── voice/                (git-ignored) narration.wav (one continuous track).
+├── brief.json            Idea, archetype, angle, tags, score, sources, status.
+├── sources.md            Facts + citable links (Comparisons/stats; not transcripts).
+├── script.json           Ordered SCENES, each with a `template` tag (see §5).
+├── script.review.json    Review agent's findings + pass/fail (incl. angle check).
+├── voice/                (git-ignored) narration.wav — one continuous track.
 ├── alignment.json        Sentence/word timestamps from forced alignment.
-├── storyboard.json       Per-scene visual plan (on-screen description).
-├── visual-prompts.json   Image prompts + derived video-animation prompts.
-├── images/               (git-ignored) generated/stock images.
-├── captures/             (git-ignored) your screen recordings for tool demos.
-├── render/               (git-ignored) Remotion props + intermediate frames.
-├── video/                (git-ignored) final.mp4 + short.mp4.
-├── qa.report.json        Automated QA results (sync, subtitles, scenes).
-├── publish.json          Title, description, tags, thumbnail spec, status.
-└── log.md                Human-readable history of this specific video.
+├── scene-plan.json       Per-scene template + props (deterministic; storyboard out).
+├── visual-prompts.json   Thumbnail + occasional concept-image prompts only.
+├── images/               (git-ignored) thumbnails / rare AI or stock images.
+├── captures/             (git-ignored) your OBS recordings for mini-demos.
+├── render/               (git-ignored) engine props + intermediate frames.
+├── video/                (git-ignored) final.mp4 + short.mp4 + thumb_a/b.png.
+├── qa.report.json        Automated QA results + the 30s digest.
+├── publish.json          Title, description, tags, chapters, thumbnail, status.
+└── log.md                Human-readable history of this video.
 ```
 
 ## 4. Pipeline contract (every phase obeys this)
 
-1. **Input/output via the video folder.** A phase reads named files from
-   `content/<id>/` and writes named files back. No hidden state.
-2. **Idempotent.** Re-running a phase with the same inputs yields the same outputs
-   and must not corrupt prior work.
-3. **Resumable + cached.** Long/heavy work is chunked; each finished chunk is
-   cached (e.g. per-image, per-scene). A re-run skips done chunks. This is how we
-   survive Colab disconnects (PRD R18).
-4. **Status, not crashes.** A phase updates `brief.json.status` and exits cleanly
-   with a clear message on failure; it does not leave half-written files.
-5. **Free by default.** If a phase would incur cost, it stops and flags it.
-6. **Validates against a schema.** Shapes of `script.json`, `storyboard.json`,
-   etc. are defined in `pipeline/shared/schemas/`. A phase validates its output.
+1. **I/O via the video folder.** A phase reads named files and writes named files. No hidden state.
+2. **Idempotent.** Re-running with the same inputs yields the same outputs.
+3. **Resumable + cached.** Heavy work is chunked; finished chunks are cached and skipped.
+4. **Status, not crashes.** A phase updates `brief.json.status` and exits cleanly with a
+   clear message on failure; it never leaves half-written files.
+5. **Free/local by default.** If a phase would incur cost or need cloud, it flags it.
+6. **Validates against a schema** in `pipeline/shared/schemas/`.
 
-Status values (in `brief.json`):
-`new → researched → scripted → script_approved → voiced → storyboarded →
-storyboard_approved → visualized → rendered → qa_passed → ready → published`
+Status values (`brief.json`):
+`new → ideated → scripted → script_approved → voiced → planned → captured →
+rendered → qa_passed → ready → published`
+(`captured` applies only to the mini-demo archetype.)
 
-## 5. The data spine: `script.json` (scene-segmented)
-
-This is the most important schema. Everything downstream maps to **scenes**.
+## 5. The data spine: `script.json` (scene-segmented, template-tagged)
 
 ```jsonc
 {
-  "id": "001-sta-je-ai",
-  "language": "sr",
-  "title_working": "Šta je AI i šta sve može u 2026.",
-  "target_seconds": 465,                 // ~7:45
+  "id": "002-automate-invoice-emails",
+  "language": "en",
+  "archetype": "ideas",                 // ideas | mini-demo | diagram | comparison
+  "angle": "The one-line opinionated take that makes this video ours.",
+  "title_working": "5 Boring Tasks AI Can Automate in Google Sheets",
+  "target_seconds": 360,
   "scenes": [
     {
       "id": "s01",
       "role": "hook",                    // hook|intro|point|demo|transition|cta|outro
-      "narration": "Cela rečenica koja se izgovara u ovoj sceni.",
-      "sentences": [                      // narration split into sentences
-        "Cela rečenica koja se izgovara u ovoj sceni."
-      ],
-      "visual_intent": "What should be on screen, in plain language.",
-      "b_roll": ["keyword", "for stock/AI image"],
-      "screen_capture": null,             // or a capture id if a tool demo
-      "on_screen_text": "Optional kinetic-typography line",
-      "notes": "Anything the storyboard/visual steps must know."
+      "template": "hook-card",           // deterministic → render component
+      "narration": "Full sentence(s) spoken in this scene.",
+      "sentences": ["Full sentence(s) spoken in this scene."],
+      "on_screen_text": "Optional ≤6-word line",
+      "capture_id": null                 // or a capture id for a mini-demo scene
     }
     // …more scenes…
   ]
 }
 ```
 
-Why scene-segmented: the voice step generates **one continuous audio** for the
-whole `narration` stream, but alignment gives us the **time** each sentence
-starts/ends. Because scenes are defined on sentence boundaries, the render step
-switches scenes exactly at those times — audio is never cut (PRD R11–R12).
+Why template-tagged: the renderer maps each `template` **deterministically** to a
+component (no per-video bespoke layout code). Variety comes from a rich scene
+vocabulary + the 4 archetypes. (DECISIONS D-013.)
 
-## 6. The sync mechanism (solving the cut-voice bug)
+## 6. The sync mechanism (solving the cut-voice bug) — unchanged
 
 ```
 script.json (scenes → sentences)
-      │
-      ▼
-02-voice: TTS the FULL narration  ──►  voice/narration.wav   (continuous)
-      │
-      ▼
-02-voice: forced alignment        ──►  alignment.json
-      │                                  { sentence_id → {start, end} }
-      ▼
-04-render: Remotion reads alignment + storyboard
-      │   scene[i] is visible from alignment[first sentence of i].start
-      │   to alignment[last sentence of i].end
-      ▼
-   subtitles use the SAME word/sentence timings  →  always in sync
+      ▼  02-voice: edge-tts the FULL narration → voice/narration.wav  (continuous)
+      ▼  02-voice: forced alignment            → alignment.json { sentence → {start,end} }
+      ▼  04-render: engine reads alignment + scene-plan
+         scene[i] is visible from alignment[first sentence].start to [last].end
+         subtitles use the SAME timings  →  always in sync
 ```
 
-No phase ever slices the audio. Visuals and captions are *positioned in time* to
-match the audio, not the other way around.
+No phase ever slices the audio. Visuals and captions are *positioned in time* to match
+the audio. For the mini-demo archetype, a `capture-segment` scene plays the recording
+inside its scene window, with auto-zoom/highlight on the cursor.
 
-## 7. Compute split (local vs cloud)
+## 7. Compute split (local vs optional cloud)
 
 | Work | Where | Why |
 |------|-------|-----|
-| Orchestration, scripts, JSON, validation | Local (PC) | Light, instant |
-| Script / translation / QA text | Claude Code | Best Serbian, in-subscription |
-| TTS (voice) | **Cloud GPU** (Colab/Kaggle) | 4GB VRAM too small for good TTS |
-| Forced alignment | Local or cloud | Lightweight enough for either |
-| AI image generation (Flux/SDXL) | **Cloud GPU** | Won't fit 4GB VRAM |
-| Stock images (Pexels/Pixabay) | Local (API) | Just downloads |
-| Remotion render | Local first → cloud if slow | Mostly-2D 7–8 min is feasible local |
-| Screen captures | Local (you record) | Real tool footage |
-
-Cloud jobs are launched via notebooks/scripts in `scripts/colab/` (added in
-Phase 2/3). They pull the video folder's inputs, run, and push results back; all
-chunked and cached (the contract, §4.3).
+| Orchestration, scripts, JSON, validation | Local | Light |
+| Script / QA text / angle | Claude Code | Best quality, in-subscription |
+| TTS (voice) | **Local (edge-tts)** | Free, fast, good English |
+| Forced alignment | Local | Lightweight |
+| Render | **Local** (Remotion / engine) | Mostly-2D is feasible local |
+| Stock images/video | Local (Pexels/Pixabay API) | Just downloads |
+| Screen captures | Local (you record in OBS) | Real demo footage |
+| AI images (rare) | **Optional** Colab/Kaggle | Opt-in only; not a critical path |
 
 ## 8. The skills ↔ phases mapping
 
-Skills are *instructions for the agent*; phases are *code*. A skill tells the
-agent how to drive (or write) a phase.
-
 | Phase            | Skill (rulebook)                                   |
 |------------------|----------------------------------------------------|
-| 00-topic         | logic in WORKFLOW.md + 00-topic (no separate skill)|
-| 01-script        | script-writing, then script-review, +translation-localization |
-| 02-voice         | voice-synthesis                                    |
-| 03-visuals       | storyboard → visual-prompts                        |
+| 00-ideas         | idea-bank logic in `pipeline/00-ideas` + WORKFLOW.md |
+| 01-script        | script-writing, then script-review                 |
+| 02-voice         | voice-synthesis (edge-tts)                          |
+| 03-visuals       | storyboard (scene-plan) → visual-prompts (thumbnails); screen-capture for demos |
 | 04-render        | video-render                                       |
 | 05-qa            | qa-video                                           |
 | 06-publish       | youtube-publish                                    |
 
-## 9. Configuration & secrets
+> `translation-localization` is retired (single language).
 
-- `pipeline/shared/config.example.json` → copy to `config.json` (git-ignored):
-  paths, default length, voice provider toggle (`free_tts` | `elevenlabs`),
-  stock API keys, etc.
-- `.env` (git-ignored) holds API keys (Pexels, YouTube OAuth client). Never
-  commit. `.env.example` lists required names. See `docs/SETUP.md`.
-- The agent must **never** put secrets in code, URLs, or committed files.
+## 9. Render engine (Phase-2 bake-off) — DECISIONS D-019
 
-## 10. Extensibility (planned, not built yet)
+- Candidates: **Remotion** (React, mature, already set up) and **HyperFrames** (HeyGen,
+  open-source HTML→MP4, agent-native, GSAP/Lottie/Three.js).
+- Target combo: **Remotion owns the timeline/sync/captions/intro-outro**; **HyperFrames
+  optionally renders flashy scene-blocks to MP4** that Remotion imports.
+- A `render.engine` flag in `config.json` selects `remotion` | `hyperframes` | `combo`.
+  Adopt the combo only if it clearly beats Remotion-solo; else Remotion-solo (HyperFrames
+  documented plan-B).
 
-- **n8n** (free, self-hosted) can later wrap the phases for fully-scheduled,
-  hands-off runs. Deferred until the manual pipeline is proven (DECISIONS D-006).
-- **Cloud storage** (e.g. Terabox 1TB free) for media when local space runs out;
-  swap the `content/**/video` location via config.
-- **Multi-language** output later by adding a translation target + TTS voice.
+## 10. Configuration & secrets
+
+- `pipeline/shared/config.json` (git-ignored copy from `config.example.json`): paths,
+  default lengths, `voice` (edge-tts voice id), `render.engine`, stock keys, review policy.
+- `.env` holds API keys (Pexels, YouTube OAuth). Never commit. The agent must never put
+  secrets in code, URLs, or committed files.
 
 ## 11. Failure & recovery quick reference
 
 | Symptom | What happened | Recovery |
 |---------|---------------|----------|
-| Colab disconnected | Session timed out | Re-run the same phase; cached chunks skip |
-| Voice sounds wrong | Free TTS quality | Flip config to `elevenlabs` fallback (D-003) |
-| Scene drifts from audio | alignment.json stale | Re-run 02-voice alignment, then 04-render |
-| Render too slow locally | Heavy effects | Move render to cloud (OQ2), or simplify scene |
-| QA fails sync check | timestamps mismatch | 05-qa report names the scene; re-render it |
+| Scene drifts from audio | alignment.json stale | Re-run 02-voice align, then 04-render |
+| Capture unreadable | zoom/region wrong | Re-run screen-capture plan; re-record segment |
+| QA flags content | rule violation | QA emits digest; owner approves the proposed fix |
+| QA finds technical break | no audio / cut / no captions | QA auto-fixes and re-renders that step |
+| Render slow locally | heavy effects | Simplify scene template, or move that block to chosen engine |
+| AI image step needs cloud | optional path | Skip (use code-visual/stock) or run the opt-in Colab notebook |

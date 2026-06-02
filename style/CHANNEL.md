@@ -7,99 +7,95 @@ Name, niche, audience, SEO strategy, and the account decision. This complements
 
 ## 1. Niche & promise
 
-**Niche:** AI, broadly — news, model releases, tools, skills/MCP, prompting
-techniques, and "how to actually use AI" tutorials, in **Serbian**.
+**Niche:** **boring, everyday AI automations** — the small, unglamorous back-office
+tasks people do by hand every day (data entry, invoicing, shift scheduling,
+reminder/invite emails, simple record-keeping, copying between spreadsheets/docs).
+**English, global.**
 
-**Promise to the viewer:** the clearest, most up-to-date Serbian-language source
-for understanding and *using* AI — explained like a knowledgeable friend, not a
-press release.
+**Promise to the viewer:** the place builders come to steal **overlooked,
+money-making automation ideas** for the dull tasks nobody else covers — shown on a
+tiny example you can scale to any real system.
 
-**Why now:** very little high-quality Serbian AI content exists; the topic is hot
-and constantly renewing (endless evergreen + news material).
+**Why now:** everyone chases huge end-to-end systems (Zapier/n8n mega-builds) and
+ignores the small daily pains. That gap = low competition + high RPM (B2B/software
+intent) + an audience that turns ideas into paid work.
 
 ## 2. Name
 
-The working name "AI Automatizacija" is **too narrow** (sounds like only n8n/Zapier
-automation), while the channel is broader (news + education). Candidates:
+**Boring AI Automations** — the "boring" angle *is* the differentiation and the SEO
+hook (we own the tasks others find too dull). Backup if the handle is taken:
+**The AI Automation Desk**. (DECISIONS D-012.)
 
-| Name | Vibe | Notes |
-|------|------|-------|
-| **AI Puls** | news + pulse of the scene | Short, memorable, covers news *and* tutorials. **Top pick.** |
-| AI Lab | experimental, hands-on | Good for tutorial-heavy identity |
-| Sintetika | brandable, distinct | Less descriptive; needs building |
-| Algoritam | techy, broad | Common word; harder to rank/own |
-| Prompter | practical, AI-usage | Narrower toward prompting |
-| AI na srpskom | explicit, searchable | Descriptive but generic |
+## 3. Account decision (DECISIONS D-016, resolves old D-005)
 
-**Recommendation:** **AI Puls** (broad, memorable, future-proof). Decide and
-record in DECISIONS if you change from the working name.
-
-## 3. Account decision (relates to DECISIONS D-005, PRD OQ3)
-
-Two options:
-- **Reuse EconVault (older account):** possible small trust advantage; new accounts
-  sometimes get under-promoted/flagged as AI. Plan: remove the private piece,
-  change channel keywords/branding now, post AI content, and **rename** once it
-  hits YouTube's channel-rename eligibility.
-  - ⚠️ **Verify the current rename rule** before relying on it (it has historically
-    been tied to handle/branding policies, not a fixed follower count). Check
-    YouTube Help before deciding the rename timing.
-  - ⚠️ Don't mix finance (EconVault) and AI long-term — a clean niche matters more
-    than account age for the algorithm. If you reuse it, fully repurpose it.
-- **Start fresh:** clean niche from day one; lose the small age advantage.
-
-**Leaning:** reuse EconVault *only if* you fully repurpose it (clear old content
-focus, rebrand keywords now). Otherwise start fresh. Final call after checking
-current YouTube rename rules. Log the choice in DECISIONS.
+**Reuse the older EconVault account, fully repurposed:** remove old/private content,
+change channel keywords + branding to this niche now, and **rename** once it hits
+YouTube's channel-rename eligibility.
+- ⚠️ **Verify the current rename rule** before relying on it (historically tied to
+  handle/branding policy, not a fixed follower count). Check YouTube Help first.
+- ⚠️ Keep the niche **clean** — clear any old finance focus so the algorithm sees one
+  consistent topic. A clean niche matters more than account age.
 
 ## 4. Audience
 
-- Serbian-speaking, AI-curious: developers, students, founders, tech enthusiasts,
-  and beginners who "keep hearing about AI."
-- They want: clarity, practicality ("šta ja s ovim mogu da uradim"), and to keep
-  up without reading English all day.
+**Primary:** builders / freelancers / no-code & automation agencies who **create
+automations for other people** and come here for inspiration they can resell.
+**Secondary:** small-business owners/managers curious what's possible.
+*Not* the end clerks/accountants themselves — they don't watch automation content
+(it isn't their job). Write for the person who will *build and sell* the solution.
 
-## 5. Content pillars (and early "catch-up" series)
+They want: a quick, concrete idea + proof it's feasible + a sense of how to adapt it.
+They do **not** want a 40-minute full system build.
 
-1. **Foundations:** What is AI / what it can do (2026), the major players & models.
-2. **How to use AI:** day-to-day workflows, prompting, tools.
-3. **Tools & skills:** new tools, Claude skills, MCP servers, Codex, etc.
-4. **News:** releases and updates as they happen (fast Shorts + occasional longs).
-5. **Deep dives:** "how I built X with AI", Remotion, automation, etc.
+## 5. Content pillars (organized by the painful task)
 
-Early run = the foundations/catch-up series first (Video 001 = "Šta je AI i šta
-sve može u 2026."), then branch into news + tools.
+Driven by the idea-bank (`pipeline/00-ideas`), tagged by task/sector/tool/archetype
+and ranked by predicted demand. Recurring task clusters:
+
+1. **Data entry & copying** — between spreadsheets, forms, docs, emails.
+2. **Documents & records** — invoices, certificates, letters, simple registries.
+3. **Scheduling** — shifts, appointments, reminders, recurring calendars.
+4. **Outbound comms** — invite/reminder/confirmation emails, bulk personalised messages.
+5. **Lookups & reports** — pulling, summarising, and formatting routine data.
+
+Under-digitised sectors to mine for examples: schools, municipalities, accounting,
+notaries/clerks, pharmacies, hospitality (cafés), small banks/back-office.
 
 ## 6. Formats & cadence
 
-- Long: 7–10 min, 2–3 per week (target), the monetization backbone.
-- Shorts: ~1/day, mostly repurposed beats from longs, sometimes standalone news.
-- Ramp toward daily long-form once the system is automated (ROADMAP Phase 5).
+- **Long:** 4 archetypes, length by type (Ideas 5-7m, Mini-demo 3-5m, Diagram 5-8m,
+  Comparison 6-10m). The monetization backbone.
+- **Shorts:** 1-2 auto-repurposed from each long video (light music allowed on Shorts).
+- **Cadence:** on-demand / as time allows (~10h/week); no rigid schedule. Produce in
+  idea-bank **score order**; let real metrics re-rank.
 
 ## 7. SEO strategy (practical)
 
-- **Keyword research per topic:** what Serbian (and some English) terms people
-  search for the topic; put the main one early in title + description.
-- **Titles:** benefit/curiosity + front-loaded keyword, ≤ ~60 chars, no pure
-  clickbait. (STYLE_GUIDE §8)
-- **Descriptions:** hook + keywords in the first 1–2 lines; then a short summary;
-  then timestamps and any links. Natural language, no stuffing.
-- **Tags:** topic + entity names (model/tool names) + Serbian variants.
-- **Thumbnails:** consistent brand system (VISUAL_IDENTITY §9); 1–4 word Serbian
-  phrase; test 2 variants when possible.
-- **Chapters:** add timestamps (also help retention & search).
-- **Consistency:** same intro/outro, same look, regular cadence → algorithm trust.
-- **Cross-format:** Shorts funnel to longs; pin a comment linking the full video.
+- **Keyword research per topic:** free signals — YouTube & Google search-suggest,
+  autocomplete, competitor view counts — feed the idea-bank `score`. Put the main
+  search term early in title + description.
+- **Titles:** benefit/curiosity + front-loaded keyword, ≤ ~60 chars, no pure clickbait.
+- **Descriptions:** hook + keyword in the first 1-2 lines; short summary; then chapters/
+  timestamps and links. Natural language, no stuffing.
+- **Tags:** task + tool names (Excel, Sheets, Outlook, Notion, Claude…) + variants.
+- **Thumbnails:** consistent brand system (VISUAL_IDENTITY §9); 1-4 word phrase; 2
+  variants per video, owner picks.
+- **Chapters:** add timestamps (help retention & search).
+- **Consistency:** same intro/outro, same look, regular-enough cadence → algorithm trust.
+- **Cross-format:** Shorts funnel to the long; pin a comment linking the full video.
 
-## 8. Monetization notes (for later)
+## 8. Monetization (DECISIONS D-017)
 
-- YouTube Partner Program needs thresholds (verify current numbers); originality
-  matters — "reused content" gets demonetized, which is exactly why our scripts &
-  visuals are original (PRD R1–R5).
-- Sponsorships come later, if/when the channel grows; revisit then.
+- **Ad RPM + views only for now.** This niche carries high B2B/software RPM; the CTA
+  is simply **subscribe**.
+- Products/affiliate/courses are **deferred** (owner lacks Stripe-class payout rails in
+  Serbia). Revisit if an agency/contract engagement appears.
+- Originality matters: "reused content" and templated AI-slop get demonetized — which is
+  exactly why every script has an **original human angle** (PRD R-originality, D-018).
+- No AI-disclosure label is required (we don't depict real people/events). (D-…/PRD.)
 
 ## 9. Growth review loop
 
-After each video, append to `docs/PROGRESS.md`: topic, CTR, avg view duration,
-retention dips. Feed learnings back into STYLE_GUIDE (hooks/structure) and this
-file (titles/thumbnails) — the system improves with data.
+After each video, append to `docs/PROGRESS.md` and the idea's `metrics`: CTR, avg view
+duration, retention dips, search terms that landed. Re-rank the idea-bank; double down on
+the **task/sector/tool/archetype** that performs best. The system improves with data.

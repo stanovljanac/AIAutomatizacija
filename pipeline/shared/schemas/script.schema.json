@@ -2,10 +2,15 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "script.json",
   "type": "object",
-  "required": ["id", "language", "title_working", "target_seconds", "scenes"],
+  "required": ["id", "language", "archetype", "angle", "title_working", "target_seconds", "scenes"],
   "properties": {
     "id": { "type": "string" },
-    "language": { "type": "string", "const": "sr" },
+    "language": { "type": "string", "const": "en" },
+    "archetype": {
+      "type": "string",
+      "enum": ["ideas", "mini-demo", "diagram", "comparison"]
+    },
+    "angle": { "type": "string", "minLength": 1, "description": "Required original human angle (PRD R4, D-018)." },
     "title_working": { "type": "string" },
     "target_seconds": { "type": "number" },
     "scenes": {
@@ -13,19 +18,25 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "role", "narration", "sentences", "visual_intent"],
+        "required": ["id", "role", "template", "narration", "sentences"],
         "properties": {
           "id": { "type": "string" },
           "role": {
             "type": "string",
             "enum": ["hook", "intro", "point", "demo", "transition", "cta", "outro"]
           },
+          "template": {
+            "type": "string",
+            "enum": [
+              "hook-card", "section-header", "bullet-steps", "stat-callout",
+              "term-highlight", "comparison-table", "diagram", "code-block",
+              "capture-segment", "lower-third", "transition", "cta-card"
+            ]
+          },
           "narration": { "type": "string" },
           "sentences": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-          "visual_intent": { "type": "string" },
-          "b_roll": { "type": "array", "items": { "type": "string" } },
-          "screen_capture": { "type": ["string", "null"] },
           "on_screen_text": { "type": ["string", "null"] },
+          "capture_id": { "type": ["string", "null"], "description": "Set only for capture-segment scenes (mini-demo)." },
           "notes": { "type": "string" }
         }
       }

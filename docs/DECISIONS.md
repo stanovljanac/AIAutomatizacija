@@ -109,4 +109,77 @@ old one (don't delete history).
   surrounding pipeline. `config.json.voice` is set to the final choice **after** the
   listen test (so config still shows the placeholder until then).
 
-<!-- Add D-011, D-012, … as new decisions arise. Supersede, don't delete. -->
+## D-011 — Pivot: Serbian AI explainer → English "Boring AI Automations" (supersedes the niche in D-009 output clause)
+- **Context:** Serbian TTS quality is an unfixable free-tier blocker (D-010). Meanwhile
+  English "AI/tech" is saturated, but **boring everyday back-office automations** (data
+  entry, invoicing, shift scheduling, reminder/invite emails, simple record-keeping)
+  are underserved with high RPM. English free TTS (edge-tts) is excellent.
+- **Decision:** Re-found the channel as **English, faceless "Boring AI Automations."**
+  Audience = builders/freelancers/agencies who make automations for others and want
+  inspiration (not the end clerks, who never watch). Depth = ideas + a minimal example,
+  "scale it to your own process"; we are not free consultants. Channel **output is now
+  English** (this overrides D-009's "output in Serbian"; code/docs stay English).
+- **Consequences:** The voice blocker disappears; ~70% of the framework is reused. The
+  Serbian work is preserved under git tag `serbian-ai-archive` and `content/001-sta-je-ai`.
+
+## D-012 — Channel name: "Boring AI Automations"
+- **Context:** Plain "Boring Automations" already exists; the niche is AI-driven.
+- **Decision:** **Boring AI Automations** (the "boring" angle is the differentiation
+  and SEO arbitrage). Backup if handle taken: *The AI Automation Desk*.
+- **Consequences:** Memorable, keyword-rich, signals the exact niche.
+
+## D-013 — Four archetypes + fixed-template mapping (not LLM-composed scenes)
+- **Context:** The owner cannot edit; assembly must be fully automatic and auto-QA-able.
+- **Decision:** Support 4 cycling archetypes — Ideas/Listicle, Mini-demo, Diagram, Comparison.
+  Each `script.json` scene carries a `template` tag mapped **deterministically** to a
+  Remotion component (rich scene vocabulary avoids monotony). No per-video bespoke render code.
+- **Consequences:** Predictable, testable, consistent. Variety comes from the scene
+  vocabulary + archetypes, not from generative layout.
+
+## D-014 — Voice: edge-tts English, one consistent voice (supersedes the Serbian-TTS path of D-003/D-010)
+- **Context:** With English output, the whole Serbian-TTS struggle is moot.
+- **Decision:** Use **edge-tts neural** (free) with **one consistent EN voice** chosen by
+  A/B listen. No own-voice recording; no ElevenLabs/Fish/OpenAudio for now.
+- **Consequences:** Free, professional, local. `voice/RECORDING_SCRIPT.md` and the
+  voice-clone flow are retired. config `voice.provider` → edge-tts.
+
+## D-015 — Compute: local-first; Colab/HF optional; AI-video deferred (refines D-004, R17)
+- **Context:** Tutorial professionalism comes from clarity (clean motion-graphics,
+  readable diagrams, real captures, good audio/sync), not AI-generated b-roll, which can
+  read as "slop." Cloud GPU is a fragility/maintenance cost that fights hands-off goals.
+- **Decision:** Core pipeline runs **locally** (edge-tts + render + stock). Keep Colab/HF
+  as an **optional opt-in** module for occasional AI images only. **AI-video deferred.**
+- **Consequences:** Reliable, cheap, automatable core; cloud is garnish, not a critical path.
+
+## D-016 — Account: repurpose EconVault, cleaned & rebranded (resolves open D-005)
+- **Decision:** Reuse the older **EconVault** account, fully cleared and rebranded to the
+  EN niche; rename when eligible. Keep the niche clean (no old finance content lingering).
+- **Consequences:** Possible small age/trust advantage; requires a full repurpose pass.
+
+## D-017 — Monetization: ad RPM + views only for now
+- **Context:** Owner is in Serbia without Stripe-class payout rails, so paid products/
+  memberships aren't practical yet.
+- **Decision:** Optimize for **ad RPM + views**; defer products/affiliate/courses.
+  Revisit if a contract/agency engagement appears.
+- **Consequences:** Simpler funnel; CTA is "subscribe." High-RPM niche choice carries the income.
+
+## D-018 — Mandatory original human angle in every script (anti-AI-slop)
+- **Context:** YouTube 2026 demonetizes templated, value-less mass AI content.
+- **Decision:** I draft an **original angle/opinion/experience** per topic; the owner
+  approves/tweaks it at the script gate. The script-review skill enforces its presence.
+- **Consequences:** Keeps the channel inside YPP eligibility; gives each video a point of view.
+
+## D-019 — Render engine: bake-off Remotion vs HyperFrames, combine best-of-both (refines D-007)
+- **Context:** The agent authors every video; HyperFrames (HeyGen, open-source HTML→MP4)
+  is agent-native, but Remotion is already set up and mature, and we chose fixed templates
+  (so the agent rarely writes new render code).
+- **Decision:** **Phase-2 bake-off** of one scene in each. Target combo: Remotion owns the
+  timeline/sync/captions/intro-outro; HyperFrames optionally renders flashy scene-blocks to
+  MP4 that Remotion imports. Adopt the combo only if it clearly beats Remotion-solo;
+  otherwise Remotion-solo with HyperFrames as documented plan-B.
+- **Consequences:** De-risks the core of the factory before building the full template library.
+
+> Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
+> Still in force: **D-002** (no YouTube transcripts; clean sources only).
+
+<!-- Add D-020, D-021, … as new decisions arise. Supersede, don't delete. -->

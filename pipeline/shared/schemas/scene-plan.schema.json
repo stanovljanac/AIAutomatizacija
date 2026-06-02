@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "scene-plan.json",
+  "description": "Deterministic mapping of each script scene to a render component + props. Replaces the old human-gated storyboard (fixed templates → no gate).",
+  "type": "object",
+  "required": ["id", "scenes"],
+  "properties": {
+    "id": { "type": "string" },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["scene_id", "template", "props"],
+        "properties": {
+          "scene_id": { "type": "string", "description": "Matches a script.json scene id." },
+          "template": {
+            "type": "string",
+            "enum": [
+              "hook-card", "section-header", "bullet-steps", "stat-callout",
+              "term-highlight", "comparison-table", "diagram", "code-block",
+              "capture-segment", "lower-third", "transition", "cta-card"
+            ]
+          },
+          "props": {
+            "type": "object",
+            "description": "Component-specific props (title, items[], rows[], nodes/edges for diagram, code, capture path, etc.)."
+          }
+        }
+      }
+    }
+  }
+}

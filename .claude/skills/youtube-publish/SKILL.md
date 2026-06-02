@@ -1,62 +1,34 @@
 ---
 name: youtube-publish
-description: Use to prepare and publish a finished video to YouTube — generating SEO title, description, tags, chapters, and a thumbnail spec, building the Short variant, and uploading as a private/draft via the YouTube Data API for the human's final review and publish click. Triggers on "publish", "upload to YouTube", "objavi", "napravi opis i tagove", or Step 6 of the workflow. Never publishes publicly without the human.
+description: Use to prepare and publish a finished video to YouTube — generating English SEO title, description (keyword-first), tags, chapters, picking one of the two thumbnails, building the Short, and uploading as a private/draft via the YouTube Data API for the owner's final review and publish click. Triggers on "publish", "upload to YouTube", "make the description", or Step 6 of the workflow. Never publishes publicly without the owner.
 ---
 
 # Skill: YouTube publish
 
-You prepare everything for publishing and upload a **private/draft** so the human
-does the final review and clicks publish (PRD R15, semi-automatic). You also build
-the Short. You never make a video public on your own.
+You prepare everything and upload a **private/draft** for the owner's final click
+(PRD R15). Never publish publicly yourself. Output: `publish.json` (schema
+`pipeline/shared/schemas/publish.schema.json`).
 
-## Read first
-- `style/CHANNEL.md` (SEO strategy, niche, name) and `style/STYLE_GUIDE.md` §8.
-- The video's `script.json`, `alignment.json` (for chapter timestamps),
-  `video/final.mp4` (+ `video/short.mp4`).
-- Schema: `pipeline/shared/schemas/publish.schema.json`.
+## Generate (English, SEO — STYLE_GUIDE §8, CHANNEL §7)
+- **Title:** benefit/curiosity + front-loaded **search keyword** (`brief.search_term`),
+  ≤ ~60 chars, no pure clickbait.
+- **Description:** hook + main keyword in the first 1–2 lines; short summary; then
+  **chapters** (timestamps from `alignment.json`/scene starts); then any links.
+- **Tags:** task + tool names (Sheets, Excel, Outlook, Notion, Claude…) + variants.
+- **Thumbnail:** the owner picks `thumb_a` or `thumb_b`.
+- **No AI-disclosure label** (graphics + AI voice; not required — we don't depict real
+  people). Monetization model = ad RPM + views; the single CTA is **subscribe** (D-017).
 
-## Inputs → Output
-- **In:** the files above + `config.json` (channel/account, paths) + YouTube OAuth
-  creds (path from `.env`, stored outside git).
-- **Out:** `content/<id>/publish.json` + a private/draft upload on YouTube.
+## Short
+- Build the **Short** from the 1–2 key beats (vertical, light music ok), with its own
+  short title/description.
 
-## Step 1 — Metadata (Serbian, SEO-aware)
-- **Title:** benefit/curiosity + front-loaded keyword, ≤ ~60 chars, no pure
-  clickbait (STYLE_GUIDE §8). Offer 2 variants for the human to pick.
-- **Description:** first 1–2 lines = hook + main keywords; then a short summary;
-  then **chapters** (from `alignment.json` scene starts) and any links. Natural
-  keywords, no stuffing.
-- **Tags:** topic + entity names (models/tools) + Serbian variants.
-- **Thumbnail spec:** 1–4 word Serbian phrase, brand layout (VISUAL_IDENTITY §9),
-  rendered via the Remotion `ThumbnailTemplate` (reproducible).
-- Write all of it to `publish.json`.
+## Upload
+- Via YouTube Data API v3 as **private/draft** with all metadata + thumbnail, plus the
+  Short. Uploads are quota-heavy — space them.
+- The owner reviews title/description/tags and **clicks publish**.
 
-## Step 2 — Originality / credit check (PRD R4)
-- If this video is about someone's **strictly original IP** (e.g. reviewing their
-  named skill/tool), **ask the human** whether to credit the source in the
-  description, and how. Most videos won't need this — only when it's clearly one
-  person's original work.
-
-## Step 3 — Short
-- Build/confirm `video/short.mp4` (from the same script's key beats or standalone),
-  with its own short title + a few tags. Shorts funnel to the long video (pin a
-  comment / link).
-
-## Step 4 — Upload as draft
-- Use YouTube Data API v3 to upload `final.mp4` as **private** (or unlisted draft)
-  with the metadata + thumbnail attached.
-- Auth: OAuth via the human's own consent flow; creds/token live **outside git**.
-  Never create accounts, never enter passwords, never put secrets in code/URLs/
-  committed files. Uploads are quota-heavy — don't retry blindly.
-
-## Step 5 — Hand to human (Gate after QA already passed)
-- Surface: chosen title/description/tags/thumbnail + the draft link. The human does
-  the **keyword + SEO pass** and clicks publish.
-- After publish: set `status = "published"`; append outcome (title, link, date) to
-  `content/<id>/log.md` and a line to `docs/PROGRESS.md`.
-
-## Don'ts
-- Don't publish publicly without explicit human action.
-- Don't fabricate stats or keywords; base tags on the actual topic/sources.
-- Don't store OAuth tokens or client secrets in the repo.
-- Don't keyword-stuff or use misleading clickbait (channel trust, monetization).
+## After publish
+- Set `brief.json.status: "published"`. Append outcome to `content/<id>/log.md`,
+  `docs/PROGRESS.md`, and the idea's `metrics` in `pipeline/00-ideas/ideas.json`
+  (CTR/retention later) so the idea-bank can be **re-ranked** (growth loop).
