@@ -178,6 +178,18 @@ old one (don't delete history).
   MP4 that Remotion imports. Adopt the combo only if it clearly beats Remotion-solo;
   otherwise Remotion-solo with HyperFrames as documented plan-B.
 - **Consequences:** De-risks the core of the factory before building the full template library.
+- **Bake-off result (2026-06-02):** Built the same Ideas "bullet-steps" hook scene in
+  both. **Remotion** (`templates/remotion/src/Bakeoff.tsx`) and **HyperFrames**
+  (`templates/hyperframes/bakeoff/`, CLI v0.6.70) rendered **visually near-identical,
+  on-brand 1920×1080** output; both deterministic; both worked first try. HyperFrames
+  installed cleanly and even ships useful standalone tools (Kokoro TTS, Whisper
+  word-timestamps, website capture, snapshot+vision). **Verdict:** since the look is
+  equal and we use **fixed templates** (the agent fills JSON props, it doesn't author
+  render code per video), **Remotion stays the core** — it's mature, already set up, and
+  owns the continuous-audio sync contract. **HyperFrames is kept installed as an opt-in
+  block-renderer** for occasional flashy scenes (GSAP/Three/Lottie/shaders) imported into
+  the Remotion timeline as MP4 (the "combo" path is proven feasible). `render.engine`
+  stays `remotion`; flip to `combo` only when a specific scene needs it.
 
 > Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
 > Still in force: **D-002** (no YouTube transcripts; clean sources only).

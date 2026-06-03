@@ -70,6 +70,13 @@ yarn-error.log*
 templates/remotion/out/
 templates/remotion/.cache/
 
+# ── HyperFrames (render bake-off; opt-in block renderer) ──────────────────
+templates/hyperframes/**/snapshots/
+templates/hyperframes/**/renders/
+templates/hyperframes/**/.hyperframes/
+templates/hyperframes/**/capture/
+templates/hyperframes/package-lock.json
+
 # ── Python ────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]

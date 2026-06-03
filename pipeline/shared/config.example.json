@@ -3,8 +3,8 @@
   "voice": {
     "provider": "edge-tts",
     "edge_tts": {
-      "voice": "en-US-AndrewNeural",
-      "rate": "+0%",
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "+8%",
       "pitch": "+0Hz"
     },
     "target_wpm": 160,

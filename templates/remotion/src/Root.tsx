@@ -1,6 +1,7 @@
 import React from "react";
 import { Composition } from "remotion";
 import { TestComposition, testDefaultProps } from "./Test";
+import { BakeoffScene, bakeoffDefaultProps } from "./Bakeoff";
 
 /**
  * Phase 1: a single 10-second smoke-test composition that proves the local
@@ -13,6 +14,7 @@ import { TestComposition, testDefaultProps } from "./Test";
  */
 export const RemotionRoot: React.FC = () => {
   return (
+    <>
     <Composition
       id="TestComposition"
       component={TestComposition}
@@ -22,5 +24,15 @@ export const RemotionRoot: React.FC = () => {
       height={1080}
       defaultProps={testDefaultProps}
     />
+      <Composition
+        id="BakeoffRemotion"
+        component={BakeoffScene}
+        durationInFrames={180} // 6s @ 30fps
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={bakeoffDefaultProps}
+      />
+    </>
   );
 };
