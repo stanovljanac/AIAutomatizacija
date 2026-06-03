@@ -1,0 +1,186 @@
+{
+  "id": "002-what-is-ai-automation",
+  "language": "en",
+  "archetype": "ideas",
+  "angle": "Everyone chases giant AI systems and ignores the boring daily tasks that actually waste their time. This channel digs out those small wins and shows them in plain English - no hype, no guru act.",
+  "title_working": "What AI Automation Actually Is - and Why I Built This Channel",
+  "target_seconds": 300,
+  "scenes": [
+    {
+      "id": "s01",
+      "role": "hook",
+      "template": "hook-card",
+      "narration": "Everyone keeps telling you AI is going to change everything. Meanwhile, you're still copying the same numbers between the same two spreadsheets, by hand, every single day. So let's skip the hype. In the next few minutes I'll show you what AI automation actually is, with a real example, in plain English, and why I built this whole channel around the most boring work imaginable.",
+      "sentences": [
+        "Everyone keeps telling you AI is going to change everything.",
+        "Meanwhile, you're still copying the same numbers between the same two spreadsheets, by hand, every single day.",
+        "So let's skip the hype.",
+        "In the next few minutes I'll show you what AI automation actually is, with a real example, in plain English, and why I built this whole channel around the most boring work imaginable."
+      ],
+      "on_screen_text": "Still doing it by hand?",
+      "capture_id": null
+    },
+    {
+      "id": "s02",
+      "role": "point",
+      "template": "term-highlight",
+      "narration": "Let's start with the word everyone throws around: AI. Forget the science fiction and the robots. For our purposes, AI is just software that can read messy, human input - a sloppy spreadsheet, a long email, a pile of handwritten notes - and make a sensible decision about it. That's really it. It's not magic, and it's not here to take your job - it's just very good at the dull, repetitive reading and sorting that humans quietly hate. Think of it as a fast, patient assistant that never gets bored, never gets distracted, and never needs a coffee break.",
+      "sentences": [
+        "Let's start with the word everyone throws around: AI.",
+        "Forget the science fiction and the robots.",
+        "For our purposes, AI is just software that can read messy, human input - a sloppy spreadsheet, a long email, a pile of handwritten notes - and make a sensible decision about it.",
+        "That's really it.",
+        "It's not magic, and it's not here to take your job - it's just very good at the dull, repetitive reading and sorting that humans quietly hate.",
+        "Think of it as a fast, patient assistant that never gets bored, never gets distracted, and never needs a coffee break."
+      ],
+      "on_screen_text": "AI",
+      "capture_id": null
+    },
+    {
+      "id": "s03",
+      "role": "point",
+      "template": "term-highlight",
+      "narration": "Automation is the older, simpler half. It just means a task runs by itself, on a trigger, without you clicking through every step. A new row appears in a sheet, and something happens. An email lands in your inbox, and it gets sorted into the right place. Nobody sitting there pressing the buttons.",
+      "sentences": [
+        "Automation is the older, simpler half.",
+        "It just means a task runs by itself, on a trigger, without you clicking through every step.",
+        "A new row appears in a sheet, and something happens.",
+        "An email lands in your inbox, and it gets sorted into the right place.",
+        "Nobody sitting there pressing the buttons."
+      ],
+      "on_screen_text": "Automation",
+      "capture_id": null
+    },
+    {
+      "id": "s04",
+      "role": "point",
+      "template": "diagram",
+      "narration": "Put those two halves together and you get the whole point of this channel. A boring task shows up - that's the trigger. The AI handles the messy, judgment part in the middle. And you just glance at the result and approve it. Trigger, AI, check. And that check step matters: you stay in control, the AI does the grunt work, and you keep the final say. That tiny three-step loop is hiding behind almost everything I'm going to show you.",
+      "sentences": [
+        "Put those two halves together and you get the whole point of this channel.",
+        "A boring task shows up - that's the trigger.",
+        "The AI handles the messy, judgment part in the middle.",
+        "And you just glance at the result and approve it.",
+        "Trigger, AI, check.",
+        "And that check step matters: you stay in control, the AI does the grunt work, and you keep the final say.",
+        "That tiny three-step loop is hiding behind almost everything I'm going to show you."
+      ],
+      "on_screen_text": null,
+      "capture_id": null
+    },
+    {
+      "id": "s05",
+      "role": "demo",
+      "template": "custom",
+      "narration": "Let me make that real. Say you keep a spreadsheet of customers, and people keep pasting in new rows - names in the wrong case, extra spaces, phone numbers in five different formats. Normally, you'd fix each one by hand. With this loop, the moment a messy row lands, the AI cleans it up. It fixes the formatting, splits the name into first and last, and flags the duplicates, then drops the tidy version right back in. Before, tidying each new batch of rows took someone five or ten minutes of dull copy-paste, every single time. Now it happens automatically, and you only check the few rows it flags as unsure. You set it up once. After that, you just watch it happen.",
+      "sentences": [
+        "Let me make that real.",
+        "Say you keep a spreadsheet of customers, and people keep pasting in new rows - names in the wrong case, extra spaces, phone numbers in five different formats.",
+        "Normally, you'd fix each one by hand.",
+        "With this loop, the moment a messy row lands, the AI cleans it up.",
+        "It fixes the formatting, splits the name into first and last, and flags the duplicates, then drops the tidy version right back in.",
+        "Before, tidying each new batch of rows took someone five or ten minutes of dull copy-paste, every single time.",
+        "Now it happens automatically, and you only check the few rows it flags as unsure.",
+        "You set it up once.",
+        "After that, you just watch it happen."
+      ],
+      "on_screen_text": "A real one: messy row in, clean row out",
+      "capture_id": null,
+      "notes": "BESPOKE SCENE (D-020 variety): animate a small spreadsheet - a messy row (mixed case, double spaces, ' 0641/23 45 ') slides in on the left; an AI 'pass' sweeps it; a clean row (Title Case, split First/Last, normalized phone, a small 'dup?' flag) appears on the right. Build with Remotion (+ GSAP/HyperFrames if it helps). Not one of the 12 base templates."
+    },
+    {
+      "id": "s06",
+      "role": "transition",
+      "template": "section-header",
+      "narration": "Now, here's the mistake almost everyone makes when they first get excited about this. They go straight for the giant system that runs their entire business. It's complicated, it breaks in ways nobody can explain, and it never actually gets finished. So they give up and decide AI just isn't there yet. But the real wins were sitting right under their nose the whole time.",
+      "sentences": [
+        "Now, here's the mistake almost everyone makes when they first get excited about this.",
+        "They go straight for the giant system that runs their entire business.",
+        "It's complicated, it breaks in ways nobody can explain, and it never actually gets finished.",
+        "So they give up and decide AI just isn't there yet.",
+        "But the real wins were sitting right under their nose the whole time."
+      ],
+      "on_screen_text": "The mistake everyone makes",
+      "capture_id": null
+    },
+    {
+      "id": "s07",
+      "role": "point",
+      "template": "bullet-steps",
+      "narration": "I'm talking about the boring goldmine. Typing the same data between spreadsheets. Making and sending invoices. Building shift and appointment schedules. Sending reminder and invite emails. Pulling the same little report every Monday morning. Nobody films these tasks. Everybody does them. Every single day.",
+      "sentences": [
+        "I'm talking about the boring goldmine.",
+        "Typing the same data between spreadsheets.",
+        "Making and sending invoices.",
+        "Building shift and appointment schedules.",
+        "Sending reminder and invite emails.",
+        "Pulling the same little report every Monday morning.",
+        "Nobody films these tasks.",
+        "Everybody does them.",
+        "Every single day."
+      ],
+      "on_screen_text": "The boring goldmine",
+      "capture_id": null
+    },
+    {
+      "id": "s08",
+      "role": "point",
+      "template": "stat-callout",
+      "narration": "And here's the part that actually matters. The problem was never that these tasks take a long time. The problem is that you do the same dull thing, over and over, every single day, forever. With a little automation, you do it once. You set it up, you click go, and by the time your coffee has gone cold, it's already running on its own.",
+      "sentences": [
+        "And here's the part that actually matters.",
+        "The problem was never that these tasks take a long time.",
+        "The problem is that you do the same dull thing, over and over, every single day, forever.",
+        "With a little automation, you do it once.",
+        "You set it up, you click go, and by the time your coffee has gone cold, it's already running on its own."
+      ],
+      "on_screen_text": null,
+      "capture_id": null,
+      "notes": "stat-callout value = \"Once.\"  label = \"Set it up once - then it runs while your coffee's still hot.\""
+    },
+    {
+      "id": "s09",
+      "role": "point",
+      "template": "hook-card",
+      "narration": "So, why this channel? Because someone has to dig through the boring corners of office work and pull out the automations that are actually worth your time. That's what I do here. I find the small, dull wins, strip out the hype, and show you exactly how each one works, in plain English. No guru act. No forty-nine dollar course.",
+      "sentences": [
+        "So, why this channel?",
+        "Because someone has to dig through the boring corners of office work and pull out the automations that are actually worth your time.",
+        "That's what I do here.",
+        "I find the small, dull wins, strip out the hype, and show you exactly how each one works, in plain English.",
+        "No guru act.",
+        "No forty-nine dollar course."
+      ],
+      "on_screen_text": "Why this channel?",
+      "capture_id": null
+    },
+    {
+      "id": "s10",
+      "role": "point",
+      "template": "bullet-steps",
+      "narration": "So here's the deal for every video. You'll get small, concrete ideas you can copy. Tiny working examples, not bloated systems you'll never finish. And plain English, with no hype. And when an idea isn't actually worth the effort, I'll tell you that too, so you don't waste a weekend on it. You take the idea, and you scale it to your own work.",
+      "sentences": [
+        "So here's the deal for every video.",
+        "You'll get small, concrete ideas you can copy.",
+        "Tiny working examples, not bloated systems you'll never finish.",
+        "And plain English, with no hype.",
+        "And when an idea isn't actually worth the effort, I'll tell you that too, so you don't waste a weekend on it.",
+        "You take the idea, and you scale it to your own work."
+      ],
+      "on_screen_text": "What you get here",
+      "capture_id": null
+    },
+    {
+      "id": "s11",
+      "role": "cta",
+      "template": "cta-card",
+      "narration": "If automating the boring stuff sounds good to you, stick around, because that is the whole channel. I'll see you in the next one.",
+      "sentences": [
+        "If automating the boring stuff sounds good to you, stick around, because that is the whole channel.",
+        "I'll see you in the next one."
+      ],
+      "on_screen_text": null,
+      "capture_id": null
+    }
+  ]
+}

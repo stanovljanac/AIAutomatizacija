@@ -191,6 +191,58 @@ old one (don't delete history).
   the Remotion timeline as MP4 (the "combo" path is proven feasible). `render.engine`
   stays `remotion`; flip to `combo` only when a specific scene needs it.
 
+## D-020 — Fixed templates are a BASE, not the whole look; build bespoke scenes per video (refines D-013)
+- **Context:** Owner watched the template gallery and flagged that if every video is just
+  the same 12 templates on repeat, all videos look identical and nobody watches. He also
+  wants thorough, slower, more detailed videos (never shortened for brevity), and proof/
+  examples introduced by judgment (not a forced rule).
+- **Decision:** Keep the 12 fixed templates as the **reliable, auto-QA-able base**, but
+  **every video must mix in fresh / bespoke scenes** (`template: "custom"`) so the channel
+  doesn't feel canned. Build the custom scenes with Remotion + the now-installed
+  **HyperFrames agent skills** (`npx skills add heygen-com/hyperframes` → hyperframes, gsap,
+  three, lottie, css-animations, animejs, waapi, typegpu, remotion-to-hyperframes, …, in
+  `~/.agents/skills`, symlinked to Claude Code). The render engine stays Remotion-core +
+  HyperFrames opt-in (D-019); custom scenes may be authored in either and composited.
+  Script rule added to `script-writing` SKILL (#6 proof-by-judgment, #7 thorough/never-cut,
+  #8 visual variety).
+- **Consequences:** More authoring effort per video, but distinctive, watchable videos.
+  Auto-QA still anchors on the base templates + sync contract; custom scenes are reviewed
+  visually at the final gate.
+
+## D-021 — (Deferred upgrade) Multi-agent review panel
+- **Context:** The owner manually pasted a script into a second model and got a useful
+  independent review. He wants this as an automated upgrade: several **independent reviewer
+  agents** (that did NOT write the script/scene-plan) each rate the work, an **aggregator
+  agent** synthesizes/decides, and the **owner still checks the final verdict**.
+- **Decision:** **Deferred** — keep the single `script-review` agent for now; build the
+  multi-agent panel later (could use the Agent tool / sub-agents). Logged so we don't lose it.
+- **Consequences:** None yet; this is a roadmap upgrade note for `script-review` + `qa-video`.
+
+## D-022 — Dynamic, narration-synced scenes + a visual library (extends D-013/D-019)
+- **Context:** The first 002 render looked clean but **too static** — long text held on one
+  card while the voice talked. The owner wants scenes that move with the narration, a real
+  visual arsenal (icons, illustrations, workflows), and continuity between scenes.
+- **Decision:** Build a dynamic-scene system:
+  - **Reveal-sync** — the builder (`pipeline/04-render/build-props.mjs`) computes per-element
+    reveal frames from the alignment (`revealOn: "sentences"` or `cueWords`); list/flow/diagram
+    elements appear exactly when the voice names them.
+  - **Scene beats** — one script scene can split into several timed visual beats over its
+    sentences (no re-voice needed), so text-heavy scenes aren't one static hold.
+  - **Visual library** — an icon registry (`templates/remotion/src/icons/Icon.tsx`), new
+    reusable templates **`flow`** + **`icon-list`**, and bespoke illustration scenes
+    (`HandCopy`, `AiFlow`, `ChaosX`, `DeskScene` in `src/custom/`). Fixed templates are a
+    base; every video mixes in custom/illustrated scenes.
+  - **Continuity** — one **persistent `BackgroundFX`** in `Main` (templates render transparent)
+    + a `SceneWrapper` **crossfade** (~9 frames) between scenes.
+  - Rule added to `script-writing` (#6–#8) + `video-render`: visual density follows the
+    narration; prefer icons/drawings/workflows over text cards; never a long static hold.
+- **Cleanup:** removed the test/proof scaffolding the bake-off/gallery work left behind —
+  `Test/Bakeoff/BakeoffLong/KineticText`, `templates/hyperframes/bakeoff/`, and the Serbian
+  `scripts/colab|kaggle` + `tts_sample_edge.py`. Kept `TemplateGallery` (dev preview), the
+  HyperFrames CLI/skills (opt-in engine, D-019), and the `001-sta-je-ai` archive.
+- **Consequences:** Lively, distinctive videos that stay in lockstep with the voice; more
+  authoring per video, anchored by the reusable library + the sync contract.
+
 > Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
 > Still in force: **D-002** (no YouTube transcripts; clean sources only).
 

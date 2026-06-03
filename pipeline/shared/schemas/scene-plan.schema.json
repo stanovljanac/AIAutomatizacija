@@ -11,7 +11,8 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["scene_id", "template", "props"],
+        "required": ["scene_id"],
+        "description": "Either a single template+props, OR a `beats` array to split one script scene into several timed visuals (D-022).",
         "properties": {
           "scene_id": { "type": "string", "description": "Matches a script.json scene id." },
           "template": {
@@ -19,12 +20,27 @@
             "enum": [
               "hook-card", "section-header", "bullet-steps", "stat-callout",
               "term-highlight", "comparison-table", "diagram", "code-block",
-              "capture-segment", "lower-third", "transition", "cta-card"
+              "capture-segment", "lower-third", "transition", "cta-card",
+              "flow", "icon-list", "custom"
             ]
           },
-          "props": {
-            "type": "object",
-            "description": "Component-specific props (title, items[], rows[], nodes/edges for diagram, code, capture path, etc.)."
+          "props": { "type": "object" },
+          "revealOn": { "type": "string", "enum": ["sentences"], "description": "Reveal sub-elements at each of this scene's sentence starts." },
+          "cueWords": { "type": "array", "items": { "type": "string" }, "description": "Reveal sub-element i when this word is spoken." },
+          "beats": {
+            "type": "array",
+            "description": "Split the scene into ordered visual beats; each covers a slice of the scene's sentences.",
+            "items": {
+              "type": "object",
+              "required": ["template", "props"],
+              "properties": {
+                "template": { "type": "string" },
+                "props": { "type": "object" },
+                "sentences": { "type": "array", "items": { "type": "integer" }, "description": "[from,to] sentence indices within this scene (inclusive)." },
+                "revealOn": { "type": "string" },
+                "cueWords": { "type": "array", "items": { "type": "string" } }
+              }
+            }
           }
         }
       }

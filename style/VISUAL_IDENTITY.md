@@ -79,6 +79,18 @@ engine):
 Plus the always-on: `Intro` / `IntroShort`, `Outro` / `OutroShort`, `Subtitles`,
 `BackgroundFX` (subtle dark gradient/grid), `ThumbnailTemplate`.
 
+### 5.1 Dynamic visuals (D-022)
+- **Icons:** `src/icons/Icon.tsx` — a flat, on-brand line+accent set (spreadsheet, email,
+  calendar, invoice, document, clock, ai, person, desk, factory, gear, chart, money, check,
+  flag, magnifier, coffee, bell…). Extend it; keep them simple.
+- **Dynamic templates:** **`flow`** (input → process → output with icons) and **`icon-list`**
+  (rows reveal with an icon as the voice names them). Plus **bespoke illustration scenes**
+  in `src/custom/` (e.g. `HandCopy`, `AiFlow`, `ChaosX`, `DeskScene`) — used via `template:"custom"`.
+- **Reveal-sync:** sub-elements appear in step with the narration (alignment-driven). Text-
+  heavy beats must reveal or split — never a static hold.
+- **Continuity:** one persistent `BackgroundFX` in `Main`; every scene renders **transparent**
+  and crossfades (~9 frames) via `SceneWrapper`. No per-scene backgrounds.
+
 ## 6. Layout & safe areas
 
 - **Long (16:9):** 1920×1080, 30fps. Text inside 90% safe area.

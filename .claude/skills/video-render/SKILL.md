@@ -33,5 +33,20 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   flagged for HyperFrames is rendered to an MP4 block and imported into the Remotion
   timeline. Keep it deterministic; cache rendered blocks per scene.
 
+## Dynamic scenes (D-022)
+- **Visual density follows the narration.** A short line can be one calm template; a beat
+  that lists/explains several things must **reveal sub-elements in sync** or split into
+  **beats** — never a long static hold over a wall of text.
+- **Reveal-sync:** `scene-plan` declares `revealOn: "sentences"` or `cueWords: [...]`; the
+  builder turns these into per-element reveal frames from the alignment, passed as
+  `props.reveals`. `icon-list`, `flow`, `bullet-steps`, `diagram` honor them.
+- **Beats:** a `scene-plan` scene can carry a `beats: [{template, props, sentences:[from,to]}]`
+  array — one script scene → several timed visuals (no re-voice needed).
+- **Library:** prefer **icons** (`src/icons/Icon.tsx`), **`flow`** / **`icon-list`**, and
+  bespoke illustration scenes (`src/custom/*`, `template:"custom"`) over plain text cards.
+  Every video should mix in at least one custom/illustrated scene.
+- **Continuity:** one persistent `BackgroundFX` lives in `Main`; templates render
+  **transparent**; `SceneWrapper` crossfades (~9 frames). Don't paint per-scene backgrounds.
+
 Render locally (default). If a scene is too heavy, simplify its template before
 reaching for cloud.

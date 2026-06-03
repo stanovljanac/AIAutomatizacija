@@ -30,7 +30,8 @@
             "enum": [
               "hook-card", "section-header", "bullet-steps", "stat-callout",
               "term-highlight", "comparison-table", "diagram", "code-block",
-              "capture-segment", "lower-third", "transition", "cta-card"
+              "capture-segment", "lower-third", "transition", "cta-card",
+              "flow", "icon-list", "custom"
             ]
           },
           "narration": { "type": "string" },

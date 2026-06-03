@@ -1,0 +1,24 @@
+{
+  "id": "002-what-is-ai-automation",
+  "pass": true,
+  "summary": "Revised per owner notes. Adds an early CONCRETE example (s05, bespoke 'messy row in, clean row out' scene), reframes the weak time-stat into the 'set it once, runs while your coffee's cold' relief beat (s08), and repositions the channel angle as an honest curator who digs out the wins worth your time (s09) - not 'I'm figuring it out'. Runtime now ~4.9 min (in the 4.5-6 target). On-brand, no hype.",
+  "checks": {
+    "original_human_angle": "PASS - curator angle in s01 + s09 (\"someone has to dig through the boring corners... find the small, dull wins, strip out the hype\"). Competent and authentic; does not claim to run workflows in real businesses.",
+    "proof_not_only_theory": "PASS - s05 gives a concrete, specific example (customer-list cleanup) early, breaking the definition/philosophy stretch.",
+    "thorough_not_rushed": "PASS - ~4.9 min, calm detailed pace; substance added (what AI is NOT, the 'check' control step, 'I'll tell you when it's not worth it'), no filler.",
+    "visual_variety": "PASS - s05 marked template:custom (bespoke animated scene per D-020); the rest mix term-highlight, diagram, section-header, bullet-steps, stat-callout, hook-card, cta-card - not one template on repeat.",
+    "accuracy_by_archetype": "PASS - Ideas/explainer; definitions fair; no cited stats to source; the example is illustrative and realistic.",
+    "tone": "PASS - sharp + warm, explicitly anti-hype, speaks to one viewer.",
+    "single_cta_outro": "PASS - one CTA (s11), short close.",
+    "reads_for_ai_voice": "PASS - numbers/phrases natural for edge-tts (Andrew)."
+  },
+  "flags": [
+    {
+      "severity": "advisory",
+      "rule": "custom-scene-build",
+      "note": "s05 is template:custom and needs a bespoke animated component built at render time (not in the 12-template base).",
+      "fix_hint": "Build the 'messy row -> AI pass -> clean row' animation in Remotion (GSAP/HyperFrames optional) during the render step; QA it visually at the final gate."
+    }
+  ],
+  "issues": []
+}

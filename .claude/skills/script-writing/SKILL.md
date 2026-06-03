@@ -23,6 +23,21 @@ does not self-approve (that's `script-review`, then the human gate).
    **synthetic data**; pure-conceptual claims are framed as ideas, not tested fact.
 4. **One idea per sentence** (sentences are timing units).
 5. Hook lands in ≤ 10s; one subtle CTA (subscribe); short branded outro.
+6. **Prefer concrete proof, by judgment (not a hard rule).** A real mini-example or a
+   specific before→after gives the viewer something tangible instead of pure theory, and
+   usually helps — so consider one reasonably early. BUT some topics are carried perfectly
+   well by strong narration alone with no example, or work better with a longer intro and
+   then an example. Decide per topic; never force an example where it doesn't belong.
+7. **Thorough, not short. Length follows the topic.** A video runs exactly as long as its
+   topic needs to be covered well — **there is no target length**, and you never pad or cut
+   to hit a number. Explain at a calm, detailed pace and err toward more depth; let simple
+   topics be short and rich topics be long. The viewer should finish feeling they actually
+   learned something. (Owner rule, 2026-06-03.)
+8. **Visual variety — don't loop the same templates.** The 12 fixed templates are a
+   reliable BASE, not the whole vocabulary. Every video should include some **fresh / bespoke
+   scenes** (mark them `template: "custom"`) so videos don't all look identical — build them
+   with Remotion + the installed HyperFrames / GSAP / Three / Lottie skills. Mix custom
+   beats in with the base templates; never ship a video that is just the gallery on repeat.
 
 ## Write to the archetype (STYLE_GUIDE §5)
 - **ideas:** hook → framing → N items (idea → why it pays → tiny illustration →

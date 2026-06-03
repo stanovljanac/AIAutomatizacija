@@ -30,9 +30,10 @@ Storyboard is now automatic (fixed templates). The mini-demo archetype inserts a
 3. If the archetype needs facts (Comparison/stats), research → `sources.md` (paraphrased
    facts, citable links; never transcripts — D-002). Ideas/Demo may skip formal sources.
 
-### ▶ GATE ① — You approve topic + archetype + angle
-You confirm the topic, the chosen archetype, and the angle (or tweak them). This is the
-cheapest place to redirect. On approval → continue.
+### ▶ GATE ① — topic + archetype + angle (AUTO — no stop)
+The owner opted out of the Gate-1 stop: the agent classifies the archetype, drafts the
+angle, writes `brief.json`, and **proceeds straight to the script without asking**. The
+owner reviews at the script gate instead. (Keep the brief on record either way.)
 
 **Output:** `brief.json`, optional `sources.md`.
 

@@ -1,0 +1,49 @@
+{
+  "id": "002-what-is-ai-automation",
+  "scenes": [
+    { "scene_id": "s01", "beats": [
+      { "template": "custom", "props": { "component": "hand-copy", "title": "Still doing this by hand?" }, "sentences": [0, 1] },
+      { "template": "hook-card", "props": { "kicker": "Boring AI Automations", "title": "What AI automation actually is" }, "sentences": [2, 3] }
+    ] },
+    { "scene_id": "s02", "beats": [
+      { "template": "custom", "props": { "component": "ai-flow", "title": "What is AI?" }, "sentences": [0, 3] },
+      { "template": "icon-list", "props": { "title": "So, what AI is NOT", "items": [ { "icon": "flag", "label": "Not magic" }, { "icon": "person", "label": "Not here to take your job" } ] }, "sentences": [4, 5], "revealOn": "sentences" }
+    ] },
+    { "scene_id": "s03", "beats": [
+      { "template": "term-highlight", "props": { "term": "Automation", "definition": "A task that runs by itself, on a trigger - no human pressing buttons." }, "sentences": [0, 1] },
+      { "template": "icon-list", "props": { "title": "It just... happens", "items": [ { "icon": "spreadsheet", "label": "A new row appears, and it's handled" }, { "icon": "email", "label": "An email lands, and it's filed" } ] }, "sentences": [2, 4], "revealOn": "sentences" }
+    ] },
+    { "scene_id": "s04", "template": "flow", "cueWords": ["trigger", "handles", "approve"], "props": {
+      "title": "The whole loop",
+      "steps": [
+        { "icon": "spreadsheet", "label": "Boring task\n(the trigger)" },
+        { "icon": "ai", "label": "AI does\nthe messy part", "accent": true },
+        { "icon": "check", "label": "You check\n& approve" }
+      ] } },
+    { "scene_id": "s05", "template": "custom", "props": { "component": "spreadsheet-clean", "title": "A real one: messy row in, clean row out" } },
+    { "scene_id": "s06", "beats": [
+      { "template": "custom", "props": { "component": "chaos-x", "title": "The all-in-one mega-system" }, "sentences": [0, 2] },
+      { "template": "custom", "props": { "component": "desk-scene", "title": "The real wins were right under their nose" }, "sentences": [3, 4] }
+    ] },
+    { "scene_id": "s07", "template": "icon-list", "cueWords": ["spreadsheets", "invoices", "schedules", "emails", "report"], "props": {
+      "title": "The boring goldmine",
+      "items": [
+        { "icon": "spreadsheet", "label": "Data between spreadsheets" },
+        { "icon": "invoice", "label": "Invoices" },
+        { "icon": "calendar", "label": "Shift & appointment schedules" },
+        { "icon": "email", "label": "Reminder & invite emails" },
+        { "icon": "chart", "label": "The same Monday report" }
+      ] } },
+    { "scene_id": "s08", "template": "stat-callout", "props": { "value": "Once.", "label": "Set it up once - then it runs while your coffee's still hot." } },
+    { "scene_id": "s09", "template": "hook-card", "props": { "kicker": "Why this channel", "title": "I dig out the wins worth your time", "subtitle": "No guru act. No forty-nine dollar course." } },
+    { "scene_id": "s10", "template": "icon-list", "cueWords": ["ideas", "examples", "English", "worth"], "props": {
+      "title": "What you get here",
+      "items": [
+        { "icon": "document", "label": "Small ideas you can copy" },
+        { "icon": "check", "label": "Tiny working examples" },
+        { "icon": "note", "label": "Plain English, no hype" },
+        { "icon": "flag", "label": "I'll tell you when it's NOT worth it" }
+      ] } },
+    { "scene_id": "s11", "template": "cta-card", "props": { "title": "Stick around", "subtitle": "for more automation ideas" } }
+  ]
+}

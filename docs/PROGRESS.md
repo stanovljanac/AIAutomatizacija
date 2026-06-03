@@ -30,6 +30,30 @@ Format:
 
 <!-- New entries below this line, newest on top. Add as you build each phase. -->
 
+## 2026-06-04 — Pilot 002 produced + dynamic-scene system (D-022)
+- who: agent + owner (gate reviews)
+- did:
+  - **Produced pilot 002** end-to-end ("What AI Automation Actually Is"): script →
+    edge-tts Andrew voice → **faster-whisper alignment** (F: venv `.venv`, F: HF cache;
+    edge-tts emits no WordBoundary so we recover word timings from the clean TTS) →
+    Remotion render → burned-in synced captions → mp4. Built the production renderer:
+    `Main.tsx`, `pipeline/04-render/build-props.mjs`, scene-template library, `CaptionsTrack`.
+  - **Iterated to dynamic scenes (D-022)** after owner feedback that scenes were too
+    static: reveal-sync from alignment (`revealOn`/`cueWords`), scene **beats**, persistent
+    background + **crossfade** (`SceneWrapper`), an **icon registry**, new **`flow`** +
+    **`icon-list`** templates, and bespoke illustration scenes (`HandCopy`, `AiFlow`,
+    `ChaosX`, `DeskScene`). Rewired 002's scene-plan to use them; dropped "in plain English"
+    from the hook card. Re-rendered (~4:04, 1080p/30fps).
+  - **Cleanup:** removed test/proof scaffolding (Test/Bakeoff/BakeoffLong/KineticText,
+    hyperframes/bakeoff demo, Serbian colab/kaggle/tts scripts). Kept TemplateGallery (dev),
+    HyperFrames CLI + agent skills (installed: hyperframes/gsap/three/lottie/…), 001 archive.
+  - Rules added (owner): never shorten — **length follows the topic**; visual density
+    follows the narration; build custom/illustrated scenes, don't loop the same templates;
+    **Gate 1 is auto** (no stop) — real gates are script + final video. Decisions D-020…D-022.
+- next: owner watches the dynamic 002 (Gate 3). On approval: thumbnail (2 variants) + Short +
+  YouTube draft, then produce video #2 from the idea-bank on the new system.
+- blockers: none.
+
 ## 2026-06-02 — PIVOT: Serbian-AI → "Boring AI Automations" (English, faceless)
 - who: agent + owner (long decision interview)
 - did: After Serbian TTS proved an unfixable free blocker (D-010), re-founded the

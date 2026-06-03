@@ -69,6 +69,8 @@ yarn-error.log*
 .pnpm-store/
 templates/remotion/out/
 templates/remotion/.cache/
+templates/remotion/public/
+templates/remotion/props/
 
 # ── HyperFrames (render bake-off; opt-in block renderer) ──────────────────
 templates/hyperframes/**/snapshots/
@@ -76,6 +78,8 @@ templates/hyperframes/**/renders/
 templates/hyperframes/**/.hyperframes/
 templates/hyperframes/**/capture/
 templates/hyperframes/package-lock.json
+templates/hyperframes/.bin/
+templates/hyperframes/*.log
 
 # ── Python ────────────────────────────────────────────────────────────────
 __pycache__/

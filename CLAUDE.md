@@ -30,9 +30,10 @@ Why we pivoted from the old Serbian-AI channel: `docs/DECISIONS.md` (D-011…D-0
    topics/facts, never sentences. Demo data is **synthetic** (never real client data).
 3. **Every text passes a review agent before a human sees it.** Author → review → fix.
    See `.claude/skills/script-review/SKILL.md`.
-4. **Three human gates: topic+angle+type → script → final video.** Storyboard is now
-   automatic (fixed templates). Never publish without the final-video approval.
-   See `docs/WORKFLOW.md`.
+4. **Human gates: script → final video.** Gate 1 (topic+angle+type) is **auto** — the
+   owner opted out of that stop, so classify + draft the angle and proceed straight to
+   the script. Storyboard is automatic (fixed templates). Never publish without the
+   final-video approval. See `docs/WORKFLOW.md`.
 5. **Audio is one continuous track.** Scenes/captions snap to forced-alignment
    timestamps; audio is never cut. See `.claude/skills/voice-synthesis/SKILL.md`.
 6. **Never delete or overwrite a file/asset without asking first.** Writing brand-new
@@ -118,4 +119,7 @@ three gates.
 - One continuous audio track; scenes snap to sentence timestamps.
 - Synthetic demo data only; review agent before human; human approves final video.
 - **Never delete/overwrite existing files or assets without asking first** (principle 6).
+- **Never `git commit` or `git push` unless the owner explicitly asks — every time.**
+  Finishing a task or a "continue" instruction is NOT commit permission; leave changes
+  in the working tree and wait for an explicit "commit". Offer push separately.
 - Keep this file thin. New rules go in the relevant skill or `style/` file.
