@@ -243,7 +243,74 @@ old one (don't delete history).
 - **Consequences:** Lively, distinctive videos that stay in lockstep with the voice; more
   authoring per video, anchored by the reusable library + the sync contract.
 
+## D-023 — Rename: "Boring AI Automations" → "The Automation Desk" (supersedes D-012)
+- **Context:** Nothing is published yet, so a rename is cheap. The owner wants a brand that
+  lasts beyond the narrow "boring automations" niche — room to grow into bigger systems,
+  tools, comparisons, and news.
+- **Decision:** Channel name **The Automation Desk**, handle **@TheAutomationDesk**.
+  "Boring automations" survives as a *series* inside it (see D-028). Rebrand all assets/docs.
+- **Consequences:** Broader, more durable brand; supersedes the D-012 name.
+
+## D-024 — TTS: edge-tts for drafts, **Azure AI Speech for the final** (supersedes D-014)
+- **Context:** edge-tts commercially **violates Microsoft's ToS** (it reverse-engineers the
+  Edge read-aloud endpoint) and is unreliable — unfit for a monetized channel's published
+  audio. Azure AI Speech offers the **same neural voices** (incl. Andrew), **500k chars/month
+  free**, and a real commercial license.
+- **Decision:** Provider-aware TTS adapter. **edge-tts = drafts only** (free, fast iteration,
+  never in a published file); **Azure = the final voice** (and Shorts), regenerated once the
+  video is locked so we don't burn the quota per iteration. faster-whisper alignment works on
+  either. Owner adds a free Azure Speech key (`AZURE_SPEECH_KEY`/`REGION`).
+- **Consequences:** Legal, reliable published audio at $0 within quota; edge stays a dev tool.
+
+## D-025 — Always disclose "altered content" at upload (supersedes the old no-disclosure note)
+- **Context:** YouTube's 2026 policy requires disclosing realistic synthetic content; an AI
+  voice narrating qualifies. Disclosure is the obligation; SynthID is Google's *detection*,
+  not a requirement (the popular video overstates it).
+- **Decision:** **Always set altered-content = yes** for our videos (AI voice + AI visuals).
+  `publish.json` carries `altered_content: true`; set the flag at upload (Studio toggle; verify
+  if the Data API exposes it). Disclosure alone doesn't save mass-produced/templated content —
+  originality (D-018/D-022/D-028) still does the heavy lifting.
+- **Consequences:** Reverses the earlier "no disclosure"; keeps us inside YPP rules.
+
+## D-026 — Write for the answer-engine: answer-first + specific, citable facts
+- **Context:** YouTube/Google now reward topical authority and citation-friendly structure;
+  AI overviews weight the first 30–60s most.
+- **Decision:** Scripts **answer the topic's core question in the first 30–60s**, then hook,
+  then deeper build. Use **specific names, dates, numbers, places** (e.g. "26,000 workers in
+  Malaysia were laid off in 2026 because…"), not vague claims. Specifics ⇒ **`sources.md`
+  mandatory**; the review agent flags vague/uncited stats.
+- **Consequences:** More research per video; better pickup by search/AI-overviews.
+
+## D-027 — Cross-platform distribution via Postiz (self-hosted, free)
+- **Context:** Faceless AI channels need a real off-platform presence (matching socials,
+  Pinterest, Medium, a store) to avoid "content-farm" flags, and the owner wants it automated.
+- **Decision:** A new `pipeline/07-distribute` phase posts derivatives **after** the YouTube
+  upload (passing the video link), through **Postiz** (open-source, self-hosted = free, 30+
+  channels, API/agent-friendly) as the hub. Per-platform skills: Short/Reel → YT/IG/TikTok,
+  link-post → FB/X, Pinterest pin, blog-from-transcript (Medium's API is retired → Hashnode/
+  dev.to or semi-manual). MCP-native alternative: Zernio (paid). Honest gating caveats apply
+  (TikTok audit, X write tier, IG Business account).
+- **Consequences:** One connected brand, mostly automated; some platforms stay semi-manual.
+
+## D-028 — Anti-slop core: human fingerprint + the "Desk" series system + topical clusters; staged sequencing
+- **Context:** The #1 monetization risk is "mass-produced / templated / low-original-value,"
+  not the AI voice. Full automation and a human fingerprint are in tension.
+- **Decision:**
+  - **Human fingerprint (owner: angle + occasional real demo):** every video has an
+    owner-approved original angle/POV + honest "not worth it" takes; **every Nth video includes
+    a real owner-recorded screen demo** (genuine human footage = strongest anti-farm signal).
+  - **Series system → archetypes:** **Desk Fixes** (mini-demo) · **Desk Loops** (ideas/diagram)
+    · **Automation Breakdowns** (comparison) · **Desk Notes** (news/short).
+  - **Topical clusters:** publish the idea-bank in owned clusters (spreadsheets, then email…)
+    to build topical authority — not random one-offs.
+  - **Sequencing:** compliance + brand presence BEFORE clip 1; the auto-posting machinery is
+    built in parallel and goes live by clips 1–3 (don't block the launch). Build for durable
+    truths, not unverified hype specifics.
+- **Consequences:** Distinctive, authority-building, monetizable channel with a small but real
+  human touch.
+
 > Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
+> **D-012** (name) → see D-023. **D-014** (TTS) → see D-024. The old "no AI-disclosure" note → see D-025.
 > Still in force: **D-002** (no YouTube transcripts; clean sources only).
 
 <!-- Add D-020, D-021, … as new decisions arise. Supersede, don't delete. -->

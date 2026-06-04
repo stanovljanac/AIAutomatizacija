@@ -1,0 +1,40 @@
+{
+  "id": "002-what-is-ai-automation",
+  "title_options": [
+    "What AI Automation Actually Is (No Hype, Plain English)",
+    "AI Automation Explained Simply — and Why I Built This Channel",
+    "Stop Ignoring the Boring Stuff: What AI Automation Really Is"
+  ],
+  "chosen_title": null,
+  "description": "AI automation is just software that reads messy input and makes a sensible decision, plus a task that runs by itself on a trigger — put together, a boring job gets done automatically and you only check the result. This video explains it in plain English with a real example, and why I started The Automation Desk.\n\nEveryone chases giant AI systems and ignores the small, boring daily tasks that actually waste time: data entry, invoices, schedules, reminder emails. This channel is about automating those — tiny wins you can copy and scale to your own work. No hype. No guru act. No $49 course.\n\nChapters:\n0:00 Still doing it by hand?\n0:22 What \"AI\" actually means\n0:55 What \"automation\" means\n1:13 The whole loop: trigger → AI → check\n1:39 A real example: messy row in, clean row out\n2:18 The mistake almost everyone makes\n2:40 The boring goldmine\n2:58 Set it up once\n3:17 Why I built this channel\n3:36 What you get here\n3:58 Wrap-up\n\nNew automation ideas regularly. Subscribe → @TheAutomationDesk\n\n(Narration and visuals are AI-assisted; disclosed as altered content.)",
+  "altered_content": true,
+  "tags": [
+    "ai automation", "what is ai automation", "automate boring tasks", "office automation",
+    "ai for spreadsheets", "no code automation", "boring ai automations", "automate data entry",
+    "ai workflow", "productivity automation", "automate invoices", "small business automation"
+  ],
+  "chapters": [
+    { "time": "0:00", "label": "Still doing it by hand?" },
+    { "time": "0:22", "label": "What \"AI\" actually means" },
+    { "time": "0:55", "label": "What \"automation\" means" },
+    { "time": "1:13", "label": "The whole loop" },
+    { "time": "1:39", "label": "A real example" },
+    { "time": "2:18", "label": "The mistake everyone makes" },
+    { "time": "2:40", "label": "The boring goldmine" },
+    { "time": "2:58", "label": "Set it up once" },
+    { "time": "3:17", "label": "Why I built this channel" },
+    { "time": "3:36", "label": "What you get here" },
+    { "time": "3:58", "label": "Wrap-up" }
+  ],
+  "thumbnail": {
+    "phrase": "STILL DOING THIS BY HAND?",
+    "template": "Thumbnail (variant A: images/thumb_a.png; variant B: images/thumb_b.png)"
+  },
+  "credit_source": null,
+  "short": {
+    "title": "What AI automation actually is (in 40 seconds)",
+    "tags": ["ai automation", "automate boring tasks", "boring ai automations"]
+  },
+  "youtube_video_id": null,
+  "status": "draft_pending"
+}

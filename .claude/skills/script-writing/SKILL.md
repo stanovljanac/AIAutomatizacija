@@ -38,6 +38,16 @@ does not self-approve (that's `script-review`, then the human gate).
    scenes** (mark them `template: "custom"`) so videos don't all look identical — build them
    with Remotion + the installed HyperFrames / GSAP / Three / Lottie skills. Mix custom
    beats in with the base templates; never ship a video that is just the gallery on repeat.
+9. **Answer-first + specific facts (D-026).** Answer the topic's core question in the **first
+   30–60 seconds** (AI overviews weight the opening most), then the hook, then the deeper
+   build. Use **specific names, dates, numbers, places** — "26,000 workers in Malaysia were
+   laid off in 2026 because…", not "lots of people lost jobs." Every specific factual claim
+   traces to `sources.md`.
+10. **Human fingerprint + series (D-028).** Carry the owner-approved **original angle/POV** and
+   honest "what wasn't worth it" takes; the channel's series tag belongs on the section-header:
+   **Desk Fixes** (mini-demo) · **Desk Loops** (ideas/diagram) · **Automation Breakdowns**
+   (comparison) · **Desk Notes** (news/short). Every Nth video should plan a real
+   owner-recorded demo (mini-demo) — genuine footage is the strongest anti-"content-farm" signal.
 
 ## Write to the archetype (STYLE_GUIDE §5)
 - **ideas:** hook → framing → N items (idea → why it pays → tiny illustration →

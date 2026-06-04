@@ -1,4 +1,4 @@
-# Boring AI Automations
+# The Automation Desk
 
 An automated, mostly-hands-off **YouTube content factory** for professional,
 **English-language**, **faceless** videos about **boring, everyday AI automations** —

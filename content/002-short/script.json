@@ -1,0 +1,72 @@
+{
+  "id": "002-short",
+  "language": "en",
+  "archetype": "ideas",
+  "angle": "The boring automations everyone ignores are exactly where the easy wins are.",
+  "title_working": "What AI automation actually is (in 40 seconds)",
+  "target_seconds": 42,
+  "scenes": [
+    {
+      "id": "s1",
+      "role": "hook",
+      "template": "hook-card",
+      "narration": "Here's what AI automation actually is, in plain English.",
+      "sentences": ["Here's what AI automation actually is, in plain English."],
+      "on_screen_text": "in 40 seconds",
+      "capture_id": null
+    },
+    {
+      "id": "s2",
+      "role": "point",
+      "template": "term-highlight",
+      "narration": "AI is just software that reads messy input, like a sheet or an email, and makes a sensible decision.",
+      "sentences": ["AI is just software that reads messy input, like a sheet or an email, and makes a sensible decision."],
+      "on_screen_text": "AI",
+      "capture_id": null
+    },
+    {
+      "id": "s3",
+      "role": "point",
+      "template": "term-highlight",
+      "narration": "Automation just means a task runs by itself, on a trigger, with nobody pressing buttons.",
+      "sentences": ["Automation just means a task runs by itself, on a trigger, with nobody pressing buttons."],
+      "on_screen_text": "Automation",
+      "capture_id": null
+    },
+    {
+      "id": "s4",
+      "role": "point",
+      "template": "bullet-steps",
+      "narration": "Put them together. A boring job shows up. The AI handles the messy part. And you just check the result.",
+      "sentences": [
+        "Put them together.",
+        "A boring job shows up.",
+        "The AI handles the messy part.",
+        "And you just check the result."
+      ],
+      "on_screen_text": null,
+      "capture_id": null
+    },
+    {
+      "id": "s5",
+      "role": "point",
+      "template": "stat-callout",
+      "narration": "You set it up once, and it runs while your coffee is still hot.",
+      "sentences": ["You set it up once, and it runs while your coffee is still hot."],
+      "on_screen_text": null,
+      "capture_id": null
+    },
+    {
+      "id": "s6",
+      "role": "cta",
+      "template": "cta-card",
+      "narration": "That's the whole channel: the boring automations everyone ignores. Follow The Automation Desk.",
+      "sentences": [
+        "That's the whole channel: the boring automations everyone ignores.",
+        "Follow The Automation Desk."
+      ],
+      "on_screen_text": null,
+      "capture_id": null
+    }
+  ]
+}

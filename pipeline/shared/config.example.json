@@ -2,10 +2,17 @@
   "language": "en",
   "voice": {
     "provider": "edge-tts",
+    "final_provider": "azure",
     "edge_tts": {
       "voice": "en-US-AndrewMultilingualNeural",
       "rate": "+8%",
       "pitch": "+0Hz"
+    },
+    "azure": {
+      "voice": "en-US-AndrewMultilingualNeural",
+      "rate": "+8%",
+      "key_env": "AZURE_SPEECH_KEY",
+      "region_env": "AZURE_SPEECH_REGION"
     },
     "target_wpm": 160,
     "loudness_lufs": -16

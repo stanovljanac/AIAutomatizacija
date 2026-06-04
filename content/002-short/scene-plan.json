@@ -1,0 +1,14 @@
+{
+  "id": "002-short",
+  "scenes": [
+    { "scene_id": "s1", "template": "hook-card", "props": { "kicker": "The Automation Desk", "title": "What AI automation actually is" } },
+    { "scene_id": "s2", "template": "term-highlight", "props": { "term": "AI", "definition": "reads messy input → a sensible decision" } },
+    { "scene_id": "s3", "template": "term-highlight", "props": { "term": "Automation", "definition": "a task runs itself, on a trigger" } },
+    { "scene_id": "s4", "template": "bullet-steps", "cueWords": ["job", "handles", "check"], "props": {
+      "title": "The loop",
+      "items": ["A boring job shows up", "AI handles the messy part", "You just check it"]
+    } },
+    { "scene_id": "s5", "template": "stat-callout", "props": { "value": "Once.", "label": "It runs while your coffee's still hot." } },
+    { "scene_id": "s6", "template": "cta-card", "props": { "title": "The Automation Desk", "subtitle": "follow for more automation ideas" } }
+  ]
+}

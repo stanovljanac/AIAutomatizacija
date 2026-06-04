@@ -1,6 +1,6 @@
 # ROADMAP
 
-Phased plan from the pivot to a repeatable, mostly-automated **Boring AI Automations**
+Phased plan from the pivot to a repeatable, mostly-automated **The Automation Desk**
 channel. Each phase has **exit criteria** — concrete, checkable conditions. Quality
 first; no hard deadline. Log details in `docs/PROGRESS.md`.
 

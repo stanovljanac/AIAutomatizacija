@@ -27,6 +27,7 @@
         "template": { "type": "string" }
       }
     },
+    "altered_content": { "type": "boolean", "description": "Always true for us (AI voice + AI visuals) — set 'altered content = yes' at upload (D-025)." },
     "credit_source": { "type": ["string", "null"] },
     "short": {
       "type": "object",

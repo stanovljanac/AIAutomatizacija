@@ -1,101 +1,92 @@
 # CHANNEL
 
-Name, niche, audience, SEO strategy, and the account decision. This complements
-`style/STYLE_GUIDE.md` §8 (titles/descriptions/thumbnails).
+Name, niche, series system, audience, SEO, brand presence, and monetization. Complements
+`style/STYLE_GUIDE.md` §8 (titles/descriptions/thumbnails). Rename rationale: `DECISIONS.md`
+D-023; anti-slop/brand strategy: D-025…D-028.
 
 ---
 
-## 1. Niche & promise
+## 1. Name & promise
 
-**Niche:** **boring, everyday AI automations** — the small, unglamorous back-office
-tasks people do by hand every day (data entry, invoicing, shift scheduling,
-reminder/invite emails, simple record-keeping, copying between spreadsheets/docs).
-**English, global.**
+**Name:** **The Automation Desk** · handle **@TheAutomationDesk**. English, faceless.
 
-**Promise to the viewer:** the place builders come to steal **overlooked,
-money-making automation ideas** for the dull tasks nobody else covers — shown on a
-tiny example you can scale to any real system.
+**Promise:** the desk where the boring, everyday automations get figured out and explained
+in plain English — start with the small back-office tasks everyone ignores, and grow into
+bigger systems, tool comparisons, and automation news. One durable brand, not a one-niche
+channel.
 
-**Why now:** everyone chases huge end-to-end systems (Zapier/n8n mega-builds) and
-ignores the small daily pains. That gap = low competition + high RPM (B2B/software
-intent) + an audience that turns ideas into paid work.
+**Differentiation:** we own the *unglamorous* automations (data entry, invoices, scheduling,
+reminder emails) and present them as a real show with recurring formats — not a content farm.
 
-## 2. Name
+## 2. The series system (maps onto the 4 archetypes — D-028)
 
-**Boring AI Automations** — the "boring" angle *is* the differentiation and the SEO
-hook (we own the tasks others find too dull). Backup if the handle is taken:
-**The AI Automation Desk**. (DECISIONS D-012.)
+| Series | Archetype | What it is |
+|---|---|---|
+| **Desk Fixes** | mini-demo | a small real fix shown on a tiny example (owner screen-capture) |
+| **Desk Loops** | ideas / diagram | "N ways to automate X" + the trigger→AI→check loop |
+| **Automation Breakdowns** | comparison | "best tool/model for X", honest analysis |
+| **Desk Notes** | news / short | quick takes on automation/AI news |
 
-## 3. Account decision (DECISIONS D-016, resolves old D-005)
+The series tag appears on the section-header and in titles/playlists → topical authority +
+recognizable show.
 
-**Reuse the older EconVault account, fully repurposed:** remove old/private content,
-change channel keywords + branding to this niche now, and **rename** once it hits
-YouTube's channel-rename eligibility.
-- ⚠️ **Verify the current rename rule** before relying on it (historically tied to
-  handle/branding policy, not a fixed follower count). Check YouTube Help first.
-- ⚠️ Keep the niche **clean** — clear any old finance focus so the algorithm sees one
-  consistent topic. A clean niche matters more than account age.
+## 3. Topical clusters (answer-engine authority — D-026/D-028)
+
+Publish in **owned clusters**, not random one-offs: e.g. run a batch of *spreadsheet
+automations*, then *email automations*, then *scheduling*, etc. The idea-bank
+(`pipeline/00-ideas/ideas.json`) is tagged by task/sector/tool; produce cluster by cluster so
+YouTube/Google read us as the authority on each.
 
 ## 4. Audience
 
-**Primary:** builders / freelancers / no-code & automation agencies who **create
-automations for other people** and come here for inspiration they can resell.
-**Secondary:** small-business owners/managers curious what's possible.
-*Not* the end clerks/accountants themselves — they don't watch automation content
-(it isn't their job). Write for the person who will *build and sell* the solution.
+Builders / freelancers / no-code & automation agencies who make automations for others (and
+SMB owners curious what's possible). They come for resell-able, copy-able ideas. Tone: sharp
+practical engineer + warm teacher (STYLE_GUIDE §1).
 
-They want: a quick, concrete idea + proof it's feasible + a sense of how to adapt it.
-They do **not** want a 40-minute full system build.
+## 5. Formats & cadence
 
-## 5. Content pillars (organized by the painful task)
+- **Long:** by archetype/series (Ideas 5-7m, Mini-demo 3-5m, Diagram 5-8m, Comparison 6-10m;
+  length follows the topic — never padded/cut).
+- **Shorts/Reels:** 1-2 auto-repurposed per long video → YouTube Shorts + Instagram + TikTok.
+- **Cadence:** on-demand, in cluster order; let real metrics re-rank the idea-bank.
 
-Driven by the idea-bank (`pipeline/00-ideas`), tagged by task/sector/tool/archetype
-and ranked by predicted demand. Recurring task clusters:
+## 6. SEO & answer-engine (D-026)
 
-1. **Data entry & copying** — between spreadsheets, forms, docs, emails.
-2. **Documents & records** — invoices, certificates, letters, simple registries.
-3. **Scheduling** — shifts, appointments, reminders, recurring calendars.
-4. **Outbound comms** — invite/reminder/confirmation emails, bulk personalised messages.
-5. **Lookups & reports** — pulling, summarising, and formatting routine data.
+- **Answer-first:** the title + first 1-2 description lines + first 30-60s of the video
+  directly answer the core question, with **specific names/dates/numbers/places**.
+- **Titles:** front-load the search keyword; benefit/curiosity; ≤ ~60 chars.
+- **Descriptions:** answer + keyword first, then summary, then chapters + links.
+- **Tags:** task + tool names + variants. **Chapters** always. **Thumbnails:** consistent
+  brand system (VISUAL_IDENTITY §9), 2 variants → owner picks.
 
-Under-digitised sectors to mine for examples: schools, municipalities, accounting,
-notaries/clerks, pharmacies, hospitality (cafés), small banks/back-office.
+## 7. Brand presence — the off-platform machine (D-027, owner setup checklist)
 
-## 6. Formats & cadence
+Faceless AI channels must read as a real connected brand (Fix 3). Owner one-time setup:
+- [ ] Create socials under **@TheAutomationDesk**: Instagram, TikTok, Facebook (Page), X,
+      Pinterest, plus a blog (Hashnode/dev.to; Medium semi-manual).
+- [ ] **Link all of them in the YouTube "links" section**; put the **YouTube channel in each
+      platform's bio** → one connected brand.
+- [ ] Connect a **free store** (Fourthwall / Spreadshop) to the channel — legitimacy signal
+      (Fix 4), even at $0 sales.
+- [ ] Stand up **Postiz** (self-hosted, free) and connect each account once (OAuth) so the
+      `07-distribute` pipeline can auto-post Shorts/links/pins/articles after each upload.
 
-- **Long:** 4 archetypes, length by type (Ideas 5-7m, Mini-demo 3-5m, Diagram 5-8m,
-  Comparison 6-10m). The monetization backbone.
-- **Shorts:** 1-2 auto-repurposed from each long video (light music allowed on Shorts).
-- **Cadence:** on-demand / as time allows (~10h/week); no rigid schedule. Produce in
-  idea-bank **score order**; let real metrics re-rank.
+## 8. Compliance (D-024/D-025)
 
-## 7. SEO strategy (practical)
+- **Always disclose altered content = yes** at upload (AI voice + AI visuals).
+- **Voice:** Azure AI Speech for the published audio (licensed); edge-tts for drafts only.
+- Originality + the human-fingerprint (owner angle + occasional real demo) is what actually
+  protects monetization — disclosure alone doesn't.
 
-- **Keyword research per topic:** free signals — YouTube & Google search-suggest,
-  autocomplete, competitor view counts — feed the idea-bank `score`. Put the main
-  search term early in title + description.
-- **Titles:** benefit/curiosity + front-loaded keyword, ≤ ~60 chars, no pure clickbait.
-- **Descriptions:** hook + keyword in the first 1-2 lines; short summary; then chapters/
-  timestamps and links. Natural language, no stuffing.
-- **Tags:** task + tool names (Excel, Sheets, Outlook, Notion, Claude…) + variants.
-- **Thumbnails:** consistent brand system (VISUAL_IDENTITY §9); 1-4 word phrase; 2
-  variants per video, owner picks.
-- **Chapters:** add timestamps (help retention & search).
-- **Consistency:** same intro/outro, same look, regular-enough cadence → algorithm trust.
-- **Cross-format:** Shorts funnel to the long; pin a comment linking the full video.
+## 9. Account & monetization
 
-## 8. Monetization (DECISIONS D-017)
+- **Repurpose EconVault** → rename to The Automation Desk, clear old finance content, rebrand
+  keywords (channel keywords: `ai automation, office automation, automate boring tasks,
+  no-code, spreadsheets, productivity, small business automation, ai workflows`).
+- **Monetization:** ad RPM + views for now; products/affiliate deferred (no Stripe). Single
+  CTA = subscribe.
 
-- **Ad RPM + views only for now.** This niche carries high B2B/software RPM; the CTA
-  is simply **subscribe**.
-- Products/affiliate/courses are **deferred** (owner lacks Stripe-class payout rails in
-  Serbia). Revisit if an agency/contract engagement appears.
-- Originality matters: "reused content" and templated AI-slop get demonetized — which is
-  exactly why every script has an **original human angle** (PRD R-originality, D-018).
-- No AI-disclosure label is required (we don't depict real people/events). (D-…/PRD.)
+## 10. Growth loop
 
-## 9. Growth review loop
-
-After each video, append to `docs/PROGRESS.md` and the idea's `metrics`: CTR, avg view
-duration, retention dips, search terms that landed. Re-rank the idea-bank; double down on
-the **task/sector/tool/archetype** that performs best. The system improves with data.
+After each video, log CTR / retention to `docs/PROGRESS.md` + the idea's `metrics`; re-rank
+the idea-bank; double down on the best cluster/series/tool. The system improves with data.

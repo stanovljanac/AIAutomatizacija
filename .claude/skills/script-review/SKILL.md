@@ -14,6 +14,11 @@ write `script.review.json` with `pass: true|false` + a list of issues.
 - [ ] Hook lands in ≤ 10s and promises a payoff.
 - [ ] **Accuracy by archetype:** comparison/stats claims trace to `sources.md`; demo
       steps use **synthetic data**; conceptual claims are framed as ideas, not fact.
+- [ ] **Answer-first (D-026):** the topic's core question is answered in the first 30–60s.
+- [ ] **Specific, not vague (D-026):** real names/dates/numbers/places where possible; flag
+      hand-wavy stats ("a lot of people…") and require a sourced specific instead.
+- [ ] **Series + fingerprint (D-028):** a series tag fits (Desk Fixes/Loops/Breakdowns/Notes);
+      original angle present; ≥1 custom/bespoke scene planned.
 - [ ] "Scale it to your own process" close where relevant; we don't build full systems.
 - [ ] Sentences are clean timing units; no over-long scenes (≤ ~4 sentences).
 - [ ] Every scene has a **valid `template`** tag (script.schema.json) and sensible role order.

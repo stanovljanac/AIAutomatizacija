@@ -10,8 +10,10 @@ An automated, mostly-hands-off **YouTube content factory** that produces
 professional, **English-language**, **faceless** videos about **boring, everyday
 AI automations** — the small back-office tasks everyone ignores while chasing big
 systems (data entry, invoicing, shift scheduling, reminder/invite emails, simple
-record-keeping). We give **ideas and small worked examples**; viewers scale them to
-their own processes. Channel: **Boring AI Automations**.
+record-keeping), growing into bigger systems, tool comparisons, and news. We give
+**ideas and small worked examples**; viewers scale them to their own processes.
+Channel: **The Automation Desk** (@TheAutomationDesk). Recurring series:
+**Desk Fixes · Desk Loops · Automation Breakdowns · Desk Notes** (`style/CHANNEL.md`).
 
 We never translate or copy anyone's video. We take *topics and facts*, then build
 **original** English scripts, visuals, and voice. Every script carries an **original
@@ -26,8 +28,10 @@ Why we pivoted from the old Serbian-AI channel: `docs/DECISIONS.md` (D-011…D-0
 1. **Quality > speed > cost.** Target **$0**; the stack is mostly **local** now, so
    cost risk is low. If a step can't be free at acceptable quality, flag it.
 2. **Accuracy & originality.** Examples must actually work or be clearly framed as a
-   concept; the **original human angle is mandatory** in every script. Sources give
-   topics/facts, never sentences. Demo data is **synthetic** (never real client data).
+   concept; the **original human angle is mandatory** in every script. Answer the core
+   question early with **specific, sourced facts** (names/dates/numbers — D-026). Sources
+   give topics/facts, never sentences. Demo data is **synthetic** (never real client data).
+   **Always disclose altered content** at upload (AI voice + visuals — D-025).
 3. **Every text passes a review agent before a human sees it.** Author → review → fix.
    See `.claude/skills/script-review/SKILL.md`.
 4. **Human gates: script → final video.** Gate 1 (topic+angle+type) is **auto** — the

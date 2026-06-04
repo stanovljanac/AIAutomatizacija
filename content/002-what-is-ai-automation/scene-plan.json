@@ -3,7 +3,7 @@
   "scenes": [
     { "scene_id": "s01", "beats": [
       { "template": "custom", "props": { "component": "hand-copy", "title": "Still doing this by hand?" }, "sentences": [0, 1] },
-      { "template": "hook-card", "props": { "kicker": "Boring AI Automations", "title": "What AI automation actually is" }, "sentences": [2, 3] }
+      { "template": "hook-card", "props": { "kicker": "The Automation Desk", "title": "What AI automation actually is" }, "sentences": [2, 3] }
     ] },
     { "scene_id": "s02", "beats": [
       { "template": "custom", "props": { "component": "ai-flow", "title": "What is AI?" }, "sentences": [0, 3] },

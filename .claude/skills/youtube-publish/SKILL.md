@@ -16,8 +16,12 @@ You prepare everything and upload a **private/draft** for the owner's final clic
   **chapters** (timestamps from `alignment.json`/scene starts); then any links.
 - **Tags:** task + tool names (Sheets, Excel, Outlook, Notion, Claude…) + variants.
 - **Thumbnail:** the owner picks `thumb_a` or `thumb_b`.
-- **No AI-disclosure label** (graphics + AI voice; not required — we don't depict real
-  people). Monetization model = ad RPM + views; the single CTA is **subscribe** (D-017).
+- **Always disclose altered content (D-025).** We use an AI voice + AI visuals, so set
+  **"altered content = yes"** at upload (YouTube Studio toggle; check if the Data API exposes
+  it, else the owner toggles it in Studio). `publish.json.altered_content` is `true`.
+- **Answer-first description (D-026):** the first 1–2 lines should directly answer the video's
+  core question with specific facts, then the keyword — this feeds AI overviews.
+- Monetization = ad RPM + views; single CTA = **subscribe → @TheAutomationDesk**.
 
 ## Short
 - Build the **Short** from the 1–2 key beats (vertical, light music ok), with its own

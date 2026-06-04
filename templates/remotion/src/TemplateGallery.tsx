@@ -13,7 +13,7 @@ import { renderTemplate, TemplateName } from "./templates/templates";
 const SEG = 125; // ~4.2s @ 30fps per template
 
 export const GALLERY: { name: TemplateName; data: any }[] = [
-  { name: "hook-card", data: { kicker: "Boring AI Automations", title: "Still doing this by hand?", subtitle: "3 boring tasks AI can take off your plate." } },
+  { name: "hook-card", data: { kicker: "The Automation Desk", title: "Still doing this by hand?", subtitle: "3 boring tasks AI can take off your plate." } },
   { name: "section-header", data: { index: 1, title: "Clean messy spreadsheet imports" } },
   { name: "flow", data: { title: "The whole loop", steps: [{ icon: "spreadsheet", label: "Boring task\n(trigger)" }, { icon: "ai", label: "AI does\nthe messy part", accent: true }, { icon: "check", label: "You check\n& approve" }] } },
   { name: "icon-list", data: { title: "The boring goldmine", items: [{ icon: "spreadsheet", label: "Data between spreadsheets" }, { icon: "invoice", label: "Invoices" }, { icon: "calendar", label: "Schedules" }, { icon: "email", label: "Reminder & invite emails" }] } },

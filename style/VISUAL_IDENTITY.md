@@ -99,7 +99,7 @@ Plus the always-on: `Intro` / `IntroShort`, `Outro` / `OutroShort`, `Subtitles`,
 
 ## 7. Intro / outro spec  *(finalize in Phase 2)*
 
-- **Intro (long):** wordmark "Boring AI Automations" + tagline, ≤ 3s, accent animation,
+- **Intro (long):** wordmark "The Automation Desk" + tagline, ≤ 3s, accent animation,
   then straight into the hook. **No music** (sound-design hit only).
 - **Outro (long):** "subscribe / next video" card + brand, ~5s. **No music.**
 - **Short variants:** tighter, vertical, ≤ 1.5s intro, minimal outro; **light music ok**.

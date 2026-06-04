@@ -1,6 +1,6 @@
 # PRD — Product Requirements Document
 
-**Project:** Boring AI Automations — automated, faceless, **English** YouTube channel
+**Project:** The Automation Desk — automated, faceless, **English** YouTube channel
 **Owner:** solo creator
 **Status:** Phase 0 (re-founding after the Serbian-AI pivot) — see `docs/ROADMAP.md`
 **Last updated:** 2026-06-02

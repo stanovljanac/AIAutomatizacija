@@ -30,6 +30,28 @@ Format:
 
 <!-- New entries below this line, newest on top. Add as you build each phase. -->
 
+## 2026-06-04 (late) — Rebrand → The Automation Desk + monetization compliance + Short draft
+- who: agent + owner (strategy from a YouTube 2026 algorithm breakdown; reviewed by a 2nd model)
+- did:
+  - **Rebrand → The Automation Desk** (@TheAutomationDesk) across all docs/skills/Remotion/
+    thumbnail/scene-plan (D-023). "Boring automations" becomes a *series*.
+  - **Compliance (verified by research):** edge-tts violates Microsoft ToS for commercial use →
+    **dual-TTS**: edge for drafts, **Azure AI Speech for the published final** (same Andrew voice,
+    500k chars/mo free) — `scripts/make_voice_azure.py`, config `voice.final_provider`, `.env`
+    keys (D-024). **Always disclose altered content = yes** at upload (D-025; reverses the old
+    no-disclosure note). **Answer-first + specific facts** script rules (D-026).
+  - **Anti-slop core (D-028):** human-fingerprint (owner angle + occasional real demo), the Desk
+    series system (Desk Fixes/Loops/Breakdowns/Notes ↔ archetypes), topical clusters. Staged
+    sequencing (compliance+presence before clip 1; auto-posting in parallel).
+  - **Distribution plan (D-027):** Postiz (self-host, free) hub + `pipeline/07-distribute`
+    (not built yet). Owner sets up accounts/store/Azure in parallel — see `docs/NEXT-SESSION.md`.
+  - **Assets:** thumbnail B + a workflow motif; **re-rendered 002** (rebrand); built the
+    **Short** (`content/002-short/`, 1080×1920, ~34s) — both still **edge-tts drafts** awaiting
+    the owner's separate approval, then Azure for the final voice.
+- next: owner approves the long + Short drafts (separately) + does Phase A in parallel; then
+  Azure final voice + launch + Phase B machinery. Full TODO in `docs/NEXT-SESSION.md`.
+- blockers: none. (Uncommitted since `fd1c1fe`.)
+
 ## 2026-06-04 — Pilot 002 produced + dynamic-scene system (D-022)
 - who: agent + owner (gate reviews)
 - did:
@@ -52,6 +74,10 @@ Format:
     **Gate 1 is auto** (no stop) — real gates are script + final video. Decisions D-020…D-022.
 - next: owner watches the dynamic 002 (Gate 3). On approval: thumbnail (2 variants) + Short +
   YouTube draft, then produce video #2 from the idea-bank on the new system.
+- owner feedback 2026-06-04 (applied): **redesigned `ChaosX`** into an iconified
+  microservice tangle (servers/DB/AI/queues with labels); reveal lead nudged (-0.22s) so
+  animations land on the word; outro is now the channel handle only ("@BoringAIAutomations"),
+  CTA stays on the prior scene. Committed & pushed the iteration (fd1c1fe).
 - blockers: none.
 
 ## 2026-06-02 — PIVOT: Serbian-AI → "Boring AI Automations" (English, faceless)

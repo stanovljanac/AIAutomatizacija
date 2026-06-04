@@ -27,9 +27,12 @@ const al = JSON.parse(readFileSync(join(cdir, "alignment.json"), "utf8"));
 
 const fps = cfg.render?.fps ?? 30;
 const F = (s) => Math.round(s * fps);
-const intro = Math.round(1.5 * fps);
-const outro = Math.round(2.5 * fps);
+const vertical = id.endsWith("-short"); // 002-short → 1080x1920 Short
+const dims = vertical ? (cfg.render?.short ?? { width: 1080, height: 1920 }) : (cfg.render?.long ?? { width: 1920, height: 1080 });
+const intro = Math.round((vertical ? 0.7 : 1.5) * fps);
+const outro = Math.round((vertical ? 1.2 : 2.5) * fps);
 const xf = cfg.render?.crossfadeFrames ?? 9;
+const LEAD = Math.round(0.22 * fps); // start reveals slightly BEFORE the word so the animation lands on cue
 const audioFrames = F(al.duration);
 const total = intro + audioFrames + outro;
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9']/g, "");
@@ -86,7 +89,7 @@ const scenes = beats.map((bt, k) => {
       } else {
         absSec = bt.sents[Math.min(i, bt.sents.length - 1)]?.start ?? bt.sents[0].start;
       }
-      reveals.push(Math.max(intro + F(absSec) - from, 0));
+      reveals.push(Math.max(intro + F(absSec) - from - LEAD, 0));
     }
     bt.props.reveals = reveals;
   }
@@ -110,11 +113,11 @@ mkdirSync(pubDir, { recursive: true });
 cpSync(join(cdir, "voice/narration.mp3"), join(pubDir, "narration.mp3"));
 
 const props = {
-  fps, width: cfg.render?.long?.width ?? 1920, height: cfg.render?.long?.height ?? 1080,
+  fps, width: dims.width ?? 1920, height: dims.height ?? 1080,
   introFrames: intro, outroFrames: outro, totalFrames: total, crossfadeFrames: xf,
   audioSrc: `${id}/narration.mp3`, audioFromFrame: intro,
-  intro: { wordmark: "Boring AI Automations", tagline: "automate the boring stuff" },
-  outro: { cta: "Stick around", brand: "Boring AI Automations" },
+  intro: { wordmark: "The Automation Desk", tagline: "automate the boring stuff" },
+  outro: { cta: "@TheAutomationDesk", brand: "" },
   scenes, captions: cues,
 };
 
