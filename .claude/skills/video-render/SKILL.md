@@ -24,8 +24,9 @@ You assemble the final video deterministically from `script.json` + `alignment.j
 - **Motion:** per VISUAL_IDENTITY §4; visual change every ~3–7s, snapped to sentences.
 
 ## Outputs
-- `video/final.mp4` (long), `video/short.mp4` (1–2 key beats, **light music allowed**),
-  `video/thumb_a.png` + `thumb_b.png` (from `visual-prompts`).
+- `video/final.mp4` (long), `video/short.mp4` (1–2 key beats, **light music allowed**;
+  length per **STYLE_GUIDE §7** — ~50–60s target, hard max 2:00, `config.defaults.short_seconds`
+  / `short_seconds_max`), `video/thumb_a.png` + `thumb_b.png` (from `visual-prompts`).
 - `render/props.json`. Set `brief.json.status: "rendered"`.
 
 ## Engine notes (combo)

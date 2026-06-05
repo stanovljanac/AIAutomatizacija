@@ -25,7 +25,7 @@ You prepare everything and upload a **private/draft** for the owner's final clic
 
 ## Short
 - Build the **Short** from the 1–2 key beats (vertical, light music ok), with its own
-  short title/description.
+  short title/description. Length per **STYLE_GUIDE §7** (canonical) — ~50–60s, hard max 2:00.
 
 ## Upload
 - Via YouTube Data API v3 as **private/draft** with all metadata + thumbnail, plus the

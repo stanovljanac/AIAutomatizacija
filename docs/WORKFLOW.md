@@ -48,13 +48,18 @@ that passes the review agent.
    **archetype** (STYLE_GUIDE §5), each scene with `role`, **`template`**, `narration`,
    `sentences`, optional `on_screen_text`/`capture_id`. Output: `script.json`
    (schema `pipeline/shared/schemas/script.schema.json`).
-2. **Review (mandatory).** Run `.claude/skills/script-review/SKILL.md`. Checks: the
-   **original human angle is present**, accuracy rule for the archetype, style/pacing,
+2. **Fact-check (generate + verify).** Run `.claude/skills/fact-check/SKILL.md` (`draft`
+   mode): extract every checkable claim (names/dates/numbers/prices/versions/limits/stats),
+   verify each against a **fetched** primary/reputable source, and write `sources.md` +
+   `claims.json`. HIGH-severity unverified claims go back to the writer. This removes the
+   owner's old manual "Google it to confirm" step (D-032).
+3. **Review (mandatory).** Run `.claude/skills/script-review/SKILL.md`. Checks: the
+   **original human angle is present**, accuracy (delegates to `claims.json`), style/pacing,
    scene segmentation + valid `template` tags, retention. Output: `script.review.json`
    (`pass: true|false` + issues).
-3. **Fix loop.** If `pass: false`, the writer fixes and re-runs review (cap at N loops,
-   then surface to you).
-4. Set `status: "scripted"`.
+4. **Fix loop.** If `pass: false`, the writer fixes and re-runs fact-check + review (cap at
+   N loops, then surface to you).
+5. Set `status: "scripted"`.
 
 ### ▶ GATE ② — You review the script
 You read `script.json` (already auto-reviewed and clean). Approve or request changes.
@@ -133,6 +138,8 @@ Short).
 - **Technical breakage** (no audio / cut-off / missing captions) → **auto-fix and
   re-render** that step.
 - **Content issues** → **flag** and propose a fix for you to approve (human perspective).
+- **Claim re-check** → run `.claude/skills/fact-check/SKILL.md` (`final` mode) on the rendered
+  narration: every spoken HIGH claim is still `verified` and unchanged since draft (D-032).
 - Emit a **30s digest** (key claims, the angle, sources, risk flags) for fast judgment.
 
 Set `status: "qa_passed"` when clean. Output: `qa.report.json` (incl. digest).

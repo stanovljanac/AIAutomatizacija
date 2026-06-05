@@ -88,7 +88,9 @@ wall of narration as one scene.
 
 ## 7. Shorts style
 
-- 20–55 seconds, one idea, fast hook in the first 2 seconds.
+- **Length (canonical — other docs link here):** ~50–60 seconds, one idea, fast hook in the
+  first 2 seconds. Go longer only if the material justifies it — **hard max 2:00**. Never pad
+  to hit a length. (Config: `short_seconds: 55`, `short_seconds_max: 120`.)
 - A key beat lifted from a long video, or a standalone idea.
 - Punchy on-screen text; **light music allowed** (unlike long-form).
 - End with a reason to follow / watch the full video.

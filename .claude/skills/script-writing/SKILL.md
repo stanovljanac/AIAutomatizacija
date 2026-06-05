@@ -1,6 +1,6 @@
 ---
 name: script-writing
-description: Use when writing or drafting a video script for the Boring AI Automations channel — turning an approved brief (brief.json + optional sources.md) into a scene-segmented, template-tagged, high-retention English script (script.json) for one of the four archetypes, with the original human angle baked in. Triggers on "write the script", "draft the video", or Step 1 of the workflow. Do NOT use for reviewing a script (use script-review).
+description: Use when writing or drafting a video script for The Automation Desk channel — turning an approved brief (brief.json + optional sources.md) into a scene-segmented, template-tagged, high-retention English script (script.json) for one of the four archetypes, with the original human angle baked in. Triggers on "write the script", "draft the video", or Step 1 of the workflow. Do NOT use for reviewing a script (use script-review).
 ---
 
 # Skill: Script writing

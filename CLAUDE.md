@@ -69,6 +69,7 @@ Each skill is the **single source of truth** for that step. Open it FIRST, then 
 |------|-----------|
 | Find/score a topic from the idea-bank | topic logic in `pipeline/00-ideas` + WORKFLOW.md |
 | Write the script (per archetype + angle) | `.claude/skills/script-writing/SKILL.md` |
+| Fact-check & source the script (generate + verify) | `.claude/skills/fact-check/SKILL.md` |
 | Review/QA the script         | `.claude/skills/script-review/SKILL.md` |
 | Build the scene plan (templates) | `.claude/skills/storyboard/SKILL.md` |
 | Thumbnail / occasional asset prompts | `.claude/skills/visual-prompts/SKILL.md` |
@@ -106,9 +107,12 @@ pipeline/00-ideas → 01-script → 02-voice → 03-visuals → 04-render → 05
 ## One video = one folder
 
 Every video lives in `content/<NNN>-<slug>/` (skeleton: `content/_TEMPLATE/`).
-**Media files (audio/video/images/captures) are git-ignored.** Only text/JSON/config
-is committed. The old Serbian example `content/001-sta-je-ai/` is **archived**, kept
-for reference (also under git tag `serbian-ai-archive`).
+**Per-video content and the idea-bank are git-ignored; only the `_TEMPLATE` skeleton and
+the system (code/docs/skills/schemas/templates) are committed.** Media files
+(audio/video/images/captures) are ignored everywhere. 001/002 remain tracked for history
+(owner choice — gitignore doesn't untrack); 003+ and `pipeline/00-ideas/ideas.json` are
+ignored. The old Serbian example `content/001-sta-je-ai/` is **archived**, kept for
+reference (also under git tag `serbian-ai-archive`).
 
 ## How to start a new video
 

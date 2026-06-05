@@ -99,6 +99,11 @@ Plus the always-on: `Intro` / `IntroShort`, `Outro` / `OutroShort`, `Subtitles`,
 
 ## 7. Intro / outro spec  *(finalize in Phase 2)*
 
+> **Logo (D-029):** avatar = **Logo 1** — gold "desk" mark on a dark background
+> (`assets/brand/logo.png`). In-video accent **stays electric blue** (hybrid). The gold
+> mark is **not yet baked** into the `Intro`/`ThumbnailTemplate` components — that's a
+> future task; it enters the next videos, not a 002 re-render.
+
 - **Intro (long):** wordmark "The Automation Desk" + tagline, ≤ 3s, accent animation,
   then straight into the hook. **No music** (sound-design hit only).
 - **Outro (long):** "subscribe / next video" card + brand, ~5s. **No music.**

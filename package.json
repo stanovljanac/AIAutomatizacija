@@ -2,7 +2,7 @@
   "name": "aiautomatizacija",
   "version": "0.1.0",
   "private": true,
-  "description": "Boring AI Automations YouTube content factory — pipeline tooling (validation, scaffolding). The Remotion render project lives in templates/remotion with its own package.json.",
+  "description": "The Automation Desk YouTube content factory — pipeline tooling (validation, scaffolding). The Remotion render project lives in templates/remotion with its own package.json.",
   "scripts": {
     "validate": "node pipeline/shared/validate.js",
     "new-video": "node pipeline/00-ideas/new-video.mjs"

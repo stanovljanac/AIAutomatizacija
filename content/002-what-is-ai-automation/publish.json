@@ -6,12 +6,18 @@
     "Stop Ignoring the Boring Stuff: What AI Automation Really Is"
   ],
   "chosen_title": null,
-  "description": "AI automation is just software that reads messy input and makes a sensible decision, plus a task that runs by itself on a trigger — put together, a boring job gets done automatically and you only check the result. This video explains it in plain English with a real example, and why I started The Automation Desk.\n\nEveryone chases giant AI systems and ignores the small, boring daily tasks that actually waste time: data entry, invoices, schedules, reminder emails. This channel is about automating those — tiny wins you can copy and scale to your own work. No hype. No guru act. No $49 course.\n\nChapters:\n0:00 Still doing it by hand?\n0:22 What \"AI\" actually means\n0:55 What \"automation\" means\n1:13 The whole loop: trigger → AI → check\n1:39 A real example: messy row in, clean row out\n2:18 The mistake almost everyone makes\n2:40 The boring goldmine\n2:58 Set it up once\n3:17 Why I built this channel\n3:36 What you get here\n3:58 Wrap-up\n\nNew automation ideas regularly. Subscribe → @TheAutomationDesk\n\n(Narration and visuals are AI-assisted; disclosed as altered content.)",
+  "description": "AI automation is just software that reads messy input and makes a sensible decision, wired to a task that runs by itself on a trigger. Put together: a boring job gets done automatically and you only check the result. This video explains AI automation in plain English with a real spreadsheet example — and why I built The Automation Desk.\n\nEveryone chases giant AI systems and ignores the small, boring daily tasks that actually waste time: data entry, invoices, schedules, reminder emails. This channel is about automating those — tiny wins you can copy and scale to your own work. No hype. No guru act. No $49 course.\n\nThe loop behind almost every automation here: trigger → AI → check. A boring task shows up, the AI handles the messy middle, you glance at the result and approve it.\n\n⏱ Chapters\n0:00 Still doing it by hand?\n0:22 What \"AI\" actually means\n0:55 What \"automation\" means\n1:13 The whole loop: trigger → AI → check\n1:39 A real example: messy row in, clean row out\n2:18 The mistake almost everyone makes\n2:39 The boring goldmine\n2:58 Set it up once\n3:16 Why I built this channel\n3:35 What you get here\n3:58 Wrap-up\n\n▶ Subscribe for new automation ideas: https://youtube.com/@TheAutomationDesk\n\nFollow The Automation Desk:\nInstagram → https://instagram.com/TheAutomationDesk\nTikTok → https://tiktok.com/@TheAutomationDesk\nX → https://x.com/TheAutomationDesk\nFacebook → https://facebook.com/TheAutomationDesk\nPinterest → https://pinterest.com/TheAutomationDesk\n\n(Narration and visuals are AI-assisted; disclosed as altered content.)",
   "altered_content": true,
   "tags": [
-    "ai automation", "what is ai automation", "automate boring tasks", "office automation",
-    "ai for spreadsheets", "no code automation", "boring ai automations", "automate data entry",
-    "ai workflow", "productivity automation", "automate invoices", "small business automation"
+    "ai automation", "what is ai automation", "ai automation explained", "automate boring tasks",
+    "boring automation", "office automation", "office tasks", "automate data entry",
+    "ai for spreadsheets", "spreadsheet automation", "no code automation", "ai workflow",
+    "workflow automation", "productivity automation", "small business automation",
+    "automate invoices", "the automation desk"
+  ],
+  "channel_keywords": [
+    "ai automation", "office automation", "automate boring tasks", "no-code",
+    "spreadsheets", "productivity", "small business automation", "ai workflows"
   ],
   "chapters": [
     { "time": "0:00", "label": "Still doing it by hand?" },
@@ -20,10 +26,10 @@
     { "time": "1:13", "label": "The whole loop" },
     { "time": "1:39", "label": "A real example" },
     { "time": "2:18", "label": "The mistake everyone makes" },
-    { "time": "2:40", "label": "The boring goldmine" },
+    { "time": "2:39", "label": "The boring goldmine" },
     { "time": "2:58", "label": "Set it up once" },
-    { "time": "3:17", "label": "Why I built this channel" },
-    { "time": "3:36", "label": "What you get here" },
+    { "time": "3:16", "label": "Why I built this channel" },
+    { "time": "3:35", "label": "What you get here" },
     { "time": "3:58", "label": "Wrap-up" }
   ],
   "thumbnail": {
@@ -33,7 +39,8 @@
   "credit_source": null,
   "short": {
     "title": "What AI automation actually is (in 40 seconds)",
-    "tags": ["ai automation", "automate boring tasks", "boring ai automations"]
+    "description": "What AI automation actually is, in under a minute: software reads messy input, makes a sensible decision, and runs on a trigger — so a boring task does itself and you just check the result. Trigger → AI → check.\n\nFull breakdown + a real spreadsheet example on the channel.\n▶ Subscribe: https://youtube.com/@TheAutomationDesk\n\n#Shorts #AIautomation #automation #productivity #spreadsheets #nocode #smallbusiness #AItools\n\n(AI-assisted voice and visuals.)",
+    "tags": ["ai automation", "automate boring tasks", "boring automation", "ai automation explained", "productivity"]
   },
   "youtube_video_id": null,
   "status": "draft_pending"

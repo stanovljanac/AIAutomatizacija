@@ -30,7 +30,8 @@
   },
   "defaults": {
     "long_seconds": 360,
-    "short_seconds": 40
+    "short_seconds": 55,
+    "short_seconds_max": 120
   },
   "stock": {
     "pexels_enabled": true,

@@ -58,7 +58,7 @@ export const HookCard: React.FC<{ data: { kicker?: string; title: string; subtit
   const s = fadeUp(frame, fps, 22, 18);
   return (
     <Frame>
-      <Kicker text={data.kicker ?? "Boring AI Automations"} o={k.opacity} />
+      <Kicker text={data.kicker ?? "The Automation Desk"} o={k.opacity} />
       <div style={{ fontFamily: theme.font.heading, fontWeight: 800, fontSize: 92, lineHeight: 1.04, color: theme.color.textPrimary, transform: `translateY(${t.y}px)`, opacity: t.opacity }}>{data.title}</div>
       {data.subtitle && (
         <div style={{ fontFamily: theme.font.body, fontWeight: 500, fontSize: 38, color: theme.color.textSecondary, marginTop: 30, transform: `translateY(${s.y}px)`, opacity: s.opacity }}>{data.subtitle}</div>

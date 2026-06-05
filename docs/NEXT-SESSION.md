@@ -22,6 +22,8 @@ the current state in `docs/PROGRESS.md`. Channel is now **The Automation Desk**
 3. **Create socials** under @TheAutomationDesk: Instagram, TikTok, Facebook Page, X,
    Pinterest, a blog (Hashnode/dev.to; Medium semi-manual). Link them all in the YouTube
    "links" section; put the YouTube channel in each platform **bio**.
+   → **Copy-paste bios + per-platform "page vs profile / review?" guide:
+   `docs/SOCIAL-SETUP.md`.** Avatar = Logo 1 (save as `assets/brand/logo.png`; D-029).
 4. **Connect a free store** (Fourthwall / Spreadshop) to the channel (legitimacy signal).
 5. At upload, set **"altered content = yes"** (D-025).
 

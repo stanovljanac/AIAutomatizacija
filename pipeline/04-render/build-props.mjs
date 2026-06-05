@@ -29,7 +29,7 @@ const fps = cfg.render?.fps ?? 30;
 const F = (s) => Math.round(s * fps);
 const vertical = id.endsWith("-short"); // 002-short → 1080x1920 Short
 const dims = vertical ? (cfg.render?.short ?? { width: 1080, height: 1920 }) : (cfg.render?.long ?? { width: 1920, height: 1080 });
-const intro = Math.round((vertical ? 0.7 : 1.5) * fps);
+const intro = Math.round((vertical ? 1.2 : 1.5) * fps); // Short bumped 0.7→1.2s so the intro underline finishes & wordmark reads
 const outro = Math.round((vertical ? 1.2 : 2.5) * fps);
 const xf = cfg.render?.crossfadeFrames ?? 9;
 const LEAD = Math.round(0.22 * fps); // start reveals slightly BEFORE the word so the animation lands on cue

@@ -76,8 +76,9 @@ Format:
   YouTube draft, then produce video #2 from the idea-bank on the new system.
 - owner feedback 2026-06-04 (applied): **redesigned `ChaosX`** into an iconified
   microservice tangle (servers/DB/AI/queues with labels); reveal lead nudged (-0.22s) so
-  animations land on the word; outro is now the channel handle only ("@BoringAIAutomations"),
-  CTA stays on the prior scene. Committed & pushed the iteration (fd1c1fe).
+  animations land on the word; outro is now the channel handle only ("@BoringAIAutomations"
+  — historical: predates the D-023 rebrand to **@TheAutomationDesk**), CTA stays on the prior
+  scene. Committed & pushed the iteration (fd1c1fe).
 - blockers: none.
 
 ## 2026-06-02 — PIVOT: Serbian-AI → "Boring AI Automations" (English, faceless)

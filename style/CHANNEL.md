@@ -48,6 +48,7 @@ practical engineer + warm teacher (STYLE_GUIDE §1).
 - **Long:** by archetype/series (Ideas 5-7m, Mini-demo 3-5m, Diagram 5-8m, Comparison 6-10m;
   length follows the topic — never padded/cut).
 - **Shorts/Reels:** 1-2 auto-repurposed per long video → YouTube Shorts + Instagram + TikTok.
+  Length lives in **STYLE_GUIDE §7** (canonical): ~50-60s, hard max 2:00, never padded.
 - **Cadence:** on-demand, in cluster order; let real metrics re-rank the idea-bank.
 
 ## 6. SEO & answer-engine (D-026)

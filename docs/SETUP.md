@@ -103,7 +103,7 @@ YOUTUBE_CLIENT_SECRET_PATH=C:\secure\client_secret.json
   "language": "en",
   "render": { "engine": "remotion", "fps": 30 },   // remotion | hyperframes | combo
   "paths": { "content": "content", "assets": "assets" },
-  "defaults": { "long_seconds": 360, "short_seconds": 40 }
+  "defaults": { "long_seconds": 360, "short_seconds": 55, "short_seconds_max": 120 }
 }
 ```
 

@@ -309,6 +309,70 @@ old one (don't delete history).
 - **Consequences:** Distinctive, authority-building, monetizable channel with a small but real
   human touch.
 
+## D-029 — Brand mark locked: gold-on-black "desk" logo (Logo 1); hybrid accent; embedding deferred
+- **Context:** Owner reviewed four candidate logos while creating the socials. Two cyberpunk
+  robot options were off-brand (cluttered / "AI-art slop", illegible at avatar size). Two
+  gold-on-black "desk" options fit the premium, faceless identity.
+- **Decision:**
+  - **Brand mark = Logo 1** — minimal gold crescent + desk/laptop/plant on a dark/near-black
+    background. Used as the **avatar** everywhere (legible when small). Save to
+    `assets/brand/logo.png`.
+  - **Accent = hybrid:** the logo is gold; the **in-video accent stays electric blue**
+    (theme.ts unchanged). The dark background carries both; blue text against a gold-mark
+    brand is acceptable, not a clash to "fix".
+  - **Embedding deferred:** do **not** bake the logo into the intro/thumbnail components or
+    re-render 002 to insert it. The logo enters the **next** videos to avoid a needless re-render.
+- **Consequences:** One recognizable avatar now; visual system (blue accent) untouched; a
+  future small task wires the gold mark into `Intro`/`ThumbnailTemplate`.
+
+## D-030 — Git scope: ignore new per-video content + the idea-bank; keep existing history
+- **Context:** Content text/JSON was committed alongside code. As the channel scales, per-video
+  folders and the topic backlog are working data, not the system — they shouldn't live in git.
+- **Decision:** `.gitignore` now ignores `content/*` (except the `_TEMPLATE` skeleton) and
+  `pipeline/00-ideas/ideas.json`. Only the system (code/docs/skills/schemas/templates) is
+  committed going forward. **No history rewrite:** gitignore doesn't untrack files, so 001/002
+  and the existing `ideas.json` stay in history by design (owner choice). New videos (003+) and
+  future idea-bank edits are local-only.
+- **Consequences:** Cleaner repo; the idea-bank/topics stay private; 001/002 remain for
+  reference. Docs realigned (CLAUDE.md "One video = one folder", ARCHITECTURE §1/§3).
+
+## D-031 — Short length: ~50–60s default, hard max 2:00 (supersedes the old 20–55s / 40s)
+- **Context:** The old "20–55s" guidance and `short_seconds: 40` skewed Shorts too short for a
+  single complete idea.
+- **Decision:** Canonical Short length lives in **STYLE_GUIDE §7**: **~50–60s**, one idea, fast
+  hook in the first 2s; go longer only if the material justifies it, **hard max 2:00**, never
+  pad. Config: `short_seconds: 55`, `short_seconds_max: 120`. CHANNEL §5 and the
+  video-render / youtube-publish skills link to STYLE_GUIDE §7 instead of restating a number.
+- **Consequences:** One source of truth for Short length; room for a complete idea without bloat.
+
+## D-032 — `fact-check` skill: generate AND self-verify the factual backbone (removes manual "Google it")
+- **Context:** The owner manually searched to confirm AI-written facts before approving. To move
+  toward full automation, that verification must be a skill, not a human step (answer-first +
+  specific facts: D-026).
+- **Decision:** One robust skill `.claude/skills/fact-check/SKILL.md` does **all three layers** —
+  draft-time fact-check (after script-writing, feeding script-review), a freshness pass for
+  time-sensitive values, and a final claim-check at QA on the rendered narration. It extracts
+  every checkable claim, verifies each against a **fetched** primary/reputable source, and writes
+  `sources.md` + `claims.json`; `unverified` is an honest, surfaced status; synthetic demo data is
+  exempt. Wired into WORKFLOW Step 1 (write → fact-check → review) and Step 5 (QA).
+- **Consequences:** Accuracy is built-in and auditable before the human gate; unblocks
+  comparisons/news; script-review's "claims trace to sources" check now delegates to `claims.json`.
+
+## D-033 — Parallel short-vs-long branches (DESIGN; build deferred)
+- **Context:** Short and long for one topic are **separate content folders** (`002` vs
+  `002-short`) sharing only the topic — no shared mutable state — so the pipeline contract
+  (ARCHITECTURE §4: folder I/O, idempotent, status-based) already makes them safe to run
+  concurrently.
+- **Decision (design only — not built this round):** after the long script is approved (Gate ②),
+  an orchestrator runs two branches as background Agents — Branch A (long): voice → align →
+  scene-plan → render; Branch B (short): derive short (`make-short`, D-027) → voice → align →
+  render. Each writes only its own folder/props. Orchestrator would live in `/novi-video` or a
+  new `pipeline/orchestrate.mjs`.
+- **Honest caveat:** on one PC the two **renders** are CPU-bound and serialize; the real
+  wall-clock win is overlapping the LLM/IO-bound authoring/voice/align work. The structure scales
+  when rendering later moves to a second machine/cloud. Tracked in ROADMAP "Phase B".
+- **Consequences:** A safe, documented path to parallelism; no orchestrator code yet.
+
 > Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
 > **D-012** (name) → see D-023. **D-014** (TTS) → see D-024. The old "no AI-disclosure" note → see D-025.
 > Still in force: **D-002** (no YouTube transcripts; clean sources only).

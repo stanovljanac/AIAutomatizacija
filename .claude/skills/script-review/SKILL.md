@@ -12,8 +12,11 @@ write `script.review.json` with `pass: true|false` + a list of issues.
 ## Checklist (mirror of STYLE_GUIDE §10)
 - [ ] **Original human angle present** and surfaces in/after the hook (HARD — D-018).
 - [ ] Hook lands in ≤ 10s and promises a payoff.
-- [ ] **Accuracy by archetype:** comparison/stats claims trace to `sources.md`; demo
-      steps use **synthetic data**; conceptual claims are framed as ideas, not fact.
+- [ ] **Accuracy by archetype:** comparison/stats claims trace to sources — **delegate to
+      `claims.json`** (the `fact-check` skill's scorecard): every HIGH/MED claim is
+      `verified`/`corrected` with a fetched `source_url`, none left `unverified`. Demo steps use
+      **synthetic data**; conceptual claims are framed as ideas, not fact. (If `claims.json` is
+      missing, run `fact-check` `draft` first.)
 - [ ] **Answer-first (D-026):** the topic's core question is answered in the first 30–60s.
 - [ ] **Specific, not vague (D-026):** real names/dates/numbers/places where possible; flag
       hand-wavy stats ("a lot of people…") and require a sourced specific instead.

@@ -19,6 +19,24 @@ content/**/*.webp
 content/**/voice/*
 !content/**/voice/.gitkeep
 
+# ── Per-video content & the idea-bank: not committed going forward ─────────
+# Only the _TEMPLATE skeleton + code/docs/skills/schemas are tracked. Existing
+# 001/002 stay tracked for history (owner choice); new videos (003+) are ignored.
+# gitignore never untracks already-tracked files, so 001/002/ideas.json keep their
+# history automatically — no `git rm`.
+content/*
+!content/_TEMPLATE/
+!content/_TEMPLATE/**
+# …but media dirs stay ignored even inside the skeleton (repo-wide convention; the
+# pipeline recreates them). Only voice/.gitkeep is kept (rule above).
+content/_TEMPLATE/audio/
+content/_TEMPLATE/captures/
+content/_TEMPLATE/images/
+content/_TEMPLATE/render/
+content/_TEMPLATE/video/
+# The topics / idea-bank ("teme") — not committed.
+pipeline/00-ideas/ideas.json
+
 # Shared heavy assets
 assets/music/*
 assets/screenshots/*

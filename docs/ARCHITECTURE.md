@@ -18,7 +18,10 @@ Three layers:
    AI-video is deferred. (DECISIONS D-015.)
 
 State lives on disk, in **one folder per video** (`content/<id>/`) — inspectable,
-resumable, git-friendly (text/JSON committed, media ignored).
+resumable, git-friendly. **Per-video content and the idea-bank are git-ignored;** only the
+`_TEMPLATE` skeleton and the system (code/docs/skills/schemas/templates) are committed.
+001/002 stay tracked for history (gitignore doesn't untrack existing files); 003+ and
+`pipeline/00-ideas/ideas.json` are ignored.
 
 ## 2. Folder map
 
@@ -40,6 +43,10 @@ AIAutomatizacija/
 ```
 
 ## 3. One video = one folder (canonical layout)
+
+> **Git scope:** this whole folder is git-ignored going forward (only `_TEMPLATE` is
+> tracked). The layout below still describes what every video folder contains on disk;
+> it just isn't committed. 001/002 remain in history by owner choice.
 
 ```
 content/<NNN>-<slug>/

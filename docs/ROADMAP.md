@@ -117,6 +117,31 @@ Exit criteria:
 
 ---
 
+## Phase B — Toward full automation (prioritized backlog)
+
+**North star:** every step automated **except** (a) final video approval, (b) the publish
+click, (c) owner screen recordings — those stay human forever. Already planned under D-027:
+Postiz distribution, `pipeline/07-distribute`, `make-short` generalization,
+`blog-from-transcript`. New/sharpened ideas, ranked by accuracy-and-automation payoff:
+
+1. **`fact-check` skill** (D-032, shipped this round) — generate + self-verify the factual
+   backbone; biggest accuracy win; unblocks comparisons/news.
+2. **`make-short` auto-derivation** — the Short stops being a hand-built folder; it's derived
+   from the approved long script (feeds the parallel design, D-033).
+3. **Auto-metadata** — fill `publish.json` (title/desc/tags/chapters) deterministically from
+   `script.json` + `alignment.json` (formalize what we did by hand for 002).
+4. **YouTube Analytics auto-logging** — pull views/CTR/retention → `log.md` + each idea's
+   `metrics` → re-rank the idea-bank (close the growth loop, currently manual).
+5. **Loudness normalize to −16 LUFS** in voice/render (config already names the target).
+6. **Thumbnail auto-scoring** (legibility/contrast/brand) to inform the owner's 2-variant pick.
+7. **Topic auto-sourcing for Desk Notes** — lightweight news watch → scored ideas.
+8. **Parallel short-vs-long orchestrator** (D-033) — run the two branches concurrently; the
+   real win is overlapping authoring/voice/align (renders serialize on one PC).
+
+**Stays human forever (owner):** final video approval, the publish click, screen recordings.
+
+---
+
 ## What we deliberately deferred
 
 - Products/affiliate/courses — until payout rails exist (D-017).
