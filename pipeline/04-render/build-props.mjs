@@ -35,6 +35,14 @@ const xf = cfg.render?.crossfadeFrames ?? 9;
 const LEAD = Math.round(0.22 * fps); // start reveals slightly BEFORE the word so the animation lands on cue
 const audioFrames = F(al.duration);
 const total = intro + audioFrames + outro;
+
+// HARD RULE ENFORCEMENT (so documented rules can't be silently skipped).
+// Short length — STYLE_GUIDE §7 / config.defaults: target 50-60s, min 45, hard max 120.
+const durSec = al.duration;
+if (id.endsWith("-short") && (durSec < 45 || durSec > (cfg.defaults?.short_seconds_max ?? 120))) {
+  console.error(`\nSHORT LENGTH RULE (STYLE_GUIDE §7): ${id} narration is ${durSec.toFixed(1)}s — must be 45-${cfg.defaults?.short_seconds_max ?? 120}s (target ~${cfg.defaults?.short_seconds ?? 55}s). Fix the Short script before rendering.\n`);
+  process.exit(1);
+}
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9']/g, "");
 
 const planBy = Object.fromEntries(plan.scenes.map((s) => [s.scene_id, s]));
@@ -97,14 +105,29 @@ const scenes = beats.map((bt, k) => {
   return { sceneId: bt.sceneId, template: bt.template, props: bt.props, fromFrame: from, durFrames: dur };
 });
 
-// caption cues (per sentence, absolute; word offsets relative to the cue)
-const words = al.words ?? [];
-const cues = al.sentences.map((sent, i) => {
-  const from = intro + F(sent.start);
-  const nextStart = i + 1 < al.sentences.length ? intro + F(al.sentences[i + 1].start) : intro + audioFrames;
-  const ww = words.filter((w) => w.start >= sent.start - 0.001 && w.start < sent.end + 0.05)
-    .map((w) => ({ w: /^ai$/i.test(w.w) ? "AI" : w.w, relFrom: F(w.start - sent.start), relDur: Math.max(F(w.end - w.start), 1) }));
-  return { fromFrame: from, durFrames: Math.max(nextStart - from, 1), words: ww };
+// caption cues — chunked into <=2-line groups, each timed to its words as they are
+// spoken. We never dump a whole long sentence at once (that caused 3-6 line blocks and
+// text appearing before it was said). A chunk shows only while its words are spoken.
+const words = (al.words ?? []).filter((w) => w && w.w).slice().sort((a, b) => a.start - b.start);
+const MAX_WORDS = 7;   // keeps a caption to <= 2 lines at the caption font size
+const GAP = 0.7;       // start a fresh chunk after a pause this long (seconds)
+const TAIL = 0.4;      // keep a chunk on screen this long after its last word (seconds)
+const groups = [];
+let cur = [];
+for (let i = 0; i < words.length; i++) {
+  cur.push(words[i]);
+  const next = words[i + 1];
+  const boundary = !next || cur.length >= MAX_WORDS || next.scene !== words[i].scene || (next.start - words[i].end) > GAP;
+  if (boundary) { groups.push(cur); cur = []; }
+}
+const cues = groups.map((g, gi) => {
+  const start = g[0].start;
+  const from = intro + F(start);
+  const nextFrom = gi + 1 < groups.length ? intro + F(groups[gi + 1][0].start) : intro + audioFrames;
+  const cap = intro + F(g[g.length - 1].end + TAIL); // drop the chunk shortly after its last word
+  const durFrames = Math.max(Math.min(nextFrom, cap) - from, 1);
+  const ww = g.map((w) => ({ w: /^ai$/i.test(w.w) ? "AI" : w.w, relFrom: F(w.start - start), relDur: Math.max(F(w.end - w.start), 1) }));
+  return { fromFrame: from, durFrames, words: ww };
 });
 
 // copy narration into Remotion public/

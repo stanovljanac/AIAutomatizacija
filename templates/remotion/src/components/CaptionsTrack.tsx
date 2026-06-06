@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Sequence, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig } from "remotion";
 import { theme } from "../theme";
 
 /**
@@ -12,20 +12,29 @@ export type CaptionCue = { fromFrame: number; durFrames: number; words: CaptionW
 
 const SentenceCaption: React.FC<{ words: CaptionWord[] }> = ({ words }) => {
   const f = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const vertical = height > width;
+  // Short (vertical): keep the layout that already reads well. Long (16:9): sit lower
+  // and lighter so captions don't fight the graphics (chunking already caps it at ~2 lines).
+  const paddingBottom = vertical ? 110 : 72;
+  const bg = vertical ? "rgba(8,11,15,0.62)" : "rgba(8,11,15,0.42)";
+  const maxWidth = vertical ? "82%" : "72%";
+  const fontSize = vertical ? 46 : 44;
   return (
-    <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: 110 }}>
+    <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom }}>
       <div
         style={{
-          width: "76%",
+          maxWidth,
           textAlign: "center",
-          background: "rgba(8,11,15,0.62)",
+          background: bg,
           borderRadius: 16,
-          padding: "16px 30px",
+          padding: "14px 28px",
           fontFamily: theme.font.heading,
           fontWeight: 800,
-          fontSize: 46,
-          lineHeight: 1.25,
+          fontSize,
+          lineHeight: 1.22,
           color: theme.color.textPrimary,
+          textShadow: "0 2px 10px rgba(0,0,0,0.85)",
         }}
       >
         {words.map((wd, i) => {

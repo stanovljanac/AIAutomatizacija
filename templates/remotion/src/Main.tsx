@@ -12,6 +12,10 @@ import { HandCopy } from "./custom/HandCopy";
 import { AiFlow } from "./custom/AiFlow";
 import { ChaosX } from "./custom/ChaosX";
 import { DeskScene } from "./custom/DeskScene";
+import { DeskScatter } from "./custom/DeskScatter";
+import { CalendarFind } from "./custom/CalendarFind";
+import { InboxTriage } from "./custom/InboxTriage";
+import { MorningSynthesis } from "./custom/MorningSynthesis";
 
 /** Custom (bespoke) scene dispatch — template:"custom" routes by props.component. */
 const CUSTOM: Record<string, React.FC<{ data?: any }>> = {
@@ -20,6 +24,10 @@ const CUSTOM: Record<string, React.FC<{ data?: any }>> = {
   "ai-flow": AiFlow,
   "chaos-x": ChaosX,
   "desk-scene": DeskScene,
+  "desk-scatter": DeskScatter,
+  "calendar-find": CalendarFind,
+  "inbox-triage": InboxTriage,
+  "morning": MorningSynthesis,
 };
 
 export type Scene = {

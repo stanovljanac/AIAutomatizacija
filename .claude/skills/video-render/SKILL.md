@@ -16,8 +16,17 @@ You assemble the final video deterministically from `script.json` + `alignment.j
 - Map each `template` to its component (VISUAL_IDENTITY §5).
 
 ## Compose
-- **Captions:** burned-in, animated **English**, from `alignment.json` (same timings →
-  always in sync). Large, high-contrast, word/line highlight.
+- **Captions (hard rules):** burned-in, animated **English**, from `alignment.json` (same
+  timings → always in sync). **Chunked into ≤ ~7-word groups (≤ 2 lines), each shown only
+  while its words are spoken** — never dump a whole long sentence at once (that caused 3-6
+  line blocks and text appearing before it was said). `build-props.mjs` builds the chunks;
+  `CaptionsTrack` renders one chunk at a time. Large, high-contrast, current-word highlight.
+- **Layout safe-zone (hard rule):** captions live in the bottom band; **scene content and any
+  bottom-anchored elements (cards, captions inside custom scenes) must stay above it** so
+  captions never cover the graphics. On 16:9 the `Frame` reserves a bottom pad and custom
+  scenes bias their content upward; the vertical Short keeps its own (already-good) layout.
+- **Short length (hard rule — STYLE_GUIDE §7):** a `*-short` runs **45-120s** (target ~50-60s).
+  `build-props.mjs` hard-fails outside that range — fix the Short script, don't ship 30s.
 - **capture-segment scenes:** play `captures/<capture_id>.mp4` inside the scene window
   with **auto-zoom-to-cursor + highlight** on the noted region (owner never edits).
 - **Intro/outro:** reusable, **no music on long-form** (sound-design hit only).

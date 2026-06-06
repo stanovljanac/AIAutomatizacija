@@ -25,22 +25,26 @@ const revealDelay = (reveals: number[] | undefined, i: number, fallback: number)
  * so it works wherever the renderer places it in time.
  */
 
-const PAD = "0 9%";
-
 // Transparent frame — the global BackgroundFX (in Main) shows through so scenes
-// crossfade cleanly (D-022). No per-scene background.
-const Frame: React.FC<{ children: React.ReactNode; center?: boolean }> = ({ children, center }) => (
-  <AbsoluteFill
-    style={{
-      padding: PAD,
-      justifyContent: "center",
-      alignItems: center ? "center" : "flex-start",
-      textAlign: center ? "center" : "left",
-    }}
-  >
-    {children}
-  </AbsoluteFill>
-);
+// crossfade cleanly (D-022). No per-scene background. On 16:9 we reserve a bottom
+// caption safe-zone (content biases upward) so captions never sit over the graphics;
+// the vertical Short keeps its existing centered layout.
+const Frame: React.FC<{ children: React.ReactNode; center?: boolean }> = ({ children, center }) => {
+  const { width, height } = useVideoConfig();
+  const vertical = height > width;
+  return (
+    <AbsoluteFill
+      style={{
+        padding: vertical ? "0 9%" : "0 9% 210px 9%",
+        justifyContent: "center",
+        alignItems: center ? "center" : "flex-start",
+        textAlign: center ? "center" : "left",
+      }}
+    >
+      {children}
+    </AbsoluteFill>
+  );
+};
 
 const Kicker: React.FC<{ text?: string; o: number }> = ({ text, o }) =>
   text ? (

@@ -11,12 +11,23 @@ You catch problems **before** the owner watches (PRD R13–R14), and you produce
 
 ## Checks
 - **Sync:** each scene's visible window matches its sentences' timestamps.
-- **Subtitles:** caption cues match `alignment.json` (no drift/overlap); **legible**
-  (size/contrast ≥ 4.5:1).
+- **Subtitles (HARD):** caption cues match `alignment.json` (no drift); each cue shows
+  **≤ 2 lines** and only while its words are spoken (chunked, never a whole long sentence
+  dumped at once); **legible** (size/contrast ≥ 4.5:1). FAIL if any cue exceeds 2 lines or
+  text appears before it is said.
+- **No overlap (HARD):** captions live in the bottom safe-zone and must **not** cover scene
+  graphics; scene content/bottom-anchored elements stay above the caption band. FAIL on overlap.
 - **Scene/audio coherence:** no scene change mid-sentence; narration continuous (R11).
 - **Demo legibility (mini-demo):** capture region readable; cursor/zoom land on the action.
 - **Coverage:** every scene rendered; audio length ≈ sum of scenes; no black gaps.
+- **Short length (HARD — STYLE_GUIDE §7):** a `*-short` must be **45-120s** (target ~50-60s),
+  never padded/cut. `build-props.mjs` hard-fails outside this range; QA re-confirms. FAIL if outside.
 - **Loudness/format:** sane levels (`loudness_lufs`); correct resolution/fps; Short vertical.
+- **Pacing/dynamism:** a visual change every ~3-7s; no single scene is a long static hold
+  (use beats / reveal-sync / window-aware custom motion).
+
+> These HARD checks exist because they were skipped before. Treat a HARD failure like a
+> failed build: fix it (and the upstream skill/script) before the video reaches the owner.
 
 ## Fix policy (D-…, owner's rule)
 - **Pure technical breakage** (no audio / cut-off / missing captions / black frames):

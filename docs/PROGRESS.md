@@ -30,6 +30,44 @@ Format:
 
 <!-- New entries below this line, newest on top. Add as you build each phase. -->
 
+## 2026-06-06 — Video #3 produced ("5 Tasks an AI Can Do Like a Secretary") + render hardening
+- who: agent + owner (gate reviews)
+- did:
+  - **Produced video #3** (first real idea-bank topic; Ideas / Desk Loops) end-to-end:
+    script → fact-check (sourced decline stat, on-screen source) → review → scene-plan →
+    Azure final voice → faster-whisper align → 17 beats → render. Long ~5:18 + Short 50.6s +
+    2 thumbnails. **Per-video files are git-ignored** (003+ per CLAUDE.md); the *system*
+    changes below are what's committed.
+  - **4 new window-aware custom scenes** (`DeskScatter`, `CalendarFind`, `InboxTriage`,
+    `MorningSynthesis`) + registered in `Main.tsx`. Motion spread across each window + the
+    longest scenes split into beats (kills the static-hold feel — the owner's #1 complaint).
+  - **Caption system rewrite (fixes owner-reported drift/overlap):** captions are now
+    **chunked to ≤7 words / ≤2 lines, shown only as spoken** (was dumping whole sentences →
+    3-6 lines + text ahead of audio). Long captions moved into a bottom **safe-zone** (lower,
+    lighter); `Frame` + custom scenes bias content upward so captions never cover graphics.
+    Short layout left as-is (owner: it was good).
+  - **Thumbnails** redesigned — `Thumbnail.tsx` now supports multiple motifs (iconRow /
+    bigIcon / flow); 2 distinct variants, dropped the confusing "DESK LOOPS" kicker. Owner
+    picked **thumb A** for this upload.
+  - **HARD rule enforcement** (owner: "make me follow our own rules"): `build-props.mjs`
+    exits if a `*-short` is outside 45-120s; `qa-video` + `video-render` skills got HARD
+    checks (Short length, captions ≤2 lines / safe-zone / no-overlap, pacing).
+  - **Andrew slowed for next videos:** `config.voice.rate` +8% → **-2%** (~10% slower) to
+    test whether it reduces the progressive caption lag on long videos.
+  - **Permission allow-list** added (`.claude/settings.json`) so script-approval → final runs
+    hands-off (pipeline/render/file-edits allowed; **git commit/push still prompt**).
+- decisions:
+  - **Captions on long videos:** if the progressive lag persists after slowing Andrew, drop
+    burned-in captions on long-form and rely on YouTube's auto-captions; **keep burned-in on
+    Shorts/Reels**. (Likely root cause is alignment time-scaling vs real audio duration — a
+    rescale-by-actual-duration fix is the candidate if we revisit.)
+  - **Gates this round:** script gate + final-video gate both used; owner publishing #3 himself.
+  - Permission-prompt automation = the allow-list (option 2), not full bypass.
+- next: owner publishes #3 (thumb A, altered-content=yes). Then video #4 from the idea-bank
+  on the slower voice; watch the caption lag; wire Pexels/Pixabay b-roll (dark-graded) as the
+  next system addition. Deferred: loudness -16 LUFS (needs ffmpeg on PATH).
+- blockers: none.
+
 ## 2026-06-04 (late) — Rebrand → The Automation Desk + monetization compliance + Short draft
 - who: agent + owner (strategy from a YouTube 2026 algorithm breakdown; reviewed by a 2nd model)
 - did:
