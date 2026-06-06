@@ -42,11 +42,16 @@ AIAutomatizacija/
 └── scripts/              Helper scripts (setup, OBS profile, optional colab).
 ```
 
-## 3. One video = one folder (canonical layout)
+## 3. One topic = one folder (canonical layout)
 
 > **Git scope:** this whole folder is git-ignored going forward (only `_TEMPLATE` is
 > tracked). The layout below still describes what every video folder contains on disk;
 > it just isn't committed. 001/002 remain in history by owner choice.
+
+The topic folder **is** the long video; the **Short is a nested lean sub-unit** at
+`short/` (its own script/voice/alignment/scene-plan/video; it inherits topic, angle and
+sources from the long unit above). `build-props.mjs` detects the Short by the last path
+segment (`.../short`) → vertical 1080×1920. Legacy `002-short`/`003-short` stay flat.
 
 ```
 content/<NNN>-<slug>/
@@ -61,7 +66,13 @@ content/<NNN>-<slug>/
 ├── images/               (git-ignored) thumbnails / rare AI or stock images.
 ├── captures/             (git-ignored) your OBS recordings for mini-demos.
 ├── render/               (git-ignored) engine props + intermediate frames.
-├── video/                (git-ignored) final.mp4 + short.mp4 + thumb_a/b.png.
+├── video/                (git-ignored) the long final.mp4 (+ thumb_a/b.png).
+├── short/                The nested Short sub-unit:
+│   ├── script.json           Short's own ~50–60s script.
+│   ├── voice/                (git-ignored) Short narration.
+│   ├── alignment.json        Short's timestamps.
+│   ├── scene-plan.json       Short's scene plan.
+│   └── video/               (git-ignored) the Short final.mp4.
 ├── qa.report.json        Automated QA results + the 30s digest.
 ├── publish.json          Title, description, tags, chapters, thumbnail, status.
 └── log.md                Human-readable history of this video.

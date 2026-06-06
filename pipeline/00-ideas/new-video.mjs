@@ -13,6 +13,7 @@ import {
   cpSync,
   existsSync,
   readdirSync,
+  rmSync,
   statSync,
   writeFileSync,
 } from "node:fs";
@@ -52,8 +53,20 @@ const id = `${String(maxN + 1).padStart(3, "0")}-${slug}`;
 const dest = join(CONTENT, id);
 if (existsSync(dest)) die(`content/${id} already exists — refusing to overwrite.`);
 
-// copy the template folder (keeps the .gitkeep subfolders)
+// copy the template folder (keeps the .gitkeep subfolders) — this is the LONG unit
 cpSync(TEMPLATE, dest, { recursive: true });
+
+// nest the Short as a LEAN sub-unit: content/<id>/short/. One topic = one folder.
+// The Short only owns script.json / scene-plan.json / alignment.json / voice/ / video/ —
+// it inherits the topic, angle and sources from the long unit above. Copy the skeleton
+// (for voice/.gitkeep + video/.gitkeep) then prune what the Short doesn't use, matching the
+// lean legacy shorts. build-props detects it by the last path segment (".../short"), so
+// render it with: build-props.mjs <id>/short
+const shortDir = join(dest, "short");
+cpSync(TEMPLATE, shortDir, { recursive: true });
+for (const extra of ["brief.json", "README.md", "sources.md", "script.sample.json", "captures", "images", "render"]) {
+  rmSync(join(shortDir, extra), { recursive: true, force: true });
+}
 
 // initialize brief.json (matches brief.schema.json)
 const brief = {
@@ -69,6 +82,6 @@ const brief = {
 };
 writeFileSync(join(dest, "brief.json"), JSON.stringify(brief, null, 2) + "\n");
 
-console.log(`Created content/${id}/ from _TEMPLATE.`);
+console.log(`Created content/${id}/ from _TEMPLATE (+ lean short/ sub-unit for the Short).`);
 console.log(`brief.json initialized (status: "new"${titleWorking ? `, title: "${titleWorking}"` : ""}).`);
 console.log(`Next: classify archetype + draft the angle (Gate 1), then write the script. See docs/WORKFLOW.md Step 0.`);

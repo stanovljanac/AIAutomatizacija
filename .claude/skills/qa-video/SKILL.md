@@ -20,8 +20,10 @@ You catch problems **before** the owner watches (PRD R13–R14), and you produce
 - **Scene/audio coherence:** no scene change mid-sentence; narration continuous (R11).
 - **Demo legibility (mini-demo):** capture region readable; cursor/zoom land on the action.
 - **Coverage:** every scene rendered; audio length ≈ sum of scenes; no black gaps.
-- **Short length (HARD — STYLE_GUIDE §7):** a `*-short` must be **45-120s** (target ~50-60s),
-  never padded/cut. `build-props.mjs` hard-fails outside this range; QA re-confirms. FAIL if outside.
+- **Short length (HARD — STYLE_GUIDE §7):** the Short (nested `content/<id>/short/`; legacy
+  flat `*-short`) must be **45-120s** (target ~50-60s), never padded/cut. `build-props.mjs`
+  detects it by the last path segment and hard-fails outside this range; QA re-confirms.
+  FAIL if outside.
 - **Loudness/format:** sane levels (`loudness_lufs`); correct resolution/fps; Short vertical.
 - **Pacing/dynamism:** a visual change every ~3-7s; no single scene is a long static hold
   (use beats / reveal-sync / window-aware custom motion).

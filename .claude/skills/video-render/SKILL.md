@@ -25,17 +25,21 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   bottom-anchored elements (cards, captions inside custom scenes) must stay above it** so
   captions never cover the graphics. On 16:9 the `Frame` reserves a bottom pad and custom
   scenes bias their content upward; the vertical Short keeps its own (already-good) layout.
-- **Short length (hard rule — STYLE_GUIDE §7):** a `*-short` runs **45-120s** (target ~50-60s).
-  `build-props.mjs` hard-fails outside that range — fix the Short script, don't ship 30s.
+- **Short length (hard rule — STYLE_GUIDE §7):** the Short (nested `content/<id>/short/`;
+  legacy flat `*-short`) runs **45-120s** (target ~50-60s). `build-props.mjs` detects the
+  Short by the last path segment and hard-fails outside that range — fix the Short script,
+  don't ship 30s. Render it with `build-props.mjs <id>/short` (artifacts use a flat id, e.g.
+  `<id>-short`).
 - **capture-segment scenes:** play `captures/<capture_id>.mp4` inside the scene window
   with **auto-zoom-to-cursor + highlight** on the noted region (owner never edits).
 - **Intro/outro:** reusable, **no music on long-form** (sound-design hit only).
 - **Motion:** per VISUAL_IDENTITY §4; visual change every ~3–7s, snapped to sentences.
 
 ## Outputs
-- `video/final.mp4` (long), `video/short.mp4` (1–2 key beats, **light music allowed**;
-  length per **STYLE_GUIDE §7** — ~50–60s target, hard max 2:00, `config.defaults.short_seconds`
-  / `short_seconds_max`), `video/thumb_a.png` + `thumb_b.png` (from `visual-prompts`).
+- `video/final.mp4` (long), `short/video/final.mp4` (the nested Short — 1–2 key beats,
+  **light music allowed**; length per **STYLE_GUIDE §7** — ~50–60s target, hard max 2:00,
+  `config.defaults.short_seconds` / `short_seconds_max`), `images/thumb_a.png` +
+  `thumb_b.png` (from `visual-prompts`).
 - `render/props.json`. Set `brief.json.status: "rendered"`.
 
 ## Engine notes (combo)

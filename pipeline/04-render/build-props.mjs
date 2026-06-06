@@ -9,7 +9,9 @@
  *    early so SceneWrapper can blend over the persistent background).
  *
  *   node pipeline/04-render/build-props.mjs 002-what-is-ai-automation
- *   then:  cd templates/remotion && npx remotion render Main out/<id>.mp4 --props=props/<id>.json
+ *   node pipeline/04-render/build-props.mjs 004-foo/short        # nested Short unit
+ *   then:  cd templates/remotion && npx remotion render Main out/<outId>.mp4 --props=props/<outId>.json
+ *   (<outId> = the content id with slashes flattened, e.g. 004-foo/short → 004-foo-short)
  */
 import { cpSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -27,7 +29,11 @@ const al = JSON.parse(readFileSync(join(cdir, "alignment.json"), "utf8"));
 
 const fps = cfg.render?.fps ?? 30;
 const F = (s) => Math.round(s * fps);
-const vertical = id.endsWith("-short"); // 002-short → 1080x1920 Short
+// Short detection by the LAST path segment, so both schemes work:
+//   new nested: content/004-foo/short  (seg === "short")
+//   legacy flat: content/002-short     (seg endsWith "-short")
+const seg = id.split(/[\\/]/).pop();
+const vertical = seg === "short" || seg.endsWith("-short"); // → 1080x1920 Short
 const dims = vertical ? (cfg.render?.short ?? { width: 1080, height: 1920 }) : (cfg.render?.long ?? { width: 1920, height: 1080 });
 const intro = Math.round((vertical ? 1.2 : 1.5) * fps); // Short bumped 0.7→1.2s so the intro underline finishes & wordmark reads
 const outro = Math.round((vertical ? 1.2 : 2.5) * fps);
@@ -39,7 +45,7 @@ const total = intro + audioFrames + outro;
 // HARD RULE ENFORCEMENT (so documented rules can't be silently skipped).
 // Short length — STYLE_GUIDE §7 / config.defaults: target 50-60s, min 45, hard max 120.
 const durSec = al.duration;
-if (id.endsWith("-short") && (durSec < 45 || durSec > (cfg.defaults?.short_seconds_max ?? 120))) {
+if (vertical && (durSec < 45 || durSec > (cfg.defaults?.short_seconds_max ?? 120))) {
   console.error(`\nSHORT LENGTH RULE (STYLE_GUIDE §7): ${id} narration is ${durSec.toFixed(1)}s — must be 45-${cfg.defaults?.short_seconds_max ?? 120}s (target ~${cfg.defaults?.short_seconds ?? 55}s). Fix the Short script before rendering.\n`);
   process.exit(1);
 }
@@ -130,15 +136,19 @@ const cues = groups.map((g, gi) => {
   return { fromFrame: from, durFrames, words: ww };
 });
 
+// Flat artifact id so a nested content id (004-foo/short) doesn't put slashes into
+// the Remotion public/props/out paths or the --props CLI arg. 004-foo/short → 004-foo-short.
+const outId = id.replace(/[\\/]/g, "-");
+
 // copy narration into Remotion public/
-const pubDir = join(ROOT, "templates/remotion/public", id);
+const pubDir = join(ROOT, "templates/remotion/public", outId);
 mkdirSync(pubDir, { recursive: true });
 cpSync(join(cdir, "voice/narration.mp3"), join(pubDir, "narration.mp3"));
 
 const props = {
   fps, width: dims.width ?? 1920, height: dims.height ?? 1080,
   introFrames: intro, outroFrames: outro, totalFrames: total, crossfadeFrames: xf,
-  audioSrc: `${id}/narration.mp3`, audioFromFrame: intro,
+  audioSrc: `${outId}/narration.mp3`, audioFromFrame: intro,
   intro: { wordmark: "The Automation Desk", tagline: "automate the boring stuff" },
   outro: { cta: "@TheAutomationDesk", brand: "" },
   scenes, captions: cues,
@@ -146,7 +156,7 @@ const props = {
 
 const outDir = join(ROOT, "templates/remotion/props");
 mkdirSync(outDir, { recursive: true });
-writeFileSync(join(outDir, `${id}.json`), JSON.stringify(props, null, 2) + "\n");
+writeFileSync(join(outDir, `${outId}.json`), JSON.stringify(props, null, 2) + "\n");
 
-console.log(`OK props/${id}.json  (${scenes.length} beats from ${script.scenes.length} scenes, ${cues.length} caption cues)`);
+console.log(`OK props/${outId}.json  (${scenes.length} beats from ${script.scenes.length} scenes, ${cues.length} caption cues)`);
 console.log(`   total ${total} frames = ${(total / fps).toFixed(1)}s @ ${fps}fps (xf ${xf})`);

@@ -104,9 +104,14 @@ resumable**. See `docs/ARCHITECTURE.md` → "Pipeline contract".
 pipeline/00-ideas → 01-script → 02-voice → 03-visuals → 04-render → 05-qa → 06-publish
 ```
 
-## One video = one folder
+## One topic = one folder
 
-Every video lives in `content/<NNN>-<slug>/` (skeleton: `content/_TEMPLATE/`).
+Every video lives in `content/<NNN>-<slug>/` (skeleton: `content/_TEMPLATE/`). The
+**Short is nested inside it** at `content/<NNN>-<slug>/short/` (a lean sub-unit with its
+own `script.json`/`voice/`/`scene-plan.json`/`alignment.json`/`video/`; it inherits the
+topic, angle and sources from the long unit). `build-props.mjs` detects the Short by the
+last path segment, so render it with `build-props.mjs <id>/short`. (Legacy `002-short`/
+`003-short` stay flat for history.)
 **Per-video content and the idea-bank are git-ignored; only the `_TEMPLATE` skeleton and
 the system (code/docs/skills/schemas/templates) are committed.** Media files
 (audio/video/images/captures) are ignored everywhere. 001/002 remain tracked for history

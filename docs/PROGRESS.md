@@ -30,6 +30,42 @@ Format:
 
 <!-- New entries below this line, newest on top. Add as you build each phase. -->
 
+## 2026-06-07 — Folder refactor (nested Short) + Video #4 pivoted to a real experiment
+- who: agent + owner (multiple gate reviews, incl. 2 independent model reviews)
+- did:
+  - **Folder refactor:** the Short now nests at `content/<id>/short/` (was a separate
+    `<NNN>-short` top-level folder). `build-props.mjs` detects the Short by the **last path
+    segment** + flattens artifacts to `<id>-short`; `new-video.mjs` scaffolds a lean
+    `short/`; updated CLAUDE.md, ARCHITECTURE §3, video-render & qa-video skills. Verified
+    (detection across new/legacy/false-positive; git-ignore intact; legacy 002/003-short still work).
+  - **Video #4 pivoted** from a theory comparison ("Claude vs ChatGPT for Spreadsheets") to a
+    **real experiment** — "I Gave Claude and ChatGPT the Same Messy Spreadsheet" (mini-demo /
+    Desk Fixes). Drivers: experiment > review; **free-vs-free** (owner has Claude Pro but won't
+    pay for ChatGPT — paid-vs-free is unfair); **never fabricate results**.
+  - Built a deterministic **synthetic-data generator** (`scripts/make-synthetic-orders.mjs`,
+    2000 rows, planted 40 dupes / 1139+30 dates / 25 bad totals) + a **scorer**
+    (`scripts/score-orders-clean.mjs`). Owner recorded 9 clips free-vs-free + saved both tools'
+    cleaned files & take-home scripts.
+  - **Verified the cleaned files vs the planted truth:** Claude 40/40 dupes & kept/flagged
+    broken dates; ChatGPT 34/40 (missed 6 last-name-first) & silently blanked 30 dates;
+    totals 25/25 tie. Honest verdict: the flashier tool (ChatGPT) produced the *riskier* file.
+  - **Script written, reviewed, APPROVED** (24 scenes, "demo-with-rigor" framing: planted-truth
+    credibility beat, failure-mode naming, free-tier-only caveat, one copy-pasteable master
+    prompt). **Voiced** = edge-tts Andrew −2% **draft**, ~4.8 min; whisper alignment, hard gate
+    passed (65/65 sentences timed).
+  - New rule **script-writing §11**: automation/how-to clips lead with one stylized
+    copy-pasteable prompt (full prompt in description); reusable script > one-off. Idea-bank:
+    003 → produced, 004 → in-progress, + sequel idea ("a rules system that won't let bad data
+    in"); fixed invalid status enum values.
+- decisions: framing = **demo with rigor as proof** (not a benchmark-showcase); length = let
+  the captures **"breathe"** → ~6 min (render-side; B4). Memories saved: comparison=experiment,
+  lead-with-copy-pasteable-prompt.
+- next (tomorrow, B4): storyboard scene-plan; **wire captures into `build-props` (new code)** +
+  the captures-breathe audio segmentation; 2 thumbnails; render long + Short; QA → final-video
+  gate; then **Azure final voice** + publish prep.
+- blockers: none. (edge-tts now installed in `.venv`; ffmpeg still not on PATH — not needed:
+  Remotion bundles it and breathe is render-side.)
+
 ## 2026-06-06 — Video #3 produced ("5 Tasks an AI Can Do Like a Secretary") + render hardening
 - who: agent + owner (gate reviews)
 - did:

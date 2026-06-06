@@ -48,6 +48,13 @@ does not self-approve (that's `script-review`, then the human gate).
    **Desk Fixes** (mini-demo) · **Desk Loops** (ideas/diagram) · **Automation Breakdowns**
    (comparison) · **Desk Notes** (news/short). Every Nth video should plan a real
    owner-recorded demo (mini-demo) — genuine footage is the strongest anti-"content-farm" signal.
+11. **Lead with one copy-pasteable prompt (automation/how-to clips) — owner rule 2026-06-07.**
+   When a clip teaches a result the viewer can reproduce with AI, feature **one stylized,
+   copy-pasteable prompt** on screen, held long enough to **pause and screenshot**. If it fits
+   on screen, show it big; if it's too long, show the gist on screen and put the **full prompt
+   in the description / pinned comment**. The diagnostic build-up (separate find-this, fix-that
+   steps) is optional flavor — the single reproduce-it prompt is the payoff. And remember: a
+   one-off chat result isn't automation — prefer the **reusable script/system** as the takeaway.
 
 ## Write to the archetype (STYLE_GUIDE §5)
 - **ideas:** hook → framing → N items (idea → why it pays → tiny illustration →
