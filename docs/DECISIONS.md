@@ -373,6 +373,36 @@ old one (don't delete history).
   when rendering later moves to a second machine/cloud. Tracked in ROADMAP "Phase B".
 - **Consequences:** A safe, documented path to parallelism; no orchestrator code yet.
 
+## D-034 — Comparisons are experiments, not reviews (video #4 reframed)
+- **Context:** the theory "Claude vs ChatGPT for spreadsheets" read like "here's what I read," not "here's what I tried."
+- **Decision:** turn "X vs Y" into a hands-on experiment on a shared real task with **planted ground truth** + a deterministic scorer; **free-vs-free** matchup; **never fabricate results**. #4 = "I Gave Claude & ChatGPT the Same Messy Spreadsheet" (mini-demo). Owner records the real runs.
+- **Consequences:** far more credible, story-shaped content; needs owner screen recordings; results verified vs the answer key.
+
+## D-035 — Forced-alignment root fix: difflib sequence alignment
+- **Context:** the pointer-walk aligner drifted whenever a hyphenated compound ("upload-a-file-and-say-wow") didn't match whisper's separate words — recurred across clips and broke caption sync mid-video.
+- **Decision:** tokenize on hyphens too, and map script tokens → whisper words via `difflib.SequenceMatcher` (interpolate unmatched gaps) in `make_alignment.py`.
+- **Consequences:** captions track the voice reliably; the recurring drift is gone.
+
+## D-036 — No empty/static scenes + b-roll guardrails
+- **Context:** a ~20s near-empty `lower-third`; and an off-topic Pexels clip that looped/flickered.
+- **Decision:** HARD no-empty-scene rule (split/animate long beats; `lower-third` for short overlays only). B-roll only when it genuinely **fits the point**, **never looped** (play once via `OffthreadVideo`, no flicker), **prefer code-drawn over irrelevant footage**.
+- **Consequences:** `VersusNote` scene; SceneWrapper b-roll layer fixed; enforced in `build-props` + qa-video + VISUAL_IDENTITY.
+
+## D-037 — Thumbnails: owner generates from 2 prompts; agent only composites
+- **Context:** agent code-drawn / auto thumbnails were poor, and the agent can't generate raster images here.
+- **Decision:** always give exactly **2 image prompts** for the owner to generate in a **free** tool; the agent **only composites** (logos, no title unless asked) via `ThumbComposite`. Legacy code-drawn `Thumbnail` retired for production.
+- **Consequences:** better thumbnails for $0; the owner owns the base image + the thumbnail step.
+
+## D-038 — Cross-platform metadata: timing + formats
+- **Context:** owner wants names early and tight, platform-fit copy.
+- **Decision:** generate SEO (**title for the video AND the Short** + description + tags) at **script approval**; the YouTube description is **max 3 SEO-dense sentences** (+ chapters + altered-content line; long utility text like the master prompt → **pinned comment**); the **Short** gets **one sentence + a link** to the full video; every video also gets a **Medium** description (600–700 words, "cited by AI search engines" prompt) generated from the transcript → `medium.md`.
+- **Consequences:** faster naming; platform-appropriate copy; AI-search (ChatGPT/Perplexity/AI Overview) discoverability.
+
+## D-039 — North star: self-reviewing autonomous studio (ROADMAP Phase C)
+- **Context:** the owner should do **only** final video approval + the thumbnail.
+- **Decision:** build a loop where the agent writes, **two OTHER (different) models** review + score each stage (script, scene-plan/video-prep, the cut), the best fixes are merged and applied, repeating **until both reviewers score ≥ 9/10**; then final render + **auto-draft to YouTube**. Needs **2 external model API keys** (prefer free tiers) + a one-time YouTube OAuth.
+- **Consequences:** max quality/throughput with min owner time; documented in ROADMAP "Phase C"; not built yet.
+
 > Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
 > **D-012** (name) → see D-023. **D-014** (TTS) → see D-024. The old "no AI-disclosure" note → see D-025.
 > Still in force: **D-002** (no YouTube transcripts; clean sources only).

@@ -91,6 +91,26 @@ Plus the always-on: `Intro` / `IntroShort`, `Outro` / `OutroShort`, `Subtitles`,
 - **Continuity:** one persistent `BackgroundFX` in `Main`; every scene renders **transparent**
   and crossfades (~9 frames) via `SceneWrapper`. No per-scene backgrounds.
 
+### 5.2 Stock b-roll + no-empty-scene (D-027 b-roll; owner rules 2026-06-07)
+- **B-roll is optional and rare — only when a clip genuinely fits what's being said.** A
+  scene declares `props.broll = "<query>"`; `pipeline/03-visuals/fetch-stock.mjs` pulls a
+  clip from **Pexels** (then Pixabay; free keys in `.env`) and `SceneWrapper` renders it
+  behind the scene **dark-graded**. Prefer **video** over images. HARD rules (owner 2026-06-07,
+  learned the hard way):
+  - **Must fit the topic/segment.** Search for the *specific* idea on screen — a generic
+    "person typing" behind "ChatGPT was faster, Claude more precise" is WRONG. If no clip
+    truly fits, **use none** (code-drawn scene is better than irrelevant footage).
+  - **NEVER loop/repeat** a clip to fill a scene. A 3-second clip = 3 seconds of use. Render
+    plays it **once** via `OffthreadVideo` (no `loop`); match b-roll to short scenes whose
+    length ≈ the clip, don't stretch it across a long scene.
+  - **No flicker:** always `OffthreadVideo` (frame-accurate), never a looping `<Video>`.
+  - Don't bury the message; credit the creator (Pexels/Pixabay) in the description.
+- **No empty / long-static scene (HARD):** every scene fills the frame and keeps moving. A
+  sparse template (`lower-third`, `transition`) must not be held as a long standalone scene —
+  split a long caveat/list into **reveal beats** or use a fuller/animated scene (e.g. a
+  bespoke `custom` like `VersusNote`). `build-props` warns; qa-video FAILs a >~8s mostly-empty
+  hold.
+
 ## 6. Layout & safe areas
 
 - **Long (16:9):** 1920×1080, 30fps. Text inside 90% safe area.

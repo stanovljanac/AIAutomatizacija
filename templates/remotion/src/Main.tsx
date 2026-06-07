@@ -16,10 +16,12 @@ import { DeskScatter } from "./custom/DeskScatter";
 import { CalendarFind } from "./custom/CalendarFind";
 import { InboxTriage } from "./custom/InboxTriage";
 import { MorningSynthesis } from "./custom/MorningSynthesis";
+import { VersusNote } from "./custom/VersusNote";
 
 /** Custom (bespoke) scene dispatch — template:"custom" routes by props.component. */
 const CUSTOM: Record<string, React.FC<{ data?: any }>> = {
   "spreadsheet-clean": SpreadsheetClean,
+  "versus-note": VersusNote,
   "hand-copy": HandCopy,
   "ai-flow": AiFlow,
   "chaos-x": ChaosX,
@@ -83,7 +85,7 @@ export const Main: React.FC<MainProps> = (p) => {
       {/* scenes/beats placed in time from the alignment, crossfading */}
       {p.scenes.map((s) => (
         <Sequence key={s.sceneId} from={s.fromFrame} durationInFrames={s.durFrames} name={s.sceneId}>
-          <SceneWrapper durFrames={s.durFrames} overlap={xf}>
+          <SceneWrapper durFrames={s.durFrames} overlap={xf} broll={s.props?.brollSrc}>
             {renderScene(s.template, s.props)}
           </SceneWrapper>
         </Sequence>

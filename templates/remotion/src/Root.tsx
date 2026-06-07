@@ -3,6 +3,7 @@ import { Composition } from "remotion";
 import { TemplateGallery, GALLERY_FRAMES } from "./TemplateGallery";
 import { Main, MainProps } from "./Main";
 import { Thumbnail, thumbDefault } from "./Thumbnail";
+import { ThumbComposite, thumbCompositeDefault } from "./ThumbComposite";
 
 const mainPlaceholder: MainProps = {
   fps: 30, width: 1920, height: 1080,
@@ -52,6 +53,15 @@ export const RemotionRoot: React.FC = () => {
         width={1280}
         height={720}
         defaultProps={thumbDefault}
+      />
+      <Composition
+        id="ThumbComposite"
+        component={ThumbComposite}
+        durationInFrames={1}
+        fps={30}
+        width={1280}
+        height={720}
+        defaultProps={thumbCompositeDefault}
       />
     </>
   );

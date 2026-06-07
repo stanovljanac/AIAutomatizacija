@@ -13,6 +13,7 @@ sentence timestamps (R12). Voice + rate come from pipeline/shared/config.json.
 """
 import asyncio
 import json
+import re
 import string
 import sys
 from pathlib import Path
@@ -27,13 +28,17 @@ def norm(tok: str) -> str:
 
 
 def tokens_of(sentence: str):
-    # split on whitespace, strip surrounding punctuation, keep internal hyphens,
-    # drop empties (lone dashes) — mirrors edge-tts word emission closely.
+    # split on whitespace AND hyphens/dashes — a hyphenated compound is spoken as separate
+    # words, so it must tokenize as separate words too (keeps alignment from drifting; v2-1).
     out = []
     for raw in sentence.split():
-        t = raw.strip(string.punctuation + "—")
-        if t:
-            out.append(t.lower())
+        t = raw.strip(string.punctuation + "—–")
+        if not t:
+            continue
+        for part in re.split(r"[-–—]", t):
+            p = part.strip(string.punctuation + "—–")
+            if p:
+                out.append(p.lower())
     return out
 
 

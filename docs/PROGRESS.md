@@ -30,6 +30,37 @@ Format:
 
 <!-- New entries below this line, newest on top. Add as you build each phase. -->
 
+## 2026-06-07 (eve) — Video #4 produced end-to-end (experiment) + big system upgrades
+- who: agent + owner (recording + 3 gate reviews)
+- did:
+  - **Produced video #4** "I Gave Claude & ChatGPT the Same Messy Spreadsheet" (mini-demo
+    experiment): owner recorded 9 free-vs-free clips on a synthetic 2,000-row file (40 dup /
+    30 broken dates / 25 bad totals planted); agent **verified the cleaned files vs the answer
+    key** (ChatGPT 34/40 dupes + silent date blanking; Claude 40/40 + keeps/flags; totals tie),
+    wrote the real-results script (24 scenes), rendered long (**Azure final voice**, 4:56) +
+    Short (Azure, 50.7s). All per-video 004 media is git-ignored.
+  - **Alignment root-fixed (D-035):** difflib sequence alignment + hyphen-split in
+    `make_alignment.py` — kills the recurring caption drift.
+  - **No-empty-scene + b-roll guardrails (D-036):** new `VersusNote` custom scene (real
+    ChatGPT/Claude logos) replaced an empty lower-third; b-roll reverted (off-topic/looping/
+    flicker) — SceneWrapper now `OffthreadVideo`, plays once; `pipeline/03-visuals/fetch-stock.mjs`
+    built (Pexels/Pixabay) for future *fitting* use only.
+  - **Thumbnails (D-037):** owner generates from 2 prompts (free tool); agent only composites
+    via new `ThumbComposite` (ChatGPT/Claude/Excel logos, no title, covers the watermark).
+  - **Capture wiring:** `build-props.mjs` now copies capture clips + brand logos into Remotion
+    `public/` and wires `src` (first real mini-demo).
+  - **Cross-platform metadata (D-038):** SEO at script-approval; YT desc = 3 sentences; Short =
+    1 sentence + link; **Medium** description per video (600–700w, AI-search-cited prompt) →
+    `medium.md`. `publish.json` ready (status draft_pending).
+  - **Roadmap:** added **Phase C — self-reviewing autonomous studio** (2 other models review →
+    loop to ≥9 → auto-draft to YouTube; owner only does final approval + thumbnail) (D-039).
+  - Decisions logged **D-034…D-039**. Memories saved (comparison-as-experiment, b-roll rules,
+    thumbnails-prompts, seo-at-script-approval, autonomous-studio north star).
+- next: owner final-approves #4 → upload. **Upload blocker:** YouTube needs a one-time OAuth
+  (`token.json`) to auto-draft; else manual upload. Then build Phase C (LLM-judge harness +
+  `pipeline/06-publish/upload.mjs`). Short still has no Short-specific intro music (optional).
+- blockers: YouTube OAuth not set up (one-time owner action) for auto-upload.
+
 ## 2026-06-07 — Folder refactor (nested Short) + Video #4 pivoted to a real experiment
 - who: agent + owner (multiple gate reviews, incl. 2 independent model reviews)
 - did:

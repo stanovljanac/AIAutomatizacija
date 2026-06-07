@@ -8,12 +8,16 @@ description: Use to produce the thumbnail spec (2 variants) and the rare optiona
 Most visuals are **code-driven** (fixed templates + code-drawn diagrams), so this skill
 is small. It handles two things only:
 
-## 1. Thumbnail spec (every video, 2 variants)
-- Build props for the Remotion `ThumbnailTemplate` (VISUAL_IDENTITY §9): a 1–4 word
-  English phrase, brand background + accent, one focal element (clean icon / cropped UI
-  / bold graphic — no AI-art clutter).
-- Produce **2 variants** (e.g. different phrase or focal element) → `images/thumb_a.*`,
-  `images/thumb_b.*` (rendered in Step 4). The owner picks one at publish.
+## 1. Thumbnail = always 2 PROMPTS for the owner (HARD — owner rule 2026-06-07)
+- **NEVER auto-generate the thumbnail yourself** (neither the old code-drawn `Thumbnail`
+  composition nor any agent-made image — they were poor). **Always write exactly 2 image
+  prompts** the owner runs in a **free** tool (Bing Image Creator / Google ImageFX /
+  Ideogram; Colab SDXL/Flux fallback) → into `visual-prompts.json`. The prompt makes the
+  dramatic BACKGROUND and leaves clean space; do **not** bake words into the image.
+- After the owner drops their chosen image in `images/`, the agent **only composites**
+  what the owner asks (e.g. the tool logos from `assets/brand/`) via the Remotion
+  `ThumbComposite` still — **no title unless the owner asks**. Render to a final PNG; the
+  owner uploads it. (The legacy code-drawn `Thumbnail` composition is retired for production.)
 
 ## 2. Rare concept image (optional, opt-in)
 - Only when code-visual + stock genuinely won't convey an idea. Prefer **free stock**

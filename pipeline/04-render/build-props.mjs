@@ -13,7 +13,7 @@
  *   then:  cd templates/remotion && npx remotion render Main out/<outId>.mp4 --props=props/<outId>.json
  *   (<outId> = the content id with slashes flattened, e.g. 004-foo/short → 004-foo-short)
  */
-import { cpSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -35,6 +35,9 @@ const F = (s) => Math.round(s * fps);
 const seg = id.split(/[\\/]/).pop();
 const vertical = seg === "short" || seg.endsWith("-short"); // → 1080x1920 Short
 const dims = vertical ? (cfg.render?.short ?? { width: 1080, height: 1920 }) : (cfg.render?.long ?? { width: 1920, height: 1080 });
+// Flat artifact id so a nested content id (004-foo/short) doesn't put slashes into the
+// Remotion public/props/out paths or the --props CLI arg. 004-foo/short → 004-foo-short.
+const outId = id.replace(/[\\/]/g, "-");
 const intro = Math.round((vertical ? 1.2 : 1.5) * fps); // Short bumped 0.7→1.2s so the intro underline finishes & wordmark reads
 const outro = Math.round((vertical ? 1.2 : 2.5) * fps);
 const xf = cfg.render?.crossfadeFrames ?? 9;
@@ -81,6 +84,52 @@ for (const sc of script.scenes) {
   });
 }
 
+// capture-segment wiring: copy each recorded clip into Remotion public/<outId>/ and
+// point the scene at it (the CaptureSegment component plays props.src via staticFile).
+const capDir = join(ROOT, "templates/remotion/public", outId);
+for (const bt of beats) {
+  if (bt.template !== "capture-segment") continue;
+  const capId = bt.props?.capture_id;
+  if (!capId) { console.warn(`capture-segment ${bt.sceneId} has no capture_id`); continue; }
+  const srcFile = join(cdir, "captures", `${capId}.mp4`);
+  if (!existsSync(srcFile)) { console.warn(`capture clip missing: ${srcFile}`); continue; }
+  mkdirSync(capDir, { recursive: true });
+  cpSync(srcFile, join(capDir, `${capId}.mp4`));
+  bt.props.src = `${outId}/${capId}.mp4`;
+}
+
+// brand logos: copy assets/brand/* into Remotion public/brand/, then STRIP any logo prop
+// whose file is missing so a scene (e.g. versus-note) falls back to a wordmark instead of
+// crashing the render. Drop chatgpt.png/claude.png/excel.png into assets/brand/ to enable.
+const brandSrc = join(ROOT, "assets", "brand");
+const brandDst = join(ROOT, "templates/remotion/public/brand");
+if (existsSync(brandSrc)) {
+  mkdirSync(brandDst, { recursive: true });
+  for (const f of readdirSync(brandSrc)) if (/\.(png|jpe?g|webp|svg)$/i.test(f)) cpSync(join(brandSrc, f), join(brandDst, f));
+}
+for (const bt of beats) for (const k of ["leftLogo", "rightLogo", "logo"]) {
+  const v = bt.props?.[k];
+  if (v && !existsSync(join(ROOT, "templates/remotion/public", v))) delete bt.props[k];
+}
+
+// b-roll (v2-4): a scene with props.broll = "<query>" plays a fetched stock clip behind it.
+// fetch-stock.mjs downloads content/<id>/broll/<slug>.mp4; copy it into public/ and set
+// props.brollSrc (SceneWrapper renders it dark-graded). If missing, the scene renders plain.
+const brollSlug = (q) => String(q).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+for (const bt of beats) {
+  if (!bt.props?.broll) continue;
+  const slug = brollSlug(bt.props.broll);
+  const f = join(cdir, "broll", `${slug}.mp4`);
+  if (existsSync(f)) {
+    const d = join(ROOT, "templates/remotion/public", outId, "broll");
+    mkdirSync(d, { recursive: true });
+    cpSync(f, join(d, `${slug}.mp4`));
+    bt.props.brollSrc = `${outId}/broll/${slug}.mp4`;
+  } else {
+    console.warn(`b-roll missing for "${bt.props.broll}" — run: node pipeline/03-visuals/fetch-stock.mjs ${id}  (scene renders without b-roll)`);
+  }
+}
+
 // nominal start frame (when this beat's first sentence is spoken)
 beats.forEach((bt) => { bt.B = intro + F(bt.sents[0].start); });
 
@@ -111,6 +160,18 @@ const scenes = beats.map((bt, k) => {
   return { sceneId: bt.sceneId, template: bt.template, props: bt.props, fromFrame: from, durFrames: dur };
 });
 
+// no-empty-scene guard (v2-2): a SPARSE template (lower-third/transition) held long is the
+// "empty screen" failure the owner flagged. Content-full scenes (table/code/term/cta) holding
+// a while are fine. Warn only for the sparse case → split into beats or use a fuller scene.
+const SPARSE = new Set(["lower-third", "transition"]);
+for (const s of scenes) {
+  const secs = s.durFrames / fps;
+  const dynamic = Array.isArray(s.props?.reveals) && s.props.reveals.length > 1;
+  if (SPARSE.has(s.template) && secs > 6 && !dynamic) {
+    console.warn(`EMPTY/STATIC SCENE: ${s.sceneId} (${s.template}) ${secs.toFixed(1)}s — sparse template held long; split or use a fuller/animated scene (no-empty-scene rule).`);
+  }
+}
+
 // caption cues — chunked into <=2-line groups, each timed to its words as they are
 // spoken. We never dump a whole long sentence at once (that caused 3-6 line blocks and
 // text appearing before it was said). A chunk shows only while its words are spoken.
@@ -135,10 +196,6 @@ const cues = groups.map((g, gi) => {
   const ww = g.map((w) => ({ w: /^ai$/i.test(w.w) ? "AI" : w.w, relFrom: F(w.start - start), relDur: Math.max(F(w.end - w.start), 1) }));
   return { fromFrame: from, durFrames, words: ww };
 });
-
-// Flat artifact id so a nested content id (004-foo/short) doesn't put slashes into
-// the Remotion public/props/out paths or the --props CLI arg. 004-foo/short → 004-foo-short.
-const outId = id.replace(/[\\/]/g, "-");
 
 // copy narration into Remotion public/
 const pubDir = join(ROOT, "templates/remotion/public", outId);

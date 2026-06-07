@@ -27,6 +27,11 @@ You catch problems **before** the owner watches (PRD R13–R14), and you produce
 - **Loudness/format:** sane levels (`loudness_lufs`); correct resolution/fps; Short vertical.
 - **Pacing/dynamism:** a visual change every ~3-7s; no single scene is a long static hold
   (use beats / reveal-sync / window-aware custom motion).
+- **No empty / static scene (HARD — owner rule 2026-06-07):** every scene must fill the frame
+  and keep moving. FAIL if a scene runs **> ~8s with no motion/reveals and a mostly-empty
+  frame** (e.g. a `lower-third` caption held for 20s). `build-props.mjs` warns on this; the
+  fix is to split the scene into reveal beats or use a fuller/animated template (a sparse
+  template like `lower-third` is for SHORT overlays only, never a long standalone scene).
 
 > These HARD checks exist because they were skipped before. Treat a HARD failure like a
 > failed build: fix it (and the upstream skill/script) before the video reaches the owner.

@@ -7,7 +7,9 @@ edge-tts in this version doesn't emit WordBoundary events, so we recover per-wor
 timing from the (crystal-clear) TTS audio with faster-whisper and snap it to the
 known script text. One continuous track; scene windows come from sentence times.
 """
+import difflib
 import json
+import re
 import string
 import sys
 from pathlib import Path
@@ -23,11 +25,18 @@ def norm(t: str) -> str:
 
 
 def tokens_of(sentence: str):
+    # Split on whitespace AND on hyphens/dashes: whisper emits a hyphenated compound like
+    # "upload-a-file-and-say-wow" or "last-name-first" as separate words, so we must too —
+    # otherwise one mega-token can never match and the alignment drifts (v2-1 fix).
     out = []
     for raw in sentence.split():
         t = raw.strip(PUNCT)
-        if t:
-            out.append(t.lower())
+        if not t:
+            continue
+        for part in re.split(r"[-–—]", t):
+            p = part.strip(PUNCT)
+            if p:
+                out.append(p.lower())
     return out
 
 
@@ -51,21 +60,47 @@ def main(cid: str):
     print(f"whisper words: {len(ww)}")
 
     flat = [(si, t) for si, s in enumerate(sents) for t in s["tok"]]
+    script_toks = [t for (_, t) in flat]
+    wn = [w["n"] for w in ww]
+
+    # Robust mapping script tokens -> whisper words via SEQUENCE ALIGNMENT (v2-1). This
+    # handles whisper insertions / deletions / substitutions (e.g. "twenty-five" vs "25")
+    # without the old pointer-walk drifting or parking everything at the end. Matched
+    # ("equal") tokens take the real whisper time; the rest are interpolated between anchors.
+    times = [None] * len(script_toks)
+    sm = difflib.SequenceMatcher(a=script_toks, b=wn, autojunk=False)
+    for tag, i1, i2, j1, j2 in sm.get_opcodes():
+        if tag == "equal":
+            for k in range(i2 - i1):
+                w = ww[j1 + k]
+                times[i1 + k] = (w["start"], w["end"])
+    dur_guess = ww[-1]["end"] if ww else 0.0
+    n = len(times)
+    i = 0
+    while i < n:
+        if times[i] is not None:
+            i += 1
+            continue
+        a = i - 1
+        b = i
+        while b < n and times[b] is None:
+            b += 1
+        left = times[a][1] if a >= 0 else 0.0
+        right = times[b][0] if b < n else dur_guess
+        gap = b - i
+        span = max(right - left, 0.0)
+        for k in range(gap):
+            t0 = round(left + span * k / (gap + 1), 3)
+            t1 = round(left + span * (k + 1) / (gap + 1), 3)
+            times[i + k] = (t0, t1)
+        i = b
+
     words_out, si_start, si_end = [], {}, {}
-    j = 0
-    for (si, tok) in flat:
-        match = None
-        for scan in range(j, min(j + 4, len(ww))):  # small look-ahead
-            if ww[scan]["n"] == tok:
-                match = ww[scan]
-                j = scan + 1
-                break
-        if match is None:  # best effort: take current, advance by 1
-            match = ww[j] if j < len(ww) else (ww[-1] if ww else {"start": 0, "end": 0})
-            j = min(j + 1, len(ww))
-        words_out.append({"scene": sents[si]["scene"], "w": tok, "start": match["start"], "end": match["end"]})
-        si_start.setdefault(si, match["start"])
-        si_end[si] = match["end"]
+    for idx, (si, tok) in enumerate(flat):
+        st, en = times[idx] if times[idx] else (0.0, 0.0)
+        words_out.append({"scene": sents[si]["scene"], "w": tok, "start": st, "end": en})
+        si_start.setdefault(si, st)
+        si_end[si] = en
 
     duration = round((ww[-1]["end"] if ww else 0) + 0.5, 3)
     sentences_out = []

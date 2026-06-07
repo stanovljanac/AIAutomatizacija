@@ -142,6 +142,57 @@ Postiz distribution, `pipeline/07-distribute`, `make-short` generalization,
 
 ---
 
+## Phase C — Self-reviewing autonomous studio (owner: only final approval + thumbnail)
+
+**North star (owner, 2026-06-07):** the system writes, reviews **itself with two OTHER models**
+(not the author, and different from each other), merges the best of both reviews, applies the
+changes, and **loops until BOTH external reviewers score ≥ 9/10** — then produces the final
+video and **waits only for (a) the owner's final approval and (b) the owner's thumbnail.**
+Everything else is automated, including drafting to YouTube.
+
+### C1. Multi-model self-review loop (the core)
+- **Author:** this agent drafts `script.json`, then `scene-plan.json` + "video-prep" (props).
+- **Two independent reviewers = two different external models** (e.g. Gemini + one other —
+  NOT the author model, and not the same as each other), each scoring against a rubric
+  (original angle, accuracy vs `claims.json`, retention/structure, our hard rules: no-empty
+  scene, captions ≤2 lines, Short 45–120s, on-screen sources, b-roll-fit, etc.). Each returns
+  a **1–10 score + concrete fixes**.
+- **Merge + apply:** the author takes the *best* fixes from both, applies them, and re-submits.
+- **Loop until BOTH reviewers ≥ 9** (cap N iterations → then surface to owner). Review stages:
+  **(1) script → (2) scene-plan/video-prep → (3) the rendered cut** (a final QA-grade pass).
+- **Build:** `pipeline/shared/review/` — an LLM-judge harness that calls 2 model APIs with the
+  rubric, parses scores+fixes, and drives the loop. Generalizes today's single `script-review`.
+- **Constraints (honest):** needs **2 external model API keys** (prefer free tiers — Gemini
+  free; pick a 2nd free/cheap model); has a per-video cost/latency; keys in `.env`, never
+  committed. Define the rubric + score schema first; start with the script stage, then extend.
+
+### C2. Auto-publish to YouTube (draft)
+- Build `pipeline/06-publish/upload.mjs` (YouTube Data API v3): upload the long + Short as
+  **private/draft** with the `publish.json` metadata + `thumb_final.png`, set altered-content.
+- **One-time owner step:** OAuth consent to mint `token.json` (interactive, can't be headless).
+  After that, uploads are automatic; the owner only **clicks publish** (or we schedule it).
+
+### C3. Other automation to remove manual touches
+- **Idea selection:** auto-pick the top-scored idea + draft the angle (Gate 1 already auto).
+- **SEO at script-approval** (done as a rule) + **auto-metadata** from script/alignment.
+- **make-short auto-derivation** from the approved long script (Phase B #2).
+- **Loudness −16 LUFS** normalize; **caption-lag** rescale fix if it recurs.
+- **Analytics loop:** pull CTR/retention → re-rank `ideas.json` (Phase B #4).
+- **Distribution:** Postiz + `pipeline/07-distribute` cross-post the Short caption (D-027).
+
+### C4. What stays the owner's (only these)
+- **Final video approval** (Gate 3) and **thumbnail** (owner generates the image from the 2
+  prompts; agent composites logos). Screen recordings remain owner-only **but only for the
+  occasional mini-demo** — the autonomous loop defaults to full-auto archetypes (ideas /
+  comparison / diagram) that need no recording.
+
+Exit criteria:
+- [ ] Two external models review each stage and the loop reaches ≥9/9 without human edits.
+- [ ] A video goes idea → script → reviewed→fixed→re-reviewed → final render → **draft on
+      YouTube**, with the owner touching only final-approval + thumbnail.
+
+---
+
 ## What we deliberately deferred
 
 - Products/affiliate/courses — until payout rails exist (D-017).

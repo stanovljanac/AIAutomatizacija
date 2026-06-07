@@ -38,6 +38,9 @@ does not self-approve (that's `script-review`, then the human gate).
    scenes** (mark them `template: "custom"`) so videos don't all look identical — build them
    with Remotion + the installed HyperFrames / GSAP / Three / Lottie skills. Mix custom
    beats in with the base templates; never ship a video that is just the gallery on repeat.
+   **No scene may be empty or a long static hold** (owner rule 2026-06-07): a long caveat or
+   list must split into reveal beats or use a full/animated template — a bare `lower-third`
+   held ~20s is a fail. Enforced in `build-props` (warn) + qa-video (HARD).
 9. **Answer-first + specific facts (D-026).** Answer the topic's core question in the **first
    30–60 seconds** (AI overviews weight the opening most), then the hook, then the deeper
    build. Use **specific names, dates, numbers, places** — "26,000 workers in Malaysia were
