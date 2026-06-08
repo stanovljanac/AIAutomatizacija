@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "news.json",
+  "description": "Normalized AI-automation news pulled from a list of sources (official changelogs + aggregators), deduplicated across sources, and scored. Feeds Desk Notes ideas into the idea-bank.",
+  "type": "object",
+  "required": ["updated", "items"],
+  "properties": {
+    "updated": { "type": "string", "description": "ISO timestamp of the last fetch." },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "url", "sources", "fetched"],
+        "properties": {
+          "id": { "type": "string", "description": "Stable dedup id (e.g. hash of normalized title)." },
+          "title": { "type": "string" },
+          "url": { "type": "string", "format": "uri", "description": "Canonical / first-seen link." },
+          "summary": { "type": "string" },
+          "published": { "type": ["string", "null"], "description": "ISO publish date if known." },
+          "fetched": { "type": "string", "description": "ISO timestamp first seen by us." },
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Every source that carried this story (>1 = corroboration → higher signal).",
+            "items": {
+              "type": "object",
+              "required": ["name", "type"],
+              "properties": {
+                "name": { "type": "string", "description": "e.g. anthropic, openai, google-ai, the-decoder, tldr-ai, hn." },
+                "type": { "type": "string", "enum": ["official", "aggregator"] },
+                "url": { "type": "string", "format": "uri" }
+              }
+            }
+          },
+          "topics": { "type": "array", "items": { "type": "string" } },
+          "score": { "type": "number", "minimum": 0, "maximum": 100, "description": "Predicted topical value (corroboration + recency + relevance)." },
+          "suggested_archetype": { "type": "string", "enum": ["ideas", "mini-demo", "diagram", "comparison"] },
+          "idea_id": { "type": ["string", "null"], "description": "Set once promoted into ideas.json." },
+          "status": { "type": "string", "enum": ["new", "promoted", "ignored"], "default": "new" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "timeline.json",
+  "description": "Engine-agnostic timeline (all times in SECONDS). build-props emits this; per-engine compilers (Remotion frames / HyperFrames seconds) translate it. Decouples the sync logic from any one render engine so the engine becomes swappable.",
+  "type": "object",
+  "required": ["version", "format", "duration_seconds", "scenes"],
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "out_id": { "type": "string", "description": "e.g. 005-foo or 005-foo/short." },
+    "format": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "integer" },
+        "height": { "type": "integer" },
+        "fps": { "type": "integer", "description": "Advisory; the timeline itself is in seconds." }
+      }
+    },
+    "duration_seconds": { "type": "number", "minimum": 0 },
+    "audio": {
+      "type": "object",
+      "required": ["src", "start_seconds"],
+      "properties": {
+        "src": { "type": "string", "description": "Continuous narration track (never cut)." },
+        "start_seconds": { "type": "number", "minimum": 0, "description": "When narration starts (after intro)." }
+      }
+    },
+    "intro": { "type": "object", "properties": { "duration_seconds": { "type": "number" } } },
+    "outro": { "type": "object", "properties": { "duration_seconds": { "type": "number" } } },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["scene_id", "template", "start_seconds", "end_seconds"],
+        "properties": {
+          "scene_id": { "type": "string" },
+          "template": { "type": "string", "description": "Render component tag." },
+          "start_seconds": { "type": "number", "minimum": 0 },
+          "end_seconds": { "type": "number", "minimum": 0 },
+          "props": { "type": "object", "description": "Template-specific props (engine-agnostic)." },
+          "reveals": {
+            "type": "array",
+            "description": "Per-element reveal times (seconds), snapped to spoken words.",
+            "items": {
+              "type": "object",
+              "required": ["at_seconds"],
+              "properties": {
+                "key": { "type": "string" },
+                "at_seconds": { "type": "number", "minimum": 0 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "captions": {
+      "type": "array",
+      "description": "Caption cues; words timed to the narration (<= 2 lines enforced downstream).",
+      "items": {
+        "type": "object",
+        "required": ["start_seconds", "end_seconds", "words"],
+        "properties": {
+          "start_seconds": { "type": "number", "minimum": 0 },
+          "end_seconds": { "type": "number", "minimum": 0 },
+          "words": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["w", "start_seconds", "end_seconds"],
+              "properties": {
+                "w": { "type": "string" },
+                "start_seconds": { "type": "number", "minimum": 0 },
+                "end_seconds": { "type": "number", "minimum": 0 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

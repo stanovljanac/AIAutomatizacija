@@ -33,6 +33,17 @@
             "enum": ["backlog", "in-progress", "produced", "parked"]
           },
           "produced_video_id": { "type": ["string", "null"] },
+          "source": {
+            "type": "object",
+            "description": "Provenance: how this idea entered the bank.",
+            "required": ["origin"],
+            "properties": {
+              "origin": { "type": "string", "enum": ["manual", "news", "analytics"] },
+              "news_id": { "type": ["string", "null"], "description": "news.json item id if origin=news." },
+              "url": { "type": ["string", "null"] },
+              "added": { "type": "string", "description": "ISO date added." }
+            }
+          },
           "metrics": {
             "type": "object",
             "description": "Filled after publish; used to re-rank the bank.",

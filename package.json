@@ -5,7 +5,9 @@
   "description": "The Automation Desk YouTube content factory — pipeline tooling (validation, scaffolding). The Remotion render project lives in templates/remotion with its own package.json.",
   "scripts": {
     "validate": "node pipeline/shared/validate.js",
-    "new-video": "node pipeline/00-ideas/new-video.mjs"
+    "new-video": "node pipeline/00-ideas/new-video.mjs",
+    "test": "node --test pipeline/",
+    "make-video": "node pipeline/shared/orchestrator/run.mjs"
   },
   "dependencies": {
     "ajv": "^8.17.1",

@@ -43,11 +43,65 @@
   },
   "youtube": {
     "client_secret_path_env": "YOUTUBE_CLIENT_SECRET_PATH",
-    "upload_privacy": "private"
+    "token_path_env": "YOUTUBE_TOKEN_PATH",
+    "upload_privacy": "private",
+    "altered_content": true,
+    "category_id": "27",
+    "made_for_kids": false
   },
   "review": {
     "script_max_loops": 3,
     "qa_autofix_technical": true,
-    "qa_flag_content": true
+    "qa_flag_content": true,
+    "panel": {
+      "enabled": true,
+      "score_threshold": 9,
+      "auto_pass_threshold": 9.2,
+      "max_iterations": 3,
+      "stages": ["script", "scene-plan", "cut"],
+      "reviewers": [
+        { "name": "claude-subagent", "provider": "claude_subagent", "model": "claude-sonnet-4-6", "enabled": true },
+        { "name": "gemini", "provider": "gemini", "model": "gemini-3-flash", "enabled": true },
+        { "name": "groq", "provider": "groq", "model": "meta-llama/llama-4-scout-17b-16e-instruct", "enabled": false }
+      ],
+      "weights": {
+        "retention_structure": 0.30,
+        "originality_depth": 0.20,
+        "hard_rule_craft": 0.20,
+        "style_tone": 0.15,
+        "readaloud_clarity": 0.15
+      }
+    }
+  },
+  "llm": {
+    "author": { "provider": "claude", "model": "claude-opus-4-8" },
+    "providers": {
+      "claude_subagent": { "kind": "subagent", "model": "claude-sonnet-4-6" },
+      "gemini": { "kind": "http", "model": "gemini-3-flash", "key_env": "GEMINI_API_KEY", "rpm": 10, "free_tier": true, "enabled": true },
+      "groq": { "kind": "http", "model": "meta-llama/llama-4-scout-17b-16e-instruct", "key_env": "GROQ_API_KEY", "rpm": 30, "free_tier": true, "enabled": false }
+    }
+  },
+  "news": {
+    "enabled": true,
+    "min_corroboration": 1,
+    "dedup": true,
+    "sources": [
+      { "name": "anthropic", "type": "official", "url": "https://www.anthropic.com/news", "enabled": true },
+      { "name": "openai", "type": "official", "url": "https://openai.com/news/", "enabled": true },
+      { "name": "google-ai", "type": "official", "url": "https://blog.google/technology/ai/", "enabled": true },
+      { "name": "microsoft-ai", "type": "official", "url": "https://blogs.microsoft.com/ai/", "enabled": true },
+      { "name": "meta-ai", "type": "official", "url": "https://ai.meta.com/blog/", "enabled": true },
+      { "name": "the-decoder", "type": "aggregator", "url": "https://the-decoder.com/", "enabled": true },
+      { "name": "tldr-ai", "type": "aggregator", "url": "https://tldr.tech/ai", "enabled": true },
+      { "name": "hn", "type": "aggregator", "url": "https://hn.algolia.com/api/v1/search_by_date?tags=story&query=AI", "enabled": true }
+    ]
+  },
+  "error": {
+    "retry": { "max_attempts": 3, "backoff_ms": 2000, "backoff_factor": 2 },
+    "on_fatal": "pause_and_notify"
+  },
+  "notify": {
+    "channel": "push",
+    "email_to_env": "NOTIFY_EMAIL"
   }
 }

@@ -27,6 +27,9 @@ content/**/voice/*
 content/*
 !content/_TEMPLATE/
 !content/_TEMPLATE/**
+# Golden test fixture (committed; used by the testkit). No media inside.
+!content/_FIXTURE/
+!content/_FIXTURE/**
 # …but media dirs stay ignored even inside the skeleton (repo-wide convention; the
 # pipeline recreates them). Only voice/.gitkeep is kept (rule above).
 content/_TEMPLATE/audio/

@@ -28,6 +28,11 @@ const FILENAME_TO_SCHEMA = {
   "alignment.json": "alignment.schema.json",
   "qa.report.json": "qa.schema.json",
   "publish.json": "publish.schema.json",
+  // Phase B/C artifacts
+  "review.json": "review.schema.json",
+  "timeline.json": "timeline.schema.json",
+  "news.json": "news.schema.json",
+  "config.json": "config.schema.json",
 };
 
 function resolveSchemaPath(filePath, override) {

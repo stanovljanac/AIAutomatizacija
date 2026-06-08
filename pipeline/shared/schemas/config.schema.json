@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "config.json",
+  "description": "Pipeline configuration. Top level is closed (typos in section names fail); sections stay lenient so they can grow. Secrets are never stored here — only *_env pointers.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["language", "voice", "render", "paths", "defaults", "review"],
+  "properties": {
+    "language": { "type": "string" },
+    "voice": { "type": "object" },
+    "render": {
+      "type": "object",
+      "properties": {
+        "engine": { "type": "string", "enum": ["remotion", "hyperframes", "combo"] }
+      }
+    },
+    "paths": { "type": "object" },
+    "defaults": { "type": "object" },
+    "stock": { "type": "object" },
+    "ai_images": { "type": "object" },
+    "youtube": {
+      "type": "object",
+      "properties": {
+        "client_secret_path_env": { "type": "string" },
+        "token_path_env": { "type": "string" },
+        "upload_privacy": { "type": "string", "enum": ["private", "unlisted", "public"] },
+        "altered_content": { "type": "boolean" },
+        "category_id": { "type": "string" },
+        "made_for_kids": { "type": "boolean" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": ["script_max_loops"],
+      "properties": {
+        "script_max_loops": { "type": "integer", "minimum": 1 },
+        "qa_autofix_technical": { "type": "boolean" },
+        "qa_flag_content": { "type": "boolean" },
+        "panel": {
+          "type": "object",
+          "required": ["score_threshold", "auto_pass_threshold", "reviewers", "weights"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "score_threshold": { "type": "number", "minimum": 0, "maximum": 10, "description": "Both reviewers must reach this to pass the loop (9)." },
+            "auto_pass_threshold": { "type": "number", "minimum": 0, "maximum": 10, "description": "Both must reach this (+ hard gates) to skip the human script gate (9.2)." },
+            "max_iterations": { "type": "integer", "minimum": 1 },
+            "stages": { "type": "array", "items": { "type": "string", "enum": ["script", "scene-plan", "cut"] } },
+            "reviewers": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "required": ["name", "provider", "model"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "provider": { "type": "string" },
+                  "model": { "type": "string" },
+                  "enabled": { "type": "boolean" }
+                }
+              }
+            },
+            "weights": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["retention_structure", "originality_depth", "hard_rule_craft", "style_tone", "readaloud_clarity"],
+              "properties": {
+                "retention_structure": { "type": "number" },
+                "originality_depth": { "type": "number" },
+                "hard_rule_craft": { "type": "number" },
+                "style_tone": { "type": "number" },
+                "readaloud_clarity": { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "llm": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "object",
+          "properties": { "provider": { "type": "string" }, "model": { "type": "string" } }
+        },
+        "providers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": {
+              "kind": { "type": "string", "enum": ["subagent", "http"] },
+              "model": { "type": "string" },
+              "key_env": { "type": "string" },
+              "rpm": { "type": "integer" },
+              "free_tier": { "type": "boolean" },
+              "enabled": { "type": "boolean" },
+              "base_url": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "news": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "min_corroboration": { "type": "integer", "minimum": 1 },
+        "dedup": { "type": "boolean" },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string", "enum": ["official", "aggregator"] },
+              "url": { "type": "string", "format": "uri" },
+              "enabled": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "retry": {
+          "type": "object",
+          "properties": {
+            "max_attempts": { "type": "integer", "minimum": 1 },
+            "backoff_ms": { "type": "integer", "minimum": 0 },
+            "backoff_factor": { "type": "number", "minimum": 1 }
+          }
+        },
+        "on_fatal": { "type": "string", "enum": ["pause_and_notify", "stop"] }
+      }
+    },
+    "notify": {
+      "type": "object",
+      "properties": {
+        "channel": { "type": "string", "enum": ["push", "email", "both"] },
+        "email_to_env": { "type": "string" }
+      }
+    }
+  }
+}

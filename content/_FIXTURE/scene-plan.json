@@ -1,0 +1,24 @@
+{
+  "id": "_FIXTURE",
+  "scenes": [
+    {
+      "scene_id": "s1",
+      "template": "hook-card",
+      "props": { "title": "A day a month, gone", "subtitle": "Three tiny invoice automations" }
+    },
+    {
+      "scene_id": "s2",
+      "template": "bullet-steps",
+      "props": {
+        "title": "Label, extract, flag",
+        "items": ["Auto-label by sender", "Extract amount + due date", "Flag overdue for reply"]
+      },
+      "revealOn": "sentences"
+    },
+    {
+      "scene_id": "s3",
+      "template": "cta-card",
+      "props": { "title": "Scale it to your own inbox", "subtitle": "Subscribe for more boring automations" }
+    }
+  ]
+}

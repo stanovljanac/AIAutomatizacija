@@ -1,0 +1,435 @@
+{
+  "audio": "voice/narration.mp3",
+  "duration": 20,
+  "sentences": [
+    {
+      "scene": "s1",
+      "index": 0,
+      "text": "Sorting invoice emails by hand eats about a day every month.",
+      "start": 0,
+      "end": 3
+    },
+    {
+      "scene": "s1",
+      "index": 1,
+      "text": "Here are three tiny automations that hand it back.",
+      "start": 3,
+      "end": 5.5
+    },
+    {
+      "scene": "s2",
+      "index": 0,
+      "text": "First, auto-label invoices by sender.",
+      "start": 5.5,
+      "end": 8
+    },
+    {
+      "scene": "s2",
+      "index": 1,
+      "text": "Second, pull the amount and due date into a sheet.",
+      "start": 8,
+      "end": 11
+    },
+    {
+      "scene": "s2",
+      "index": 2,
+      "text": "Third, flag anything overdue for a reply.",
+      "start": 11,
+      "end": 13.5
+    },
+    {
+      "scene": "s3",
+      "index": 0,
+      "text": "Start with one of these and scale it to your own inbox.",
+      "start": 13.5,
+      "end": 16.5
+    },
+    {
+      "scene": "s3",
+      "index": 1,
+      "text": "Subscribe for more boring automations that quietly save hours.",
+      "start": 16.5,
+      "end": 20
+    }
+  ],
+  "words": [
+    {
+      "scene": "s1",
+      "w": "Sorting",
+      "start": 0,
+      "end": 0.273
+    },
+    {
+      "scene": "s1",
+      "w": "invoice",
+      "start": 0.273,
+      "end": 0.545
+    },
+    {
+      "scene": "s1",
+      "w": "emails",
+      "start": 0.545,
+      "end": 0.818
+    },
+    {
+      "scene": "s1",
+      "w": "by",
+      "start": 0.818,
+      "end": 1.091
+    },
+    {
+      "scene": "s1",
+      "w": "hand",
+      "start": 1.091,
+      "end": 1.364
+    },
+    {
+      "scene": "s1",
+      "w": "eats",
+      "start": 1.364,
+      "end": 1.636
+    },
+    {
+      "scene": "s1",
+      "w": "about",
+      "start": 1.636,
+      "end": 1.909
+    },
+    {
+      "scene": "s1",
+      "w": "a",
+      "start": 1.909,
+      "end": 2.182
+    },
+    {
+      "scene": "s1",
+      "w": "day",
+      "start": 2.182,
+      "end": 2.455
+    },
+    {
+      "scene": "s1",
+      "w": "every",
+      "start": 2.455,
+      "end": 2.727
+    },
+    {
+      "scene": "s1",
+      "w": "month.",
+      "start": 2.727,
+      "end": 3
+    },
+    {
+      "scene": "s1",
+      "w": "Here",
+      "start": 3,
+      "end": 3.278
+    },
+    {
+      "scene": "s1",
+      "w": "are",
+      "start": 3.278,
+      "end": 3.556
+    },
+    {
+      "scene": "s1",
+      "w": "three",
+      "start": 3.556,
+      "end": 3.833
+    },
+    {
+      "scene": "s1",
+      "w": "tiny",
+      "start": 3.833,
+      "end": 4.111
+    },
+    {
+      "scene": "s1",
+      "w": "automations",
+      "start": 4.111,
+      "end": 4.389
+    },
+    {
+      "scene": "s1",
+      "w": "that",
+      "start": 4.389,
+      "end": 4.667
+    },
+    {
+      "scene": "s1",
+      "w": "hand",
+      "start": 4.667,
+      "end": 4.944
+    },
+    {
+      "scene": "s1",
+      "w": "it",
+      "start": 4.944,
+      "end": 5.222
+    },
+    {
+      "scene": "s1",
+      "w": "back.",
+      "start": 5.222,
+      "end": 5.5
+    },
+    {
+      "scene": "s2",
+      "w": "First,",
+      "start": 5.5,
+      "end": 6
+    },
+    {
+      "scene": "s2",
+      "w": "auto-label",
+      "start": 6,
+      "end": 6.5
+    },
+    {
+      "scene": "s2",
+      "w": "invoices",
+      "start": 6.5,
+      "end": 7
+    },
+    {
+      "scene": "s2",
+      "w": "by",
+      "start": 7,
+      "end": 7.5
+    },
+    {
+      "scene": "s2",
+      "w": "sender.",
+      "start": 7.5,
+      "end": 8
+    },
+    {
+      "scene": "s2",
+      "w": "Second,",
+      "start": 8,
+      "end": 8.3
+    },
+    {
+      "scene": "s2",
+      "w": "pull",
+      "start": 8.3,
+      "end": 8.6
+    },
+    {
+      "scene": "s2",
+      "w": "the",
+      "start": 8.6,
+      "end": 8.9
+    },
+    {
+      "scene": "s2",
+      "w": "amount",
+      "start": 8.9,
+      "end": 9.2
+    },
+    {
+      "scene": "s2",
+      "w": "and",
+      "start": 9.2,
+      "end": 9.5
+    },
+    {
+      "scene": "s2",
+      "w": "due",
+      "start": 9.5,
+      "end": 9.8
+    },
+    {
+      "scene": "s2",
+      "w": "date",
+      "start": 9.8,
+      "end": 10.1
+    },
+    {
+      "scene": "s2",
+      "w": "into",
+      "start": 10.1,
+      "end": 10.4
+    },
+    {
+      "scene": "s2",
+      "w": "a",
+      "start": 10.4,
+      "end": 10.7
+    },
+    {
+      "scene": "s2",
+      "w": "sheet.",
+      "start": 10.7,
+      "end": 11
+    },
+    {
+      "scene": "s2",
+      "w": "Third,",
+      "start": 11,
+      "end": 11.357
+    },
+    {
+      "scene": "s2",
+      "w": "flag",
+      "start": 11.357,
+      "end": 11.714
+    },
+    {
+      "scene": "s2",
+      "w": "anything",
+      "start": 11.714,
+      "end": 12.071
+    },
+    {
+      "scene": "s2",
+      "w": "overdue",
+      "start": 12.071,
+      "end": 12.429
+    },
+    {
+      "scene": "s2",
+      "w": "for",
+      "start": 12.429,
+      "end": 12.786
+    },
+    {
+      "scene": "s2",
+      "w": "a",
+      "start": 12.786,
+      "end": 13.143
+    },
+    {
+      "scene": "s2",
+      "w": "reply.",
+      "start": 13.143,
+      "end": 13.5
+    },
+    {
+      "scene": "s3",
+      "w": "Start",
+      "start": 13.5,
+      "end": 13.75
+    },
+    {
+      "scene": "s3",
+      "w": "with",
+      "start": 13.75,
+      "end": 14
+    },
+    {
+      "scene": "s3",
+      "w": "one",
+      "start": 14,
+      "end": 14.25
+    },
+    {
+      "scene": "s3",
+      "w": "of",
+      "start": 14.25,
+      "end": 14.5
+    },
+    {
+      "scene": "s3",
+      "w": "these",
+      "start": 14.5,
+      "end": 14.75
+    },
+    {
+      "scene": "s3",
+      "w": "and",
+      "start": 14.75,
+      "end": 15
+    },
+    {
+      "scene": "s3",
+      "w": "scale",
+      "start": 15,
+      "end": 15.25
+    },
+    {
+      "scene": "s3",
+      "w": "it",
+      "start": 15.25,
+      "end": 15.5
+    },
+    {
+      "scene": "s3",
+      "w": "to",
+      "start": 15.5,
+      "end": 15.75
+    },
+    {
+      "scene": "s3",
+      "w": "your",
+      "start": 15.75,
+      "end": 16
+    },
+    {
+      "scene": "s3",
+      "w": "own",
+      "start": 16,
+      "end": 16.25
+    },
+    {
+      "scene": "s3",
+      "w": "inbox.",
+      "start": 16.25,
+      "end": 16.5
+    },
+    {
+      "scene": "s3",
+      "w": "Subscribe",
+      "start": 16.5,
+      "end": 16.889
+    },
+    {
+      "scene": "s3",
+      "w": "for",
+      "start": 16.889,
+      "end": 17.278
+    },
+    {
+      "scene": "s3",
+      "w": "more",
+      "start": 17.278,
+      "end": 17.667
+    },
+    {
+      "scene": "s3",
+      "w": "boring",
+      "start": 17.667,
+      "end": 18.056
+    },
+    {
+      "scene": "s3",
+      "w": "automations",
+      "start": 18.056,
+      "end": 18.444
+    },
+    {
+      "scene": "s3",
+      "w": "that",
+      "start": 18.444,
+      "end": 18.833
+    },
+    {
+      "scene": "s3",
+      "w": "quietly",
+      "start": 18.833,
+      "end": 19.222
+    },
+    {
+      "scene": "s3",
+      "w": "save",
+      "start": 19.222,
+      "end": 19.611
+    },
+    {
+      "scene": "s3",
+      "w": "hours.",
+      "start": 19.611,
+      "end": 20
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "_FIXTURE",
+  "language": "en",
+  "archetype": "ideas",
+  "angle": "The boring inbox math nobody runs: triaging invoices by hand quietly costs about a day a month.",
+  "title_working": "3 Tiny AI Automations for Invoice Email Triage",
+  "target_seconds": 60,
+  "scenes": [
+    {
+      "id": "s1",
+      "role": "hook",
+      "template": "hook-card",
+      "narration": "Sorting invoice emails by hand eats about a day every month. Here are three tiny automations that hand it back.",
+      "sentences": [
+        "Sorting invoice emails by hand eats about a day every month.",
+        "Here are three tiny automations that hand it back."
+      ],
+      "on_screen_text": "A day a month, gone"
+    },
+    {
+      "id": "s2",
+      "role": "point",
+      "template": "bullet-steps",
+      "narration": "First, auto-label invoices by sender. Second, pull the amount and due date into a sheet. Third, flag anything overdue for a reply.",
+      "sentences": [
+        "First, auto-label invoices by sender.",
+        "Second, pull the amount and due date into a sheet.",
+        "Third, flag anything overdue for a reply."
+      ],
+      "on_screen_text": "Label, extract, flag"
+    },
+    {
+      "id": "s3",
+      "role": "cta",
+      "template": "cta-card",
+      "narration": "Start with one of these and scale it to your own inbox. Subscribe for more boring automations that quietly save hours.",
+      "sentences": [
+        "Start with one of these and scale it to your own inbox.",
+        "Subscribe for more boring automations that quietly save hours."
+      ],
+      "on_screen_text": "Scale it to your own inbox"
+    }
+  ]
+}

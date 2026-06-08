@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "review.json",
+  "description": "Result of one multi-model review pass over a single stage (script | scene-plan | cut). Holds each reviewer's independent score + the merged verdict that drives the loop and the gate bands.",
+  "type": "object",
+  "required": ["stage", "iteration", "reviewers", "verdict", "created"],
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": ["script", "scene-plan", "cut"],
+      "description": "Which artifact this review covers."
+    },
+    "target": { "type": "string", "description": "Path or id of the reviewed artifact." },
+    "iteration": { "type": "integer", "minimum": 0, "description": "Loop iteration (0-based)." },
+    "created": { "type": "string", "description": "ISO timestamp." },
+    "reviewers": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One entry per independent reviewer (e.g. claude-subagent, gemini).",
+      "items": {
+        "type": "object",
+        "required": ["reviewer", "model", "score", "hard_gates", "category_scores"],
+        "properties": {
+          "reviewer": { "type": "string", "description": "Adapter name, e.g. claude-subagent | gemini | groq." },
+          "model": { "type": "string", "description": "Concrete model id used." },
+          "score": { "type": "number", "minimum": 0, "maximum": 10, "description": "Final 0-10 score (capped by hard gates)." },
+          "hard_gates": {
+            "type": "object",
+            "description": "Binary gates; any false caps the score < 9 and blocks auto-pass.",
+            "required": ["accuracy", "original_angle", "synthetic_data", "on_screen_source"],
+            "properties": {
+              "accuracy": { "type": "boolean" },
+              "original_angle": { "type": "boolean" },
+              "synthetic_data": { "type": "boolean" },
+              "on_screen_source": { "type": "boolean" }
+            }
+          },
+          "category_scores": {
+            "type": "object",
+            "description": "1-10 per scored category (weights live in config.review.panel).",
+            "required": ["retention_structure", "originality_depth", "hard_rule_craft", "style_tone", "readaloud_clarity"],
+            "properties": {
+              "retention_structure": { "type": "number", "minimum": 0, "maximum": 10 },
+              "originality_depth": { "type": "number", "minimum": 0, "maximum": 10 },
+              "hard_rule_craft": { "type": "number", "minimum": 0, "maximum": 10 },
+              "style_tone": { "type": "number", "minimum": 0, "maximum": 10 },
+              "readaloud_clarity": { "type": "number", "minimum": 0, "maximum": 10 }
+            }
+          },
+          "fixes": {
+            "type": "array",
+            "description": "Concrete, actionable fixes for the author to merge.",
+            "items": {
+              "type": "object",
+              "required": ["severity", "note"],
+              "properties": {
+                "severity": { "type": "string", "enum": ["blocker", "major", "minor", "nit"] },
+                "area": { "type": "string", "description": "e.g. hook, accuracy, pacing, captions." },
+                "scene_id": { "type": ["string", "null"] },
+                "note": { "type": "string" }
+              }
+            }
+          },
+          "summary": { "type": "string" }
+        }
+      }
+    },
+    "merged": {
+      "type": "object",
+      "description": "How the author (not a reviewer) combined the best fixes.",
+      "properties": {
+        "author_model": { "type": "string" },
+        "applied_fixes": { "type": "array", "items": { "type": "string" } },
+        "rationale": { "type": "string" }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "required": ["band", "proceed"],
+      "properties": {
+        "min_score": { "type": "number", "description": "Lowest reviewer score this iteration." },
+        "both_pass": { "type": "boolean", "description": "All reviewers >= score_threshold (9)." },
+        "hard_gate_ok": { "type": "boolean", "description": "All hard gates green across reviewers." },
+        "band": {
+          "type": "string",
+          "enum": ["auto", "soft", "pause", "fail"],
+          "description": "auto = >=9.2 & gates ok (skip human script gate); soft = >=9 (show owner); pause = <9 after cap; fail = hard-gate fail."
+        },
+        "proceed": { "type": "boolean", "description": "Whether the pipeline may advance past this stage." }
+      }
+    }
+  }
+}

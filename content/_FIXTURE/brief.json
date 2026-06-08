@@ -1,0 +1,14 @@
+{
+  "id": "_FIXTURE",
+  "title_working": "3 Tiny AI Automations for Invoice Email Triage",
+  "archetype": "ideas",
+  "angle": "The boring inbox math nobody runs: triaging invoices by hand quietly costs about a day a month.",
+  "audience": "Small-business owners and ops people drowning in invoice emails.",
+  "target_seconds": 60,
+  "format": "long+short",
+  "search_term": "automate invoice emails",
+  "task": "outbound-comms",
+  "tool": "Claude",
+  "score": 70,
+  "status": "scripted"
+}
