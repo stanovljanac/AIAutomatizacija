@@ -8,6 +8,49 @@ Newest on top.
 
 ---
 
+## 2026-06-09 — Orchestrator integration (wire the deferred executors)
+- **verifier:** Sonnet 4.6, independent of the author (Opus 4.8).
+- **scope:** `orchestrator/run.mjs` — voice/align wired to the Python scripts (mechanical, real);
+  render/qa wired to the video-render / qa-video skills (agent steps via the Runner: real in
+  headless, deferred to the top agent in Claude-Code mode); `ctx` gains `root` + `python`.
+- **result:** **166 tests green.** Verifier added 7 tests.
+- **verified correct + safe:** Short executors target `<id>/short` (long ones never do); a non-zero
+  exit (incl. spawn error `code:-1`) throws → `guardStep` converts it to a pause, never a crash;
+  agent steps defer to `{__pause}` in Claude-Code mode and proceed on `.data` in headless.
+- **no real bugs.** Nits (documented, not fixed): `qa` passes only `ctx.id` to the skill (the skill
+  discovers paths); `runVideo` must always be started with the LONG id (Shorts are internal executors).
+- **verdict:** integration correct and safe.
+
+## 2026-06-09 — Wave 2 (multi-model self-review loop)
+- **verifier:** Sonnet 4.6, independent of the author (Opus 4.8).
+- **scope:** `review/rubric.mjs`, live `review/gemini.mjs`, `review/claude-subagent.mjs`,
+  `review/loop.mjs`, `review/build.mjs`, and the `reviewStage` wiring in `orchestrator/run.mjs`.
+- **result:** **156 tests green.** Verifier added 22 tests (`review/wave2-verify.test.mjs`).
+- **CORE SAFETY PROPERTY VERIFIED — fails closed:** no path lets a hard-gate-failing or unscored
+  artifact reach `passed:true`. Layered defense: `normalizeReviewResult` fills missing gates with
+  `false`; `panelScore` recomputes the score from categories (ignoring the model's self-score) and
+  requires all 4 gate keys `=== true`; a hard-gate fail clamps below 9; the schema rejects empty/
+  malformed review docs. Confirmed with `accuracy:false` + perfect categories and a bare `{score:10}`.
+- **no real bugs.** Nits: Gemini throttle `_lastCall` is per-instance (fine — one Gemini per panel);
+  a stale `[BUG]` label in panel-edges.test.mjs is actually fixed (cosmetic).
+- **verdict:** review loop is safe and sound. v1 (Waves 0–2) complete.
+
+## 2026-06-09 — O1 orchestrator (DAG runner + single-video composition)
+- **verifier:** Sonnet 4.6, independent of the author (Opus 4.8).
+- **scope:** `shared/orchestrator/dag.mjs` (resumable DAG runner) + `run.mjs` (video DAG composition,
+  long‖short fan-out, gate pause, manifest persistence) + tests.
+- **result:** **121 tests green.** Verifier added 6 probe tests.
+- **verified sound:** resumability (results survive the manifest JSON round-trip), parallel-wave
+  safety (a paused sibling stops the run; the other is still persisted), gate-vs-error distinction,
+  multi-node cycle detection, and the long/short fan-out join at `qa`.
+- **hardening applied (nits the verifier flagged):** `runDag` now tolerates a literal-`null` manifest
+  (corrupt file) without crashing; it returns `blockedAll` (every blocked node this wave), not just the
+  first. Regression tests added.
+- **notes for Wave 2:** keep voice/render executor results JSON-serializable (file paths as strings,
+  not Buffers); the live review panel runs its reviewers *inside* one node, so DAG-level simultaneous
+  blocks stay rare.
+- **verdict:** orchestrator is sound to wire the live review loop (Wave 2) + real voice/render executors.
+
 ## 2026-06-08 — Wave 1 Batch 1B (YouTube publish path: OAuth + upload)
 - **verifier:** Sonnet 4.6, independent of the author (Opus 4.8).
 - **scope:** P4 `auth.mjs` (OAuth bootstrap), P5 `upload.mjs` (Publisher port) + tests.

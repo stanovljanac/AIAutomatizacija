@@ -202,11 +202,18 @@ atomize → build → test → verify with a *different* model → fix → docs 
 - **Wave 0 — foundations: ✅ DONE** (commit `ae92a6c`, Sonnet-verified, 46 tests). Ports
   (Runner/Reviewer), schemas (review/news/timeline/config), test-gate hook, generalized permissions,
   golden `_FIXTURE`.
-- **Wave 1 — hands-off publish path:** auto-metadata, `make-short`, loudness −16 LUFS, OAuth +
-  YouTube upload, error policy, notifications, the orchestrator DAG. ◀ next
-- **Wave 2 — multi-model review loop:** live Gemini adapter + the panel loop wired into 3 stages.
-- **Waves 3–5** (news/freshness + anti-stale, swappability hardening, full autonomy + analytics +
-  distribute): atomized just-in-time.
+- **Wave 1 — hands-off publish path: ✅ DONE** (commit `f611e78`, Sonnet-verified). Auto-metadata,
+  `make-short`, loudness −16 LUFS, OAuth + YouTube upload (private-only), error policy, notifications.
+- **O1 — orchestrator: ✅ DONE.** Resumable DAG runner + single-video composition (long‖short fan-out),
+  `npm run make-video -- <id>`, stops at the owner gate.
+- **Wave 2 — multi-model review loop: ✅ DONE.** Rubric + live Gemini adapter + Sonnet sub-agent +
+  the loop wired into the script + cut stages. Verified to **fail closed**.
+- **Integration: ✅ DONE.** voice/align → Python (mechanical); render/qa → `video-render` /
+  `qa-video` skills via the Runner (real in headless, deferred to the top agent in Claude-Code). 166 tests.
+- **Waves 3–5 — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed, atomized handoff):
+  Wave 3 news/freshness + anti-stale ◀ next, Wave 4 swappability hardening, Wave 5 full autonomy +
+  analytics + distribute. That doc also lists the short path to the **first real video** (Gemini key,
+  YouTube OAuth, the Short scene-plan).
 
 ## What we deliberately deferred
 

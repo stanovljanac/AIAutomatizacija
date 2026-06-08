@@ -9,6 +9,12 @@ You are the quality reviewer. Every script passes you **before** a human sees it
 (PRD R10). You read `script.json` against `style/STYLE_GUIDE.md` and the brief, then
 write `script.review.json` with `pass: true|false` + a list of issues.
 
+> **Autonomous path (D-040/D-041):** this same rubric is now also scored by the **multi-model
+> panel** in `pipeline/shared/review/` — two other models score 1–10 against `rubric.mjs`
+> (hard-gates + 5 weighted categories), the author merges fixes, and the loop repeats until both
+> reviewers ≥9 (`loop.mjs`, schema `review.schema.json`). The checklist below is the human-readable
+> source of truth for that rubric; keep them in sync.
+
 ## Checklist (mirror of STYLE_GUIDE §10)
 - [ ] **Original human angle present** and surfaces in/after the hook (HARD — D-018).
 - [ ] Hook lands in ≤ 10s and promises a payoff.

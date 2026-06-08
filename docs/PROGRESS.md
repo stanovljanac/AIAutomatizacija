@@ -30,6 +30,25 @@ Format:
 
 <!-- New entries below this line, newest on top. Add as you build each phase. -->
 
+## 2026-06-09 — v1 orchestrator complete: Wave 1 (publish path) + O1 (DAG) + Wave 2 (review loop)
+- who: agent (build, each step verified by an independent Sonnet sub-agent)
+- did:
+  - **Wave 1 publish path (P1–P7):** auto-metadata, make-short, loudness −16 LUFS, error-policy
+    (retry→pause+notify), notifications, OAuth + **YouTube upload (private/draft only, never public)**.
+  - **O1 orchestrator:** resumable DAG runner (parallel waves, manifest resume, error/gate pause) +
+    the single-video composition with the long‖short fan-out (D-033); `npm run make-video -- <id>`.
+  - **Wave 2 multi-model review loop:** shared rubric, live Gemini adapter (free tier), Sonnet
+    sub-agent adapter, the loop (author merges fixes, re-review until both ≥9 or cap), wired into the
+    script + cut stages. **Verified to fail closed** — a hard-gate-failing/unscored script can't pass.
+  - Committed Wave 1 + policy as `f611e78` (Wave 0 was `ae92a6c`).
+- decisions: D-040/D-041 (prior session). **156 tests green; verifier verdicts in BUILD_LOG.**
+- next: **✅ integration wired** (voice/align → Python mechanical; render/qa → video-render /
+  qa-video skills via the Runner — real headless, deferred to the top agent in Claude-Code).
+  **166 tests green.** Everything remaining (the first real video + Waves 3–5) is captured in detail
+  in **`docs/WAVES_3-5_PLAN.md`** — the resume-here handoff doc.
+- blockers: none. Owner one-time steps for the live run: `GEMINI_API_KEY` (free, AI Studio) +
+  YouTube OAuth `token.json` (`node pipeline/06-publish/auth.mjs`).
+
 ## 2026-06-08 — Phase B/C build kicked off: Wave 0 (foundations) + build-sprint policy
 - who: agent + owner (co-design Q&A, then build)
 - did:

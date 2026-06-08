@@ -34,6 +34,7 @@ export function topoWaves(nodes) {
 export async function runDag(nodes, { ctx = {}, manifest = { nodes: {} }, retry = {}, onPause, saveManifest } = {}) {
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const waves = topoWaves(nodes);
+  if (!manifest) manifest = { nodes: {} }; // a manifest file containing literal null must not crash
   manifest.nodes = manifest.nodes || {};
 
   const results = {};
@@ -57,24 +58,25 @@ export async function runDag(nodes, { ctx = {}, manifest = { nodes: {} }, retry 
       })
     );
 
-    let blocked = null;
+    const blockedAll = [];
     for (const { id, node, r } of settled) {
       if (r.ok && r.result && r.result.__pause) {
         manifest.nodes[id] = { status: "awaiting", gate: !!node.gate, reason: r.result.reason };
         if (onPause) await onPause({ node: id, kind: "gate", reason: r.result.reason, manifest });
-        blocked = blocked || { id, kind: "gate", reason: r.result.reason };
+        blockedAll.push({ id, kind: "gate", reason: r.result.reason });
       } else if (r.ok) {
         results[id] = r.result;
         manifest.nodes[id] = { status: "done", gate: !!node.gate, result: r.result };
       } else {
         manifest.nodes[id] = { status: "paused", error: r.error };
         if (onPause) await onPause({ node: id, kind: "error", error: r.error, manifest });
-        blocked = blocked || { id, kind: "error", error: r.error };
+        blockedAll.push({ id, kind: "error", error: r.error });
       }
     }
 
     await persist();
-    if (blocked) return { ok: false, blocked, manifest, results };
+    // `blocked` = first blocking node (back-compat); `blockedAll` = every node that blocked this wave.
+    if (blockedAll.length) return { ok: false, blocked: blockedAll[0], blockedAll, manifest, results };
   }
 
   return { ok: true, manifest, results };

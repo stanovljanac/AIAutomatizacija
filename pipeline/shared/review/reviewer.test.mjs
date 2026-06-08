@@ -27,9 +27,13 @@ test("createReviewer('claude_subagent') defers in claude-code mode", async () =>
   assert.equal(out.task.role, "review");
 });
 
-test("gemini and groq adapters load but are honest stubs", async () => {
-  const g = await createReviewer({ provider: "gemini", name: "gemini", model: "gemini-3-flash" });
-  await assert.rejects(() => g.review({ stage: "script" }), /Wave 2/);
+test("gemini reviewer defers when no API key is configured", async () => {
+  const g = await createReviewer({ provider: "gemini", name: "gemini", model: "gemini-3-flash" }, { getKey: () => undefined });
+  const r = await g.review({ stage: "script", artifact: {} });
+  assert.equal(r.deferred, true);
+});
+
+test("groq adapter is still an honest stub", async () => {
   const q = await createReviewer({ provider: "groq", name: "groq" });
   await assert.rejects(() => q.review({ stage: "script" }), /future upgrade/);
 });
