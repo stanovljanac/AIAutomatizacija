@@ -33,7 +33,17 @@
       "type": "object",
       "properties": {
         "title": { "type": "string" },
-        "tags": { "type": "array", "items": { "type": "string" } }
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "caption": { "type": "string", "description": "One-sentence cross-post caption + link to the long video (D-038)." }
+      }
+    },
+    "pinned_comment": { "type": "string", "description": "Long utility text (e.g. the copy-pasteable master prompt) — not in the 3-sentence description." },
+    "medium": {
+      "type": "object",
+      "description": "Medium cross-post (D-038): keyword-rich title + cover reuse.",
+      "properties": {
+        "title": { "type": "string" },
+        "cover": { "type": "string" }
       }
     },
     "youtube_video_id": { "type": ["string", "null"] },

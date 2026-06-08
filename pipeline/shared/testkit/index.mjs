@@ -29,11 +29,11 @@ export function assertValid(data, schemaName) {
   return true;
 }
 
-/** Run `fn(dir)` against a throwaway temp dir, always cleaned up. */
-export function withTempDir(fn) {
+/** Run `fn(dir)` against a throwaway temp dir, always cleaned up. Awaits async fns. */
+export async function withTempDir(fn) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "tad-test-"));
   try {
-    return fn(dir);
+    return await fn(dir);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

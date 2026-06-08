@@ -67,6 +67,7 @@ Each skill is the **single source of truth** for that step. Open it FIRST, then 
 
 | Step | Skill file |
 |------|-----------|
+| **Implement/fix/refactor ANY code (the engineering cycle — every change)** | `.claude/skills/build-sprint/SKILL.md` |
 | Find/score a topic from the idea-bank | topic logic in `pipeline/00-ideas` + WORKFLOW.md |
 | Write the script (per archetype + angle) | `.claude/skills/script-writing/SKILL.md` |
 | Fact-check & source the script (generate + verify) | `.claude/skills/fact-check/SKILL.md` |
@@ -132,6 +133,9 @@ three gates.
 - One continuous audio track; scenes snap to sentence timestamps.
 - Synthetic demo data only; review agent before human; human approves final video.
 - **Never delete/overwrite existing files or assets without asking first** (principle 6).
+- **Every code change runs the build-sprint cycle** (atomize → build → test → verify with a
+  *different* model → fix → docs); `npm test` must be green (Stop hook enforces). Not for
+  planning/research/doc-only edits. See `.claude/skills/build-sprint/SKILL.md`.
 - **Never `git commit` or `git push` unless the owner explicitly asks — every time.**
   Finishing a task or a "continue" instruction is NOT commit permission; leave changes
   in the working tree and wait for an explicit "commit". Offer push separately.

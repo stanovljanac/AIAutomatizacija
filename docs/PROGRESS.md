@@ -30,6 +30,26 @@ Format:
 
 <!-- New entries below this line, newest on top. Add as you build each phase. -->
 
+## 2026-06-08 — Phase B/C build kicked off: Wave 0 (foundations) + build-sprint policy
+- who: agent + owner (co-design Q&A, then build)
+- did:
+  - **Co-designed Phase B/C** with the owner (16 decisions): hexagonal ports, hybrid runner,
+    Remotion+HyperFrames combo kept, reviewer panel = Sonnet 4.6 + Gemini 3 Flash (free),
+    bands ≥9 / ≥9.2, news = official + The Decoder + TLDR/HN (deduped), errors = retry→pause+notify,
+    approval = YouTube draft + notification. Plan saved under `~/.claude/plans`.
+  - **Shipped Wave 0** (commit `ae92a6c`): shared `validate-lib` + `npm test` (node --test) + golden
+    `content/_FIXTURE/`; schemas review/news/timeline/config (+ ideas provenance); config panel/llm/
+    news/error/notify; Runner + Reviewer ports with authoritative hard-gate-clamped scoring;
+    generalized no-prompt permissions; purged the one-off Video-#4 commands. **46 tests green.**
+  - **Independent Sonnet verifier** caught + we fixed a hard-gate scoring bug (partial gates passing).
+  - **Codified the build-sprint cycle** as policy: Stop test-gate hook + `build-sprint` skill +
+    CLAUDE.md rule + memory (D-041).
+- decisions logged: D-040, D-041.
+- next: Wave 1 (auto-metadata, make-short, loudness −16 LUFS, OAuth + upload, error/notify,
+  orchestrator) → Wave 2 (live Gemini review loop). 
+- blockers: none. Owner one-time steps (needed only for the live run): `GEMINI_API_KEY` (free,
+  https://aistudio.google.com/apikey) and the YouTube OAuth `token.json`.
+
 ## 2026-06-07 (eve) — Video #4 produced end-to-end (experiment) + big system upgrades
 - who: agent + owner (recording + 3 gate reviews)
 - did:

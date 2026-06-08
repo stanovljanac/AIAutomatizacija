@@ -193,6 +193,21 @@ Exit criteria:
 
 ---
 
+## Build execution status (Phase B/C)
+
+Tracked in `docs/PROGRESS.md` + `docs/BUILD_LOG.md`. **v1 = Waves 0–2** (hands-off to a YouTube
+draft, **including** the multi-model loop). Every wave runs the **build-sprint cycle** (D-041):
+atomize → build → test → verify with a *different* model → fix → docs → commit only on request.
+
+- **Wave 0 — foundations: ✅ DONE** (commit `ae92a6c`, Sonnet-verified, 46 tests). Ports
+  (Runner/Reviewer), schemas (review/news/timeline/config), test-gate hook, generalized permissions,
+  golden `_FIXTURE`.
+- **Wave 1 — hands-off publish path:** auto-metadata, `make-short`, loudness −16 LUFS, OAuth +
+  YouTube upload, error policy, notifications, the orchestrator DAG. ◀ next
+- **Wave 2 — multi-model review loop:** live Gemini adapter + the panel loop wired into 3 stages.
+- **Waves 3–5** (news/freshness + anti-stale, swappability hardening, full autonomy + analytics +
+  distribute): atomized just-in-time.
+
 ## What we deliberately deferred
 
 - Products/affiliate/courses — until payout rails exist (D-017).
