@@ -9,12 +9,54 @@ import {
 } from "remotion";
 import { theme } from "../theme";
 import { Icon, IconName } from "../icons/Icon";
-import { fadeUp, progress } from "../lib/anim";
+import {
+  fadeUp,
+  progress,
+  ramp,
+  springPreset,
+  countUp,
+  pop,
+  motionScale,
+  splitNumeric,
+  formatNumber,
+} from "../lib/anim";
+import { useMotion } from "../lib/motion";
 
 /** scene-local reveal frame for sub-element i: builder-provided `reveals[i]`
  * (synced to the narration), else a fixed fallback stagger. */
 const revealDelay = (reveals: number[] | undefined, i: number, fallback: number) =>
   reveals && reveals[i] != null ? reveals[i] : fallback;
+
+/** A short SVG connector (line + arrowhead) that DRAWS ON left→right via strokeDashoffset.
+ * `p` is 0→1 progress (from a ramp/spring). Deterministic + contained, so it works between
+ * flex nodes without measuring layout. Used by Flow + Diagram. */
+const ConnectorArrow: React.FC<{ p: number; w: number; color?: string }> = ({ p, w, color = theme.color.accent }) => {
+  const len = Math.max(w - 12, 1);
+  return (
+    <svg width={w} height={28} style={{ overflow: "visible" }}>
+      <line
+        x1={2}
+        y1={14}
+        x2={w - 12}
+        y2={14}
+        stroke={color}
+        strokeWidth={4}
+        strokeLinecap="round"
+        strokeDasharray={len}
+        strokeDashoffset={len * (1 - p)}
+      />
+      <path
+        d={`M ${w - 16} 6 L ${w - 2} 14 L ${w - 16} 22`}
+        fill="none"
+        stroke={color}
+        strokeWidth={4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={p > 0.85 ? (p - 0.85) / 0.15 : 0}
+      />
+    </svg>
+  );
+};
 
 /**
  * The fixed scene-template library (DECISIONS D-013). Each `template` name maps
@@ -53,19 +95,30 @@ const Kicker: React.FC<{ text?: string; o: number }> = ({ text, o }) =>
     </div>
   ) : null;
 
-// ── hook-card ──────────────────────────────────────────────────────────────
+// ── hook-card (word-by-word kinetic entrance + accent underline draw) ────────
 export const HookCard: React.FC<{ data: { kicker?: string; title: string; subtitle?: string } }> = ({ data }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const ms = motionScale(useMotion().intensity);
   const k = fadeUp(frame, fps, 0, 14);
-  const t = fadeUp(frame, fps, 6, 20);
-  const s = fadeUp(frame, fps, 22, 18);
+  const words = data.title.split(" ");
+  const lastWordAt = 8 + words.length * 3;
+  const u = ramp(frame, lastWordAt, 16); // underline draws on after the words land
+  const s = fadeUp(frame, fps, lastWordAt + 10, 18);
   return (
     <Frame>
       <Kicker text={data.kicker ?? "The Automation Desk"} o={k.opacity} />
-      <div style={{ fontFamily: theme.font.heading, fontWeight: 800, fontSize: 92, lineHeight: 1.04, color: theme.color.textPrimary, transform: `translateY(${t.y}px)`, opacity: t.opacity }}>{data.title}</div>
+      <div style={{ fontFamily: theme.font.heading, fontWeight: 800, fontSize: 92, lineHeight: 1.06, color: theme.color.textPrimary }}>
+        {words.map((w, i) => {
+          const p = springPreset(frame, fps, 8 + i * 3, "snappy");
+          return (
+            <span key={i} style={{ display: "inline-block", marginRight: "0.28em", opacity: p, transform: `translateY(${(1 - p) * 28 * ms}px)` }}>{w}</span>
+          );
+        })}
+      </div>
+      <div style={{ height: 8, marginTop: 20, width: `${u * 100}%`, maxWidth: 620, background: `linear-gradient(90deg, ${theme.color.accent}, ${theme.color.accentSecondary})`, borderRadius: 4, transformOrigin: "left" }} />
       {data.subtitle && (
-        <div style={{ fontFamily: theme.font.body, fontWeight: 500, fontSize: 38, color: theme.color.textSecondary, marginTop: 30, transform: `translateY(${s.y}px)`, opacity: s.opacity }}>{data.subtitle}</div>
+        <div style={{ fontFamily: theme.font.body, fontWeight: 500, fontSize: 38, color: theme.color.textSecondary, marginTop: 26, transform: `translateY(${s.y}px)`, opacity: s.opacity }}>{data.subtitle}</div>
       )}
     </Frame>
   );
@@ -112,16 +165,24 @@ export const BulletSteps: React.FC<{ data: { title?: string; items: string[]; re
   );
 };
 
-// ── stat-callout ────────────────────────────────────────────────────────────
+// ── stat-callout (numbers COUNT UP and land with an emphasis pop) ────────────
 export const StatCallout: React.FC<{ data: { value: string; label: string } }> = ({ data }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const calm = useMotion().intensity === "calm";
+  const { prefix, num, suffix, decimals, grouped } = splitNumeric(data.value);
   const n = fadeUp(frame, fps, 2, 22);
-  const s = fadeUp(frame, fps, 22, 18);
+  const s = fadeUp(frame, fps, 24, 18);
+  const COUNT_DELAY = 8;
+  const COUNT_DUR = 34;
+  const display = num == null
+    ? data.value
+    : `${prefix}${formatNumber(countUp(frame, num, { delay: COUNT_DELAY, dur: COUNT_DUR }), decimals, grouped)}${suffix}`;
+  const landed = num == null || calm ? 1 : pop(frame, COUNT_DELAY + COUNT_DUR, 0.08);
   return (
     <Frame center>
-      <div style={{ fontFamily: theme.font.heading, fontWeight: 800, fontSize: 200, color: theme.color.accent, opacity: n.opacity, transform: `translateY(${n.y}px)` }}>{data.value}</div>
-      <div style={{ fontFamily: theme.font.body, fontWeight: 600, fontSize: 46, color: theme.color.textPrimary, opacity: s.opacity, transform: `translateY(${s.y}px)` }}>{data.label}</div>
+      <div style={{ fontFamily: theme.font.heading, fontWeight: 800, fontSize: 200, color: theme.color.accent, opacity: n.opacity, transform: `translateY(${n.y}px) scale(${landed})`, fontVariantNumeric: "tabular-nums" }}>{display}</div>
+      <div style={{ fontFamily: theme.font.body, fontWeight: 600, fontSize: 46, color: theme.color.textPrimary, maxWidth: 1300, opacity: s.opacity, transform: `translateY(${s.y}px)` }}>{data.label}</div>
     </Frame>
   );
 };
@@ -182,16 +243,16 @@ export const Diagram: React.FC<{ data: { title?: string; nodes: { id: string; la
       <div style={{ display: "flex", alignItems: "center", gap: 0, width: "100%" }}>
         {data.nodes.map((n, i) => {
           const rd = revealDelay(data.reveals, i, 14 + i * 28);
-          const a = progress(frame, fps, rd, 24);
-          const arrow = i > 0 ? progress(frame, fps, rd - 12, 18) : 1;
+          const a = springPreset(frame, fps, rd, "bouncy");
+          const arrowP = i > 0 ? ramp(frame, Math.max(rd - 12, 0), 16) : 1;
           return (
             <React.Fragment key={n.id}>
               {i > 0 && (
-                <div style={{ flex: "0 0 90px", height: 4, background: theme.color.accent, transformOrigin: "left", transform: `scaleX(${arrow})`, position: "relative" }}>
-                  <div style={{ position: "absolute", right: -2, top: -8, width: 0, height: 0, borderLeft: `16px solid ${theme.color.accent}`, borderTop: "10px solid transparent", borderBottom: "10px solid transparent", opacity: arrow }} />
+                <div style={{ flex: "0 0 90px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <ConnectorArrow p={arrowP} w={86} />
                 </div>
               )}
-              <div style={{ flex: 1, minHeight: 130, background: theme.color.surface, border: `2px solid ${theme.color.accent}`, borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: theme.font.body, fontWeight: 700, fontSize: 34, color: theme.color.textPrimary, textAlign: "center", whiteSpace: "pre-line", lineHeight: 1.2, opacity: a, transform: `scale(${interpolate(a, [0, 1], [0.85, 1])})` }}>{n.label}</div>
+              <div style={{ flex: 1, minHeight: 130, background: theme.color.surface, border: `2px solid ${theme.color.accent}`, borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: theme.font.body, fontWeight: 700, fontSize: 34, color: theme.color.textPrimary, textAlign: "center", whiteSpace: "pre-line", lineHeight: 1.2, opacity: Math.min(a, 1), transform: `translateY(${(1 - Math.min(a, 1)) * 16}px) scale(${interpolate(a, [0, 1], [0.85, 1])})` }}>{n.label}</div>
             </React.Fragment>
           );
         })}
@@ -302,14 +363,14 @@ export const Flow: React.FC<{ data: { title?: string; steps: { icon?: IconName; 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", gap: 0 }}>
         {data.steps.map((s, i) => {
           const rd = revealDelay(data.reveals, i, 14 + i * 26);
-          const a = progress(frame, fps, rd, 22);
-          const arr = i > 0 ? progress(frame, fps, rd - 10, 16) : 1;
+          const a = Math.min(springPreset(frame, fps, rd, "snappy"), 1);
+          const arrP = i > 0 ? ramp(frame, Math.max(rd - 10, 0), 16) : 1;
           const col = s.accent ? theme.color.accent : theme.color.textPrimary;
           return (
             <React.Fragment key={i}>
               {i > 0 && (
-                <div style={{ flex: "0 0 80px", display: "flex", justifyContent: "center", opacity: arr, transform: `scale(${arr})` }}>
-                  <Icon name="arrow" size={48} color={theme.color.accent} />
+                <div style={{ flex: "0 0 80px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <ConnectorArrow p={arrP} w={72} />
                 </div>
               )}
               <div style={{ flex: 1, minHeight: 190, background: theme.color.surface, border: `2px solid ${s.accent ? theme.color.accent : "#26303c"}`, borderRadius: 20, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18, padding: 24, opacity: a, transform: `translateY(${interpolate(a, [0, 1], [24, 0])}px) scale(${interpolate(a, [0, 1], [0.9, 1])})` }}>

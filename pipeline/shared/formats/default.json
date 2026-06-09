@@ -1,0 +1,66 @@
+{
+  "name": "default",
+  "description": "Base video-format recipe for The Automation Desk. Edit the production-policy knobs HERE (one place) instead of in prose + hardcoded constants. Series/archetype files in this folder shallow-override this; per-video brief.format overrides last. Resolved by pipeline/shared/lib/format.mjs and read by build-props + the authoring skills. Seeded values mirror today's build-props constants so wiring stays behavior-preserving until each knob is intentionally changed.",
+  "hook": {
+    "target_seconds": 12,
+    "answer_first_seconds": 45,
+    "visual_detail": {
+      "first_seconds": 30,
+      "require_hook_class_scene": true,
+      "min_motion": "standard"
+    }
+  },
+  "motion": {
+    "intensity": "standard",
+    "max_moving_elements": 3,
+    "ambient": true,
+    "emphasis": true,
+    "transition": { "style": "crossfade", "duration_seconds": 0.3 },
+    "default_engine": "remotion"
+  },
+  "reveals": { "lead_seconds": 0.22 },
+  "pacing": {
+    "beat_seconds": { "min": 3, "max": 9 },
+    "sentences_per_scene": { "min": 1, "max": 4 },
+    "max_static_hold_seconds": 6
+  },
+  "captions": {
+    "max_words": 7,
+    "gap_seconds": 0.7,
+    "tail_seconds": 0.4,
+    "max_lines": 2
+  },
+  "length": {
+    "long": { "target": 360, "min": 60, "max": 1800 },
+    "short": { "target": 55, "min": 45, "max": 120 }
+  },
+  "intro": { "long_seconds": 1.5, "short_seconds": 1.2 },
+  "outro": { "long_seconds": 2.5, "short_seconds": 1.2 },
+  "transition_frames": { "crossfade": 9 },
+  "scene_set": {
+    "custom_ratio_min": 0.25,
+    "broll": { "enabled": false },
+    "preferred_templates": [
+      "hook-card",
+      "section-header",
+      "bullet-steps",
+      "stat-callout",
+      "term-highlight",
+      "comparison-table",
+      "diagram",
+      "code-block",
+      "capture-segment",
+      "lower-third",
+      "transition",
+      "cta-card",
+      "flow",
+      "icon-list"
+    ]
+  },
+  "archetype_structure": {
+    "ideas": ["hook", "framing", "items", "scale-it-close"],
+    "mini-demo": ["hook", "boring-task", "capture-demo", "scale-it", "close"],
+    "diagram": ["hook", "build-diagram", "walk-flow", "caveats", "close"],
+    "comparison": ["hook", "contenders-criteria", "comparison-table", "verdict", "close"]
+  }
+}

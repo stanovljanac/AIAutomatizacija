@@ -210,6 +210,19 @@ atomize → build → test → verify with a *different* model → fix → docs 
   the loop wired into the script + cut stages. Verified to **fail closed**.
 - **Integration: ✅ DONE.** voice/align → Python (mechanical); render/qa → `video-render` /
   `qa-video` skills via the Runner (real in headless, deferred to the top agent in Claude-Code). 166 tests.
+- **Wave V — modular video formats + pro motion design (Remotion-core → HyperFrames hero scenes): 🔄 IN PROGRESS.**
+  Owner-added before Wave 3 (videos were "slideshow"; want a strong first-30s hook + real motion +
+  modular policy; drop stock b-roll). **V0** format-spec foundation (`formats/default.json` +
+  `format.schema.json` + `lib/format.mjs` — the single source of truth for hook/motion/pacing/length/
+  caption/scene knobs), **V1** build-props reads it, **V2** the motion system (kinetic type, number
+  count-up, SVG draw-on, intensity budget), **V3** strong-hook enforcement + `HookStatReveal` opener +
+  stock b-roll dropped, **V4** skills/style now point at the recipe, **V4b** a deterministic
+  fails-closed QA gate (`pipeline/05-qa/check.mjs`, hybrid: code for mechanical rules + skill for
+  perceptual) — **Phase 0 DONE, all Sonnet-verified, 242 tests green**, a ~58s gallery clip sent to the
+  owner for review. **Next (awaiting owner review):** **V5** emit engine-agnostic `timeline.json` +
+  `compile-remotion.mjs` (byte-identical render), then **V6** `compile-hyperframes.mjs` + the first
+  HyperFrames hero scene (flip `render.engine` to `combo`). **Full handoff: `docs/WAVE_V_HANDOFF.md`**
+  (read this to resume). Also see `docs/PROGRESS.md` + `docs/BUILD_LOG.md`.
 - **Waves 3–5 — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed, atomized handoff):
   Wave 3 news/freshness + anti-stale ◀ next, Wave 4 swappability hardening, Wave 5 full autonomy +
   analytics + distribute. That doc also lists the short path to the **first real video** (Gemini key,

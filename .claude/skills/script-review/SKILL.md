@@ -16,8 +16,12 @@ write `script.review.json` with `pass: true|false` + a list of issues.
 > source of truth for that rubric; keep them in sync.
 
 ## Checklist (mirror of STYLE_GUIDE §10)
+> Numeric thresholds come from the **FORMAT recipe** (`pipeline/shared/formats/default.json` via
+> `resolveFormat`): hook timing (`hook.target_seconds`, `hook.answer_first_seconds`), length, pacing.
+> Check the script against the resolved recipe; the values below are the current defaults.
 - [ ] **Original human angle present** and surfaces in/after the hook (HARD — D-018).
-- [ ] Hook lands in ≤ 10s and promises a payoff.
+- [ ] Hook lands within `format.hook.target_seconds` (default ~12s) and promises a payoff; the
+      planned opening scene is **hook-class** (a `hook-card` or custom `hook-*`).
 - [ ] **Accuracy by archetype:** comparison/stats claims trace to sources — **delegate to
       `claims.json`** (the `fact-check` skill's scorecard): every HIGH/MED claim is
       `verified`/`corrected` with a fetched `source_url`, none left `unverified`. Demo steps use

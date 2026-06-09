@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "format.json",
+  "description": "Video-format recipe (the channel 'show bible') for The Automation Desk. Single source of truth for the production-policy knobs that used to live as prose (STYLE_GUIDE/skills) + hardcoded constants (build-props/anim/theme): hook, motion, pacing, captions, length, intro/outro, scene set, per-archetype structure. pipeline/shared/formats/default.json is the COMPLETE base; formats/<series-or-archetype>.json files SHALLOW-OVERRIDE it (they are partial, so they are validated only via the merged result — never standalone); per-video brief.format overrides last. Resolved by pipeline/shared/lib/format.mjs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name"],
+  "properties": {
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "extends": { "type": "string", "description": "Optional base format name this overrides (default: 'default')." },
+    "hook": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "target_seconds": { "type": "number", "minimum": 1, "description": "The hook should land by ~this time." },
+        "answer_first_seconds": { "type": "number", "minimum": 1, "description": "Answer the topic's core question within this opening window (D-026)." },
+        "visual_detail": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "first_seconds": { "type": "number", "minimum": 1, "description": "Opening window that must carry strong visual detail." },
+            "require_hook_class_scene": { "type": "boolean", "description": "The opening window must use a hook-class scene, not a static card." },
+            "min_motion": { "type": "string", "enum": ["calm", "standard", "lively"] }
+          }
+        }
+      }
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "intensity": { "type": "string", "enum": ["calm", "standard", "lively"], "description": "Global motion budget. calm = hold where the narration carries it; lively = more movement." },
+        "max_moving_elements": { "type": "integer", "minimum": 0, "description": "Cap on simultaneously-animating elements so motion stays purposeful, not constant." },
+        "ambient": { "type": "boolean", "description": "Subtle continuous background drift." },
+        "emphasis": { "type": "boolean", "description": "Pop / underline on emphasized words or beats." },
+        "transition": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "style": { "type": "string", "enum": ["crossfade", "shared-element", "wipe"] },
+            "duration_seconds": { "type": "number", "minimum": 0 }
+          }
+        },
+        "default_engine": { "type": "string", "enum": ["remotion", "hyperframes"], "description": "Per-scene engine default; a scene may override. HyperFrames only for 1-3 hero beats." }
+      }
+    },
+    "reveals": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lead_seconds": { "type": "number", "minimum": 0, "description": "Start a sub-element reveal slightly BEFORE its word so the animation lands on cue." }
+      }
+    },
+    "pacing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "beat_seconds": { "$ref": "#/$defs/minmax" },
+        "sentences_per_scene": { "$ref": "#/$defs/minmax" },
+        "max_static_hold_seconds": { "type": "number", "minimum": 1, "description": "A sparse scene (lower-third/transition) held longer than this with no dynamic reveals is flagged as an empty/static hold (no-empty-scene rule)." }
+      }
+    },
+    "captions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_words": { "type": "integer", "minimum": 1, "description": "Words per caption chunk (keeps it <= max_lines at the caption font size)." },
+        "gap_seconds": { "type": "number", "minimum": 0, "description": "Start a fresh chunk after a pause this long." },
+        "tail_seconds": { "type": "number", "minimum": 0, "description": "Keep a chunk on screen this long after its last word." },
+        "max_lines": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "length": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "long": { "$ref": "#/$defs/length_band" },
+        "short": { "$ref": "#/$defs/length_band" }
+      }
+    },
+    "intro": { "$ref": "#/$defs/format_band" },
+    "outro": { "$ref": "#/$defs/format_band" },
+    "transition_frames": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "crossfade": { "type": "integer", "minimum": 0, "description": "Scene crossfade overlap, in frames." } }
+    },
+    "scene_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "custom_ratio_min": { "type": "number", "minimum": 0, "maximum": 1, "description": "Minimum fraction of bespoke/custom scenes so videos aren't the base gallery on repeat (variety rule)." },
+        "broll": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "enabled": { "type": "boolean" } }
+        },
+        "preferred_templates": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "archetype_structure": {
+      "type": "object",
+      "description": "Per-archetype beat skeleton (was prose in STYLE_GUIDE §5 / script-writing 'Write to the archetype').",
+      "additionalProperties": { "type": "array", "items": { "type": "string" } }
+    }
+  },
+  "$defs": {
+    "minmax": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "min": { "type": "number" }, "max": { "type": "number" } }
+    },
+    "length_band": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "target": { "type": "number", "minimum": 0 },
+        "min": { "type": "number", "minimum": 0 },
+        "max": { "type": "number", "minimum": 0 }
+      }
+    },
+    "format_band": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "long_seconds": { "type": "number", "minimum": 0 },
+        "short_seconds": { "type": "number", "minimum": 0 }
+      }
+    }
+  }
+}

@@ -15,6 +15,83 @@ Format:
 
 ---
 
+## 2026-06-09 — Wave V4b: deterministic QA gate (hybrid) + checkpoint clip
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier
+- did: built the CODE half of qa-video — `pipeline/05-qa/check.mjs` (+ pure `check-lib`) runs
+  artifact-level HARD checks from the format recipe (Short length, first-30s hook, caption density,
+  no-empty, coverage/black-gap), writes `qa.report.json`, **fails-closed** (exit 1). Reuses
+  `policy.mjs` + the format. Perceptual checks stay in the skill (now runs the gate first). 242 tests
+  green; Sonnet-verified (13 edge regressions). Sent the owner a ~58s gallery clip of the Phase-0
+  visual jump.
+- next: owner reviews the clip; then **V5** — emit engine-agnostic `timeline.json` +
+  `compile-remotion.mjs` (byte-identical render) → **V6** `compile-hyperframes.mjs` + first
+  HyperFrames hero scene (flip `render.engine` to `combo`).
+- blockers: none.
+
+## 2026-06-09 — Wave V4: skills + style now read the format recipe
+- who: agent (Opus 4.8)
+- did: pointed the workflow at the recipe as the single source of truth — `script-writing`,
+  `storyboard`, `qa-video` (added the HARD first-30s hook check + format-sourced thresholds),
+  `script-review`, plus `STYLE_GUIDE`/`VISUAL_IDENTITY` (numbers live in the recipe; b-roll off;
+  motion intensity is a knob) and a `CLAUDE.md` "where everything lives" row + ROADMAP Wave V status.
+  Doc-only (no build-sprint cycle). Owner decision: build a deterministic QA checker (hybrid) →
+  next.
+- next: **V4b** — `pipeline/05-qa/check.mjs` (artifact-level, fails-closed, reuse `policy.mjs` +
+  format): short length, first-30s hook, caption density, no-empty, coverage → `qa.report.json`;
+  perceptual checks stay in the skill. Then **checkpoint** (gallery clip) → **V5** timeline seam.
+- blockers: none.
+
+## 2026-06-09 — Wave V3: strong-hook rule + new hook scene + b-roll dropped
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier
+- did: enforced "strong hook in the first 30s" (build-props warns via a pure policy helper;
+  qa-video will hard-enforce in V4); made the no-empty-scene threshold a format knob
+  (`pacing.max_static_hold_seconds`); dropped stock b-roll by default
+  (`scene_set.broll.enabled=false` — code kept, just disabled); added a bespoke `HookStatReveal`
+  opener (count-up stat + punch line). 220 tests green; Sonnet-verified (one null-guard fix).
+- next: **V4** — point the skills (script-writing / storyboard / qa-video / script-review) and
+  STYLE/VISUAL at the format recipe as the source of truth; add the qa-video HARD hook check;
+  update ROADMAP.
+- blockers: none. Deferred: true shared-element continuity (higher risk; persistent BG + new
+  per-scene motion already read as continuous) — noted for a later pass.
+
+## 2026-06-09 — Wave V2: motion system (first visible jump)
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier
+- did: replaced the single-fade "slideshow" feel with a real motion vocabulary — kinetic
+  word-by-word hook, number count-up, SVG draw-on diagram/flow connectors, spring presets,
+  emphasis pop, and an intensity budget (calm/standard/lively) threaded from the format via
+  `MotionContext`. `tsc` clean; 201 pipeline tests green; confirmed on rendered gallery stills.
+  Sonnet-verified (2 low cosmetic fixes applied).
+- next: **V3** — dedicated hook/opening scenes + first-30s enforcement (build-props warn,
+  qa-video hard), shared-element continuity between scenes, and dropping stock b-roll via the
+  format flag.
+- blockers: none.
+
+## 2026-06-09 — Wave V1: build-props reads the format recipe
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier
+- did: wired `build-props.mjs` to the resolved format — intro/outro/crossfade/lead, caption
+  density, and the Short-length gate now come from `formats/default.json` via the pure helper
+  `04-render/lib/timings.mjs` (`deriveRenderTimings`), not hardcoded numbers. Passed the motion
+  budget into props for the render side. Behavior-preserving (proven: fixture props identical —
+  intro 45 / outro 75 / xf 9). 201 tests green; Sonnet-verified.
+- next: **V2** — the motion system: expand `templates/remotion/src/lib/anim.ts` (kinetic type,
+  number count-up, SVG path-draw, easing variety, emphasis, subtle ambient), upgrade the flattest
+  templates, and gate movement by `motion.intensity`. This is the first visible "not a slideshow" jump.
+- blockers: none. Tracked follow-ups: align `run.mjs` Short-target + the no-empty `secs>6` threshold
+  to the format (BUILD_LOG).
+
+## 2026-06-09 — Wave V0: modular video-format spec (foundation)
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier
+- did: started **Wave V** (modular video formats + pro motion design → then HyperFrames hero
+  scenes; owner-approved 0→1→2 sequencing). Shipped **V0**: a declarative format recipe
+  (`pipeline/shared/formats/default.json`, schema `format.schema.json`, resolver
+  `lib/format.mjs`) — the future single source of truth for production-policy knobs (hook length,
+  motion intensity, pacing, captions, length, intro/outro, scene set, per-archetype structure) that
+  today are scattered across prose + hardcoded constants. Wired into both validators via a
+  `formats/`-dir rule. 191 tests green; Sonnet-verified (see BUILD_LOG).
+- next: **V1** — wire `build-props.mjs` (+ theme/anim pass-through) to the resolved format so
+  caption/intro/outro/crossfade/length come from the recipe; re-render `_FIXTURE` identical-or-better.
+- blockers: none.
+
 ## 2026-05-31 — Project foundation created
 - who: agent (planning session)
 - did: Defined the whole project with the owner via a long Q&A. Created repo

@@ -40,6 +40,11 @@ function resolveSchemaPath(filePath, override) {
     const name = override.endsWith(".json") ? override : `${override}.schema.json`;
     return path.join(SCHEMA_DIR, name);
   }
+  // format recipe files live in pipeline/shared/formats/ (default.json + partial overrides);
+  // map any file in that folder to the format schema (mirror this rule in validate-lib.mjs).
+  if (path.basename(path.dirname(filePath)) === "formats") {
+    return path.join(SCHEMA_DIR, "format.schema.json");
+  }
   const mapped = FILENAME_TO_SCHEMA[path.basename(filePath)];
   return mapped ? path.join(SCHEMA_DIR, mapped) : null;
 }

@@ -7,6 +7,7 @@ import { Intro } from "./components/Intro";
 import { Outro } from "./components/Outro";
 import { CaptionsTrack, CaptionCue } from "./components/CaptionsTrack";
 import { renderTemplate, TemplateName } from "./templates/templates";
+import { MotionContext, DEFAULT_MOTION, MotionBudget } from "./lib/motion";
 import { SpreadsheetClean } from "./custom/SpreadsheetClean";
 import { HandCopy } from "./custom/HandCopy";
 import { AiFlow } from "./custom/AiFlow";
@@ -17,11 +18,13 @@ import { CalendarFind } from "./custom/CalendarFind";
 import { InboxTriage } from "./custom/InboxTriage";
 import { MorningSynthesis } from "./custom/MorningSynthesis";
 import { VersusNote } from "./custom/VersusNote";
+import { HookStatReveal } from "./custom/HookStatReveal";
 
 /** Custom (bespoke) scene dispatch — template:"custom" routes by props.component. */
 const CUSTOM: Record<string, React.FC<{ data?: any }>> = {
   "spreadsheet-clean": SpreadsheetClean,
   "versus-note": VersusNote,
+  "hook-stat-reveal": HookStatReveal,
   "hand-copy": HandCopy,
   "ai-flow": AiFlow,
   "chaos-x": ChaosX,
@@ -52,6 +55,7 @@ export type MainProps = {
   audioFromFrame: number;
   intro: { wordmark: string; tagline: string };
   outro: { cta: string; brand: string };
+  motion?: MotionBudget;
   scenes: Scene[];
   captions: CaptionCue[];
 };
@@ -68,6 +72,7 @@ export const Main: React.FC<MainProps> = (p) => {
   const xf = p.crossfadeFrames ?? 9;
   return (
     <AbsoluteFill style={{ backgroundColor: theme.color.bg }}>
+      <MotionContext.Provider value={p.motion ?? DEFAULT_MOTION}>
       {/* persistent background — never resets between scenes (continuity) */}
       <BackgroundFX />
 
@@ -99,6 +104,7 @@ export const Main: React.FC<MainProps> = (p) => {
           <Outro cta={p.outro.cta} brand={p.outro.brand} />
         </SceneWrapper>
       </Sequence>
+      </MotionContext.Provider>
     </AbsoluteFill>
   );
 };

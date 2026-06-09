@@ -3,6 +3,7 @@ import { AbsoluteFill, Sequence } from "remotion";
 import { theme } from "./theme";
 import { BackgroundFX } from "./components/BackgroundFX";
 import { renderTemplate, TemplateName } from "./templates/templates";
+import { HookStatReveal } from "./custom/HookStatReveal";
 
 /**
  * Internal DEV preview (not published): every scene template back-to-back with
@@ -19,6 +20,7 @@ export const GALLERY: { name: TemplateName; data: any }[] = [
   { name: "icon-list", data: { title: "The boring goldmine", items: [{ icon: "spreadsheet", label: "Data between spreadsheets" }, { icon: "invoice", label: "Invoices" }, { icon: "calendar", label: "Schedules" }, { icon: "email", label: "Reminder & invite emails" }] } },
   { name: "bullet-steps", data: { title: "What you get here", items: ["Small ideas you can copy", "Tiny working examples", "Plain English, no hype"] } },
   { name: "stat-callout", data: { value: "Once.", label: "Set it up once - then it runs while your coffee's still hot." } },
+  { name: "stat-callout", data: { value: "26,000", label: "support tickets auto-tagged last month" } },
   { name: "term-highlight", data: { term: "ARRAYFORMULA", definition: "One formula that fills an entire column automatically." } },
   { name: "comparison-table", data: { title: "Make vs Zapier vs n8n", columns: ["Criteria", "Make", "Zapier", "n8n"], rows: [["Price", "$", "$$", "Free"], ["Ease", "Medium", "Easy", "Harder"], ["Best for", "Visual", "Beginners", "Self-host"]] } },
   { name: "diagram", data: { title: "How the automation runs", nodes: [{ id: "a", label: "New row added" }, { id: "b", label: "AI cleans it" }, { id: "c", label: "Email sent" }], edges: [{ from: "a", to: "b" }, { from: "b", to: "c" }] } },
@@ -27,7 +29,7 @@ export const GALLERY: { name: TemplateName; data: any }[] = [
   { name: "cta-card", data: { title: "Stick around", subtitle: "for more automation ideas" } },
 ];
 
-export const GALLERY_FRAMES = GALLERY.length * SEG;
+export const GALLERY_FRAMES = (GALLERY.length + 1) * SEG;
 
 export const TemplateGallery: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: theme.color.bg }}>
@@ -37,5 +39,9 @@ export const TemplateGallery: React.FC = () => (
         {renderTemplate(s.name, s.data)}
       </Sequence>
     ))}
+    {/* bespoke (custom) hook-class scene preview */}
+    <Sequence from={GALLERY.length * SEG} durationInFrames={SEG} name="hook-stat-reveal">
+      <HookStatReveal data={{ stat: "26,000", statLabel: "invoices a year — entered by hand", punch: "Until we automated it." }} />
+    </Sequence>
   </AbsoluteFill>
 );

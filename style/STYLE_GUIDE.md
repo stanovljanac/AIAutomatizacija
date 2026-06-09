@@ -4,6 +4,13 @@ This is the law for every word the channel publishes. The script-writing skill
 follows it; the script-review skill enforces it. When in doubt, this file wins.
 **Language of output: English.**
 
+> **Numeric/structural knobs live in the FORMAT recipe**, not in this prose:
+> `pipeline/shared/formats/default.json` (resolved by `pipeline/shared/lib/format.mjs`) owns hook
+> length (`hook.target_seconds`), the answer-first window (`hook.answer_first_seconds`), pacing,
+> length targets, caption density, and the per-archetype beat skeleton (`archetype_structure`). This
+> file keeps the *taste* (voice, originality, what makes a good hook); the recipe keeps the *numbers*.
+> If they ever disagree, the recipe wins on numbers — update it in one place.
+
 ---
 
 ## 1. Voice & tone

@@ -16,6 +16,9 @@
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveFormat } from "../shared/lib/format.mjs";
+import { deriveRenderTimings } from "./lib/timings.mjs";
+import { openingHasHook, SPARSE_TEMPLATES } from "./lib/policy.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const id = process.argv[2];
@@ -26,6 +29,11 @@ const cfg = JSON.parse(readFileSync(join(ROOT, "pipeline/shared/config.json"), "
 const script = JSON.parse(readFileSync(join(cdir, "script.json"), "utf8"));
 const plan = JSON.parse(readFileSync(join(cdir, "scene-plan.json"), "utf8"));
 const al = JSON.parse(readFileSync(join(cdir, "alignment.json"), "utf8"));
+// Resolve the FORMAT recipe (the "show bible") for this video — the single source of truth for
+// the production-policy knobs (intro/outro, crossfade, caption density, length, motion). brief.json
+// carries archetype/series and any per-video format override; fall back to the script's archetype.
+const brief = existsSync(join(cdir, "brief.json")) ? JSON.parse(readFileSync(join(cdir, "brief.json"), "utf8")) : {};
+const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
 
 const fps = cfg.render?.fps ?? 30;
 const F = (s) => Math.round(s * fps);
@@ -38,18 +46,22 @@ const dims = vertical ? (cfg.render?.short ?? { width: 1080, height: 1920 }) : (
 // Flat artifact id so a nested content id (004-foo/short) doesn't put slashes into the
 // Remotion public/props/out paths or the --props CLI arg. 004-foo/short → 004-foo-short.
 const outId = id.replace(/[\\/]/g, "-");
-const intro = Math.round((vertical ? 1.2 : 1.5) * fps); // Short bumped 0.7→1.2s so the intro underline finishes & wordmark reads
-const outro = Math.round((vertical ? 1.2 : 2.5) * fps);
-const xf = cfg.render?.crossfadeFrames ?? 9;
-const LEAD = Math.round(0.22 * fps); // start reveals slightly BEFORE the word so the animation lands on cue
+// Timing/caption constants now come from the resolved format recipe (formats/default.json),
+// not hardcoded magic numbers. Seeded values mirror the old constants, so output is unchanged
+// until a knob is intentionally edited. Short intro/outro are the vertical band of the recipe.
+const timings = deriveRenderTimings(fmt, { fps, vertical });
+const intro = timings.introFrames;   // long 1.5s / Short 1.2s @ default
+const outro = timings.outroFrames;   // long 2.5s / Short 1.2s @ default
+const xf = cfg.render?.crossfadeFrames ?? timings.crossfadeFrames; // config override wins, else format
+const LEAD = timings.leadFrames;     // start reveals slightly BEFORE the word so the animation lands on cue
 const audioFrames = F(al.duration);
 const total = intro + audioFrames + outro;
 
 // HARD RULE ENFORCEMENT (so documented rules can't be silently skipped).
-// Short length — STYLE_GUIDE §7 / config.defaults: target 50-60s, min 45, hard max 120.
+// Short length — format.length.short (target ~55s, min 45, hard max 120).
 const durSec = al.duration;
-if (vertical && (durSec < 45 || durSec > (cfg.defaults?.short_seconds_max ?? 120))) {
-  console.error(`\nSHORT LENGTH RULE (STYLE_GUIDE §7): ${id} narration is ${durSec.toFixed(1)}s — must be 45-${cfg.defaults?.short_seconds_max ?? 120}s (target ~${cfg.defaults?.short_seconds ?? 55}s). Fix the Short script before rendering.\n`);
+if (vertical && (durSec < timings.shortLen.min || durSec > timings.shortLen.max)) {
+  console.error(`\nSHORT LENGTH RULE (format.length.short): ${id} narration is ${durSec.toFixed(1)}s — must be ${timings.shortLen.min}-${timings.shortLen.max}s (target ~${timings.shortLen.target}s). Fix the Short script before rendering.\n`);
   process.exit(1);
 }
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9']/g, "");
@@ -112,12 +124,19 @@ for (const bt of beats) for (const k of ["leftLogo", "rightLogo", "logo"]) {
   if (v && !existsSync(join(ROOT, "templates/remotion/public", v))) delete bt.props[k];
 }
 
-// b-roll (v2-4): a scene with props.broll = "<query>" plays a fetched stock clip behind it.
-// fetch-stock.mjs downloads content/<id>/broll/<slug>.mp4; copy it into public/ and set
-// props.brollSrc (SceneWrapper renders it dark-graded). If missing, the scene renders plain.
+// b-roll: only when the format enables it. The owner dropped stock footage by default
+// (formats/default.json scene_set.broll.enabled=false) — prefer code-drawn/custom scenes. The
+// fetch path + SceneWrapper branch are kept (disabled), so flipping the flag re-enables stock.
+// When enabled: a scene with props.broll = "<query>" plays content/<id>/broll/<slug>.mp4 behind it.
+const brollEnabled = fmt.scene_set?.broll?.enabled !== false;
 const brollSlug = (q) => String(q).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 for (const bt of beats) {
   if (!bt.props?.broll) continue;
+  if (!brollEnabled) {
+    console.warn(`b-roll disabled by format (scene_set.broll.enabled=false): ignoring broll "${bt.props.broll}" on ${bt.sceneId} — use a code-drawn/custom scene instead.`);
+    delete bt.props.broll;
+    continue;
+  }
   const slug = brollSlug(bt.props.broll);
   const f = join(cdir, "broll", `${slug}.mp4`);
   if (existsSync(f)) {
@@ -163,12 +182,26 @@ const scenes = beats.map((bt, k) => {
 // no-empty-scene guard (v2-2): a SPARSE template (lower-third/transition) held long is the
 // "empty screen" failure the owner flagged. Content-full scenes (table/code/term/cta) holding
 // a while are fine. Warn only for the sparse case → split into beats or use a fuller scene.
-const SPARSE = new Set(["lower-third", "transition"]);
+// Threshold is a format knob (pacing.max_static_hold_seconds) so the policy lives in one place.
+const maxHold = fmt.pacing?.max_static_hold_seconds ?? 6;
+const SPARSE = SPARSE_TEMPLATES;
 for (const s of scenes) {
   const secs = s.durFrames / fps;
   const dynamic = Array.isArray(s.props?.reveals) && s.props.reveals.length > 1;
-  if (SPARSE.has(s.template) && secs > 6 && !dynamic) {
-    console.warn(`EMPTY/STATIC SCENE: ${s.sceneId} (${s.template}) ${secs.toFixed(1)}s — sparse template held long; split or use a fuller/animated scene (no-empty-scene rule).`);
+  if (SPARSE.has(s.template) && secs > maxHold && !dynamic) {
+    console.warn(`EMPTY/STATIC SCENE: ${s.sceneId} (${s.template}) ${secs.toFixed(1)}s — sparse template held >${maxHold}s; split or use a fuller/animated scene (no-empty-scene rule).`);
+  }
+}
+
+// strong-hook guard (owner: jak hook i vizuelni detalji u prvih 30 sekundi). Warn here; the
+// qa-video skill enforces it HARD on the rendered cut. A "hook-class" opener = a hook-card or a
+// custom hook-* scene starting inside the opening window.
+const hookVD = fmt.hook?.visual_detail ?? {};
+if (hookVD.require_hook_class_scene) {
+  const openSec = hookVD.first_seconds ?? 30;
+  const openingEnd = intro + F(openSec);
+  if (!openingHasHook(scenes, openingEnd)) {
+    console.warn(`HOOK RULE (format.hook.visual_detail): no hook-class scene opens ${id} within the first ${openSec}s — start with a hook-card or a custom hook-* scene (strong first impression).`);
   }
 }
 
@@ -176,9 +209,9 @@ for (const s of scenes) {
 // spoken. We never dump a whole long sentence at once (that caused 3-6 line blocks and
 // text appearing before it was said). A chunk shows only while its words are spoken.
 const words = (al.words ?? []).filter((w) => w && w.w).slice().sort((a, b) => a.start - b.start);
-const MAX_WORDS = 7;   // keeps a caption to <= 2 lines at the caption font size
-const GAP = 0.7;       // start a fresh chunk after a pause this long (seconds)
-const TAIL = 0.4;      // keep a chunk on screen this long after its last word (seconds)
+const MAX_WORDS = timings.captions.maxWords; // keeps a caption to <= max_lines at the caption font size
+const GAP = timings.captions.gapSeconds;     // start a fresh chunk after a pause this long (seconds)
+const TAIL = timings.captions.tailSeconds;   // keep a chunk on screen this long after its last word (seconds)
 const groups = [];
 let cur = [];
 for (let i = 0; i < words.length; i++) {
@@ -208,6 +241,9 @@ const props = {
   audioSrc: `${outId}/narration.mp3`, audioFromFrame: intro,
   intro: { wordmark: "The Automation Desk", tagline: "automate the boring stuff" },
   outro: { cta: "@TheAutomationDesk", brand: "" },
+  // motion budget from the format recipe — the render side gates how much each scene moves
+  // (calm = holds where the narration carries it; lively = more). Consumed from V2 on.
+  motion: fmt.motion,
   scenes, captions: cues,
 };
 

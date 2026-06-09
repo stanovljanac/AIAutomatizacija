@@ -60,6 +60,7 @@ Why we pivoted from the old Serbian-AI channel: `docs/DECISIONS.md` (D-011…D-0
 | Write or fix the tone/language       | `style/STYLE_GUIDE.md`                      |
 | Match the visual look                | `style/VISUAL_IDENTITY.md`                  |
 | Know channel name/niche/SEO/account  | `style/CHANNEL.md`                          |
+| Change how videos are made (hook/motion/pacing/length/captions) | `pipeline/shared/formats/default.json` — the **format recipe** (one place; resolved by `pipeline/shared/lib/format.mjs`) |
 
 ## The skills (auto-invoked per task)
 

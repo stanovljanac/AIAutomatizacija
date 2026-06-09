@@ -43,6 +43,10 @@ const _compiled = new Map();
 export function resolveSchemaPath(nameOrFile) {
   if (!nameOrFile) return null;
   const base = path.basename(nameOrFile);
+  // format recipe files (pipeline/shared/formats/*.json) → format schema (mirror of validate.js).
+  if (path.basename(path.dirname(nameOrFile)) === "formats") {
+    return path.join(SCHEMA_DIR, "format.schema.json");
+  }
   if (FILENAME_TO_SCHEMA[base]) return path.join(SCHEMA_DIR, FILENAME_TO_SCHEMA[base]);
   const file = base.endsWith(".schema.json")
     ? base
@@ -73,7 +77,9 @@ export function validate(data, schemaName) {
 /** Validate a JSON file on disk. Schema inferred from filename unless `override` given. */
 export function validateFile(filePath, override = null) {
   const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
-  return validate(data, override || path.basename(filePath));
+  // Pass the FULL path (not just the basename) so dir-aware rules (e.g. formats/*) apply;
+  // resolveSchemaPath still derives the basename for the FILENAME_TO_SCHEMA lookup.
+  return validate(data, override || filePath);
 }
 
 /** Format AJV errors into a short human string. */

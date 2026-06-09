@@ -9,6 +9,14 @@ You convert an approved `script.json` into a **deterministic** `scene-plan.json`
 (schema `pipeline/shared/schemas/scene-plan.schema.json`). Because templates are fixed
 (D-013), there is **no human gate here** — you just fill props correctly.
 
+> **Read the FORMAT recipe** (`pipeline/shared/formats/default.json` via `resolveFormat`). It sets
+> `scene_set.preferred_templates`, `scene_set.custom_ratio_min` (keep at least this fraction of
+> bespoke `template:"custom"` scenes so videos aren't the base gallery on repeat), and
+> `scene_set.broll.enabled` — **stock b-roll is OFF by default** (owner dropped it); prefer
+> code-drawn / custom scenes over stock footage. Open with a **hook-class** scene (`hook-card` or a
+> custom `hook-*` such as `hook-stat-reveal`). Numbers shown to viewers can use `stat-callout`
+> (it counts up) for a stronger reveal.
+
 ## What you do
 For each scene, emit `{ scene_id, template, props }`:
 - The `template` is already chosen in the script. Map it to its component

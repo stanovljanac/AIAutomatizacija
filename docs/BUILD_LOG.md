@@ -8,6 +8,96 @@ Newest on top.
 
 ---
 
+## 2026-06-09 — Wave V4b (deterministic QA checker — the mechanical half of qa-video)
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **scope:** new `pipeline/05-qa/check.mjs` (CLI, fails-closed) + pure `05-qa/lib/check-lib.mjs`
+  (`runChecks`/`summarize`) — artifact-level HARD checks gated by the format recipe: Short length,
+  first-30s hook (reuses `policy.mjs`), caption density, no-empty hold, coverage (black-gap). Emits
+  `content/<id>/qa.report.json` (qa.schema.json), exits 1 on any high failure. `SPARSE_TEMPLATES`
+  moved to `policy.mjs` (shared with build-props — behavior identical). Perceptual checks stay in the
+  qa-video SKILL (which now runs this gate first). Owner-approved hybrid.
+- **result:** pipeline `npm test` **242 green**; end-to-end `build-props → check.mjs` on the fixture →
+  QA PASS (5/5), report validates, exit 0.
+- **bugs found:** none. Verifier added **13** coverage/edge regression tests (out-of-order scenes,
+  crossfade overlap not a false gap, pre-intro scene, tolerance boundary, trailing gap, fails-closed
+  semantics, schema validity).
+- **verdict:** PASS.
+
+## 2026-06-09 — Wave V3 (strong-hook enforcement + new hook scene + drop b-roll)
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **scope:** new pure `pipeline/04-render/lib/policy.mjs` (`isHookClass`/`openingHasHook`) + a first-30s
+  hook WARN in build-props (qa-video will enforce it HARD on the cut — V4); a
+  `format.pacing.max_static_hold_seconds` knob replacing the hardcoded no-empty threshold; build-props
+  honors `scene_set.broll.enabled` (default **false** → stock dropped per owner; the fetch + SceneWrapper
+  branch are kept, disabled); a new bespoke hook scene `HookStatReveal` (count-up stat + punch line)
+  registered in Main + previewed in the gallery.
+- **result:** `tsc` 0; pipeline `npm test` **220 green**; build-props runs end-to-end on the fixture
+  (exit 0); `HookStatReveal` visually verified (count-up to 26,000 → punch line under a drawn bar).
+- **bug found + fixed:** `policy.mjs openingHasHook` crashed on a `null` scene element (read
+  `s.fromFrame` before guarding). **Fixed:** `s != null && isHookClass(s) && s.fromFrame < …`; the
+  verifier's regression test is now green.
+- **deferred (noted):** true cross-scene *shared-element* continuity — higher risk vs. the sync
+  contract, and the persistent BackgroundFX + new per-scene motion already read as continuous. Revisit
+  later if the owner wants morph transitions.
+- **verdict:** PASS (after the null-guard fix).
+
+## 2026-06-09 — Wave V2 (motion system: the first "not a slideshow" jump)
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **scope:** Remotion motion-design upgrade. `templates/remotion/src/lib/anim.ts` gained a real motion
+  vocabulary (ramp / springPreset snappy·gentle·bouncy / countUp / draw / pop / drift / motionScale +
+  the pure `splitNumeric`/`formatNumber`); new `lib/motion.ts` (MotionContext/useMotion — the
+  intensity budget from `props.motion`); `Main.tsx` provides the budget. Upgraded **HookCard**
+  (word-by-word kinetic reveal + accent underline draw), **StatCallout** (numbers count up with
+  grouping; non-numeric fallback; emphasis pop, disabled at `calm`), **Diagram** + **Flow** (SVG
+  draw-on connectors via strokeDashoffset; spring node pops). All frame-pure (determinism preserved).
+- **result:** `tsc --noEmit` exit 0; pipeline `npm test` **201 green** (Remotion isn't in the pipeline
+  suite). Verified visually via `TemplateGallery` stills (kinetic hook; count-up reading 20,708
+  mid-count with comma grouping; diagram/flow arrows drawing on before nodes pop).
+- **bugs found + fixed:** two LOW cosmetic edge cases, both fixed — `splitNumeric("-5")` showed "-0"
+  at count start (regex now captures a leading minus into the number); Diagram/Flow connector arrows
+  could pre-draw at frame 0 for a very-early narration cue (clamped `Math.max(rd - …, 0)`).
+- **verdict:** PASS — deterministic, type-clean, props-compatible; lively-but-calm achieved.
+
+## 2026-06-09 — Wave V1 (wire build-props to the format recipe)
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **scope:** `build-props.mjs` now resolves the format (`resolveFormat` from brief/script) and reads
+  its timing/caption constants via the new pure helper `04-render/lib/timings.mjs`
+  (`deriveRenderTimings`) instead of hardcoded magic numbers — intro/outro/crossfade/lead, caption
+  max-words/gap/tail, and the Short-length gate. Adds `motion: fmt.motion` to the emitted props
+  (render side consumes it from V2). Behavior-preserving: seeded format values mirror the old constants.
+- **result:** **201 tests green** (was 197; +4 verifier regressions). Author also ran build-props
+  end-to-end on a throwaway `_FIXTURE` copy: emitted props had introFrames 45 / outroFrames 75 /
+  crossfade 9 (identical to old) + the motion budget; artifacts cleaned up.
+- **bugs found + fixed:** none (no production bugs).
+- **flagged (out of V1 scope, tracked):**
+  - `orchestrator/run.mjs:81` still passes `config.defaults.short_seconds` to the Short derivation —
+    will silently diverge if `fmt.length.short.target` changes. Wire to the format when the
+    orchestrator path is next touched (V5).
+  - `build-props.mjs` no-empty-scene guard threshold (`secs > 6`) is still hardcoded — make it a
+    `fmt.pacing` knob in V3 (where the no-empty enforcement is revisited).
+- **verdict:** PASS — behavior-preserving; build the motion system (V2) on top.
+
+## 2026-06-09 — Wave V0 (modular video-format spec foundation)
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **scope:** new `schemas/format.schema.json` + `formats/default.json` (the channel "show bible":
+  hook/motion/pacing/captions/length/intro/outro/scene-set/archetype-structure knobs) +
+  `lib/format.mjs` (`resolveFormat`: default ← series ← archetype ← brief.format, deep-merge,
+  schema-validated). Both validators got a `formats/`-dir → format-schema rule; `validateFile`
+  now passes the full path so the rule applies.
+- **result:** **191 tests green** (was 177; +14 verifier regression tests).
+- **bugs found + fixed:**
+  - `lib/format.mjs deepMerge(base, null)` returned `null` and wiped the base (latent footgun — all
+    current callers guard, but unsafe for a future caller). **Fixed:** a null/undefined override is
+    now a no-op (returns the base); the documenting test was flipped to assert the safe contract.
+  - verifier confirmed: the `validateFile` full-path change is non-breaking (and fixes a latent
+    wrong-schema resolution for `formats/` files); the dir-rule is correct on Windows backslash paths
+    and does not mis-fire on content artifacts or a file named `formats.json`; seeded `default.json`
+    values exactly mirror today's `build-props.mjs` constants (behavior-preserving for V1).
+  - note for V1: `build-props` reads `cfg.render.crossfadeFrames` / `cfg.defaults.short_seconds`;
+    the format layer names them `transition_frames.crossfade` / `length.short.target` — map these
+    names explicitly when wiring.
+- **verdict:** PASS — sound foundation; V1 can wire `build-props` to the resolved format.
+
 ## 2026-06-09 — Orchestrator integration (wire the deferred executors)
 - **verifier:** Sonnet 4.6, independent of the author (Opus 4.8).
 - **scope:** `orchestrator/run.mjs` — voice/align wired to the Python scripts (mechanical, real);

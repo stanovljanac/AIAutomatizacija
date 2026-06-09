@@ -10,6 +10,14 @@ below are sane starting points for a clean, modern, dark software-tutorial style
 
 ---
 
+> **Motion/scene knobs live in the FORMAT recipe** (`pipeline/shared/formats/default.json` via
+> `resolveFormat`): `motion.intensity` (calm | standard | lively — the "lively but not constant"
+> dial, threaded to the components through `MotionContext`), `motion.transition`,
+> `scene_set.custom_ratio_min` (variety), and `scene_set.broll.enabled` — **stock b-roll is OFF by
+> default** now (owner dropped it; §5.2 below is kept for reference but disabled unless the flag is
+> flipped). The motion *vocabulary* itself lives in `templates/remotion/src/lib/anim.ts`
+> (kinetic type, count-up, SVG draw-on, spring presets) and is gated by the intensity budget.
+
 ## 1. Brand essence
 
 - **Mood:** modern, clean, techy, trustworthy. Dark theme, high contrast.

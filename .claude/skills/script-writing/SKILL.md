@@ -13,6 +13,13 @@ does not self-approve (that's `script-review`, then the human gate).
 ## Inputs
 - `brief.json` — has `archetype`, `angle`, `task`, `tool`, `target_seconds`.
 - `sources.md` — facts (Comparisons/stats only; Ideas/Demo may have none).
+- **The FORMAT recipe** — `pipeline/shared/formats/default.json` (resolved per brief by
+  `pipeline/shared/lib/format.mjs`). It is the **single source of truth** for the production-policy
+  knobs that used to be scattered in this file: `hook.target_seconds` (when the hook lands),
+  `hook.answer_first_seconds` (the answer-first window), `archetype_structure.<archetype>` (the beat
+  skeleton below), and length/pacing. **Honor the recipe's values**; the numbers in the rules below
+  are the current defaults from it. The opening must use a **hook-class** scene (`hook-card` or a
+  custom `hook-*`) with real motion within `hook.visual_detail.first_seconds` — qa-video enforces this.
 
 ## Non-negotiables (from STYLE_GUIDE §2, PRD R4/R8/R9)
 1. **Bake in the original human angle** (from `brief.angle`) — surface it in/after the
@@ -59,7 +66,7 @@ does not self-approve (that's `script-review`, then the human gate).
    steps) is optional flavor — the single reproduce-it prompt is the payoff. And remember: a
    one-off chat result isn't automation — prefer the **reusable script/system** as the takeaway.
 
-## Write to the archetype (STYLE_GUIDE §5)
+## Write to the archetype (STYLE_GUIDE §5 ≙ `format.archetype_structure.<archetype>`)
 - **ideas:** hook → framing → N items (idea → why it pays → tiny illustration →
   takeaway) → scale-it close.
 - **mini-demo:** hook → the boring task → `capture-segment` of the trivial example →

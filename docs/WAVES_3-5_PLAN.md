@@ -6,6 +6,11 @@ to ship the **first real hands-off video**. Pair it with `docs/ROADMAP.md` (stat
 `docs/BUILD_LOG.md` (per-wave verifier verdicts). The original high-level plan lived in
 `~/.claude/plans/` (machine-local); this committed doc is the source of truth going forward.
 
+> **Inserted first: Wave V** (modular video formats + pro motion design → HyperFrames hero scenes).
+> The owner added it before Wave 3 because the videos looked like a slideshow. **Phase 0 (V0–V4b) is
+> DONE** (242 tests green, Sonnet-verified); V5/V6 (timeline seam + HyperFrames combo) remain. See
+> **`docs/WAVE_V_HANDOFF.md`**. Wave 3 below resumes after Wave V.
+
 > **Every code task below runs the build-sprint cycle** (`.claude/skills/build-sprint/SKILL.md`,
 > D-041): atomize → build → `npm test` green → **verify with a DIFFERENT model** (Sonnet 4.6;
 > Haiku for trivial) that adds regression tests → fix → update docs → **commit only when the owner
