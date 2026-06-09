@@ -61,6 +61,14 @@ the **transcript** (the ordered `script.json` sentences) and save the output ver
 > Total length: 600 to 700 words. Write in plain declarative sentences. No hype language, no
 > emojis, no calls to subscribe, no hashtags. Output only the description text, nothing else.
 
+The Medium **post** also needs (owner rule 2026-06-07), stored in `publish.json.medium`:
+- **A title** — a clear, keyword-rich headline (can be longer / more descriptive than the
+  YouTube title; Medium rewards specificity).
+- **A cover image** — reuse the video thumbnail (`images/thumb_final.png`); no separate art.
+- **A "watch on YouTube" line in the body** — e.g. "Watch the full video on YouTube: <link>",
+  placed right after the 2–4 sentence overview (and optionally repeated as the last line).
+  The real URL is filled at upload.
+
 ## Upload
 - Via YouTube Data API v3 as **private/draft** with all metadata + thumbnail, plus the
   Short. Uploads are quota-heavy — space them.
