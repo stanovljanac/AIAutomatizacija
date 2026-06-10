@@ -54,6 +54,12 @@ One primary accent used consistently; secondary only for contrast moments. Keep
 
 ## 4. Motion language
 
+- **MOTIVATED motion (the rule — owner, 2026-06-10):** motion must point at the thing the narration is
+  talking about **right now**, and stop when it stops. The **default state is still.** We tried a
+  global camera that drifted over every scene and it felt *worse* than clean static — reverted. Add
+  movement only to **single-focus** content via the opt-in `focalZoom` (punch into a target on a cue
+  word, release when done) and `pip` (corner inset / prompt card). **Tables, multi-row lists, and body
+  text stay static.** See the `storyboard` skill for how to declare it.
 - **Easing:** smooth ease-in-out; ~0.3–0.6s transitions; nothing jarring.
 - **Scene transitions:** crossfade or subtle slide/scale; a quiet "whoosh" sfx is the
   only audio garnish (no music on long-form).

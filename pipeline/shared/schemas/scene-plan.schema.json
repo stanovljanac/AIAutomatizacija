@@ -15,6 +15,7 @@
         "description": "Either a single template+props, OR a `beats` array to split one script scene into several timed visuals (D-022).",
         "properties": {
           "scene_id": { "type": "string", "description": "Matches a script.json scene id." },
+          "engine": { "type": "string", "enum": ["remotion", "hyperframes"], "description": "OPTIONAL render engine for this scene (default remotion). Set 'hyperframes' to route a single hero beat to a pre-rendered silent HyperFrames clip composited at the scene window (V6). Surgical — 1–3 per video at most." },
           "template": {
             "type": "string",
             "enum": [
@@ -24,7 +25,7 @@
               "flow", "icon-list", "custom"
             ]
           },
-          "props": { "type": "object" },
+          "props": { "type": "object", "description": "Component props. Optional MOTIVATED-MOTION (opt-in, surgical — never global): `focalZoom`: { target:{x,y} (0..1), scale (<=~1.6), in/out (narration cue words) } punches into a target on cue and releases; `pip`: { anchor:'top-right'|'top-left', content, in/out } shows a corner inset. build-props resolves cue words to scene-local frames. Use ONLY for single-focus content (capture-segment, code-block, stat-callout, prompt cards) — NOT tables/lists/body text." },
           "revealOn": { "type": "string", "enum": ["sentences"], "description": "Reveal sub-elements at each of this scene's sentence starts." },
           "cueWords": { "type": "array", "items": { "type": "string" }, "description": "Reveal sub-element i when this word is spoken." },
           "beats": {
@@ -35,7 +36,7 @@
               "required": ["template", "props"],
               "properties": {
                 "template": { "type": "string" },
-                "props": { "type": "object" },
+                "props": { "type": "object", "description": "Component props. Optional MOTIVATED-MOTION (opt-in, surgical — never global): `focalZoom`: { target:{x,y} (0..1), scale (<=~1.6), in/out (narration cue words) } punches into a target on cue and releases; `pip`: { anchor:'top-right'|'top-left', content, in/out } shows a corner inset. build-props resolves cue words to scene-local frames. Use ONLY for single-focus content (capture-segment, code-block, stat-callout, prompt cards) — NOT tables/lists/body text." },
                 "sentences": { "type": "array", "items": { "type": "integer" }, "description": "[from,to] sentence indices within this scene (inclusive)." },
                 "revealOn": { "type": "string" },
                 "cueWords": { "type": "array", "items": { "type": "string" } }

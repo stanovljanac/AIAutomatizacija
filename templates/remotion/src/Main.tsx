@@ -7,6 +7,7 @@ import { Intro } from "./components/Intro";
 import { Outro } from "./components/Outro";
 import { CaptionsTrack, CaptionCue } from "./components/CaptionsTrack";
 import { renderTemplate, TemplateName } from "./templates/templates";
+import { FocalZoom } from "./components/FocalZoom";
 import { MotionContext, DEFAULT_MOTION, MotionBudget } from "./lib/motion";
 import { SpreadsheetClean } from "./custom/SpreadsheetClean";
 import { HandCopy } from "./custom/HandCopy";
@@ -19,12 +20,14 @@ import { InboxTriage } from "./custom/InboxTriage";
 import { MorningSynthesis } from "./custom/MorningSynthesis";
 import { VersusNote } from "./custom/VersusNote";
 import { HookStatReveal } from "./custom/HookStatReveal";
+import { PromptFocus } from "./custom/PromptFocus";
 
 /** Custom (bespoke) scene dispatch — template:"custom" routes by props.component. */
 const CUSTOM: Record<string, React.FC<{ data?: any }>> = {
   "spreadsheet-clean": SpreadsheetClean,
   "versus-note": VersusNote,
   "hook-stat-reveal": HookStatReveal,
+  "prompt-focus": PromptFocus,
   "hand-copy": HandCopy,
   "ai-flow": AiFlow,
   "chaos-x": ChaosX,
@@ -61,11 +64,21 @@ export type MainProps = {
 };
 
 const renderScene = (template: string, props: any) => {
-  if (template === "custom") {
-    const Cmp = CUSTOM[props?.component] ?? (() => null);
-    return <Cmp data={props} />;
+  const inner =
+    template === "custom"
+      ? React.createElement(CUSTOM[props?.component] ?? (() => null), { data: props })
+      : renderTemplate(template as TemplateName, props);
+  // Opt-in MOTIVATED motion: a non-custom scene with props.focalZoom punches into its target on cue
+  // and releases when done. Custom scenes own their motion internally (no double-wrap).
+  const fz = props?.focalZoom;
+  if (template !== "custom" && fz?.target && fz.scale > 1) {
+    return (
+      <FocalZoom target={fz.target} scale={fz.scale} inAt={fz.inAt} outAt={fz.outAt} dur={fz.dur}>
+        {inner}
+      </FocalZoom>
+    );
   }
-  return renderTemplate(template as TemplateName, props);
+  return inner;
 };
 
 export const Main: React.FC<MainProps> = (p) => {

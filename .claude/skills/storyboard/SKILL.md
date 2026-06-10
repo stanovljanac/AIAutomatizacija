@@ -33,6 +33,34 @@ For each scene, emit `{ scene_id, template, props }`:
 - Pull text from the scene's `on_screen_text`/`narration`; keep on-screen text short
   (≤ ~6 words per line) and legible (VISUAL_IDENTITY §3).
 
+## Motivated motion (opt-in, surgical — never global)
+
+Motion must **point at something the narration is talking about right now, and stop when it stops**.
+Default state is **still** (we reverted a global camera that moved everything — it felt worse). Add
+motion ONLY to **single-focus** scenes; keep tables / multi-row lists / body text **static**.
+
+- **`props.focalZoom`** — punch the scene INTO a target, then release:
+  `{ "target": { "x": 0.72, "y": 0.30 }, "scale": 1.4, "in": "<cue word>", "out": "<cue word>" }`
+  (`target` = focus point as 0..1 fractions of the frame; `scale` ≤ ~1.6; `in`/`out` = narration
+  words that trigger the zoom in/out — `out` optional, else holds to scene end). `build-props`
+  resolves the cue words to frames. **Use for:** `capture-segment` (zoom to the cursor/region),
+  `code-block` (a key line), `stat-callout` (the number), `term-highlight`. **Do NOT use for:**
+  `comparison-table`, `bullet-steps`, `icon-list`, `section-header` — they clip/lose the eye.
+- **`props.pip`** — a corner inset (prompt card / capture), like a screen recording:
+  `{ "anchor": "top-right", "in": "<cue word>", "out": "<cue word>" }` (never bottom — caption zone).
+- The bespoke **`prompt-focus`** scene (`template:"custom", props.component:"prompt-focus"`) is the
+  brand-pillar "lead with a copy-pasteable prompt" beat: a prompt card slides in as a PiP, then a
+  focal zoom punches into it for the pause-and-screenshot moment. Pass `prompt`, `heading`, and
+  optional `focalZoom`/`pip` cue words.
+- **Gotcha:** put the `in` cue BEFORE the `out` cue in the narration — an inverted order silently
+  produces no zoom.
+
+- **`engine`** (optional, per scene) — `"remotion"` (default) or `"hyperframes"`. Routes a single hero
+  beat to a pre-rendered HyperFrames clip composited at the scene window. **Reserved until V6** —
+  `compile-hyperframes.mjs` isn't built yet, so leave it unset (everything renders in Remotion). When V6
+  lands: use it surgically (1–3 per video) for flashy hero beats only; the timeline carries it through to
+  the engine compilers. It's already a valid scene-plan field (schema-accepted), so you can plan for it.
+
 ## Output & status
 - Write `scene-plan.json`; validate:
   `node pipeline/shared/validate.js content/<id>/scene-plan.json`.

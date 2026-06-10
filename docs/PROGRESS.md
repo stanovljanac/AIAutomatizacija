@@ -15,6 +15,58 @@ Format:
 
 ---
 
+## 2026-06-10 — Wave V5: engine-agnostic timeline seam (render engine now swappable)
+- who: agent (Fable 5 / Opus 4.8) + Sonnet 4.6 verifier (two passes)
+- did: split the render step into a SYNC half and an ENGINE half so a second renderer (V6 HyperFrames)
+  can plug in without touching the forced-alignment logic. New pure `04-render/lib/timeline.mjs`
+  (`buildTimeline` → `content/<id>/timeline.json`, engine-agnostic, absolute SECONDS, per-scene `engine`
+  field). New `04-render/compile-remotion.mjs` — pure `compileTimeline` (seconds→frames) +
+  `copyRemotionAssets` + a standalone resume CLI. `build-props.mjs` is now a thin orchestrator
+  (buildTimeline → validate+write timeline.json → compile → policy warnings → write props). Added
+  `resolveCueWindowSeconds`/`localizeCueWindow` to `focal.mjs`; extended timeline + scene-plan schemas
+  (per-scene `engine`). Committed `content/_FIXTURE/golden-props.json` as the byte-identical golden.
+  **Acceptance met:** fixture props are byte-identical via both build-props and the standalone compile
+  resume. `tsc` 0; `npm test` **275 green**. The Sonnet verifier caught a real IEEE-754 frame-drift bug
+  (absolute-seconds rounding ≠ legacy intro+round on real alignments); fixed by frame-SNAPPING every
+  single-value event in buildTimeline (captions stay un-snapped to preserve the golden; ≤1-frame
+  per-word display wobble only). Re-verified PASS (snap proven sound by exhaustive search). See
+  `docs/BUILD_LOG.md`. **Uncommitted — awaiting owner's commit request.**
+- next: V6 — author one vetted HyperFrames hero scene, build `compile-hyperframes.mjs` (render a
+  `engine:"hyperframes"` scene to a silent MP4 at its timeline window, Remotion imports via
+  OffthreadVideo), flip `render.engine` to `combo`, prove sync on one real video.
+
+## 2026-06-10 — Motivated motion (focalZoom + PiP) built + generalized
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier + owner (approved direction)
+- did: followed the research-first rule — subagent researched motivated zoom / picture-in-picture
+  (where it helps vs hurts) → presented to owner → owner picked "prompt card + PiP + zoom" → built a
+  single-scene PROOF (`PromptFocus`: prompt card slides in as a PiP, focal zoom punches into it, then
+  out) → owner approved → **generalized into the pipeline**: `04-render/lib/focal.mjs` (cue-word →
+  scene-local frame resolver), build-props resolves opt-in `props.focalZoom`/`props.pip`, frame-pure
+  `FocalZoom` + `PipInset` components, `Main` wraps non-custom opt-in scenes (custom self-handle).
+  Surgical, never global; tables/lists/body text stay still; captions untouched. 253 tests green; tsc
+  0; end-to-end smoke verified (cue "day"/"back" → frames 65/157, zoom visible, caption put).
+  Sonnet-verified PASS. **Uncommitted — awaiting owner's commit request.**
+- next: owner reviews the proof clip/stills (sent). Then either tune, or proceed to V5 (timeline
+  seam) / V6 (HyperFrames). Same focalZoom/pip prop now also enables capture-segment / code / stat
+  zooms (opt-in via scene-plan). See `docs/WAVE_V_HANDOFF.md`.
+- blockers: none.
+
+## 2026-06-10 — V2.5 motion overhaul REVERTED; pivot to motivated motion (research-first)
+- who: agent (Opus 4.8) + owner
+- did: tried V2.5 (global per-scene Ken-Burns camera + zoom-through transitions + breathing bg +
+  floating text on every scene) to beat the slideshow feel. Owner rejected it — global aimless motion
+  broke templates (tables cut in half, floating text) and felt worse than clean static ("bolja mi je
+  verzija 2 od 2.5 mnogo"). It was all uncommitted → `git restore`d back to the committed V2 look.
+  Now: 242 tests green, tsc 0, working tree clean. Captured two standing rules (memory
+  `research-first-then-surgical`): (1) research any new technique with a subagent BEFORE building,
+  apply surgically not globally; (2) motion must be MOTIVATED (zoom into a prompt/PiP inset/key
+  element when it's the point, zoom out when done — like capture-segment auto-zoom), tables/body text
+  stay clean.
+- next: research subagent on motivated zoom / picture-in-picture (where it helps vs hurts +
+  deterministic Remotion mechanism) → present use-case matrix + design + single-scene proof to the
+  owner BEFORE building. Then V5/V6 once the visual direction is settled. See `docs/WAVE_V_HANDOFF.md`.
+- blockers: none.
+
 ## 2026-06-09 — Wave V4b: deterministic QA gate (hybrid) + checkpoint clip
 - who: agent (Opus 4.8) + Sonnet 4.6 verifier
 - did: built the CODE half of qa-video — `pipeline/05-qa/check.mjs` (+ pure `check-lib`) runs

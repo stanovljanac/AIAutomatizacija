@@ -117,3 +117,28 @@ export const formatNumber = (n: number, decimals: number, grouped: boolean) => {
   const withSep = int.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return dec ? `${withSep}.${dec}` : withSep;
 };
+
+/** MOTIVATED-MOTION envelope: 0 → 1 (eased in at `inAt`) → hold → 0 (eased out at `outAt`). The
+ *  basis of a focal zoom / PiP reveal — motion that lands on a target when the narration names it
+ *  and releases when it moves on. Frame-pure. `outAt == null` ⇒ stays at 1 (holds to scene end). */
+export const focalEnvelope = (
+  frame: number,
+  inAt = 0,
+  outAt: number | null = null,
+  dur = 12,
+) => {
+  const zin = ramp(frame, inAt, dur, Easing.inOut(Easing.cubic));
+  const zout = outAt == null ? 0 : ramp(frame, outAt, dur, Easing.inOut(Easing.cubic));
+  return zin * (1 - zout);
+};
+
+/** CSS transform + origin for a focal zoom toward `target` (fractional 0..1 coords) at `scale`,
+ *  driven by an envelope `env` (0..1). Scaling about the target point = "punch in" on that point. */
+export const focalTransform = (
+  target: { x: number; y: number },
+  scale: number,
+  env: number,
+) => ({
+  transformOrigin: `${target.x * 100}% ${target.y * 100}%`,
+  transform: `scale(${1 + (scale - 1) * env})`,
+});

@@ -27,7 +27,11 @@ From each `capture-segment` scene, write `captures/plan.md`:
 ## 3. Register the captures
 - Confirm each `capture_id` in the script has a matching file in `captures/`.
 - Note the on-screen region to emphasize per step, so `video-render` can apply
-  auto-zoom / highlight (the owner never edits).
+  auto-zoom / highlight (the owner never edits). This is now a real, opt-in mechanism:
+  set **`props.focalZoom`** on the `capture-segment` scene-plan entry — `{ target:{x,y} (0..1 =
+  where the action is, e.g. the cursor/formula bar), scale:~1.4, in:"<cue word>", out:"<cue word>" }`
+  — and the render punches into that region exactly when the narration names it, then pulls back.
+  (See the `storyboard` skill.) Captions stay put (separate track).
 
 ## Output & status
 - `captures/plan.md`, `captures/<capture_id>.mp4` (git-ignored), synthetic sample data.

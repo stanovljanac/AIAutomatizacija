@@ -9,11 +9,19 @@ You assemble the final video deterministically from `script.json` + `alignment.j
 `scene-plan.json` + assets, via the engine in `config.render.engine`
 (`remotion` | `hyperframes` | `combo` — chosen in the Phase-2 bake-off, D-019).
 
-## Build props
-- Write `render/props.json`: ordered scenes, each `{ scene_id, template, props, start,
-  end }` where `start/end` come from `alignment.json` (scene i = first sentence start →
-  last sentence end). **Never slice the audio** (PRD R11).
-- Map each `template` to its component (VISUAL_IDENTITY §5).
+## Build props — via the engine-agnostic timeline (V5)
+- Run `node pipeline/04-render/build-props.mjs <id>` (Short: `<id>/short`). It does two steps:
+  1. **`buildTimeline`** (`lib/timeline.mjs`) → `content/<id>/timeline.json` — the engine-agnostic
+     **source of truth** in absolute **seconds**, with a per-scene `engine` field (default `remotion`).
+     Scene `start/end` come from `alignment.json` (scene i = first sentence start → last sentence end);
+     reveals/focal cues resolve to seconds here. This is the SYNC logic — it lives in ONE place.
+  2. **`compile-remotion.mjs`** translates the timeline → Remotion props (seconds→frames, byte-identical)
+     and copies assets (narration/captures/logos/b-roll). Resume from an existing timeline with
+     `node pipeline/04-render/compile-remotion.mjs <id>`.
+- **Never slice the audio** (PRD R11). Map each `template` to its component (VISUAL_IDENTITY §5).
+- Editing the renderer (frames math, public/ asset layout) → touch `compile-remotion.mjs`, NOT the
+  timeline. Editing the sync/segmentation → touch `lib/timeline.mjs`. Adding HyperFrames (V6) = a new
+  `compile-hyperframes.mjs` that reads the SAME timeline for `engine:"hyperframes"` scenes.
 
 ## Compose
 - **Captions (hard rules):** burned-in, animated **English**, from `alignment.json` (same

@@ -8,6 +8,58 @@ Newest on top.
 
 ---
 
+## 2026-06-10 — Wave V5 (engine-agnostic timeline seam: build-props → timeline.json → compile-remotion)
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Fable 5 / Opus 4.8) — two
+  passes (initial review + a re-verification of the fix).
+- **scope:** split the render step so the engine becomes swappable (de-risks V6 HyperFrames). New pure
+  `pipeline/04-render/lib/timeline.mjs` (`buildTimeline` → engine-agnostic `content/<id>/timeline.json`
+  in absolute SECONDS, per-scene `engine` field, the forced-alignment sync logic). New
+  `pipeline/04-render/compile-remotion.mjs` — pure `compileTimeline` (seconds→frames, byte-identical) +
+  `copyRemotionAssets` (narration/captures/logos/b-roll) + a standalone resume CLI. `build-props.mjs`
+  slimmed to an orchestrator (buildTimeline → validate+write timeline.json → compile → policy warnings →
+  write props). `lib/focal.mjs` gained `resolveCueWindowSeconds` (cue words→abs seconds) +
+  `localizeCueWindow` (abs seconds→scene-local frames); `resolveCueWindow` kept. timeline.schema.json
+  (+ branding/crossfade/motion/engine/focal-seconds) and scene-plan.schema.json (optional per-scene
+  `engine`) updated. `content/_FIXTURE/golden-props.json` committed as the byte-identical golden.
+- **acceptance:** re-rendering the fixture (via build-props AND the standalone compile resume) produces
+  Remotion props **byte-identical** to `golden-props.json`. `tsc` 0; `npm test` **275 green** (+21 over
+  the 253 baseline + the verifier's regressions).
+- **bug found + fixed (the verifier earned its keep):** the first cut stored timeline times as
+  `introSeconds + rawSeconds` and rounded in compile — but `round((introSeconds+raw)*fps) ≠ introFrames +
+  round(raw*fps)` in IEEE-754 (e.g. raw=0.55@30fps → 61.499…→61, not 62), so scene cuts/reveals/focal
+  cues would drift 1 frame on real alignments; the fixture dodged every drift point so the golden still
+  passed. **Fix:** `buildTimeline` now SNAPS every single-value event to an exact frame
+  (`(introFrames + round(raw*fps))/fps`), making compile's `round(sec*fps)` recover the legacy frame
+  EXACTLY for all inputs. Captions stay un-snapped on purpose (their relFrom/relDur are raw-difference
+  rounded; snapping would break the golden) — accepted residual ≤1-frame per-word *display* wobble at FP
+  boundaries, never an audio desync. The verifier's `[KNOWN-DRIFT]` tests were converted to
+  `[verifier-fix]` tests that drive the real pipeline on adversarial drift-point alignments and assert
+  exact legacy parity for scenes/reveals/focal.
+- **re-verification:** PASS. Snap fix proven sound by exhaustive search (N≤100k, fps∈{24,25,30,60,29.97,
+  23.976}, zero counterexamples); the fix-verification tests confirmed non-circular; byte-identical
+  intact; caption decision quantified as acceptable (±1 frame, per-word fade only). One verifier
+  regression test added pinning the caption FP-boundary behavior.
+- **verdict:** PASS. (Uncommitted — awaiting the owner's commit request.)
+
+## 2026-06-10 — Motivated motion (focalZoom + PiP) — generalized into the pipeline
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **context:** after the **V2.5 global-camera revert**, the owner's vision (zoom INTO a prompt/element
+  when the voice names it, PiP inset in a corner, release when done) was **researched first** (subagent,
+  per the new rule), proven on one scene (owner-approved), then generalized.
+- **scope:** new `pipeline/04-render/lib/focal.mjs` (`cueSeconds` + `resolveCueWindow` — map narration
+  cue words → scene-local frames, pure); build-props resolves opt-in `props.focalZoom`/`props.pip`
+  per scene (no-op when absent); new frame-pure `FocalZoom` + `PipInset` components + `anim.ts`
+  `focalEnvelope`/`focalTransform`; `Main` wraps **non-custom** scenes that opt in (custom scenes
+  self-handle → no double-zoom); `PromptFocus` prompt-card scene (PiP + zoom) made prop-driven;
+  scene-plan schema documents the opt-in props. **Surgical, never global**; captions untouched
+  (separate track); tables/lists/body text stay still by policy.
+- **result:** `tsc` 0; pipeline `npm test` **253 green** (+4 verifier regressions). End-to-end smoke:
+  a hook scene with `focalZoom:{in:"day",out:"back"}` resolved to `inAt 65 / outAt 157`, and a Main
+  still mid-zoom showed the scene punched into its target while the caption stayed put.
+- **bugs found:** none. **Low/doc note:** an inverted cue order (`out` word earlier than `in`) silently
+  yields no zoom (envelope ~0) — documented in the storyboard skill.
+- **verdict:** PASS. (Uncommitted — awaiting the owner's commit request.)
+
 ## 2026-06-09 — Wave V4b (deterministic QA checker — the mechanical half of qa-video)
 - **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
 - **scope:** new `pipeline/05-qa/check.mjs` (CLI, fails-closed) + pure `05-qa/lib/check-lib.mjs`

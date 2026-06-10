@@ -14,16 +14,76 @@ is the source of truth.
 
 ---
 
+## ⚠ Update 2026-06-10 — V2.5 (global camera) REVERTED; next = MOTIVATED motion (research-first)
+
+After Phase 0 shipped, an attempt to push past the slideshow feel — **V2.5** — added a *global*
+per-scene Ken-Burns camera, zoom-through transitions, a breathing background, and floating text on
+**every** scene. **The owner rejected it** ("glup iskreno, bolje mi je kad je statično… tabele na
+pola, tekst koji lebdi je katastrofa… bolja mi je verzija 2 od 2.5 mnogo"). It was all uncommitted, so
+it was **`git restore`d back to the committed V2 look** (this doc's Phase-0 state) — `npm test` = 242
+green, `tsc` 0, working tree clean.
+
+**Two lessons captured (now standing rules — see the `research-first-then-surgical` memory):**
+1. **Research-first:** before adding ANY new visual/motion/technical technique, dispatch a research
+   subagent (how/when it's used, what it contributes, whether it's even smart) — then apply
+   **surgically (opt-in), never globally.** Don't blanket-apply a shiny idea.
+2. **Motion must be MOTIVATED.** The owner's actual vision: a prompt/element in a corner, or a
+   **picture-in-picture inset like a screen recording**; **zoom IN** to focus on it when it's the
+   point, **zoom OUT** when done. (A generalization of the `capture-segment` auto-zoom.) Tables / body
+   text / lists stay clean and mostly static — motion only where it earns its keep.
+
+**Status (built, uncommitted, owner-reviewed proof):** the motivated-motion feature now exists on top
+of the V2 baseline. Following the research-first rule: a subagent researched motivated zoom / PiP →
+owner picked "prompt card + PiP + zoom" → a single-scene proof was approved → it was generalized:
+- `pipeline/04-render/lib/focal.mjs` — `resolveCueWindow` maps narration cue words → scene-local
+  frames (pure, tested).
+- `build-props.mjs` resolves opt-in `props.focalZoom` / `props.pip` per scene (no-op when absent).
+- Frame-pure `templates/remotion/src/components/{FocalZoom,PipInset}.tsx` + `anim.ts`
+  `focalEnvelope`/`focalTransform`; `Main` wraps **non-custom** opt-in scenes (custom scenes
+  self-handle); the `PromptFocus` prompt-card scene (PiP + zoom).
+- Declared in `scene-plan.json` — see the `storyboard` skill. **Surgical, never global**; captions
+  untouched; tables/lists/body text stay still. 253 tests green; `tsc` 0; Sonnet-verified.
+**Resume point:** owner reviews the proof clip/stills (`out/prompt_focus_proof.mp4` + `pf_*` — sent).
+If approved, **commit** (currently uncommitted), then proceed to V5 (timeline seam) → V6 (HyperFrames
+combo). The same `focalZoom`/`pip` props also enable capture-segment / code / stat zooms.
+
+---
+
+## ✅ Update 2026-06-10 — V5 (engine-agnostic timeline seam) DONE (uncommitted, Sonnet-verified)
+
+The render step is now split into a **sync half** and an **engine half**, so V6 can add a second
+renderer without touching the forced-alignment logic. **`npm test` 275 green; `tsc` 0; fixture props
+byte-identical to `content/_FIXTURE/golden-props.json`** (via build-props AND the standalone compile
+resume). Built:
+- `pipeline/04-render/lib/timeline.mjs` — pure `buildTimeline(...)` → `content/<id>/timeline.json`
+  (engine-agnostic, absolute **seconds**, per-scene `engine` field, default `"remotion"`). Carries the
+  beats/reveals/focal/caption sync. **Frame-snapped:** every single-value time is stored as
+  `(introFrames + round(raw*fps))/fps` so a compiler's `round(sec*fps)` recovers the exact legacy frame
+  (captions are intentionally un-snapped — see the code comment + BUILD_LOG for the ≤1-frame rationale).
+- `pipeline/04-render/compile-remotion.mjs` — pure `compileTimeline(timeline,{leadFrames,tailSeconds})`
+  (seconds→frames, byte-identical) + `copyRemotionAssets(...)` (narration/captures/logos/b-roll) + a
+  **standalone CLI** to resume from an existing `timeline.json`.
+- `pipeline/04-render/build-props.mjs` — now a thin orchestrator: read inputs → buildTimeline →
+  validate + write `timeline.json` → compileTimeline + copy assets → policy warnings → write props.
+- `lib/focal.mjs` +`resolveCueWindowSeconds` (build) / `localizeCueWindow` (compile). Schemas:
+  timeline (branding/crossfade/motion/engine/focal-seconds) + scene-plan (optional per-scene `engine`).
+
+**The acceptance test (T4.1, minus HyperFrames) is met.** The Sonnet verifier found + the author fixed
+an IEEE-754 frame-drift bug (see BUILD_LOG 2026-06-10 V5). **Resume point: V6** below.
+
+---
+
 ## TL;DR — where we are
 
-**Phase 0 (V0–V4b) is DONE, all Sonnet-verified, `npm test` = 242 green, working tree committed.**
-The videos went from "centered cards that fade in and crossfade" (a slideshow) to real motion design,
-and the production policy (hook length, motion, pacing, length, captions, scene set) is now a single
-**modular recipe** instead of scattered prose + hardcoded constants. A ~58s gallery clip of the visual
-jump was rendered and sent to the owner for review (`templates/remotion/out/gallery_v2.mp4`, gitignored).
+**Phase 0 (V0–V4b) committed; motivated-motion + V5 built & Sonnet-verified, `npm test` = 275 green,
+`tsc` 0 — UNCOMMITTED until the owner asks.** The videos went from "centered cards that fade in and
+crossfade" (a slideshow) to real motion design; the production policy is a single **modular recipe**;
+opt-in **motivated motion** (focalZoom/PiP on cue words) is generalized; and **V5** split the render
+into the engine-agnostic `timeline.json` seam (the sync logic) + `compile-remotion.mjs` (the renderer),
+proven byte-identical on `_FIXTURE`.
 
-**Next (awaiting the owner's reaction to the clip):** V5 (engine-agnostic `timeline.json` seam) → V6
-(first **HyperFrames** hero scene composited into Remotion, flip `render.engine` to `combo`). The combo
+**Next: V6** — first **HyperFrames** hero scene composited into Remotion (flip `render.engine` to
+`combo`), via a new `compile-hyperframes.mjs` that reads the SAME timeline. The combo
 is the committed end-state (D-019); Phase 0 is the Remotion-side foundation it builds on.
 
 ## Why this wave exists (context)
@@ -115,14 +175,21 @@ brief.json ─┐
             ├─► resolveFormat(brief)  ──►  fmt (the recipe)
 script.json ┘                                 │
                                               ▼
-script + scene-plan + alignment ──► build-props.mjs ──► templates/remotion/props/<outId>.json
-   (forced-alignment timestamps;     (timeline math, reads fmt:           │  (+ fmt.motion)
-    the SYNC crown jewel, unchanged)  intro/outro/captions/hook/broll)    ▼
-                                                       Remotion: Main (MotionContext=fmt.motion)
-                                                       → templates/custom scenes → final.mp4
+script + scene-plan + alignment ──► build-props.mjs ─────────────────────────────────────────┐
+   (forced-alignment timestamps;          │  buildTimeline() (lib/timeline.mjs)               │
+    the SYNC crown jewel, unchanged)       ▼                                                  │
+                          content/<id>/timeline.json  (engine-agnostic, SECONDS, per-scene engine)
+                                              │  compileTimeline() + copyRemotionAssets()      │
+                                              ▼  (compile-remotion.mjs: seconds→frames)         │
+                          templates/remotion/props/<outId>.json (+ fmt.motion) ◄───────────────┘
+                                              ▼
+                                   Remotion: Main (MotionContext=fmt.motion)
+                                   → templates/custom scenes → final.mp4
                                               │
 content/<id>/qa.report.json ◄── 05-qa/check.mjs (props + alignment + fmt, fails-closed)
 ```
+The **timeline.json seam** decouples the sync logic (buildTimeline) from the renderer (compile-remotion);
+a sibling `compile-hyperframes.mjs` (V6) reads the SAME timeline for `engine:"hyperframes"` scenes.
 
 The continuous narration + per-sentence/word alignment sync is **unchanged** — Wave V only enriched the
 visuals on top of it and pulled the policy numbers into the recipe.
@@ -136,6 +203,8 @@ visuals on top of it and pulled the policy numbers into the recipe.
 | See/extend the motion vocabulary | `templates/remotion/src/lib/anim.ts` (+ `lib/motion.ts`) |
 | Edit a scene template's look/motion | `templates/remotion/src/templates/templates.tsx` |
 | Add/edit a bespoke (custom) scene | `templates/remotion/src/custom/*` (register in `Main.tsx` CUSTOM) |
+| Build the engine-agnostic timeline (sync logic, seconds) | `pipeline/04-render/lib/timeline.mjs` |
+| Compile the timeline → Remotion props (frames) + assets | `pipeline/04-render/compile-remotion.mjs` |
 | Change render timing wiring | `pipeline/04-render/build-props.mjs` (+ `lib/timings.mjs`) |
 | Hook/sparse policy logic | `pipeline/04-render/lib/policy.mjs` |
 | The deterministic QA gate | `pipeline/05-qa/check.mjs` (+ `lib/check-lib.mjs`) |
@@ -143,8 +212,9 @@ visuals on top of it and pulled the policy numbers into the recipe.
 ## Commands (copy-paste)
 
 ```bash
-npm test                                            # 242 green (run from repo root)
-node pipeline/04-render/build-props.mjs <id>        # build Remotion props (needs voice/narration.mp3)
+npm test                                            # 275 green (run from repo root)
+node pipeline/04-render/build-props.mjs <id>        # timeline.json + Remotion props (needs voice/narration.mp3)
+node pipeline/04-render/compile-remotion.mjs <id>   # resume: timeline.json → Remotion props only
 node pipeline/05-qa/check.mjs <id>                  # deterministic QA → content/<id>/qa.report.json
 node pipeline/shared/validate.js pipeline/shared/formats/default.json   # validate the recipe
 
@@ -159,12 +229,12 @@ npx remotion render TemplateGallery out/gallery.mp4              # full ~58s gal
 
 ## What's LEFT (after the owner reviews the clip)
 
-### V5 — Engine-agnostic timeline seam (de-risk; render stays identical)
-- Make `build-props.mjs` emit `content/<id>/timeline.json` (engine-agnostic, **seconds**, schema
-  `pipeline/shared/schemas/timeline.schema.json` already exists) with a per-scene `engine` field
-  (default `"remotion"`). Move the frames-math + asset-copying into a new `pipeline/04-render/compile-remotion.mjs`.
-- **Acceptance:** re-render the fixture and confirm the Remotion props are **byte-identical** to today.
-  (This is the long-planned T4.1, minus HyperFrames.)
+### V5 — Engine-agnostic timeline seam (de-risk; render stays identical) — ✅ DONE 2026-06-10
+- `build-props.mjs` emits `content/<id>/timeline.json` (engine-agnostic, **seconds**, per-scene
+  `engine`); the frames-math + asset-copying moved into `pipeline/04-render/compile-remotion.mjs`
+  (pure `compileTimeline` + `copyRemotionAssets` + standalone resume CLI); `lib/timeline.mjs` holds the
+  pure `buildTimeline`. **Acceptance MET:** fixture props byte-identical (build-props + standalone
+  resume); 275 tests green; tsc 0; Sonnet-verified (IEEE-754 drift bug found + fixed via frame-snapping).
 
 ### V6 — First HyperFrames hero scene (flip to `combo`)
 - Build `pipeline/04-render/compile-hyperframes.mjs`: render a scene tagged `engine:"hyperframes"` to a
@@ -205,8 +275,14 @@ npx remotion render TemplateGallery out/gallery.mp4              # full ~58s gal
 
 ## How to resume tomorrow
 1. Read this doc + the top of `docs/PROGRESS.md` + the top of `docs/BUILD_LOG.md`.
-2. Check the owner's reaction to the gallery clip. If the visuals are approved → start **V5** (emit
-   `timeline.json` + `compile-remotion.mjs`, prove byte-identical). If the owner wants tweaks → adjust
-   `formats/default.json` (timing/intensity) and/or the templates first.
-3. Run `npm test` (expect 242 green) and `cd templates/remotion && npx tsc --noEmit` (expect 0) to
+2. Run `npm test` (expect **275 green**) and `cd templates/remotion && npx tsc --noEmit` (expect 0) to
    confirm the baseline before changing anything.
+3. Start **V6** (the resume point — see the "First HyperFrames hero scene" section under What's LEFT):
+   build `pipeline/04-render/compile-hyperframes.mjs` (read the SAME `content/<id>/timeline.json`, render
+   each `engine:"hyperframes"` scene to a **silent** MP4 at its timeline window with scene-relative reveal
+   offsets; Remotion imports it via `OffthreadVideo`), author ONE vetted HyperFrames hero scene under
+   `templates/hyperframes/scenes/<name>/`, flip `config.render.engine` to `"combo"`, and **prove sync on
+   one real video** before generalizing. HyperFrames is installed at `templates/hyperframes/` (v0.6.70),
+   zero compositions today.
+4. Follow the **build-sprint cycle** (atomize → build → `npm test` green → Sonnet verify → fix → docs →
+   commit only on request). Log the verifier verdict in `BUILD_LOG.md`.

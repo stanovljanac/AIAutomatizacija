@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "timeline.json",
-  "description": "Engine-agnostic timeline (all times in SECONDS). build-props emits this; per-engine compilers (Remotion frames / HyperFrames seconds) translate it. Decouples the sync logic from any one render engine so the engine becomes swappable.",
+  "description": "Engine-agnostic timeline (all times in SECONDS). build-props emits this; per-engine compilers (Remotion frames / HyperFrames seconds) translate it. Decouples the sync logic from any one render engine so the engine becomes swappable. CONTRACT: every time is FRAME-ACCURATE — quantized once at format.fps by the timeline builder (lib/timeline.mjs) so all engine compilers reconstruct the exact same frame numbers (Math.round(seconds*fps)) and never re-derive timing from the alignment.",
   "type": "object",
   "required": ["version", "format", "duration_seconds", "scenes"],
   "properties": {
@@ -25,8 +25,24 @@
         "start_seconds": { "type": "number", "minimum": 0, "description": "When narration starts (after intro)." }
       }
     },
-    "intro": { "type": "object", "properties": { "duration_seconds": { "type": "number" } } },
-    "outro": { "type": "object", "properties": { "duration_seconds": { "type": "number" } } },
+    "intro": {
+      "type": "object",
+      "properties": {
+        "duration_seconds": { "type": "number" },
+        "wordmark": { "type": "string" },
+        "tagline": { "type": "string" }
+      }
+    },
+    "outro": {
+      "type": "object",
+      "properties": {
+        "duration_seconds": { "type": "number" },
+        "cta": { "type": "string" },
+        "brand": { "type": "string" }
+      }
+    },
+    "crossfade_seconds": { "type": "number", "minimum": 0, "description": "Scene blend overlap; consecutive scene windows overlap by this much." },
+    "motion": { "type": "object", "description": "Motion budget from the resolved format recipe (intensity/ambient/emphasis…); passed through to the engine." },
     "scenes": {
       "type": "array",
       "items": {
@@ -34,10 +50,11 @@
         "required": ["scene_id", "template", "start_seconds", "end_seconds"],
         "properties": {
           "scene_id": { "type": "string" },
+          "engine": { "type": "string", "enum": ["remotion", "hyperframes"], "description": "Which renderer draws this scene (default remotion). hyperframes = pre-rendered silent hero clip composited at the scene window (V6)." },
           "template": { "type": "string", "description": "Render component tag." },
           "start_seconds": { "type": "number", "minimum": 0 },
           "end_seconds": { "type": "number", "minimum": 0 },
-          "props": { "type": "object", "description": "Template-specific props (engine-agnostic)." },
+          "props": { "type": "object", "description": "Template-specific props (engine-agnostic). MOTIVATED-MOTION windows here carry ABSOLUTE video-second timing: focalZoom/pip expose inAtSeconds / outAtSeconds (null = scene start / hold to scene end); engine compilers convert these to their own frame/offset representation." },
           "reveals": {
             "type": "array",
             "description": "Per-element reveal times (seconds), snapped to spoken words.",

@@ -1,0 +1,448 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "introFrames": 45,
+  "outroFrames": 75,
+  "totalFrames": 720,
+  "crossfadeFrames": 9,
+  "audioSrc": "_FIXTURE/narration.mp3",
+  "audioFromFrame": 45,
+  "intro": {
+    "wordmark": "The Automation Desk",
+    "tagline": "automate the boring stuff"
+  },
+  "outro": {
+    "cta": "@TheAutomationDesk",
+    "brand": ""
+  },
+  "motion": {
+    "intensity": "standard",
+    "max_moving_elements": 3,
+    "ambient": true,
+    "emphasis": true,
+    "transition": {
+      "style": "crossfade",
+      "duration_seconds": 0.3
+    },
+    "default_engine": "remotion"
+  },
+  "scenes": [
+    {
+      "sceneId": "s1.0",
+      "template": "hook-card",
+      "props": {
+        "title": "A day a month, gone",
+        "subtitle": "Three tiny invoice automations"
+      },
+      "fromFrame": 45,
+      "durFrames": 165
+    },
+    {
+      "sceneId": "s2.0",
+      "template": "bullet-steps",
+      "props": {
+        "title": "Label, extract, flag",
+        "items": [
+          "Auto-label by sender",
+          "Extract amount + due date",
+          "Flag overdue for reply"
+        ],
+        "reveals": [
+          2,
+          77,
+          167
+        ]
+      },
+      "fromFrame": 201,
+      "durFrames": 249
+    },
+    {
+      "sceneId": "s3.0",
+      "template": "cta-card",
+      "props": {
+        "title": "Scale it to your own inbox",
+        "subtitle": "Subscribe for more boring automations"
+      },
+      "fromFrame": 441,
+      "durFrames": 204
+    }
+  ],
+  "captions": [
+    {
+      "fromFrame": 45,
+      "durFrames": 57,
+      "words": [
+        {
+          "w": "Sorting",
+          "relFrom": 0,
+          "relDur": 8
+        },
+        {
+          "w": "invoice",
+          "relFrom": 8,
+          "relDur": 8
+        },
+        {
+          "w": "emails",
+          "relFrom": 16,
+          "relDur": 8
+        },
+        {
+          "w": "by",
+          "relFrom": 25,
+          "relDur": 8
+        },
+        {
+          "w": "hand",
+          "relFrom": 33,
+          "relDur": 8
+        },
+        {
+          "w": "eats",
+          "relFrom": 41,
+          "relDur": 8
+        },
+        {
+          "w": "about",
+          "relFrom": 49,
+          "relDur": 8
+        }
+      ]
+    },
+    {
+      "fromFrame": 102,
+      "durFrames": 58,
+      "words": [
+        {
+          "w": "a",
+          "relFrom": 0,
+          "relDur": 8
+        },
+        {
+          "w": "day",
+          "relFrom": 8,
+          "relDur": 8
+        },
+        {
+          "w": "every",
+          "relFrom": 16,
+          "relDur": 8
+        },
+        {
+          "w": "month.",
+          "relFrom": 25,
+          "relDur": 8
+        },
+        {
+          "w": "Here",
+          "relFrom": 33,
+          "relDur": 8
+        },
+        {
+          "w": "are",
+          "relFrom": 41,
+          "relDur": 8
+        },
+        {
+          "w": "three",
+          "relFrom": 49,
+          "relDur": 8
+        }
+      ]
+    },
+    {
+      "fromFrame": 160,
+      "durFrames": 50,
+      "words": [
+        {
+          "w": "tiny",
+          "relFrom": 0,
+          "relDur": 8
+        },
+        {
+          "w": "automations",
+          "relFrom": 8,
+          "relDur": 8
+        },
+        {
+          "w": "that",
+          "relFrom": 17,
+          "relDur": 8
+        },
+        {
+          "w": "hand",
+          "relFrom": 25,
+          "relDur": 8
+        },
+        {
+          "w": "it",
+          "relFrom": 33,
+          "relDur": 8
+        },
+        {
+          "w": "back.",
+          "relFrom": 42,
+          "relDur": 8
+        }
+      ]
+    },
+    {
+      "fromFrame": 210,
+      "durFrames": 93,
+      "words": [
+        {
+          "w": "First,",
+          "relFrom": 0,
+          "relDur": 15
+        },
+        {
+          "w": "auto-label",
+          "relFrom": 15,
+          "relDur": 15
+        },
+        {
+          "w": "invoices",
+          "relFrom": 30,
+          "relDur": 15
+        },
+        {
+          "w": "by",
+          "relFrom": 45,
+          "relDur": 15
+        },
+        {
+          "w": "sender.",
+          "relFrom": 60,
+          "relDur": 15
+        },
+        {
+          "w": "Second,",
+          "relFrom": 75,
+          "relDur": 9
+        },
+        {
+          "w": "pull",
+          "relFrom": 84,
+          "relDur": 9
+        }
+      ]
+    },
+    {
+      "fromFrame": 303,
+      "durFrames": 63,
+      "words": [
+        {
+          "w": "the",
+          "relFrom": 0,
+          "relDur": 9
+        },
+        {
+          "w": "amount",
+          "relFrom": 9,
+          "relDur": 9
+        },
+        {
+          "w": "and",
+          "relFrom": 18,
+          "relDur": 9
+        },
+        {
+          "w": "due",
+          "relFrom": 27,
+          "relDur": 9
+        },
+        {
+          "w": "date",
+          "relFrom": 36,
+          "relDur": 9
+        },
+        {
+          "w": "into",
+          "relFrom": 45,
+          "relDur": 9
+        },
+        {
+          "w": "a",
+          "relFrom": 54,
+          "relDur": 9
+        }
+      ]
+    },
+    {
+      "fromFrame": 366,
+      "durFrames": 73,
+      "words": [
+        {
+          "w": "sheet.",
+          "relFrom": 0,
+          "relDur": 9
+        },
+        {
+          "w": "Third,",
+          "relFrom": 9,
+          "relDur": 11
+        },
+        {
+          "w": "flag",
+          "relFrom": 20,
+          "relDur": 11
+        },
+        {
+          "w": "anything",
+          "relFrom": 30,
+          "relDur": 11
+        },
+        {
+          "w": "overdue",
+          "relFrom": 41,
+          "relDur": 11
+        },
+        {
+          "w": "for",
+          "relFrom": 52,
+          "relDur": 11
+        },
+        {
+          "w": "a",
+          "relFrom": 63,
+          "relDur": 11
+        }
+      ]
+    },
+    {
+      "fromFrame": 439,
+      "durFrames": 11,
+      "words": [
+        {
+          "w": "reply.",
+          "relFrom": 0,
+          "relDur": 11
+        }
+      ]
+    },
+    {
+      "fromFrame": 450,
+      "durFrames": 53,
+      "words": [
+        {
+          "w": "Start",
+          "relFrom": 0,
+          "relDur": 8
+        },
+        {
+          "w": "with",
+          "relFrom": 8,
+          "relDur": 8
+        },
+        {
+          "w": "one",
+          "relFrom": 15,
+          "relDur": 8
+        },
+        {
+          "w": "of",
+          "relFrom": 23,
+          "relDur": 8
+        },
+        {
+          "w": "these",
+          "relFrom": 30,
+          "relDur": 8
+        },
+        {
+          "w": "and",
+          "relFrom": 38,
+          "relDur": 8
+        },
+        {
+          "w": "scale",
+          "relFrom": 45,
+          "relDur": 8
+        }
+      ]
+    },
+    {
+      "fromFrame": 503,
+      "durFrames": 60,
+      "words": [
+        {
+          "w": "it",
+          "relFrom": 0,
+          "relDur": 8
+        },
+        {
+          "w": "to",
+          "relFrom": 8,
+          "relDur": 8
+        },
+        {
+          "w": "your",
+          "relFrom": 15,
+          "relDur": 8
+        },
+        {
+          "w": "own",
+          "relFrom": 23,
+          "relDur": 8
+        },
+        {
+          "w": "inbox.",
+          "relFrom": 30,
+          "relDur": 8
+        },
+        {
+          "w": "Subscribe",
+          "relFrom": 38,
+          "relDur": 12
+        },
+        {
+          "w": "for",
+          "relFrom": 49,
+          "relDur": 12
+        }
+      ]
+    },
+    {
+      "fromFrame": 563,
+      "durFrames": 82,
+      "words": [
+        {
+          "w": "more",
+          "relFrom": 0,
+          "relDur": 12
+        },
+        {
+          "w": "boring",
+          "relFrom": 12,
+          "relDur": 12
+        },
+        {
+          "w": "automations",
+          "relFrom": 23,
+          "relDur": 12
+        },
+        {
+          "w": "that",
+          "relFrom": 35,
+          "relDur": 12
+        },
+        {
+          "w": "quietly",
+          "relFrom": 47,
+          "relDur": 12
+        },
+        {
+          "w": "save",
+          "relFrom": 58,
+          "relDur": 12
+        },
+        {
+          "w": "hours.",
+          "relFrom": 70,
+          "relDur": 12
+        }
+      ]
+    }
+  ]
+}

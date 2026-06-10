@@ -128,13 +128,18 @@ vocabulary + the 4 archetypes. (DECISIONS D-013.)
 script.json (scenes → sentences)
       ▼  02-voice: edge-tts the FULL narration → voice/narration.wav  (continuous)
       ▼  02-voice: forced alignment            → alignment.json { sentence → {start,end} }
-      ▼  04-render: engine reads alignment + scene-plan
-         scene[i] is visible from alignment[first sentence].start to [last].end
-         subtitles use the SAME timings  →  always in sync
+      ▼  04-render: buildTimeline(alignment + scene-plan) → content/<id>/timeline.json
+         (engine-agnostic, SECONDS, per-scene `engine`; the sync logic lives HERE, once)
+      ▼  04-render: compile-remotion (or, later, compile-hyperframes) translates the
+         timeline → engine props/blocks (seconds → frames). Captions use the SAME timings.
+         scene[i] is visible from alignment[first sentence].start to [last].end → always in sync
 ```
 
 No phase ever slices the audio. Visuals and captions are *positioned in time* to match
-the audio. For the mini-demo archetype, a `capture-segment` scene plays the recording
+the audio. **Engine seam (V5):** the timeline is the single, renderer-independent source of
+truth; `build-props.mjs` builds it, then `compile-remotion.mjs` (the only engine compiler
+today) renders byte-identically to the pre-seam output. Adding HyperFrames means adding a
+compiler that reads the same timeline — the sync logic is never duplicated. For the mini-demo archetype, a `capture-segment` scene plays the recording
 inside its scene window, with auto-zoom/highlight on the cursor.
 
 ## 7. Compute split (local vs optional cloud)

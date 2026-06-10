@@ -4,6 +4,7 @@ import { theme } from "./theme";
 import { BackgroundFX } from "./components/BackgroundFX";
 import { renderTemplate, TemplateName } from "./templates/templates";
 import { HookStatReveal } from "./custom/HookStatReveal";
+import { PromptFocus } from "./custom/PromptFocus";
 
 /**
  * Internal DEV preview (not published): every scene template back-to-back with
@@ -29,7 +30,7 @@ export const GALLERY: { name: TemplateName; data: any }[] = [
   { name: "cta-card", data: { title: "Stick around", subtitle: "for more automation ideas" } },
 ];
 
-export const GALLERY_FRAMES = (GALLERY.length + 1) * SEG;
+export const GALLERY_FRAMES = (GALLERY.length + 2) * SEG;
 
 export const TemplateGallery: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: theme.color.bg }}>
@@ -42,6 +43,10 @@ export const TemplateGallery: React.FC = () => (
     {/* bespoke (custom) hook-class scene preview */}
     <Sequence from={GALLERY.length * SEG} durationInFrames={SEG} name="hook-stat-reveal">
       <HookStatReveal data={{ stat: "26,000", statLabel: "invoices a year — entered by hand", punch: "Until we automated it." }} />
+    </Sequence>
+    {/* MOTIVATED-MOTION proof: prompt card slides in (PiP) → focal zoom punches into it → out */}
+    <Sequence from={(GALLERY.length + 1) * SEG} durationInFrames={SEG} name="prompt-focus">
+      <PromptFocus />
     </Sequence>
   </AbsoluteFill>
 );
