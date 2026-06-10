@@ -30,7 +30,7 @@ Format:
   (absolute-seconds rounding ≠ legacy intro+round on real alignments); fixed by frame-SNAPPING every
   single-value event in buildTimeline (captions stay un-snapped to preserve the golden; ≤1-frame
   per-word display wobble only). Re-verified PASS (snap proven sound by exhaustive search). See
-  `docs/BUILD_LOG.md`. **Uncommitted — awaiting owner's commit request.**
+  `docs/BUILD_LOG.md`. **Committed `486b9d0` + pushed to origin/main** (with motivated motion).
 - next: V6 — author one vetted HyperFrames hero scene, build `compile-hyperframes.mjs` (render a
   `engine:"hyperframes"` scene to a silent MP4 at its timeline window, Remotion imports via
   OffthreadVideo), flip `render.engine` to `combo`, prove sync on one real video.
@@ -45,7 +45,7 @@ Format:
   `FocalZoom` + `PipInset` components, `Main` wraps non-custom opt-in scenes (custom self-handle).
   Surgical, never global; tables/lists/body text stay still; captions untouched. 253 tests green; tsc
   0; end-to-end smoke verified (cue "day"/"back" → frames 65/157, zoom visible, caption put).
-  Sonnet-verified PASS. **Uncommitted — awaiting owner's commit request.**
+  Sonnet-verified PASS. **Committed `486b9d0` + pushed to origin/main** (with V5).
 - next: owner reviews the proof clip/stills (sent). Then either tune, or proceed to V5 (timeline
   seam) / V6 (HyperFrames). Same focalZoom/pip prop now also enables capture-segment / code / stat
   zooms (opt-in via scene-plan). See `docs/WAVE_V_HANDOFF.md`.

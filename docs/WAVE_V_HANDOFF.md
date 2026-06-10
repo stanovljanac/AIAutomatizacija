@@ -49,7 +49,7 @@ combo). The same `focalZoom`/`pip` props also enable capture-segment / code / st
 
 ---
 
-## ✅ Update 2026-06-10 — V5 (engine-agnostic timeline seam) DONE (uncommitted, Sonnet-verified)
+## ✅ Update 2026-06-10 — V5 (engine-agnostic timeline seam) DONE (committed `486b9d0`, Sonnet-verified)
 
 The render step is now split into a **sync half** and an **engine half**, so V6 can add a second
 renderer without touching the forced-alignment logic. **`npm test` 275 green; `tsc` 0; fixture props
@@ -75,8 +75,8 @@ an IEEE-754 frame-drift bug (see BUILD_LOG 2026-06-10 V5). **Resume point: V6** 
 
 ## TL;DR — where we are
 
-**Phase 0 (V0–V4b) committed; motivated-motion + V5 built & Sonnet-verified, `npm test` = 275 green,
-`tsc` 0 — UNCOMMITTED until the owner asks.** The videos went from "centered cards that fade in and
+**Phase 0 (V0–V4b) committed; motivated-motion + V5 built, Sonnet-verified, `npm test` = 275 green,
+`tsc` 0 — COMMITTED `486b9d0` + pushed to origin/main.** The videos went from "centered cards that fade in and
 crossfade" (a slideshow) to real motion design; the production policy is a single **modular recipe**;
 opt-in **motivated motion** (focalZoom/PiP on cue words) is generalized; and **V5** split the render
 into the engine-agnostic `timeline.json` seam (the sync logic) + `compile-remotion.mjs` (the renderer),

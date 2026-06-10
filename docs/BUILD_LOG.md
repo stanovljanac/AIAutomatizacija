@@ -39,7 +39,7 @@ Newest on top.
   23.976}, zero counterexamples); the fix-verification tests confirmed non-circular; byte-identical
   intact; caption decision quantified as acceptable (±1 frame, per-word fade only). One verifier
   regression test added pinning the caption FP-boundary behavior.
-- **verdict:** PASS. (Uncommitted — awaiting the owner's commit request.)
+- **verdict:** PASS. **Committed `486b9d0`** (with the motivated-motion work below).
 
 ## 2026-06-10 — Motivated motion (focalZoom + PiP) — generalized into the pipeline
 - **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
@@ -58,7 +58,7 @@ Newest on top.
   still mid-zoom showed the scene punched into its target while the caption stayed put.
 - **bugs found:** none. **Low/doc note:** an inverted cue order (`out` word earlier than `in`) silently
   yields no zoom (envelope ~0) — documented in the storyboard skill.
-- **verdict:** PASS. (Uncommitted — awaiting the owner's commit request.)
+- **verdict:** PASS. **Committed `486b9d0`** (together with V5 above).
 
 ## 2026-06-09 — Wave V4b (deterministic QA checker — the mechanical half of qa-video)
 - **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).

@@ -223,7 +223,7 @@ atomize → build → test → verify with a *different* model → fix → docs 
   (`lib/timeline.mjs`), `compile-remotion.mjs` renders it **byte-identical** to the pre-seam output
   (proven on `_FIXTURE`); per-scene `engine` field added. **Next: V6** — `compile-hyperframes.mjs` + the
   first HyperFrames hero scene (flip `render.engine` to `combo`, prove sync on one real video).
-  Motivated-motion + V5 are **uncommitted** (awaiting the owner's commit request). **Full handoff:
+  Motivated-motion + V5 are **committed `486b9d0` + pushed to origin/main**. **Full handoff:
   `docs/WAVE_V_HANDOFF.md`** (read this to resume). Also see `docs/PROGRESS.md` + `docs/BUILD_LOG.md`.
 - **Waves 3–5 — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed, atomized handoff):
   Wave 3 news/freshness + anti-stale ◀ next, Wave 4 swappability hardening, Wave 5 full autonomy +
