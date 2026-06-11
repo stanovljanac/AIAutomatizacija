@@ -21,6 +21,7 @@ import { deriveRenderTimings } from "./lib/timings.mjs";
 import { openingHasHook, SPARSE_TEMPLATES } from "./lib/policy.mjs";
 import { buildTimeline } from "./lib/timeline.mjs";
 import { compileTimeline, copyRemotionAssets } from "./compile-remotion.mjs";
+import { copyHyperframesClips } from "./compile-hyperframes.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const id = process.argv[2];
@@ -63,6 +64,17 @@ writeFileSync(join(cdir, "timeline.json"), JSON.stringify(timeline, null, 2) + "
 const props = compileTimeline(timeline, { leadFrames: timings.leadFrames, tailSeconds: timings.captions.tailSeconds });
 const warnings = copyRemotionAssets({ root: ROOT, cdir, outId, props, brollEnabled: fmt.scene_set?.broll?.enabled !== false });
 for (const w of warnings) console.warn(w);
+
+// 2b) Combo engine (V6): composite the pre-rendered HyperFrames clips (silent mp4s) into the Remotion
+// props via props.hfSrc. build-props NEVER spawns the browser render itself — that stays in the
+// standalone `node pipeline/04-render/compile-hyperframes.mjs <id>` CLI; here we only copy + resolve.
+const engine = cfg.render?.engine ?? "remotion";
+const hasHfScenes = timeline.scenes.some((s) => s.engine === "hyperframes");
+if (engine === "combo" || engine === "hyperframes") {
+  for (const w of copyHyperframesClips({ root: ROOT, cdir, outId, props })) console.warn(w);
+} else if (hasHfScenes) {
+  console.warn(`ENGINE MISMATCH: config render.engine is "${engine}" but ${id} has engine:"hyperframes" scenes — they will render with their Remotion template fallback. Set render.engine to "combo" and run: node pipeline/04-render/compile-hyperframes.mjs ${id}`);
+}
 
 // 3) Render-time POLICY warnings on the compiled cut (build-props warns; qa-video enforces HARD).
 // no-empty-scene: a SPARSE template (lower-third/transition) held > the static-hold budget reads as the

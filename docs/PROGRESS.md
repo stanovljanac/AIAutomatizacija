@@ -15,6 +15,48 @@ Format:
 
 ---
 
+## 2026-06-12 — V7 kickoff: capture push-in + first BOLD hero (`hook-prism`); owner steer captured
+- who: agent (Fable 5 / Opus 4.8) + Sonnet 4.6 verifier + owner (live review)
+- did: owner reviewed V6 and said the restrained `hook-kinetic` looked "the same as a flat card" + the
+  Excel demo "just plays flat, no zoom." Two fixes, both Sonnet-verified PASS (BUILD_LOG 2026-06-12):
+  (1) `CaptureSegment` (templates.tsx) gets a default cinematic **push-in** (1.0→1.20 over 2.5s),
+  auto-disabled when an outer `focalZoom`/`kenBurns:false` is set — demos are never flat again.
+  (2) A research-first subagent built a BOLD hero `templates/hyperframes/scenes/hook-prism/`
+  (Three.js/WebGL aurora plasma + particle tunnel + converging 3D glass shards; rejected WebGPU since the
+  render browser gates it off). Drop-in to the V6 contract; proven in-pipeline on 004's hook (re-tag →
+  cache re-rendered → composited → rendered with synced captions). `npm test` 296 green; `tsc` 0.
+- owner steer for the NEXT hero pass (tomorrow): **keep the aurora/plasma background, REPLACE the prism
+  shards** with a cleaner motif, and **move the palette toward brand black/yellow** (logo-driven — flag
+  VISUAL_IDENTITY for a palette review). **Scope = hook + up to 2 hero moments per video** (surgical).
+  Capture push-in is the default but used **selectively** (video-dependent); precise per-step zoom (e.g.
+  "zoom in when Claude's answer returns", a prompt that scrolls + grows) is the `focalZoom` mechanism,
+  authored per video. `hook-prism` stays as infra-proof + draft, not the final look.
+- next: tomorrow — "nastavljamo sa pravljenjem celokupnog sistema" (build out the whole system toward
+  headless autonomy) + the hero recolor/replace-shards pass above.
+- status: **V6+V7 committed + pushed.**
+
+## 2026-06-11 — Wave V6: first HyperFrames hero scene → `combo` engine (sync proven)
+- who: agent (Fable 5 / Opus 4.8) + Sonnet 4.6 verifier
+- did: built the second renderer half. New `04-render/compile-hyperframes.mjs` reads the SAME
+  `content/<id>/timeline.json` and renders every `engine:"hyperframes"` scene to a SILENT mp4 at its
+  EXACT Remotion scene window (window math mirrors `compileTimeline` incl. crossfade pull-back + reveal
+  lead), then `copyHyperframesClips` composites it into Remotion via `props.hfSrc` + a frame-pure
+  `components/HfClip.tsx` (`OffthreadVideo`). `compile-remotion.mjs` passes `engine` through only for HF
+  scenes (golden stays byte-identical). `build-props.mjs` does the copy/resolve in `combo` mode (never
+  spawns a browser — rendering stays in the standalone CLI `compile-hyperframes.mjs <id> [--force]`).
+  `config.render.engine` → `combo`. First hero scene `templates/hyperframes/scenes/hook-kinetic/`
+  (kinetic-type hook, deterministic/silent; ships a `make-entry.mjs` pre-step because hyperframes v0.6.70
+  reads frame-count/canvas from static entry attributes). **Sync PROVEN** on a scratch copy of 004: HF
+  hook clip = exactly 440 frames @30fps (== the scene window), no audio stream, captions overlay synced;
+  two stills confirm the look. `tsc` 0; `npm test` **296 green**. Verifier found 2 bugs (HIGH:
+  `jobVariables` missing `hfScene` from the cache key → stale-clip reuse; LOW: `childEnv` aliased
+  `process.env`); both fixed. Author also fixed 2 environment bugs during the live render (space in the
+  repo path under `shell:true`; ffmpeg via the vendored `.bin`). See `docs/BUILD_LOG.md`.
+- next: V7 — a small vetted menu of HF hero scenes; `storyboard` routes 1–3 per video;
+  `qa-video`/`check.mjs` verifies the HF scene window (no black gaps, right duration, captions over it);
+  wire `05-qa/check.mjs` into the orchestrator. **Generalize only after the owner signs off on V6.**
+- blockers: owner review of the proof stills + an explicit **commit** instruction (V6 is uncommitted).
+
 ## 2026-06-10 — Wave V5: engine-agnostic timeline seam (render engine now swappable)
 - who: agent (Fable 5 / Opus 4.8) + Sonnet 4.6 verifier (two passes)
 - did: split the render step into a SYNC half and an ENGINE half so a second renderer (V6 HyperFrames)
@@ -317,12 +359,12 @@ Format:
     series system (Desk Fixes/Loops/Breakdowns/Notes ↔ archetypes), topical clusters. Staged
     sequencing (compliance+presence before clip 1; auto-posting in parallel).
   - **Distribution plan (D-027):** Postiz (self-host, free) hub + `pipeline/07-distribute`
-    (not built yet). Owner sets up accounts/store/Azure in parallel — see `docs/NEXT-SESSION.md`.
+    (not built yet). Owner sets up accounts/store/Azure in parallel — see `docs/SOCIAL-SETUP.md`.
   - **Assets:** thumbnail B + a workflow motif; **re-rendered 002** (rebrand); built the
     **Short** (`content/002-short/`, 1080×1920, ~34s) — both still **edge-tts drafts** awaiting
     the owner's separate approval, then Azure for the final voice.
 - next: owner approves the long + Short drafts (separately) + does Phase A in parallel; then
-  Azure final voice + launch + Phase B machinery. Full TODO in `docs/NEXT-SESSION.md`.
+  Azure final voice + launch + Phase B machinery. Full plan in `docs/ROADMAP.md` + `docs/WAVES_3-5_PLAN.md`.
 - blockers: none. (Uncommitted since `fd1c1fe`.)
 
 ## 2026-06-04 — Pilot 002 produced + dynamic-scene system (D-022)

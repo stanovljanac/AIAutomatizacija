@@ -46,7 +46,9 @@ export function compileTimeline(timeline, { leadFrames = 0, tailSeconds = 0 } = 
     if (Array.isArray(sc.reveals)) {
       props.reveals = sc.reveals.map((r) => Math.max(F(r.at_seconds) - fromFrame - leadFrames, 0));
     }
-    return { sceneId: sc.scene_id, template: sc.template, props, fromFrame, durFrames };
+    // Pass `engine` through ONLY for hyperframes scenes (conditional spread) so remotion-only
+    // timelines — including the golden fixture — stay BYTE-IDENTICAL to the pre-V6 props.
+    return { sceneId: sc.scene_id, template: sc.template, props, fromFrame, durFrames, ...(sc.engine === "hyperframes" ? { engine: "hyperframes" } : {}) };
   });
 
   const n = timeline.captions.length;

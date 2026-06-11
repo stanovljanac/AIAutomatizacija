@@ -1,0 +1,13 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 189,
+  "durationSeconds": 6.3,
+  "revealsSeconds": [0.5, 2.1],
+  "props": {
+    "title": "Stop typing invoices by hand",
+    "kicker": "AI back office",
+    "accent": "#22d3ee"
+  }
+}

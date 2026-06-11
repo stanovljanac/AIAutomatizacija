@@ -8,6 +8,80 @@ Newest on top.
 
 ---
 
+## 2026-06-12 — V7 visual-lift kickoff (capture push-in + bold `hook-prism` hero) — verifier PASS
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Fable 5 / Opus 4.8). These are
+  visual changes (TSX + HTML/JS/Three.js), NOT covered by `node --test`; the gate is `tsc --noEmit` +
+  rigorous code review of the determinism/frame-purity contract.
+- **scope — two changes:**
+  1. **capture-segment default push-in** (`templates/remotion/src/templates/templates.tsx` `CaptureSegment`):
+     the owner flagged the Excel demo "just plays flat, no zoom like before." Root cause: `CaptureSegment`
+     had ZERO motion (the promised auto-zoom was never implemented — only the opt-in `focalZoom` existed and
+     004's scene-plan never set it). Fix: a frame-pure cinematic push-in (scale 1.0→1.20 over the first
+     2.5s, `Easing.out(cubic)`, origin "50% 40%"), SKIPPED when `kenBurns:false` or an outer `focalZoom`
+     (target + scale>1) is active so the two never compound.
+  2. **bold hero scene `templates/hyperframes/scenes/hook-prism/`** (Three.js/WebGL): the owner said the
+     restrained `hook-kinetic` was "not visibly different from a flat card — go MUCH bolder (3D/particles/
+     shaders)." A research-first subagent (per the `research-first-then-surgical` rule; rejected TypeGPU/
+     WebGPU because chrome-headless-shell gates WebGPU off → would render black, chose WebGL) built an
+     aurora fragment-shader bg + glowing particle tunnel + converging 3D glass shards, title crisp on top.
+     Drop-in to the SAME V6 variables contract (same `make-entry.mjs` math; vendored three.js + gsap, no
+     CDN). Proven in-pipeline: re-tagged 004's hook `hf_scene:"hook-prism"`, the cache correctly
+     re-rendered (the V6 `hfScene` cache-key fix working live), composited via `props.hfSrc`, rendered the
+     hook in context with synced narration + captions.
+- **verifier verdict:** **PASS, no blocking bugs.** Change 1: `tsc` 0; push is frame-pure; the focalZoom
+  skip condition is exactly symmetric with `renderScene`'s FocalZoom-wrap guard (truth-table checked — no
+  double-zoom, no missed-push in any input combo); short-scene clamping safe (`extrapolateRight:"clamp"` +
+  `overflow:hidden`). Change 2: determinism confirmed — no `requestAnimationFrame`/`Date.now`/
+  `performance.now`/unseeded `Math.random` in any output-affecting path; the Three.js layer renders only on
+  `hf-seek`, all state a pure function of seek time; `make-entry.mjs` uses the identical epsilon-proof
+  `(FRAMES-0.5)/fps` formula (189f@30fps verified); fully vendored; silent; 19.5% bottom caption reserve;
+  both orientations handled. Non-blocking notes: stale code comment (1.14/2s → fixed to 1.20/2.5s);
+  redundant timeline double-registration (matches hook-kinetic, harmless); theoretical sub-frame async
+  three.js import race (graceful `.catch` in place); a stale gitignored compositions entry.
+- **status:** `npm test` **296 green** (visual changes add no unit tests); `tsc` 0. Awaiting owner
+  direction on look/scope before wiring into the skills + a full 004 render + commit. **Uncommitted.**
+
+## 2026-06-11 — Wave V6 (first HyperFrames hero scene → `combo` engine; sync proven on a real video)
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Fable 5 / Opus 4.8).
+- **scope:** add a second renderer alongside Remotion that reads the SAME engine-agnostic
+  `content/<id>/timeline.json`. New `pipeline/04-render/compile-hyperframes.mjs` — pure
+  `buildHyperframesJobs` (timeline seconds → render jobs whose `durationFrames`/`revealsSeconds` mirror
+  `compileTimeline`'s window math EXACTLY, incl. crossfade pull-back + reveal lead), `jobVariables` (the
+  fixed variables contract), `buildEntryCommand` + `buildRenderCommand` (isolated CLI shape),
+  side-effecting `renderHyperframesScenes` (spawn-injected, idempotent: skip when mp4 + variables file
+  unchanged), `copyHyperframesClips` (clip → `templates/remotion/public/<outId>/hf/`, sets `props.hfSrc`),
+  and a standalone CLI. `compile-remotion.mjs` now passes `engine:"hyperframes"` through via a conditional
+  spread (key ABSENT for remotion scenes → golden stays byte-identical). `build-props.mjs` runs
+  `copyHyperframesClips` in `combo`/`hyperframes` mode (never spawns a browser — rendering stays in the
+  CLI). `config.render.engine` → `"combo"`. Remotion: new frame-pure `components/HfClip.tsx` (full-bleed
+  silent `OffthreadVideo`); `Main.tsx` swaps an HF scene's clip in for its template inside the SAME
+  crossfade `Sequence`, captions overlay as usual, graceful fallback when `hfSrc` is missing. First hero
+  scene `templates/hyperframes/scenes/hook-kinetic/` (kinetic-type hook; needs a `make-entry.mjs` pre-step
+  because hyperframes v0.6.70 reads frame-count/canvas from STATIC entry attributes).
+- **acceptance (sync proven on a real video):** on a scratch copy of 004 with the hook tagged
+  `engine:"hyperframes"`, the timeline put scene `s01.0` at `fromFrame 45 / durFrames 440`; the HF clip
+  rendered to **exactly 440 frames @ 30fps, 1920×1080, NO audio stream** (ffprobe), composited via
+  `props.hfSrc`, and ONLY `s01.0` carried an `engine` key. Two Remotion stills inside the window (f60 mid
+  hook, f200 fully landed) confirmed the kinetic hero plays under the synced narration captions. `tsc` 0;
+  `npm test` **296 green**.
+- **bugs found + fixed (the verifier earned its keep):**
+  1. **HIGH** — `jobVariables()` omitted `hfScene` from the idempotency cache key, so changing ONLY
+     `props.hf_scene` (a different hero template) would silently reuse the stale clip. **Fix:** `hfScene`
+     now leads the variables payload (the file records which template rendered it; the hero scene ignores
+     the extra key). Regression tests pin the re-render-on-change behavior.
+  2. **LOW/latent** — when `templates/hyperframes/.bin` is absent, `childEnv` aliased `process.env`
+     instead of a spread copy (a future write would corrupt the parent env). **Fix:** always
+     `{ ...process.env }`.
+  Plus two real bugs the **author** caught during the live sync proof (not in the unit tests): the
+  spawned render broke on the space in the repo path (`AI Automatizacija`) under `shell:true` → added a
+  win32 arg-quoting helper `q()`; and the render couldn't find ffmpeg → prepend the vendored
+  `templates/hyperframes/.bin` to the child PATH. The verifier confirmed both fixes correct and added a
+  spaces-in-path skip-logic regression test.
+- **verifier-added regression tests:** 6 (parity at index 2-of-4 + last-scene; hfScene cache-key invalidation
+  end-to-end; childEnv freshness; spaces-in-path skip logic). 290 → **296 green** after fixes.
+- **verdict:** PASS (after the two production fixes were applied; re-run green). **Uncommitted** — awaiting
+  owner review of the proof stills + an explicit commit instruction.
+
 ## 2026-06-10 — Wave V5 (engine-agnostic timeline seam: build-props → timeline.json → compile-remotion)
 - **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Fable 5 / Opus 4.8) — two
   passes (initial review + a re-verification of the fix).

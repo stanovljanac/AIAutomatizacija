@@ -221,10 +221,19 @@ atomize → build → test → verify with a *different* model → fix → docs 
   perceptual) — **Phase 0 DONE, all Sonnet-verified**. **V5 (engine-agnostic timeline seam) ✅ DONE
   2026-06-10** (Sonnet-verified, **275 tests green**): `build-props.mjs` emits `content/<id>/timeline.json`
   (`lib/timeline.mjs`), `compile-remotion.mjs` renders it **byte-identical** to the pre-seam output
-  (proven on `_FIXTURE`); per-scene `engine` field added. **Next: V6** — `compile-hyperframes.mjs` + the
-  first HyperFrames hero scene (flip `render.engine` to `combo`, prove sync on one real video).
-  Motivated-motion + V5 are **committed `486b9d0` + pushed to origin/main**. **Full handoff:
-  `docs/WAVE_V_HANDOFF.md`** (read this to resume). Also see `docs/PROGRESS.md` + `docs/BUILD_LOG.md`.
+  (proven on `_FIXTURE`); per-scene `engine` field added. **V6 (first HyperFrames hero scene → `combo`)
+  ✅ DONE 2026-06-11** (Sonnet-verified, **296 tests green**, UNCOMMITTED): `compile-hyperframes.mjs`
+  reads the SAME timeline and renders `engine:"hyperframes"` scenes to silent clips at their exact window,
+  composited into Remotion via `OffthreadVideo` (`HfClip`); first hero scene
+  `templates/hyperframes/scenes/hook-kinetic`; `render.engine` = `combo`; **sync proven** on a 004 scratch
+  (HF clip = exact 440-frame window, captions synced). **V7 kickoff ✅ 2026-06-12** (Sonnet-verified):
+  `CaptureSegment` default cinematic **push-in** (demos never flat; auto-off under `focalZoom`) + first
+  BOLD hero `templates/hyperframes/scenes/hook-prism` (Three.js/WebGL aurora + 3D shards). **Owner steer
+  for next hero pass:** keep aurora bg, REPLACE prism shards, recolor toward brand **black/yellow** (flag
+  VISUAL_IDENTITY); scope = **hook + 2 hero moments/video** (surgical). **Next:** hero recolor + build the
+  whole system (Waves 3–5 toward headless autonomy). Motivated-motion + V5 **committed `486b9d0`**; **V6+V7
+  committed + pushed 2026-06-12**. **Full handoff: `docs/WAVE_V_HANDOFF.md`** (read this to
+  resume). Also see `docs/PROGRESS.md` + `docs/BUILD_LOG.md`.
 - **Waves 3–5 — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed, atomized handoff):
   Wave 3 news/freshness + anti-stale ◀ next, Wave 4 swappability hardening, Wave 5 full autonomy +
   analytics + distribute. That doc also lists the short path to the **first real video** (Gemini key,

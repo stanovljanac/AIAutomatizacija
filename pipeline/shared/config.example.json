@@ -18,7 +18,7 @@
     "loudness_lufs": -16
   },
   "render": {
-    "engine": "remotion",
+    "engine": "combo",
     "fps": 30,
     "long": { "width": 1920, "height": 1080 },
     "short": { "width": 1080, "height": 1920 }

@@ -14,6 +14,42 @@ is the source of truth.
 
 ---
 
+## ⚠ Update 2026-06-12 — V7 kickoff (capture push-in + first BOLD hero `hook-prism`); owner steer captured
+
+V6's restrained `hook-kinetic` read "the same as a flat card" to the owner. V7 started the visible lift,
+Sonnet-verified PASS (see BUILD_LOG 2026-06-12). Two things shipped + **owner feedback to act on next**:
+
+1. **Capture demos are no longer flat.** `templates/remotion/src/templates/templates.tsx` `CaptureSegment`
+   now has a default **cinematic push-in** (scale 1.0→1.20 over 2.5s, `Easing.out(cubic)`, origin
+   "50% 40%"), SKIPPED when `props.kenBurns:false` OR an outer `props.focalZoom` (target + scale>1) is
+   active (no double-zoom). The owner's call: **push-in is the default but should be used SELECTIVELY, not
+   on every capture** — it's video-dependent. The richer per-step motion the owner wants (e.g. an "update/
+   new-skill" video: record typing the skill name → **zoom in when Claude's answer returns**; a prompt
+   being written → **bigger text + vertical scroll**) is the precise `props.focalZoom` mechanism (works
+   today) and bespoke capture handling — author per video in the scene-plan, NOT a global default.
+2. **First BOLD hero scene `templates/hyperframes/scenes/hook-prism/`** (Three.js/WebGL): aurora plasma bg
+   + glowing particle tunnel + converging 3D glass shards, title crisp on top. Drop-in to the V6 contract
+   (same `make-entry.mjs`/variables; vendored three.js+gsap, no CDN; deterministic, silent; 189f both
+   orientations). Proven in-pipeline on 004's hook with synced captions.
+
+**OWNER STEER (do this next — tomorrow's hero pass):**
+- **Keep the aurora/plasma BACKGROUND style** (he likes it) but **replace the prism/glass SHARDS with
+  something else** (shards are the part he doesn't like — pick a cleaner motif; particles/embers/light
+  streaks/data-glyphs are candidates).
+- **Move the palette toward the BRAND: black + yellow** (logo-driven). Current hero/VISUAL_IDENTITY uses
+  dark + blue/mint — the owner now wants it closer to the logo's black/gold. **Flag VISUAL_IDENTITY for a
+  palette review** before/with the hero recolor (don't silently diverge).
+- **Scope = hook + up to 2 hero moments per video** for now (surgical). Possibly go fuller-HyperFrames /
+  more motion-graphics later. Do NOT blanket bold backgrounds on every scene (the V2.5 lesson).
+- `hook-prism` stays as the **infrastructure proof + first draft**, not the final look. `hook-kinetic`
+  also stays (the calmer option).
+
+**Resume tomorrow:** "sutra nastavljamo sa pravljenjem celokupnog sistema" — build out the whole system
+(continue toward headless autonomy: Waves 3–5 + the hero recolor above). The V6+V7 engineering is
+**committed + pushed**; the hero-look refinement is the open visual task.
+
+---
+
 ## ⚠ Update 2026-06-10 — V2.5 (global camera) REVERTED; next = MOTIVATED motion (research-first)
 
 After Phase 0 shipped, an attempt to push past the slideshow feel — **V2.5** — added a *global*
@@ -73,18 +109,49 @@ an IEEE-754 frame-drift bug (see BUILD_LOG 2026-06-10 V5). **Resume point: V6** 
 
 ---
 
+## ⚠ Update 2026-06-11 — V6 (first HyperFrames hero scene → `combo`) DONE & sync-PROVEN; UNCOMMITTED
+
+The HyperFrames renderer half now exists and is proven on a real video. **`npm test` 296 green; `tsc` 0;
+golden-props still byte-identical; Sonnet-verified (2 bugs found + fixed).** Built:
+- `pipeline/04-render/compile-hyperframes.mjs` — reads the SAME `content/<id>/timeline.json` as Remotion;
+  pure `buildHyperframesJobs` (window math mirrors `compileTimeline` EXACTLY — crossfade pull-back +
+  reveal lead, so an HF clip is exactly the scene's `durFrames`), `jobVariables` (the fixed variables
+  contract), `buildEntryCommand`+`buildRenderCommand`, side-effecting `renderHyperframesScenes`
+  (spawn-injected, idempotent, prepends the vendored `templates/hyperframes/.bin` ffmpeg to PATH, win32
+  arg-quoting for the spaced repo path) and `copyHyperframesClips` (clip → `public/<outId>/hf/`, sets
+  `props.hfSrc`). Standalone CLI: `node pipeline/04-render/compile-hyperframes.mjs <id> [--force]`.
+- `compile-remotion.mjs` passes `engine:"hyperframes"` through (conditional spread; key ABSENT for
+  remotion scenes → golden byte-identical). `build-props.mjs` runs the copy/resolve in `combo` mode (it
+  NEVER spawns a browser — rendering is the CLI's job). `config.render.engine` = `"combo"`.
+- Remotion: frame-pure `components/HfClip.tsx` (full-bleed silent `OffthreadVideo`); `Main.tsx` swaps an
+  HF scene's clip in for its template inside the SAME crossfade `Sequence` (captions overlay; graceful
+  fallback when `hfSrc` is missing).
+- First hero scene `templates/hyperframes/scenes/hook-kinetic/` (kinetic-type hook, deterministic/silent;
+  ships a `make-entry.mjs` pre-step — hyperframes v0.6.70 reads frame-count/canvas from STATIC entry
+  attributes, so `--variables-file` alone can't set clip length).
+
+**Sync proof:** scratch copy `content/004-hfproof` with the hook tagged `engine:"hyperframes"`,
+`props.hf_scene:"hook-kinetic"` → timeline put `s01.0` at fromFrame 45 / durFrames 440; the HF clip
+rendered to **exactly 440 frames @30fps, 1920×1080, NO audio**; two Remotion stills inside the window
+show the kinetic hero under the synced narration captions. **Resume point: V7** (generalize) — but only
+after the **owner reviews the proof stills + says commit** (V6 is uncommitted).
+
+---
+
 ## TL;DR — where we are
 
-**Phase 0 (V0–V4b) committed; motivated-motion + V5 built, Sonnet-verified, `npm test` = 275 green,
-`tsc` 0 — COMMITTED `486b9d0` + pushed to origin/main.** The videos went from "centered cards that fade in and
-crossfade" (a slideshow) to real motion design; the production policy is a single **modular recipe**;
-opt-in **motivated motion** (focalZoom/PiP on cue words) is generalized; and **V5** split the render
-into the engine-agnostic `timeline.json` seam (the sync logic) + `compile-remotion.mjs` (the renderer),
-proven byte-identical on `_FIXTURE`.
+**Phase 0 (V0–V4b) + motivated-motion + V5 committed `486b9d0`; V6 (HyperFrames `combo`) built &
+sync-proven, Sonnet-verified, `npm test` = 296 green, `tsc` 0 — UNCOMMITTED (awaiting owner review +
+commit).** The videos went from "centered cards that fade in and crossfade" (a slideshow) to real motion
+design; the production policy is a single **modular recipe**; opt-in **motivated motion** (focalZoom/PiP
+on cue words) is generalized; **V5** split the render into the engine-agnostic `timeline.json` seam (the
+sync logic) + `compile-remotion.mjs` (the renderer); and **V6** added the second renderer
+(`compile-hyperframes.mjs`) that reads the SAME timeline to composite a HyperFrames hero scene into
+Remotion via `OffthreadVideo` — proven frame-exact on a real video.
 
-**Next: V6** — first **HyperFrames** hero scene composited into Remotion (flip `render.engine` to
-`combo`), via a new `compile-hyperframes.mjs` that reads the SAME timeline. The combo
-is the committed end-state (D-019); Phase 0 is the Remotion-side foundation it builds on.
+**Next: V7** — generalize: a vetted menu of HF hero scenes, `storyboard` routes 1–3 per video,
+`qa-video`/`check.mjs` verifies the HF scene window, wire `check.mjs` into the orchestrator. The combo
+is the committed end-state (D-019).
 
 ## Why this wave exists (context)
 
@@ -189,7 +256,9 @@ script + scene-plan + alignment ──► build-props.mjs ───────�
 content/<id>/qa.report.json ◄── 05-qa/check.mjs (props + alignment + fmt, fails-closed)
 ```
 The **timeline.json seam** decouples the sync logic (buildTimeline) from the renderer (compile-remotion);
-a sibling `compile-hyperframes.mjs` (V6) reads the SAME timeline for `engine:"hyperframes"` scenes.
+the sibling `compile-hyperframes.mjs` (V6, DONE) reads the SAME timeline for `engine:"hyperframes"`
+scenes, renders each to a silent clip at its exact window, and composites it back into Remotion via
+`props.hfSrc` + `HfClip` (`OffthreadVideo`).
 
 The continuous narration + per-sentence/word alignment sync is **unchanged** — Wave V only enriched the
 visuals on top of it and pulled the policy numbers into the recipe.
@@ -205,6 +274,8 @@ visuals on top of it and pulled the policy numbers into the recipe.
 | Add/edit a bespoke (custom) scene | `templates/remotion/src/custom/*` (register in `Main.tsx` CUSTOM) |
 | Build the engine-agnostic timeline (sync logic, seconds) | `pipeline/04-render/lib/timeline.mjs` |
 | Compile the timeline → Remotion props (frames) + assets | `pipeline/04-render/compile-remotion.mjs` |
+| Render HF scenes → silent clips + composite into Remotion | `pipeline/04-render/compile-hyperframes.mjs` |
+| Add/edit a HyperFrames hero scene | `templates/hyperframes/scenes/<name>/` (e.g. `hook-kinetic`) |
 | Change render timing wiring | `pipeline/04-render/build-props.mjs` (+ `lib/timings.mjs`) |
 | Hook/sparse policy logic | `pipeline/04-render/lib/policy.mjs` |
 | The deterministic QA gate | `pipeline/05-qa/check.mjs` (+ `lib/check-lib.mjs`) |
@@ -212,11 +283,15 @@ visuals on top of it and pulled the policy numbers into the recipe.
 ## Commands (copy-paste)
 
 ```bash
-npm test                                            # 275 green (run from repo root)
+npm test                                            # 296 green (run from repo root)
 node pipeline/04-render/build-props.mjs <id>        # timeline.json + Remotion props (needs voice/narration.mp3)
 node pipeline/04-render/compile-remotion.mjs <id>   # resume: timeline.json → Remotion props only
+node pipeline/04-render/compile-hyperframes.mjs <id> [--force]  # render engine:"hyperframes" scenes → silent clips
 node pipeline/05-qa/check.mjs <id>                  # deterministic QA → content/<id>/qa.report.json
 node pipeline/shared/validate.js pipeline/shared/formats/default.json   # validate the recipe
+
+# Full combo render (HF hero + Remotion): build → render HF clips → composite → render
+node pipeline/04-render/build-props.mjs <id> && node pipeline/04-render/compile-hyperframes.mjs <id> && node pipeline/04-render/build-props.mjs <id>
 
 # Visual checks (Remotion dev gallery — no narration needed):
 cd templates/remotion
@@ -236,14 +311,18 @@ npx remotion render TemplateGallery out/gallery.mp4              # full ~58s gal
   pure `buildTimeline`. **Acceptance MET:** fixture props byte-identical (build-props + standalone
   resume); 275 tests green; tsc 0; Sonnet-verified (IEEE-754 drift bug found + fixed via frame-snapping).
 
-### V6 — First HyperFrames hero scene (flip to `combo`)
-- Build `pipeline/04-render/compile-hyperframes.mjs`: render a scene tagged `engine:"hyperframes"` to a
-  **silent** MP4 at its exact duration with **scene-relative** reveal offsets (`reveal_at − scene.start`);
-  Remotion imports it via `OffthreadVideo` at the scene window. The one continuous `narration.mp3` lives
-  ONLY in Remotion; HF scenes are silent visuals. Author ONE vetted hero scene (e.g. a kinetic-type hook
-  or a 3D/shader accent) under `templates/hyperframes/scenes/<name>/`. Flip `config.render.engine` to
-  `"combo"`. **Prove sync on one real video** before generalizing. (HyperFrames is installed at
-  `templates/hyperframes/`, v0.6.70, but has zero compositions today.)
+### V6 — First HyperFrames hero scene (flip to `combo`) — ✅ DONE 2026-06-11 (uncommitted, Sonnet-verified)
+- `pipeline/04-render/compile-hyperframes.mjs` reads the SAME `content/<id>/timeline.json`, renders each
+  `engine:"hyperframes"` scene to a **silent** MP4 at its EXACT scene window (window math mirrors
+  `compileTimeline` incl. crossfade pull-back + reveal lead), then composites via `props.hfSrc` +
+  `components/HfClip.tsx` (`OffthreadVideo`). `config.render.engine` = `"combo"`. First hero scene
+  `templates/hyperframes/scenes/hook-kinetic/` (kinetic-type hook; ships `make-entry.mjs` since
+  hyperframes v0.6.70 reads frame-count/canvas from static entry attributes). **Acceptance MET:** sync
+  proven on `content/004-hfproof` (HF clip = exactly the 440-frame window, no audio, captions overlay);
+  296 tests green; tsc 0; golden byte-identical; Sonnet found+fixed 2 bugs (`jobVariables` cache key,
+  `childEnv` alias). **Declare HF scenes in `scene-plan.json`** with `"engine":"hyperframes"` +
+  `props.hf_scene:"<scene-dir>"` — see the `storyboard` + `video-render` skills. Chain:
+  `build-props` → `compile-hyperframes <id>` (renders the clips) → `build-props` again (composites).
 
 ### V7 (follow-up) — Generalize + wire in
 - A small vetted menu of HF hero scenes (kinetic-type, drawn architecture diagram, particle/shader bg);
@@ -275,14 +354,16 @@ npx remotion render TemplateGallery out/gallery.mp4              # full ~58s gal
 
 ## How to resume tomorrow
 1. Read this doc + the top of `docs/PROGRESS.md` + the top of `docs/BUILD_LOG.md`.
-2. Run `npm test` (expect **275 green**) and `cd templates/remotion && npx tsc --noEmit` (expect 0) to
+2. Run `npm test` (expect **296 green**) and `cd templates/remotion && npx tsc --noEmit` (expect 0) to
    confirm the baseline before changing anything.
-3. Start **V6** (the resume point — see the "First HyperFrames hero scene" section under What's LEFT):
-   build `pipeline/04-render/compile-hyperframes.mjs` (read the SAME `content/<id>/timeline.json`, render
-   each `engine:"hyperframes"` scene to a **silent** MP4 at its timeline window with scene-relative reveal
-   offsets; Remotion imports it via `OffthreadVideo`), author ONE vetted HyperFrames hero scene under
-   `templates/hyperframes/scenes/<name>/`, flip `config.render.engine` to `"combo"`, and **prove sync on
-   one real video** before generalizing. HyperFrames is installed at `templates/hyperframes/` (v0.6.70),
-   zero compositions today.
-4. Follow the **build-sprint cycle** (atomize → build → `npm test` green → Sonnet verify → fix → docs →
+3. **First: owner reviews the V6 proof** (the `content/004-hfproof` stills) and, if happy, says **commit**
+   (V6 is uncommitted). The scratch `content/004-hfproof` + `templates/remotion/{props,public}/004-hfproof*`
+   are disposable proof artifacts — delete them once reviewed.
+4. Then start **V7** (the resume point — see "V7 (follow-up) — Generalize + wire in"): add a vetted MENU of
+   HF hero scenes under `templates/hyperframes/scenes/`, have `storyboard` route 1–3 per video (tag
+   `engine:"hyperframes"` + `props.hf_scene`), extend `qa-video`/`05-qa/check.mjs` to verify the HF scene
+   window (no black gaps, exact duration, captions over it), and wire `check.mjs` into
+   `pipeline/shared/orchestrator/run.mjs`. To render a combo video: `build-props <id>` →
+   `compile-hyperframes <id>` → `build-props <id>` → Remotion render `Main` with `props/<outId>.json`.
+5. Follow the **build-sprint cycle** (atomize → build → `npm test` green → Sonnet verify → fix → docs →
    commit only on request). Log the verifier verdict in `BUILD_LOG.md`.

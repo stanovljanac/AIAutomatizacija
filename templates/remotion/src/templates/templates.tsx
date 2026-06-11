@@ -1,6 +1,7 @@
 import React from "react";
 import {
   AbsoluteFill,
+  Easing,
   interpolate,
   OffthreadVideo,
   staticFile,
@@ -286,16 +287,26 @@ export const CodeBlock: React.FC<{ data: { title?: string; language?: string; co
   );
 };
 
-// ── capture-segment (screen recording w/ frame; auto-zoom added by renderer) ─
-export const CaptureSegment: React.FC<{ data: { capture_id?: string; src?: string; caption?: string } }> = ({ data }) => {
+// ── capture-segment (screen recording w/ frame) ──────────────────────────────
+// Motion: a demo is NEVER flat playback (the mini-demo signature). By default the clip gets a
+// cinematic PUSH-IN — it zooms from 1.0 to ~1.20 over the first ~2.5s and holds, biased slightly toward
+// the upper-centre where spreadsheet/app action usually lives — so it reads as "zooming into the
+// screen". When the scene declares a precise region zoom (props.focalZoom with a target), the outer
+// FocalZoom wrapper (renderScene in Main) owns the motion and we DON'T also push, so the two never
+// compound. Set props.kenBurns:false to opt out, or props.zoomOrigin to re-aim the push. Frame-pure.
+export const CaptureSegment: React.FC<{ data: { capture_id?: string; src?: string; caption?: string; focalZoom?: { target?: unknown; scale?: number }; kenBurns?: boolean; zoomOrigin?: string } }> = ({ data }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const a = fadeUp(frame, fps, 0, 14);
+  const hasFocal = !!(data.focalZoom?.target && (data.focalZoom?.scale ?? 0) > 1);
+  const push = data.kenBurns === false || hasFocal
+    ? 1
+    : interpolate(frame, [0, fps * 2.5], [1.0, 1.2], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
   return (
     <Frame center>
       <div style={{ width: "84%", aspectRatio: "16 / 9", background: "#0c1118", border: `2px solid ${theme.color.accent}`, borderRadius: 16, overflow: "hidden", opacity: a.opacity, transform: `scale(${interpolate(a.opacity, [0, 1], [0.96, 1])})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
         {data.src ? (
-          <OffthreadVideo src={data.src.startsWith("http") ? data.src : staticFile(data.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <OffthreadVideo src={data.src.startsWith("http") ? data.src : staticFile(data.src)} style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${push})`, transformOrigin: data.zoomOrigin ?? "50% 40%" }} />
         ) : (
           <div style={{ fontFamily: theme.font.mono, fontSize: 34, color: theme.color.textSecondary }}>[ screen capture: {data.capture_id ?? "demo"} ]</div>
         )}

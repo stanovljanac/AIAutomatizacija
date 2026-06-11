@@ -8,6 +8,7 @@ import { Outro } from "./components/Outro";
 import { CaptionsTrack, CaptionCue } from "./components/CaptionsTrack";
 import { renderTemplate, TemplateName } from "./templates/templates";
 import { FocalZoom } from "./components/FocalZoom";
+import { HfClip } from "./components/HfClip";
 import { MotionContext, DEFAULT_MOTION, MotionBudget } from "./lib/motion";
 import { SpreadsheetClean } from "./custom/SpreadsheetClean";
 import { HandCopy } from "./custom/HandCopy";
@@ -40,8 +41,10 @@ const CUSTOM: Record<string, React.FC<{ data?: any }>> = {
 
 export type Scene = {
   sceneId: string;
+  /** "hyperframes" = a pre-rendered silent hero clip (props.hfSrc) composited at the scene window (V6). */
+  engine?: "hyperframes";
   template: TemplateName | "custom";
-  props: any;
+  props: any & { hfSrc?: string };
   fromFrame: number;
   durFrames: number;
 };
@@ -104,7 +107,14 @@ export const Main: React.FC<MainProps> = (p) => {
       {p.scenes.map((s) => (
         <Sequence key={s.sceneId} from={s.fromFrame} durationInFrames={s.durFrames} name={s.sceneId}>
           <SceneWrapper durFrames={s.durFrames} overlap={xf} broll={s.props?.brollSrc}>
-            {renderScene(s.template, s.props)}
+            {/* V6 combo: a hyperframes scene plays its pre-rendered silent clip INSTEAD of the
+                template, inside the same crossfade wrapper (captions overlay as usual). If the
+                clip is missing (no hfSrc), fall back to the scene's normal template. */}
+            {s.engine === "hyperframes" && s.props?.hfSrc ? (
+              <HfClip src={s.props.hfSrc} />
+            ) : (
+              renderScene(s.template, s.props)
+            )}
           </SceneWrapper>
         </Sequence>
       ))}

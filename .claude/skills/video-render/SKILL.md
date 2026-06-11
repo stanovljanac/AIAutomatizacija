@@ -20,8 +20,8 @@ You assemble the final video deterministically from `script.json` + `alignment.j
      `node pipeline/04-render/compile-remotion.mjs <id>`.
 - **Never slice the audio** (PRD R11). Map each `template` to its component (VISUAL_IDENTITY §5).
 - Editing the renderer (frames math, public/ asset layout) → touch `compile-remotion.mjs`, NOT the
-  timeline. Editing the sync/segmentation → touch `lib/timeline.mjs`. Adding HyperFrames (V6) = a new
-  `compile-hyperframes.mjs` that reads the SAME timeline for `engine:"hyperframes"` scenes.
+  timeline. Editing the sync/segmentation → touch `lib/timeline.mjs`. HyperFrames (V6, DONE) =
+  `compile-hyperframes.mjs` reads the SAME timeline for `engine:"hyperframes"` scenes.
 
 ## Compose
 - **Captions (hard rules):** burned-in, animated **English**, from `alignment.json` (same
@@ -38,8 +38,13 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   Short by the last path segment and hard-fails outside that range — fix the Short script,
   don't ship 30s. Render it with `build-props.mjs <id>/short` (artifacts use a flat id, e.g.
   `<id>-short`).
-- **capture-segment scenes:** play `captures/<capture_id>.mp4` inside the scene window
-  with **auto-zoom-to-cursor + highlight** on the noted region (owner never edits).
+- **capture-segment scenes:** play `captures/<capture_id>.mp4` inside the scene window. **Never flat:**
+  by default the clip gets a cinematic **push-in** (scale 1.0→1.20 over 2.5s, origin upper-centre) so the
+  demo always has motion. For a **precise** zoom (punch into a cell/button when the narration names it, a
+  prompt that scrolls, etc.) set `props.focalZoom { target:{x,y}, scale, in, out }` on the scene — that
+  takes over (the push-in auto-disables so they don't compound). Use bold zooms **selectively** (owner:
+  video-dependent, not every capture). `props.kenBurns:false` opts a scene out of the push-in entirely;
+  `props.zoomOrigin` re-aims it (owner never edits the footage).
 - **Intro/outro:** reusable, **no music on long-form** (sound-design hit only).
 - **Motion:** per VISUAL_IDENTITY §4; visual change every ~3–7s, snapped to sentences.
 
@@ -50,10 +55,23 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   `thumb_b.png` (from `visual-prompts`).
 - `render/props.json`. Set `brief.json.status: "rendered"`.
 
-## Engine notes (combo)
-- In `combo` mode, Remotion owns the timeline/sync/captions/intro-outro; a `template`
-  flagged for HyperFrames is rendered to an MP4 block and imported into the Remotion
-  timeline. Keep it deterministic; cache rendered blocks per scene.
+## Engine notes (combo — V6 DONE)
+- In `combo` mode Remotion still owns the one continuous narration, the timeline/sync, captions, and
+  intro/outro. A scene tagged `engine:"hyperframes"` + `props.hf_scene:"<scene-dir>"` (declared in
+  `scene-plan.json`; the dir lives under `templates/hyperframes/scenes/`, e.g. `hook-kinetic`) is
+  rendered to a **silent** MP4 at its EXACT scene window and composited via `OffthreadVideo` (`HfClip`).
+- **Render order matters — three commands:**
+  1. `node pipeline/04-render/build-props.mjs <id>` → writes `timeline.json` (carries the `engine` field)
+     + props. It WARNS that the HF clip is missing (expected on the first pass) and the scene would fall
+     back to its Remotion template.
+  2. `node pipeline/04-render/compile-hyperframes.mjs <id> [--force]` → renders each HF scene to
+     `content/<id>/video/hf/<sceneId>.mp4` (idempotent: skips when the clip + its `.variables.json` are
+     unchanged). Needs `templates/hyperframes/.bin` ffmpeg (vendored; auto-added to PATH).
+  3. `node pipeline/04-render/build-props.mjs <id>` again → now copies the clip into
+     `templates/remotion/public/<outId>/hf/` and sets `props.hfSrc` so Remotion composites it.
+- The HF clip is rendered to be **exactly** the scene's `durFrames` long (same crossfade pull-back as
+  Remotion), so it covers the window 1:1 with no black gap. Keep HF scenes **deterministic + silent**;
+  the clips are cached per scene by the variables-file hash.
 
 ## Dynamic scenes (D-022)
 - **Visual density follows the narration.** A short line can be one calm template; a beat

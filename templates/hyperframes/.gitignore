@@ -1,0 +1,2 @@
+# local render test artifacts (mp4 already ignored repo-wide; this catches pngs too)
+out/

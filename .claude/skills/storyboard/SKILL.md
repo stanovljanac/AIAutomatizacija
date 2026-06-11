@@ -55,11 +55,21 @@ motion ONLY to **single-focus** scenes; keep tables / multi-row lists / body tex
 - **Gotcha:** put the `in` cue BEFORE the `out` cue in the narration — an inverted order silently
   produces no zoom.
 
-- **`engine`** (optional, per scene) — `"remotion"` (default) or `"hyperframes"`. Routes a single hero
-  beat to a pre-rendered HyperFrames clip composited at the scene window. **Reserved until V6** —
-  `compile-hyperframes.mjs` isn't built yet, so leave it unset (everything renders in Remotion). When V6
-  lands: use it surgically (1–3 per video) for flashy hero beats only; the timeline carries it through to
-  the engine compilers. It's already a valid scene-plan field (schema-accepted), so you can plan for it.
+- **`engine`** (optional, per scene) — `"remotion"` (default) or `"hyperframes"` (V6/V7, LIVE). Routes a
+  hero beat to a pre-rendered HyperFrames clip composited at the scene window. To use it, set the scene's
+  `"engine": "hyperframes"` **and** add `"hf_scene": "<dir>"` to its `props`, where `<dir>` is a scene
+  folder under `templates/hyperframes/scenes/`. Available heroes (all read `props.title` + optional
+  `props.kicker`/`props.accent`):
+  - **`hook-kinetic`** — calmer kinetic-type hook (clean, restrained).
+  - **`hook-prism`** — BOLD 3D/WebGL: aurora-plasma bg + converging glass shards. ⚠ **Draft look** — the
+    owner wants the prism shards REPLACED and the palette moved toward brand black/yellow; use it as the
+    "bold" slot but expect it to be re-skinned (see `docs/WAVE_V_HANDOFF.md` V7 steer).
+  **Scope (owner): the hook + up to 2 hero moments per video** — surgical, flashy beats only (hook opener,
+  a number/section accent). Tables/lists/body text stay in Remotion; do NOT bold-background every scene.
+  The clip is rendered to EXACTLY the scene window and Remotion overlays the synced captions on top
+  (reveals/captions still come from the alignment). The renderer needs the extra `compile-hyperframes`
+  step (see the `video-render` skill); if the clip is missing the scene gracefully falls back to its
+  Remotion `template`.
 
 ## Output & status
 - Write `scene-plan.json`; validate:

@@ -1,0 +1,85 @@
+<!doctype html>
+<!--
+  hook-kinetic — HyperFrames "hero" HOOK opener for The Automation Desk (Wave V / V6).
+  Canonical source (and 1920x1080/189f/30fps preview default). PRODUCTION renders go
+  through a generated entry — see "Render" below and make-entry.mjs.
+
+  Kinetic-typography hook: the hook line lands word-by-word (grouped on narration
+  beats), an accent rule sweeps in underneath, with a soft brand glow behind.
+  Silent by design — narration lives only in the Remotion master track.
+
+  VARIABLES CONTRACT (passed by the pipeline via --variables-file):
+    fps              number   render fps (must match the CLI --fps flag)
+    width / height   number   canvas px — must match the entry file's orientation
+    durationFrames   number   the mp4 must be EXACTLY this many frames
+    durationSeconds  number   durationFrames / fps (informational; frames win)
+    revealsSeconds   number[] clip-relative emphasis beats; [] => auto-distribute
+    props            object   { title (required), kicker?, accent? }
+  revealsSeconds/props are intentionally NOT declared below (the declaration
+  schema only supports scalars) — they pass through getVariables() untouched.
+  => do NOT render with --strict-variables.
+
+  EXACT duration + resolution (hyperframes v0.6.70): the renderer takes BOTH the
+  frame count and the canvas size from STATIC attributes of the entry HTML (its
+  duration probe never sees --variables), so this canonical file carries no
+  static data-duration and production renders use a generated per-job entry with
+  the right statics patched in. make-entry.mjs derives it from the SAME variables
+  file: data-duration = (durationFrames - 0.5) / fps, which ceils to EXACTLY
+  durationFrames at the given fps (float-epsilon-proof). The in-page script in
+  hook-kinetic.js applies the live variables for everything visual.
+
+  Deterministic: no Math.random / Date.now; one paused GSAP timeline, seek-driven.
+  GSAP is vendored locally (./gsap.min.js) — no network at render time.
+
+  Render (pipeline commands — works for BOTH 1920x1080 and 1080x1920):
+    ENTRY=$(node scenes/hook-kinetic/make-entry.mjs <vars.json>)
+    npx hyperframes render ./scenes/hook-kinetic -c "$ENTRY" \
+      --variables-file <vars.json> --fps <fps> --quality high --output <clip.mp4>
+
+  (`npx hyperframes inspect` also needs a static duration to sample the timeline —
+  inspect a generated entry, or temporarily add data-duration="6.3" to #root here.)
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":189},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":6.3}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="hook-kinetic.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="hook-kinetic" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="glow glow-a" id="glow-a"></div>
+        <div class="glow glow-b"></div>
+        <div class="beat-flash" id="beat-flash"></div>
+      </div>
+      <div class="content" id="content">
+        <div class="kicker" id="kicker">
+          <span class="kicker-dash" id="kicker-dash"></span>
+          <span class="kicker-text" id="kicker-text">The Automation Desk</span>
+        </div>
+        <div class="title-wrap" id="title-wrap">
+          <h1 class="title" id="title"></h1>
+        </div>
+        <div class="rule-track"><div class="rule" id="rule"></div></div>
+      </div>
+    </div>
+    <script src="hook-kinetic.js"></script>
+    <script>
+      // the timeline (`tl`, a top-level global) is built in hook-kinetic.js
+      // (shared between entries); register it here at the entry level
+      window.__timelines = window.__timelines || {};
+      window.__timelines["hook-kinetic"] = tl;
+    </script>
+  </body>
+</html>

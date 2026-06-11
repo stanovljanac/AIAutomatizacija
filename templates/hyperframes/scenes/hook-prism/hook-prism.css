@@ -1,0 +1,162 @@
+/* hook-prism — bold cinematic hero hook. Brand tokens from style/VISUAL_IDENTITY.md
+   §2/§3 (same values as hook-kinetic / templates/remotion theme.ts). The WebGL plate
+   carries the drama; this CSS keeps the WORDS crisp, legible, and inside safe margins. */
+
+:root {
+  --bg: #0b0f14;
+  --surface: #151b23;
+  --text-primary: #f2f5f8;
+  --text-secondary: #9aa7b2;
+  --accent: #4f8cff; /* electric blue — overridable via props.accent */
+  --accent-2: #22d3a7; /* mint — contrast moments only */
+  --u: 1; /* min(width,height)/1080 — set from variables for fluid sizing */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+#root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  overflow: hidden;
+  /* literal system stack (matches remotion theme.ts) — deliberately NOT a
+     Google-fallback font so the renderer never fetches fonts at render time */
+  font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+
+/* ── 3D layer: the cinematic background. Fills the frame; sits at the back. ── */
+#gl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+}
+
+/* ── Plate between the 3D scene and the words: a faint brand grid + vignette,
+      for depth and to focus the eye on the title (high contrast). ── */
+.plate {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #2a3644 calc(89px * var(--u)), #2a3644 calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #2a3644 calc(89px * var(--u)), #2a3644 calc(90px * var(--u)));
+  /* mask the grid toward the edges so it reads as depth, not a flat overlay */
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, #000 30%, transparent 85%);
+}
+.vignette {
+  position: absolute;
+  inset: 0;
+  /* radial (not linear) to avoid H.264 banding on dark; deepens edges for contrast */
+  background: radial-gradient(ellipse 85% 80% at 50% 42%, transparent 38%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* ── Content (hero-frame layout first; GSAP only animates INTO this) ── */
+.content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  /* 9% side safe-area + bottom caption reserve (Remotion burns subtitles there) */
+  padding: 0 9% 19.5% 9%;
+  will-change: transform;
+}
+.portrait .content {
+  /* vertical Short: centered, captions live in the middle-upper third */
+  align-items: center;
+  text-align: center;
+  padding: 0 8%;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: calc(14px * var(--u));
+  margin-bottom: calc(24px * var(--u));
+  will-change: transform, opacity;
+}
+.kicker-dash {
+  width: calc(46px * var(--u));
+  height: calc(4px * var(--u));
+  border-radius: calc(2px * var(--u));
+  background: var(--accent);
+  box-shadow: 0 0 calc(16px * var(--u)) color-mix(in srgb, var(--accent) 60%, transparent);
+  transform-origin: left center;
+}
+.kicker-text {
+  font-weight: 700;
+  font-size: calc(26px * var(--u));
+  letter-spacing: calc(6px * var(--u));
+  color: var(--accent-2);
+  text-transform: uppercase;
+}
+
+.title-wrap {
+  will-change: transform;
+}
+.title {
+  font-weight: 800;
+  font-size: calc(102px * var(--u));
+  line-height: 1.07;
+  color: var(--text-primary);
+  max-width: 100%;
+  /* stronger depth glow than hook-kinetic — the words must "punch" out of the 3D
+     plate. A solid dark halo first keeps them legible over bright particles. */
+  text-shadow:
+    0 0 calc(3px * var(--u)) rgba(0, 0, 0, 0.85),
+    0 calc(2px * var(--u)) calc(10px * var(--u)) rgba(0, 0, 0, 0.7),
+    0 calc(2px * var(--u)) calc(40px * var(--u)) rgba(79, 140, 255, 0.42);
+}
+.portrait .title {
+  font-size: calc(108px * var(--u));
+}
+.word {
+  display: inline-block;
+  margin-right: 0.26em;
+  will-change: transform, opacity, filter;
+}
+.title .word:last-child {
+  margin-right: 0;
+}
+
+.rule-track {
+  margin-top: calc(28px * var(--u));
+  width: min(calc(640px * var(--u)), 74%);
+  height: calc(8px * var(--u));
+}
+.rule {
+  width: 100%;
+  height: 100%;
+  border-radius: calc(4px * var(--u));
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transform-origin: left center;
+  transform: scaleX(0); /* drawn on by the timeline */
+  box-shadow: 0 0 calc(26px * var(--u)) color-mix(in srgb, var(--accent) 45%, transparent);
+  will-change: transform;
+}

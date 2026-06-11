@@ -1,0 +1,105 @@
+<!doctype html>
+<!--
+  hook-prism — BOLD cinematic HyperFrames "hero" HOOK opener for The Automation Desk.
+  Canonical source (and 1920x1080/189f/30fps preview default). PRODUCTION renders go
+  through a generated entry — see "Render" below and make-entry.mjs.
+
+  WHAT MAKES IT BOLD (vs the restrained hook-kinetic card): a real 3D moment rendered
+  on a WebGL/Three.js layer behind the words — (1) a flowing brand-colored AURORA
+  fragment shader (deterministic FBM plasma, blue → mint, high contrast), (2) a deep
+  perspective tunnel of glowing particles rushing the camera, and (3) a ring of 3D
+  metallic glass shards that fly in from depth and CONVERGE around the title, flaring
+  on the narration beats. The hook line punches in over it as crisp HTML with a strong
+  accent glow + dark halo, so the words stay razor-sharp and legible while the
+  background is unmistakably cinematic at first glance. Dark #0B0F14, accent blue →
+  mint, high contrast. Bottom ~19.5% kept clear on 16:9 (Remotion burns captions there).
+
+  Silent by design — narration lives only in the Remotion master track.
+
+  VARIABLES CONTRACT (identical to hook-kinetic; passed via --variables-file):
+    fps              number   render fps (must match the CLI --fps flag)
+    width / height   number   canvas px — must match the entry file's orientation
+    durationFrames   number   the mp4 must be EXACTLY this many frames
+    durationSeconds  number   durationFrames / fps (informational; frames win)
+    revealsSeconds   number[] clip-relative emphasis beats; [] => auto-distribute
+    props            object   { title (required), kicker?, accent? }
+  revealsSeconds/props are intentionally NOT declared below (the declaration schema
+  only supports scalars) — they pass through getVariables() untouched.
+  => do NOT render with --strict-variables.
+
+  EXACT duration + resolution (hyperframes v0.6.70): the renderer reads BOTH the frame
+  count and canvas size from STATIC attributes of the entry HTML (its duration probe
+  never sees --variables), so this canonical file carries no static data-duration and
+  production renders use a generated per-job entry. make-entry.mjs derives it from the
+  SAME variables file: data-duration = (durationFrames - 0.5) / fps, which ceils to
+  EXACTLY durationFrames at the given fps (float-epsilon-proof). hook-prism.js applies
+  the live variables for everything visual and seeds the deterministic 3D layer.
+
+  Deterministic: no Math.random / Date.now anywhere in the output. The Three.js layer
+  is SEEK-DRIVEN — it renders only in response to HyperFrames' `hf-seek` event (and the
+  initial window.__hfThreeTime), never from a free-running rAF clock; all "randomness"
+  comes from a seeded mulberry32 PRNG with a constant seed. One paused GSAP timeline
+  drives the HTML text and is registered on window.__timelines. GSAP + Three.js are
+  vendored locally (./gsap.min.js, ./vendor/three.module.*.js) — no network at render.
+
+  Render (pipeline commands — works for BOTH 1920x1080 and 1080x1920):
+    ENTRY=$(node scenes/hook-prism/make-entry.mjs <vars.json>)
+    npx hyperframes render ./scenes/hook-prism -c "$ENTRY" \
+      --variables-file <vars.json> --fps <fps> --quality high --output <clip.mp4>
+
+  (`npx hyperframes inspect` also needs a static duration to sample the timeline —
+  inspect a generated entry, or temporarily add data-duration="6.3" to #root here.)
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":189},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":6.3}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="hook-prism.css" />
+    <script>
+      // Three.js ESM URL — fed to hook-prism.js's dynamic import(). make-entry.mjs
+      // rewrites this to ../vendor/... for the generated entry (which lives one level
+      // down in compositions/), exactly like the other local-asset rewrites.
+      window.__THREE_URL = "./vendor/three.module.min.js";
+    </script>
+  </head>
+  <body>
+    <div id="root" data-composition-id="hook-prism" data-start="0" data-width="1920" data-height="1080">
+      <!-- 3D layer: the cinematic background (particles tunnel + light beams + glass
+           shards). data-layout-ignore so the visual auditor never treats it as text. -->
+      <canvas id="gl" data-layout-ignore></canvas>
+      <!-- a faint vignette + grid sits between the 3D plate and the words for depth
+           and to anchor the brand "dev-tool" grid motif -->
+      <div class="plate" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="vignette"></div>
+      </div>
+      <div class="content" id="content">
+        <div class="kicker" id="kicker">
+          <span class="kicker-dash" id="kicker-dash"></span>
+          <span class="kicker-text" id="kicker-text">The Automation Desk</span>
+        </div>
+        <div class="title-wrap" id="title-wrap">
+          <h1 class="title" id="title"></h1>
+        </div>
+        <div class="rule-track"><div class="rule" id="rule"></div></div>
+      </div>
+    </div>
+    <script src="hook-prism.js"></script>
+    <script>
+      // the timeline (`tl`, a top-level global) is built in hook-prism.js;
+      // register it here at the entry level (same pattern as hook-kinetic)
+      window.__timelines = window.__timelines || {};
+      window.__timelines["hook-prism"] = tl;
+    </script>
+  </body>
+</html>
