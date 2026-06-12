@@ -27,7 +27,9 @@
             "enum": ["ideas", "mini-demo", "diagram", "comparison"]
           },
           "angle_hint": { "type": "string", "description": "Seed for the original angle (refined at Gate 1)." },
-          "score": { "type": "number", "minimum": 0, "maximum": 100, "description": "Predicted popularity." },
+          "score": { "type": "number", "minimum": 0, "maximum": 100, "description": "Predicted popularity (the immutable prediction; never overwritten by the analytics loop)." },
+          "adjusted_score": { "type": "number", "minimum": 0, "maximum": 100, "description": "Analytics-informed effective score (T5.2). Set only when it moves off `score`; pickers sort by adjusted_score ?? score." },
+          "performance": { "type": "number", "minimum": 0, "maximum": 100, "description": "Measured-performance score (0..100) for a produced idea, derived from its metrics." },
           "status": {
             "type": "string",
             "enum": ["backlog", "in-progress", "produced", "parked"]
@@ -46,11 +48,13 @@
           },
           "metrics": {
             "type": "object",
-            "description": "Filled after publish; used to re-rank the bank.",
+            "description": "Filled after publish from the YouTube Analytics API (T5.2); used to re-rank the bank.",
             "properties": {
-              "ctr": { "type": "number" },
-              "avg_view_seconds": { "type": "number" },
-              "views": { "type": "number" }
+              "ctr": { "type": "number", "description": "Click-through rate (fraction), when the API exposes it." },
+              "avg_view_seconds": { "type": "number", "description": "averageViewDuration in seconds." },
+              "retention_pct": { "type": "number", "description": "averageViewPercentage (0..100)." },
+              "views": { "type": "number" },
+              "fetched": { "type": "string", "description": "ISO date these metrics were fetched." }
             }
           }
         }

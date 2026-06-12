@@ -71,7 +71,7 @@ copy and scale to your own workflow. New episodes weekly.
 | **X (Twitter)** | Just sign up; set display name + @handle to the brand. | Yes — directly. | **No** for manual posting. API auto-posting needs a developer app (free tier is limited) — verify when we wire Postiz. |
 | **Pinterest** | Create a **Business** account (free) — better analytics + the Pins API. Can also convert a personal one. | Yes — directly. | **No.** |
 | **TikTok** | Sign up with the brand name/@handle; switch to **Business** account (free) for analytics. | Yes — directly. | **No** for manual posting. Auto-posting via TikTok's Content Posting API needs an **app audit** — that's the only real "review", and only for automation. |
-| **Medium** | Create a personal account, then create a **Publication** named "The Automation Desk" for branded articles. | Yes — the publication. | **No.** Medium's API is limited, so it stays **semi-manual** (per NEXT-SESSION). |
+| **Medium** | Create a personal account, then create a **Publication** named "The Automation Desk" for branded articles. | Yes — the publication. | **No.** Medium's API is limited, so it stays **semi-manual**. |
 
 ### Rule of thumb
 - **Facebook is the only platform that forces a separate Page** — you cannot use a renamed

@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 import { runDag } from "./dag.mjs";
 import { createRunner } from "./runner.mjs";
 import { notify } from "./notify.mjs";
-import { deriveShortFile } from "../../01-script/make-short.mjs";
+import { deriveShortFile, deriveShortPlanFile } from "../../01-script/make-short.mjs";
 import { voiceArgs } from "../../02-voice/voice-dispatcher.mjs";
 import { buildMetadataFile } from "../../06-publish/build-metadata.mjs";
 import { reviewLoop } from "../review/loop.mjs";
@@ -26,6 +26,19 @@ const pause = (reason, extra = {}) => ({ __pause: true, reason, ...extra });
 function pythonExe(root) {
   const win = process.platform === "win32";
   return path.join(root, win ? ".venv/Scripts/python.exe" : ".venv/bin/python");
+}
+
+// Nodes whose pause is an AGENT hand-off, not an owner action: in Claude-Code mode these defer to
+// the top agent (it runs the skill); the owner shouldn't be pinged. Everything else that pauses —
+// the 2 human gates (review_script, gate_owner), a review that couldn't auto-pass (review_cut),
+// the upload OAuth prompt — IS owner-actionable, as is any hard error. (In headless mode these
+// nodes run for real and don't defer, so suppression only affects Claude-Code deferrals.)
+export const AGENT_DEFERRAL_NODES = new Set(["script", "plan_long", "render_long", "render_short", "qa"]);
+
+/** Should THIS pause ping the owner? Errors always do; gate pauses do unless they're agent deferrals. */
+export function notifiesOwner(info) {
+  if (info.kind === "error") return true;
+  return !AGENT_DEFERRAL_NODES.has(info.node);
 }
 
 /** Run a mechanical step (Node/Python/ffmpeg). Throws on non-zero so the DAG pauses + notifies. */
@@ -81,7 +94,9 @@ export function defaultExecutors() {
     short_script: ({ contentDir, config }) =>
       deriveShortFile(contentDir, { targetSeconds: config.defaults?.short_seconds }),
     plan_long: ({ contentDir }) => readArtifactOr(contentDir, "scene-plan.json", "storyboard (agent)"),
-    plan_short: ({ contentDir }) => readArtifactOr(path.join(contentDir, "short"), "scene-plan.json", "storyboard short (agent)"),
+    // The Short scene-plan is DERIVED from the long plan (lean reuse of kept scenes) — no agent
+    // pause, no second storyboard pass. Respects a hand-authored short/scene-plan.json if present.
+    plan_short: ({ contentDir, config }) => deriveShortPlanFile(contentDir, { targetSeconds: config.defaults?.short_seconds }),
     // Mechanical: real Node/Python commands (run in both modes). Voice goes through the TtsProvider
     // seam (T4.2): voiceArgs() picks the synth script from config.voice (draft = edge-tts by default;
     // the Azure final is a `--final` pre-publish lock, not a per-iteration node). Alignment is
@@ -117,7 +132,7 @@ export function videoNodes(ex) {
     node("voice_long", ["review_script"]),
     node("align_long", ["voice_long"]),
     node("render_long", ["align_long", "plan_long"]),
-    node("plan_short", ["short_script"]),
+    node("plan_short", ["short_script", "plan_long"]),
     node("voice_short", ["short_script"]),
     node("align_short", ["voice_short"]),
     node("render_short", ["align_short", "plan_short"]),
@@ -153,7 +168,11 @@ export async function runVideo({ id, root = REPO_ROOT, config, executors, runner
   };
 
   const handlePause = async (info) => {
-    await notify({ event: `${id}: ${info.node}`, videoId: id, action: info.reason || info.error });
+    // Notify the owner only on owner-actionable pauses (the 2 gates / errors), never on the
+    // top-agent skill hand-offs — that keeps a scheduled run quiet until a human is truly needed.
+    if (notifiesOwner(info)) {
+      await notify({ event: `${id}: ${info.node}`, videoId: id, action: info.reason || info.error });
+    }
     if (onPause) await onPause(info);
   };
 
@@ -163,6 +182,7 @@ export async function runVideo({ id, root = REPO_ROOT, config, executors, runner
 // CLI
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
+  (await import("../lib/load-env.mjs")).loadEnv(); // make .env secrets (GEMINI_API_KEY, YOUTUBE_*) take effect
   const id = process.argv[2];
   if (!id) {
     console.error("usage: node pipeline/shared/orchestrator/run.mjs <id>");

@@ -109,19 +109,25 @@ YOUTUBE_CLIENT_SECRET_PATH=C:\secure\client_secret.json
 
 **Never commit `.env`, `config.json`, or any `client_secret*.json` / `token.json`.**
 
+`.env` is **auto-loaded** by the pipeline entrypoints (`make-video` / `auto-run` /
+`fetch-analytics`) via `pipeline/shared/lib/load-env.mjs` (Node's built-in loader, no
+`dotenv` dependency). Real OS environment variables take precedence over `.env` values.
+
 ---
 
 ## 6. Free accounts & API keys
 
 - **Pexels API:** https://www.pexels.com/api/ → key → `.env`.
 - **Pixabay API:** https://pixabay.com/api/docs/ → key → `.env`.
-- **YouTube Data API v3:**
+- **YouTube Data API v3 (also unlocks Analytics for the T5.2 loop):**
   1. https://console.cloud.google.com/ → new project.
-  2. Enable "YouTube Data API v3".
+  2. Enable **"YouTube Data API v3"** and **"YouTube Analytics API"**.
   3. Create **OAuth client ID** (Desktop app) → download `client_secret.json` → store
      **outside** the repo; point `YOUTUBE_CLIENT_SECRET_PATH` to it.
-  4. First publish run opens a browser to authorize; a `token.json` is created (keep
-     outside git).
+  4. Set `YOUTUBE_TOKEN_PATH` in `.env` (a path **outside** the repo, e.g. `C:\secure\token.json`).
+  5. Run the one-time consent: `node pipeline/06-publish/auth.mjs`. It prints/opens a Google
+     URL; authorize, and it auto-saves `token.json`. After that, uploads + analytics are
+     automatic (silent refresh). The single consent covers upload, metadata, and read-only Analytics.
 - **Optional (only if you use AI images):** Google Colab (sign in) / Kaggle (API token).
 
 > Security: the agent must never type secrets into code, URLs, or committed files, and

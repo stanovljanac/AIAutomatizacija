@@ -15,6 +15,110 @@ Format:
 
 ---
 
+## 2026-06-12 — T5.1e DONE: YouTube OAuth live + autonomous run scheduled (Wave 5 autonomy wired)
+- who: agent (Opus 4.8) + owner (did the one-time browser OAuth)
+- did: completed the last autonomy gap — the system can now auto-draft to YouTube + pull analytics, and an
+  autonomous pass is scheduled.
+  - **YouTube OAuth (free, no card)** — confirmed via research the YouTube Data + Analytics APIs are quota-only
+    (10k units/day, no billing); the "$300 credits" notice is the unrelated GCP infra trial. Owner created a
+    Desktop OAuth client and **published the consent screen to Production** (project `281348372291`) so the refresh
+    token **does not expire** (Testing-mode tokens die in 7 days — wrong for hands-off). One consent minted all three
+    scopes (`youtube.upload` + `youtube` + `yt-analytics.readonly`) → `C:\secure\token.json` (outside the repo).
+    Two false starts cleared: a stale client_secret (owner regenerated it → restarted the loopback) and a
+    publish-on-the-wrong-project (client_id prefix = project number `281348372291` pinned the right one).
+  - **`.env`** gained `YOUTUBE_TOKEN_PATH=C:/secure/token.json` (the loader already reads it; `.env` stays git-ignored).
+  - **Verified:** `fetch-analytics.mjs --dry-run` builds the live Analytics client with no auth error (`fetched 0`
+    is expected pre-first-upload); top of the bank is `bulk-personalized-emails` (88).
+  - **Scheduled (T5.1e)** — `CronCreate` job `883f0694`: **weekly, Mondays 09:07** (off-minute), session-local,
+    loops `auto-run` in Claude-Code mode → pick → produce → review (≥9 ×2) → render → QA → **auto-draft PRIVATE** →
+    PushNotify the owner for final approval + thumbnail + publish. Each fire = one pass.
+  - **No code changed** this step (config + ops only) — `npm test` stays **456 green**.
+- next: run the **first autonomous pass** (`auto-run`) to smoke the full chain to the first gate. Caveats to keep:
+  the cron is **session-local** (fires only while this Claude session + machine are up — the render/voice stack is
+  local) and recurring auto-expires after **7 days** (re-register weekly). T5.3 live Postiz + T5.4 thumbnail scoring
+  remain.
+- blockers: none.
+
+## 2026-06-12 — First-video setup enablement (.env loading + OAuth consent CLI + idea-bank fix)
+- who: agent (Opus 4.8) + Haiku/Sonnet verifiers (PASS) + owner (chose "setup first, then cron")
+- did: closed the gaps blocking the owner's "do the one-time setup, then schedule" path.
+  - **.env now auto-loads** — `pipeline/shared/lib/load-env.mjs` (`loadEnv`, Node's built-in `process.loadEnvFile`,
+    zero-dep; real OS env wins) wired into the `make-video`/`auto-run`/`fetch-analytics` CLI guards. The owner's
+    existing `GEMINI_API_KEY` + `AZURE_SPEECH_KEY` (already in `.env`) finally take effect → the review panel's 2nd
+    reviewer (Gemini) works. (Haiku-verified, +1 test.)
+  - **YouTube OAuth consent CLI** — `auth.mjs` gained `runConsent` (loopback `?code=` capture → token save;
+    injectable google + `onReady` for hermetic loopback tests) + a runnable `node pipeline/06-publish/auth.mjs`.
+    Sonnet-verified PASS (security: no token/code logging, redirect match, clean error paths), +3 tests.
+  - **idea-bank fix** — the `claude-vs-chatgpt-spreadsheets` idea was stale `in-progress`→004 (which is actually
+    `ready`); set to `produced` so the autonomous picker selects a FRESH idea. `auto-run --dry-run` now picks
+    `bulk-personalized-emails` (88).
+  - **gate:** `npm test` 445 → **456 green**. Docs: SETUP.md (the `auth.mjs` consent step + Analytics API),
+    `.env.example` (auto-load note), BUILD_LOG.
+- next: **owner one-time for upload** (only gates the final publish): drop a Desktop-OAuth `client_secret.json` at
+  `YOUTUBE_CLIENT_SECRET_PATH`, set `YOUTUBE_TOKEN_PATH`, run `node pipeline/06-publish/auth.mjs`. Then **T5.1e**
+  register the CronCreate routine. Production+review already work end-to-end without upload OAuth.
+- blockers: none. (Owner has not asked to commit — changes left in the working tree.)
+
+## 2026-06-12 — Wave 5 / T5.1 shipped: autonomous driver (pick → scaffold → run → classify)
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier (PASS) + owner (chose CronCreate as the trigger)
+- did: built the **headless + scheduled-run foundation** (T5.1). One pass per invocation, looped by the scheduler:
+  - **auto-pick** `pipeline/00-ideas/pick-next.mjs` (`pickNextIdea` top backlog by effective score
+    `adjusted_score ?? score`; `briefFromIdea`; `markIdeaInProgress`; `planNextVideo` busy/empty/pick) — reuses
+    `scaffoldVideo`, **extracted from** `new-video.mjs` (now exports `slugify`/`nextVideoId`/`scaffoldVideo`; CLI
+    unchanged).
+  - **gate-aware notify** `orchestrator/run.mjs` (`notifiesOwner` + `AGENT_DEFERRAL_NODES`): owner pinged ONLY on
+    owner-actionable pauses (the 2 gates / failed review / upload OAuth / any error), silent on Claude-Code skill
+    hand-offs.
+  - **autonomous driver** `orchestrator/auto-run.mjs` (`classifyPause` → done/ownerGate/agentTask; `autoRun` persists
+    in-progress BEFORE running, resumes when busy, noop when empty). Safe to re-fire.
+  - **HeadlessRunner** now unit-tested (mock runCommand); a live `claude -p … --output-format json` smoke confirmed
+    the real-CLI JSON contract.
+  - **gate:** `npm test` 405 → **445 green** (Short-plan + T5.1 batches; ~40 author + 14 verifier). Verifier PASS;
+    caught + fixed one real bug (`briefFromIdea` undefined-archetype → schema-invalid brief). BUILD_LOG 2026-06-12.
+  - **runbook:** the autonomous loop is documented in `docs/WORKFLOW.md` (the cron agent loops `auto-run`, fulfils
+    `agentTask` hand-offs, PushNotifies on `ownerGate`).
+- next: **T5.1e** — register the **CronCreate** routine on the owner's cadence (awaiting the owner's number). Then
+  T5.3 live Postiz, T5.4 thumbnail scoring. Owner one-time still pending: `GEMINI_API_KEY`, YouTube OAuth (the
+  review/upload nodes pause without them).
+- blockers: none. (Owner has not asked to commit — changes left in the working tree.)
+
+## 2026-06-12 — Short scene-plan build gap closed (the storyboard wire-up)
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier (PASS)
+- did: closed the last build gap before a full hands-off run (WAVES_3-5_PLAN "What remains" #2). The Short scene-plan
+  is now **derived**, not paused-for: `pipeline/01-script/make-short.mjs` gained `pickShortScenes` (shared selection
+  truth), `makeShortPlan` (reuse each kept scene's long plan entry under the renumbered `scene_id`; strip
+  `engine`/`hf_scene` → pure Remotion; minimal fallback), and `deriveShortPlanFile` (writes `short/scene-plan.json`,
+  schema-valid, idempotent + non-clobbering). `orchestrator/run.mjs` `plan_short` now derives (no agent pause), deps
+  `["short_script","plan_long"]`. storyboard SKILL updated (you only storyboard the LONG; Short is derived).
+  - **gate:** `npm test` 400 → **405 green** (5 author + 5 verifier regression tests). Verifier PASS, **no bugs**
+    (id-parity sweep, renumber join, rich-prop survival, missing-long-plan error all checked). BUILD_LOG 2026-06-12.
+- next: **T5.1** (headless + scheduled run, CronCreate) — owner chose CronCreate as the trigger.
+- blockers: none. (Owner has not asked to commit — changes left in the working tree.)
+
+## 2026-06-12 — Wave 5 / T5.2 shipped: analytics loop (close the growth loop)
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier (PASS)
+- did: built **T5.2 — analytics loop** from `docs/WAVES_3-5_PLAN.md` (Phase B #4). New
+  `pipeline/06-publish/fetch-analytics.mjs`: pull each PRODUCED video's real YouTube Analytics → write each idea's
+  `metrics` → **re-rank** the bank so the next auto-pick prefers clusters that actually performed. Pure +
+  injected-client (same shape as `upload.mjs`, no keys in tests): `fetchVideoAnalytics` (one `reports.query`,
+  `channel==MINE` filtered by `video==<id>`), `parseAnalyticsRow` (maps by `columnHeaders` **name**, never
+  positional), `toIdeaMetrics` (→ `views`/`avg_view_seconds`/`retention_pct`/`ctr`/`fetched`; never a fake 0),
+  `performanceScore` (0..100, weights re-normalized over present signals so a missing metric ≠ 0; `null` if no
+  signal), `rerankBank` (produced ideas blend `score`→`performance`; backlog ideas get a **bounded task-cluster
+  nudge**; **idempotent** — `adjusted_score` re-derived from the immutable `score`, never accumulated; re-sort by
+  `adjusted_score ?? score`), and `runAnalyticsLoop` (resolve idea→`youtube_video_id` via each `publish.json`,
+  fail-soft per video). Extended `ideas.schema.json` (`metrics.retention_pct`/`fetched`, idea
+  `adjusted_score`/`performance`); added `yt-analytics.readonly` to `auth.mjs` `YT_SCOPES` so the **one-time** YouTube
+  consent also covers analytics.
+  - **gate:** `npm test` 366 → **395 green** (20 author + 9 verifier regression tests). Verifier PASS, **no bugs**
+    (idempotency 3×, missing-signal re-normalization, cluster accumulation, ragged/string headers, [0,100] clamp all
+    checked). BUILD_LOG 2026-06-12. Live dry-run on the real bank re-ranks + schema-validates; 0 videos fetched yet
+    (nothing uploaded → no `youtube_video_id`).
+- next: **Wave 5 remaining** — T5.1 headless + **scheduled** run (would also fire this analytics loop on a cadence),
+  T5.3 live Postiz, T5.4 thumbnail auto-scoring. Still pending for the first hands-off video: `GEMINI_API_KEY`,
+  YouTube OAuth (now also unlocks the analytics numbers), the Short scene-plan.
+- blockers: none. (Owner has not asked to commit — changes left in the working tree.)
+
 ## 2026-06-12 — Wave 4 shipped: TTS dispatcher + Distributor seam (swappability hardening)
 - who: agent (Opus 4.8) + Sonnet 4.6 verifier (PASS) + owner (3 scope calls)
 - did: built **Wave 4 (Swappability hardening)** from `docs/WAVES_3-5_PLAN.md`. Owner calls up front: **T4.1

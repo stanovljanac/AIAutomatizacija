@@ -75,5 +75,11 @@ motion ONLY to **single-focus** scenes; keep tables / multi-row lists / body tex
 - Write `scene-plan.json`; validate:
   `node pipeline/shared/validate.js content/<id>/scene-plan.json`.
 - Set `brief.json.status: "planned"`.
+
+> **You only storyboard the LONG video.** The **Short scene-plan is DERIVED**, not hand-authored:
+> `deriveShortPlanFile` (`pipeline/01-script/make-short.mjs`) reuses each kept scene's long plan entry under
+> the Short's renumbered `scene_id` and strips `engine`/`hf_scene` (the Short is pure Remotion). The orchestrator's
+> `plan_short` node calls it automatically after `make-short`. Author a `content/<id>/short/scene-plan.json` by hand
+> only to OVERRIDE the derivation — it is respected and never overwritten.
 - For **mini-demo** scenes, the actual recording is produced by the `screen-capture`
   skill (status → `captured`); thumbnails/rare images by `visual-prompts`.

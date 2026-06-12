@@ -43,6 +43,10 @@ Sonnet-verified PASS (see BUILD_LOG 2026-06-12). Two things shipped + **owner fe
   more motion-graphics later. Do NOT blanket bold backgrounds on every scene (the V2.5 lesson).
 - `hook-prism` stays as the **infrastructure proof + first draft**, not the final look. `hook-kinetic`
   also stays (the calmer option).
+- **No redo / no re-architecture:** the hero refinement is a self-contained edit of ONE scene folder
+  (`templates/hyperframes/scenes/hook-prism/`). Because it's a drop-in to the V6 contract, the new look
+  applies automatically to the **next/any video** — just author it once. It does NOT need to happen
+  before continuing; it can land later, in parallel with Waves 3–5.
 
 **Resume tomorrow:** "sutra nastavljamo sa pravljenjem celokupnog sistema" — build out the whole system
 (continue toward headless autonomy: Waves 3–5 + the hero recolor above). The V6+V7 engineering is

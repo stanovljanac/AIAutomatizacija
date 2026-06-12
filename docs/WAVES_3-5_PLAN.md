@@ -51,9 +51,11 @@ two small build gaps):
    - `GEMINI_API_KEY` in `.env` — free, https://aistudio.google.com/apikey (2nd reviewer; the 1st is
      a Sonnet sub-agent, no key). Without it the review node pauses asking for it.
    - YouTube OAuth → `token.json`: run `node pipeline/06-publish/auth.mjs` once (consent in browser).
-2. **Build gap — short scene-plan:** `plan_short` reads `content/<id>/short/scene-plan.json`, which
-   the `storyboard` skill must generate for the Short (today it pauses/defers). Wire `storyboard` to
-   emit the Short scene-plan after `make-short` derives `short/script.json`. Small.
+2. ~~**Build gap — short scene-plan:**~~ ✅ **DONE 2026-06-12** (Sonnet-verified, 405 tests green). `plan_short`
+   no longer pauses: `deriveShortPlanFile` (`pipeline/01-script/make-short.mjs`) derives the Short scene-plan from
+   the long plan (reuse each kept scene's entry under the renumbered `scene_id`; strip `engine`/`hf_scene` → pure
+   Remotion; idempotent + non-clobbering). Orchestrator `plan_short` deps now `["short_script","plan_long"]`. A
+   hand-authored `short/scene-plan.json` still overrides. See BUILD_LOG 2026-06-12.
 3. **How a real Claude-Code run behaves:** `make-video <id>` runs mechanical nodes for real and
    **pauses at each agent node** (script if missing, render, qa) — the top agent fulfils it by
    running that skill (`script-writing`, `video-render`, `qa-video`), marks the node done in
@@ -123,19 +125,37 @@ swap or add a provider.
   Noop/Mock/Postiz-stub adapters + `createDistributor`). NO live network yet — the Postiz HTTP client + the
   after-upload write are T5.3 (owner one-time Postiz setup).
 
-## Wave 5 — Full autonomy + growth loop  ◀ next
+## Wave 5 — Full autonomy + growth loop  ◀ in progress
 
 **Goal:** the system self-schedules and closes the data loop; the owner only does final approval +
 thumbnail.
 
-- **T5.1 — Headless + scheduled run.** `HeadlessRunner` (shells `claude -p`) already exists in
-  `runner.mjs` — test it against the real `claude` CLI, then a scheduled trigger (Claude Code
-  CronCreate / `/schedule`) that runs `make-video` on a cadence, auto-picks the top idea/news, and
-  `PushNotification`/emails the owner at the 2 gates only. *Context:* in headless mode the agent
-  nodes (script/render/qa/review) actually run via `claude -p`, so no human-in-the-loop pauses.
-- **T5.2 — Analytics loop.** `06-publish/fetch-analytics.mjs` (YouTube Analytics API via the
+**T5.2 ✅ SHIPPED 2026-06-12** (Sonnet-verified PASS, **395 tests green**; uncommitted). The analytics loop
+is built: `pipeline/06-publish/fetch-analytics.mjs` (pure + injected YouTube Analytics client) pulls each
+PRODUCED video's views/retention/CTR into its idea's `metrics` and **re-ranks** the bank (produced ideas blend
+`score`→measured `performance`; backlog ideas get a bounded **task-cluster** nudge; idempotent — `adjusted_score`
+re-derived from the immutable `score`, re-sort by `adjusted_score ?? score`). `ideas.schema.json` extended;
+`auth.mjs` `YT_SCOPES` += `yt-analytics.readonly`. Open: live numbers arrive only after the first upload sets
+`youtube_video_id`; T5.1 will fire this loop on a cadence. See `docs/BUILD_LOG.md` + `docs/PROGRESS.md` (2026-06-12).
+
+- **T5.1 — Headless + scheduled run.** ✅ **DONE 2026-06-12** (Sonnet-verified, 456 tests green). Built the
+  autonomous driver: `pipeline/00-ideas/pick-next.mjs`
+  (auto-pick the top backlog idea by effective score → `scaffoldVideo` + seed brief → mark in-progress),
+  `orchestrator/auto-run.mjs` (`autoRun` one-pass loop: pick/resume → run the DAG → `classifyPause` into
+  done/ownerGate/agentTask), gate-aware `notifiesOwner` in `run.mjs` (owner pinged ONLY at the 2 gates / failed
+  review / OAuth / errors — never on Claude-Code skill hand-offs). `HeadlessRunner` is now unit-tested + a live
+  `claude -p` smoke confirmed its JSON contract. The runbook is in `docs/WORKFLOW.md`. **T5.1e ✅ DONE:** owner did
+  the one-time **YouTube OAuth** (app **published to Production**, project `281348372291` → non-expiring refresh
+  token at `C:\secure\token.json`; scopes upload+manage+`yt-analytics.readonly`; `.env` has both
+  `YOUTUBE_CLIENT_SECRET_PATH` + `YOUTUBE_TOKEN_PATH`), and the **CronCreate** routine is registered (weekly, Mon
+  09:07, session-local + durable-requested, auto-expires 7 days → re-register weekly). Each fire loops `auto-run` in
+  **Claude-Code mode** (the in-session agent fulfils the `agentTask` hand-offs, not per-node `claude -p`) → auto-draft
+  PRIVATE → PushNotify the owner at the gates. *Caveat:* session-local — fires only while this Claude session + machine
+  are up (the render/voice stack is local).
+- **T5.2 — Analytics loop.** ✅ **DONE.** `06-publish/fetch-analytics.mjs` (YouTube Analytics API via the
   already-installed `googleapis`) → views/CTR/retention into each idea's `metrics` in `ideas.json`
-  → re-rank the bank (Phase B #4). *Verify:* a fake stats payload re-orders the bank.
+  → re-rank the bank (Phase B #4). *Verified:* a fake stats payload re-orders the bank (395 tests green).
+  Re-rank is idempotent + cluster-aware (task); produced `score` is preserved, effective rank = `adjusted_score ?? score`.
 - **T5.3 — Distribution.** `pipeline/07-distribute/` via **Postiz** (self-hosted, free — D-027):
   cross-post the Short caption after upload. **The seam already exists (Wave 4 / T4.3):**
   `distributor.mjs` (plan builder + `PostizDistributor` stub + `createDistributor`), `distribution.schema.json`,

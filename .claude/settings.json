@@ -37,14 +37,18 @@
       "WebFetch(domain:hn.algolia.com)",
       "WebFetch(domain:news.ycombinator.com)",
       "Edit(**)",
-      "Write(**)"
+      "Write(**)",
+      "PowerShell(Set-Location \"f:\\\\AI\\\\AI Automatizacija\"; node pipeline/shared/validate.js pipeline/shared/config.example.json --schema config 2>&1 | Select-Object -Last 3; \"exit: $LASTEXITCODE\")"
     ]
   },
   "hooks": {
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/test-gate.mjs\"" }
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/test-gate.mjs\""
+          }
         ]
       }
     ]

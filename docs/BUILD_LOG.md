@@ -8,6 +8,123 @@ Newest on top.
 
 ---
 
+## 2026-06-12 — YouTube OAuth consent CLI (so `node auth.mjs` actually works) — verifier PASS
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8) — security-adjacent (token handling).
+- **scope:** `auth.mjs` only exported helpers — there was no runnable consent flow, so the documented
+  `node pipeline/06-publish/auth.mjs` did nothing. New `runConsent({clientSecretPath, tokenPath, log, open, onReady,
+  deps})`: validates (missing path / missing file → Google-Cloud-Console hint / missing token path), **idempotent**
+  (existing token short-circuits before any server/network), else a throwaway **127.0.0.1 loopback** server on an
+  ephemeral port (redirect `http://localhost:<port>`) prints the auth URL, captures the `?code=`, `getToken` →
+  `saveToken(tokenPath, …)`, closes. `deps.google` injectable + `onReady(port)` make the FULL loopback hermetically
+  testable (fake googleapis, no browser/network). CLI `isMain` guard loads `.env`, reads `YOUTUBE_CLIENT_SECRET_PATH`
+  / `YOUTUBE_TOKEN_PATH`, best-effort browser-open. The one consent now also covers Analytics (YT_SCOPES already
+  has `yt-analytics.readonly`).
+- **result:** **456 tests green** (author wrote 4; verifier added 3 regression tests; 453→456).
+- **bug found + fixed:** none (clean PASS). Verifier confirmed: tokens/auth-code are **never logged** (only the file
+  path); the redirect_uri matches across generateAuthUrl/getToken (same port); a `getToken` rejection closes the
+  server + rejects (no hang); a no-`code` request waits without resolving; the existing-token path starts no server.
+- **verifier regression tests (3):** getToken-throws frees the server + writes no token; no-code request waits then a
+  later code resolves; a log-audit proving access_token/refresh_token/code never appear in output.
+- **verdict:** sound + safe. `node pipeline/06-publish/auth.mjs` is the one-time consent; owner still must drop a
+  real `client_secret.json` (Desktop OAuth client) at `YOUTUBE_CLIENT_SECRET_PATH` and set `YOUTUBE_TOKEN_PATH`.
+
+## 2026-06-12 — .env auto-loading (so the owner's secrets actually take effect) — verifier PASS
+- **verifier:** Haiku 4.5 (`claude-haiku-4-5-20251001`), independent of the author (Opus 4.8) — small/mechanical change.
+- **scope:** the code reads secrets from `process.env` (GEMINI_API_KEY, YOUTUBE_*, …) but **nothing loaded `.env`**,
+  so a key the owner put in `.env` never reached the process — the documented "first setup, then cron" path would
+  silently fail. New `pipeline/shared/lib/load-env.mjs` (`loadEnv`) uses Node's **built-in** `process.loadEnvFile`
+  (≥20.12; this box is v20.17) — **zero new dependency** (free-first). Real OS env vars WIN over `.env` (verified).
+  Never throws (missing/malformed/old-runtime → `{loaded:false}`). Wired into the CLI `isMain` guards of `run.mjs`,
+  `auto-run.mjs`, `fetch-analytics.mjs` ONLY (not module top-level), so unit tests stay hermetic.
+- **result:** **449 tests green** (author wrote 3; verifier added 1 hermetic-leak regression test; 448→449).
+- **bug found + fixed:** none (clean PASS). Verifier confirmed OS-env precedence, missing-file no-op, the
+  isMain-only wiring (importing an entrypoint does not pull the real `.env`), and that the `await import()` in the
+  guard runs (`auto-run --dry-run` OK).
+- **verdict:** sound. `.env` now takes effect for `make-video` / `auto-run` / `fetch-analytics` runs.
+
+## 2026-06-12 — Wave 5 / T5.1 (Autonomous driver: pick → scaffold → run → classify) — verifier PASS
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **scope — the headless + scheduled-run foundation** (owner chose **CronCreate** as the trigger). One pass per
+  invocation, looped by the scheduler:
+  - **Auto-pick** (`pipeline/00-ideas/pick-next.mjs`): `pickNextIdea` (top **backlog** by effective score =
+    `adjusted_score ?? score`, deterministic id tie-break), `briefFromIdea`, `markIdeaInProgress` (pure),
+    `planNextVideo` (busy/empty/pick). Reuses `scaffoldVideo` — extracted from `new-video.mjs` (now exports
+    `slugify`/`nextVideoId`/`scaffoldVideo`; CLI unchanged) — so a pick seeds a real `content/<id>/` + brief.
+  - **Gate-aware notify** (`orchestrator/run.mjs`): `AGENT_DEFERRAL_NODES` + `notifiesOwner(info)` — the owner is
+    pinged only on owner-actionable pauses (the 2 gates `review_script`/`gate_owner`, a failed `review_cut`, the
+    `upload` OAuth prompt, **any error**), never on Claude-Code skill hand-offs (`script`/`plan_long`/`render_*`/`qa`).
+  - **Autonomous driver** (`orchestrator/auto-run.mjs`): `classifyPause` (`done`/`ownerGate`/`agentTask`) + `autoRun`
+    (idle→pick+scaffold, persisting the in-progress marker **before** the run; busy→resume; empty→noop). The
+    scheduler loops it; the wrapper fulfils `agentTask` hand-offs and PushNotifies on `ownerGate`.
+  - **HeadlessRunner**: now hermetically unit-tested (mock `runCommand` — args/`--model`/non-zero/non-JSON paths).
+    A **live `claude -p "...OK" --output-format json` smoke** confirmed the real CLI returns
+    `{"type":"result","result":"OK",...}` → `JSON.parse` contract holds (one-off, not in the hermetic suite).
+- **result:** **445 tests green** (author wrote ~32; verifier added 8 regression tests; baseline 437→445).
+- **bug found + fixed (verifier):** `pick-next.mjs:51` **`briefFromIdea` propagated an `undefined` archetype** when
+  an idea lacked the field → the spread `{archetype:"ideas", ...briefFromIdea(idea)}` overwrote the default with
+  `undefined`, producing a **schema-invalid brief.json** (archetype is enum-required). Fixed → `idea.archetype || "ideas"`
+  (matches the `|| ""` pattern for the other optional fields; a non-falsy invalid string still passes through for
+  downstream validation to catch).
+- **verifier regression tests (8):** `adjusted_score:0` is a real score (loses to a raw 60); missing-archetype →
+  schema-valid brief; **news `suggestArchetype` ⊆ brief enum** (a news-promoted idea can never make an invalid brief);
+  `classifyPause` completeness over every real pausing node (no silent `blocked` fall-through; errors always ownerGate);
+  null/undefined result → done; persist-before-run holds even if `runVideo` throws; busy resumes without re-picking.
+- **edge cases OK-as-is:** `classifyPause`'s `{kind:"blocked"}` branch is unreachable by any wired node (kept for
+  safety); `metadata` throws (→ error → ownerGate), never `__pause`; lean-Short prune list matches `_TEMPLATE`.
+- **verdict:** sound. The autonomous loop is wired and safe to re-fire (busy guard + persist-before-run). Remaining
+  for live autonomy: register the **CronCreate** routine on the owner's cadence (needs the owner's number) + the
+  one-time `GEMINI_API_KEY`/YouTube OAuth so the review/upload nodes don't pause.
+
+## 2026-06-12 — Short scene-plan build gap (the storyboard wire-up) — verifier PASS
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **scope:** close the last build gap before a full hands-off run (WAVES_3-5_PLAN "What remains" #2). The Short
+  scene-plan is now **derived** instead of pausing for a hand-authored file. `pipeline/01-script/make-short.mjs`:
+  extracted `pickShortScenes` (the single selection-truth shared by the Short script + plan), added `makeShortPlan`
+  (reuse each kept scene's long plan entry under the Short's renumbered `scene_id`; `leanForShort` strips long-only
+  `engine`/`hf_scene` so the Short renders pure Remotion; `minimalProps` fallback when the long plan lacks an entry)
+  and `deriveShortPlanFile` (writes `short/scene-plan.json`, schema-validated, **idempotent + non-clobbering** — a
+  hand-authored Short plan is respected). `orchestrator/run.mjs`: `plan_short` now calls `deriveShortPlanFile(...)`
+  (no agent pause) with deps `["short_script","plan_long"]` (needs the long plan to exist).
+- **result:** **405 tests green** (author wrote 5; verifier added 5 regression tests; baseline 400→405).
+- **bugs found + fixed:** **none** (clean PASS, no production code changed). Verifier stressed the core **id-parity**
+  invariant (short SCRIPT ids ≡ short PLAN scene_ids) across 7 `targetSeconds` values + custom `wpm` + the dedup
+  fallback-hook case, the renumbering join when a middle scene drops, rich-prop survival, and the missing-long-plan
+  error path — all correct.
+- **verifier regression tests (5):** id-parity sweep (5..100s, scenes actually dropping); dedup fallback-hook never
+  doubles; custom-`wpm` parity; `leanForShort` preserves `revealOn`/`cueWords`/`beats`/`focalZoom`/`pip` while
+  stripping `engine`/`hf_scene`; `deriveShortPlanFile` throws a clear `ENOENT` when the long scene-plan isn't produced yet.
+- **edge cases OK-as-is:** empty-scenes (rejected by `minItems:1`, same as `makeShort`, can't reach this phase);
+  `null` longPlan → all-minimal fallback (graceful); `run.test.mjs` still overrides `plan_short` (graph completes).
+- **verdict:** sound. A real run no longer pauses at `plan_short`; the Short inherits the long video's storyboard work.
+
+## 2026-06-12 — Wave 5 / T5.2 (Analytics loop — close the growth loop) — verifier PASS
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **scope — T5.2** (Phase B #4): `pipeline/06-publish/fetch-analytics.mjs` — pull each PRODUCED video's real
+  YouTube Analytics, write them into that idea's `metrics`, then **re-rank** the bank so the next auto-pick
+  prefers clusters that actually performed. Pure + injected-client (mirrors `upload.mjs`):
+  - `fetchVideoAnalytics({client,videoId})` → one `reports.query` (`ids:channel==MINE`, `filters:video==<id>`);
+    `parseAnalyticsRow` maps by `columnHeaders` name (never positional); `toIdeaMetrics` → schema fields
+    (`views`/`avg_view_seconds`/`retention_pct`/`ctr`/`fetched`), never fabricating a 0 for an absent column.
+  - `performanceScore` 0..100 — each present signal normalized vs a baseline (1.0 = on-par), clamped [0,2],
+    weights **re-normalized over present signals** so a missing metric never drags the score to 0; `null` when no signal.
+  - `rerankBank` — produced ideas blend `score`→measured `performance`; backlog ideas get a **bounded task-cluster
+    nudge** (double down on what works). **Idempotent:** `adjusted_score` always re-derived from the immutable
+    `score` + metrics, never accumulated; predicted `score` preserved. Re-sorts by `adjusted_score ?? score`.
+  - `runAnalyticsLoop` — resolve produced ideas → `youtube_video_id` via each video's `publish.json`, fetch
+    (fail-soft per video), apply, re-rank. Null-client path re-ranks existing metrics only.
+  - Schema: extended `ideas.schema.json` (`metrics.retention_pct`/`fetched`, idea `adjusted_score`/`performance`).
+    `auth.mjs` `YT_SCOPES` += `yt-analytics.readonly` so the one-time consent also covers analytics.
+- **result:** **395 tests green** (author wrote 20; verifier added 9 regression tests; baseline 366→386→395).
+  Acceptance check passes: a fake stats payload re-orders the bank (strong-cluster backlog overtakes weak).
+- **bugs found + fixed:** **none** (clean PASS). Verifier exercised idempotency (3× + on an already-adjusted
+  bank → re-derives, no drift), missing-signal re-normalization, the cluster-accumulation idiom, ragged/string
+  `columnHeaders`, zero-value preservation, CTR fallback chain, and [0,100] clamping — all correct.
+- **verifier regression tests (9):** 3-run idempotency; stale-`adjusted_score` re-derivation; string `columnHeaders`;
+  ragged row; `0` row value preserved; CTR fallback chain (`annotation`/`impressions`/`card`); two-in-a-cluster
+  accumulation; `adjusted_score` clamped at 100 and at 0 (both still schema-valid).
+- **verdict:** sound. Open follow-up (T5.1): wire a scheduled trigger to run the loop on a cadence; live numbers
+  arrive only after the first upload sets `publish.youtube_video_id`.
+
 ## 2026-06-12 — Wave 4 (Swappability hardening: TTS dispatcher + Distributor seam) — verifier PASS
 - **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
 - **scope — T4.2 + T4.3** (owner confirmed: T4.1 render-engine port already done by V5/V6, so Wave 4 = these two;

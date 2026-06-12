@@ -5,7 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { runVideo, loadConfig, videoNodes, defaultExecutors, REPO_ROOT } from "./run.mjs";
+import { runVideo, loadConfig, videoNodes, defaultExecutors, notifiesOwner, AGENT_DEFERRAL_NODES, REPO_ROOT } from "./run.mjs";
 import { topoWaves } from "./dag.mjs";
 import { withTempDir } from "../testkit/index.mjs";
 
@@ -105,6 +105,25 @@ test("agent phases (render/qa) defer to the top agent in Claude-Code mode → th
     assert.equal(r.blocked.kind, "gate");
     assert.ok(["render_long", "render_short"].includes(r.blocked.id), `paused at an agent node, got ${r.blocked.id}`);
   });
+});
+
+// ── T5.1b: gate-aware notify (owner pinged only when truly needed) ───────────
+test("notifiesOwner: the 2 gates + review fails + upload ping the owner", () => {
+  for (const node of ["review_script", "review_cut", "upload", "gate_owner"]) {
+    assert.equal(notifiesOwner({ node, kind: "gate" }), true, `${node} must ping the owner`);
+  }
+});
+
+test("notifiesOwner: Claude-Code agent hand-offs stay silent (no owner ping)", () => {
+  for (const node of ["script", "plan_long", "render_long", "render_short", "qa"]) {
+    assert.equal(notifiesOwner({ node, kind: "gate" }), false, `${node} deferral must NOT ping the owner`);
+    assert.ok(AGENT_DEFERRAL_NODES.has(node));
+  }
+});
+
+test("notifiesOwner: any hard ERROR pings the owner, even on an agent node", () => {
+  assert.equal(notifiesOwner({ node: "render_long", kind: "error", error: "boom" }), true);
+  assert.equal(notifiesOwner({ node: "voice_long", kind: "error", error: "ffmpeg" }), true);
 });
 
 // ── integration unit tests for the wired executors ──────────────────────────

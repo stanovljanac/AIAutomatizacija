@@ -249,9 +249,17 @@ atomize → build → test → verify with a *different* model → fix → docs 
   draft=edge-tts, `--final`=Azure, D-024). **T4.3** the `Distributor` port seam
   `pipeline/07-distribute/distributor.mjs` + `distribution.schema.json` + a disabled `config.distribute` (Noop/Mock/
   Postiz-**stub**; live Postiz client = Wave 5 / T5.3).
-- **Wave 5 — full autonomy + growth loop ◀ next — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed,
+- **Wave 5 — full autonomy + growth loop ◀ in progress — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed,
   atomized handoff): headless + scheduled run, analytics loop, live Postiz distribution, thumbnail auto-scoring.
-  That doc also lists the short path to the **first real video** (Gemini key, YouTube OAuth, the Short scene-plan).
+  Done so far (all Sonnet-verified, **456 tests green**): **T5.2 analytics loop**
+  (`fetch-analytics.mjs` → idea `metrics` → idempotent cluster-aware re-rank; `auth.mjs` += `yt-analytics.readonly`);
+  the **Short scene-plan** build gap (derived from the long plan — no more pause); **T5.1 autonomous driver**
+  (`pick-next.mjs` auto-pick + `auto-run.mjs` one-pass loop + gate-aware `notifiesOwner`; HeadlessRunner tested +
+  live-smoked); and **T5.1e ✅ DONE 2026-06-12** — owner did the one-time YouTube OAuth (app published to
+  **Production**, project `281348372291` → non-expiring refresh token at `C:\secure\token.json`, all three scopes
+  incl. `yt-analytics.readonly`), and the **CronCreate** routine is registered (weekly, Mon 09:07, session-local,
+  loops `auto-run` in Claude-Code mode → auto-draft PRIVATE → PushNotify the owner at gates). Remaining: **T5.3**
+  live Postiz, **T5.4** thumbnail auto-scoring. (`GEMINI_API_KEY` already in `.env`; OAuth now done.)
 
 ## What we deliberately deferred
 

@@ -5,9 +5,10 @@ human gates**. This is the operational runbook. For the *why* see `docs/PRD.md`;
 the *how it's wired* see `docs/ARCHITECTURE.md`.
 
 There are **two modes**:
-- **Manual mode** (now): you drive each step, the agent does the work.
-- **Auto mode** (later): the orchestrator runs steps back-to-back, stopping only at
-  the three gates. Both modes follow the same steps.
+- **Manual mode**: you drive each step, the agent does the work.
+- **Autonomous mode** (Wave 5, wired): a scheduler loops the orchestrator, which runs
+  steps back-to-back and stops only at the gates. Both modes follow the same steps. See
+  **"Autonomous mode"** below.
 
 The three human gates: **① Topic + angle + type · ② Script · ③ Final video.**
 Storyboard is now automatic (fixed templates). The mini-demo archetype inserts a
@@ -182,3 +183,36 @@ Step5 ──► GATE ③ final video ──► publish
 ```
 Never publish without Gate ③. Never voice without Gate ② (so we don't synth a bad
 script). Never produce without Gate ① (so we don't build the wrong thing).
+
+## Autonomous mode (Wave 5)
+
+The system can produce hands-off: the owner does **only** Gate ② (if the script can't
+auto-pass ≥9.2) and Gate ③ (final approve + thumbnail). A scheduler loops one driver.
+
+**The loop — `pipeline/shared/orchestrator/auto-run.mjs` (one pass per call):**
+1. **Idle?** `pick-next` picks the top **backlog** idea by effective score
+   (`adjusted_score ?? score` — analytics re-ranks it, T5.2), scaffolds `content/<id>/`
+   with a brief seeded from the idea, and marks the idea **in-progress** (persisted
+   *before* the run, so a crash never orphans the pick).
+2. **Busy?** It **resumes** the in-progress video (the DAG resumes from
+   `run-manifest.json`) — never starts a second one. Safe to re-fire anytime.
+3. It runs the video DAG to the next pause and **classifies** it:
+   - `done` — reached Gate ③ / complete; nothing more to automate.
+   - `ownerGate` — a human is needed (Gate ②/③, a failed review, or the upload OAuth
+     prompt) **or an error** → the wrapper PushNotifies the owner. (`notifiesOwner`.)
+   - `agentTask` — a skill hand-off (Claude-Code mode: `script`/`plan_long`/`render_*`/
+     `qa`) → the wrapping agent runs that skill, marks the node done in
+     `run-manifest.json`, and re-runs `auto-run`. The owner is **not** pinged for these.
+
+**Trigger (owner's choice = CronCreate):** a scheduled **cloud agent** fires on a cadence
+with a prompt that loops `auto-run`: run it → if `agentTask`, fulfil the skill + mark the
+node done + re-run → repeat until `done` or `ownerGate` → then PushNotify the owner and
+stop. Because the cloud agent *is* Claude, agent nodes run in **Claude-Code mode** (it
+fulfils the hand-offs itself) — no per-node `claude -p`.
+
+**Manual drive (any time):** `npm run make-video -- <id>` runs the same DAG for one video;
+in Claude-Code mode it pauses at each agent node for the top agent to fulfil, then resume.
+
+**Owner one-time before the first autonomous run:** `GEMINI_API_KEY` in `.env` (2nd
+reviewer) and YouTube OAuth (`node pipeline/06-publish/auth.mjs`) — without them the review
+and upload nodes pause as `ownerGate`s.
