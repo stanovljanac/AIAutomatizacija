@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "distribution.json",
+  "description": "Cross-platform distribution plan emitted AFTER a YouTube upload (D-027). The Distributor port (pipeline/07-distribute/distributor.mjs) builds this from publish.json + the uploaded video URL, then a provider (Postiz, self-hosted/free) posts each derivative. SEAM defined in Wave 4 (T4.3); the live Postiz adapter + the after-upload write are wired in Wave 5 (T5.3). All posts honor the altered-content disclosure (D-025).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "provider", "posts"],
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "source_video_id": { "type": ["string", "null"], "description": "The uploaded YouTube video id (publish.youtube_video_id)." },
+    "source_url": { "type": "string", "description": "Watch URL of the long video; derivatives link back to it." },
+    "provider": { "type": "string", "description": "Which distributor posts these (e.g. postiz, noop)." },
+    "posts": {
+      "type": "array",
+      "description": "One entry per derivative to publish. Wave 4 emits the Short cross-post; Wave 5 adds link/pin/blog.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "caption", "channels"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["short_crosspost", "link_post", "pin", "blog"] },
+          "caption": { "type": "string", "description": "Post text (the Short's one-line cross-post caption, D-038)." },
+          "link": { "type": "string", "description": "URL to attach (the long video)." },
+          "channels": { "type": "array", "items": { "type": "string" }, "description": "Target channel handles for this post kind." },
+          "status": { "type": "string", "enum": ["pending", "posted", "skipped", "failed"], "description": "Lifecycle (default pending; set by the distributor in Wave 5)." }
+        }
+      }
+    }
+  }
+}

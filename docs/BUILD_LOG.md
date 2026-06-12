@@ -8,6 +8,37 @@ Newest on top.
 
 ---
 
+## 2026-06-12 — Wave 4 (Swappability hardening: TTS dispatcher + Distributor seam) — verifier PASS
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **scope — T4.2 + T4.3** (owner confirmed: T4.1 render-engine port already done by V5/V6, so Wave 4 = these two;
+  **unify edge + Azure** behind the seam, **no new provider**; **Node selector + Python backends**):
+  - **T4.2 — TtsProvider dispatcher.** `pipeline/02-voice/voice-dispatcher.mjs`: pure `selectVoiceProvider` /
+    `selectVoiceBackend` / `voiceArgs` (provider→script via `VOICE_SCRIPTS`: edge-tts→`make_voice.py`,
+    azure→`make_voice_azure.py`), injectable `synthesizeVoice`, + a `<id> [--final]` CLI. Draft =
+    `config.voice.provider` (default edge-tts), final = `config.voice.final_provider` (default azure) — D-024.
+    `orchestrator/run.mjs` `voice_long`/`voice_short` now call `voiceArgs(ctx.config, id)` instead of hardcoding
+    `make_voice.py`; **default stays edge-tts** so existing nodes are unchanged. Alignment untouched/provider-agnostic.
+  - **T4.3 — Distributor port seam** (consumed by Wave 5 / T5.3 + D-027; **seam only, no live network**).
+    `pipeline/07-distribute/distributor.mjs`: pure `watchUrl` / `buildCrossPost` / `buildDistributionPlan`
+    (emits schema-valid `distribution.json`) + the port (`Distributor` abstract, `NoopDistributor`,
+    `MockDistributor`, `PostizDistributor` **stub** — `.post()` throws until a client is injected) +
+    `createDistributor` (noop when `config.distribute.enabled` is false/absent, else postiz). New
+    `schemas/distribution.schema.json` registered in BOTH validators; `distribute` config section (disabled)
+    in `config.json` + `config.example.json` + `config.schema.json`.
+- **result:** **366 tests green** (author wrote 11 + 14 = 25; verifier added 12 regression tests; baseline 354→366).
+  Both config files validate via the CLI auto-map; real-config routing smoke-tested (draft→`make_voice.py`,
+  `--final`→`make_voice_azure.py`).
+- **bug found + fixed (verifier):** the CLI validator never mapped **`config.example.json`** → `config.schema.json`
+  (pre-existing gap; in scope now that the `distribute` block lives in that file too) — added the mapping to both
+  `validate.js` and `validate-lib.mjs`; verifier test guards against schema drift.
+- **verifier regression tests:** default-invariant across every empty/partial/null config shape
+  (`voiceArgs({}|{voice:{}}|null|undefined, id)` → `make_voice.py`); draft/final fallbacks when only one provider
+  is set; `buildCrossPost` caption fallback (empty/non-array `title_options`) + empty-string `videoUrl` → id-link;
+  explicit provider override with `enabled:false`; `publish={}` still emits a schema-valid plan; config.example map.
+- **verdict:** sound. The two existing adapters (edge-tts/Azure; noop/postiz) prove each seam; adding ElevenLabs or
+  a real Postiz client is one adapter, not a rewrite. Open follow-up: Wave 5 / T5.3 wires the live Postiz client +
+  the after-upload `distribution.json` write.
+
 ## 2026-06-12 — Wave 3 (Freshness & news: anti-stale facts cache + news watch) — verifier PASS
 - **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
 - **scope — T3.1 + T3.2:**

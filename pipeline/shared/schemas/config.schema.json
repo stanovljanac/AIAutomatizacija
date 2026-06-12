@@ -141,6 +141,21 @@
         "channel": { "type": "string", "enum": ["push", "email", "both"] },
         "email_to_env": { "type": "string" }
       }
+    },
+    "distribute": {
+      "type": "object",
+      "description": "Cross-platform distribution (D-027). SEAM defined Wave 4 / T4.3; disabled by default. The live Postiz adapter + after-upload write land in Wave 5 / T5.3.",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "provider": { "type": "string", "enum": ["postiz", "noop"] },
+        "base_url_env": { "type": "string" },
+        "api_key_env": { "type": "string" },
+        "channels": {
+          "type": "object",
+          "description": "Target channel handles per post kind (short_crosspost / link_post / pin / blog).",
+          "additionalProperties": { "type": "array", "items": { "type": "string" } }
+        }
+      }
     }
   }
 }

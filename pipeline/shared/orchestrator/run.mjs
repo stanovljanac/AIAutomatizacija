@@ -12,6 +12,7 @@ import { runDag } from "./dag.mjs";
 import { createRunner } from "./runner.mjs";
 import { notify } from "./notify.mjs";
 import { deriveShortFile } from "../../01-script/make-short.mjs";
+import { voiceArgs } from "../../02-voice/voice-dispatcher.mjs";
 import { buildMetadataFile } from "../../06-publish/build-metadata.mjs";
 import { reviewLoop } from "../review/loop.mjs";
 import { buildReviewers } from "../review/build.mjs";
@@ -81,10 +82,13 @@ export function defaultExecutors() {
       deriveShortFile(contentDir, { targetSeconds: config.defaults?.short_seconds }),
     plan_long: ({ contentDir }) => readArtifactOr(contentDir, "scene-plan.json", "storyboard (agent)"),
     plan_short: ({ contentDir }) => readArtifactOr(path.join(contentDir, "short"), "scene-plan.json", "storyboard short (agent)"),
-    // Mechanical: real Node/Python commands (run in both modes).
-    voice_long: (ctx) => mechanical(ctx, ctx.python, ["scripts/make_voice.py", ctx.id], "voice(long)"),
+    // Mechanical: real Node/Python commands (run in both modes). Voice goes through the TtsProvider
+    // seam (T4.2): voiceArgs() picks the synth script from config.voice (draft = edge-tts by default;
+    // the Azure final is a `--final` pre-publish lock, not a per-iteration node). Alignment is
+    // provider-agnostic (faster-whisper on the produced narration.mp3).
+    voice_long: (ctx) => mechanical(ctx, ctx.python, voiceArgs(ctx.config, ctx.id), "voice(long)"),
     align_long: (ctx) => mechanical(ctx, ctx.python, ["scripts/make_alignment.py", ctx.id], "align(long)"),
-    voice_short: (ctx) => mechanical(ctx, ctx.python, ["scripts/make_voice.py", `${ctx.id}/short`], "voice(short)"),
+    voice_short: (ctx) => mechanical(ctx, ctx.python, voiceArgs(ctx.config, `${ctx.id}/short`), "voice(short)"),
     align_short: (ctx) => mechanical(ctx, ctx.python, ["scripts/make_alignment.py", `${ctx.id}/short`], "align(short)"),
     // Agent/skill: render (video-render) + qa (qa-video). Real in headless; deferred to the top agent in Claude-Code mode.
     render_long: (ctx) => agentStep(ctx, "video-render", { target: ctx.id }, "render(long) via the video-render skill"),

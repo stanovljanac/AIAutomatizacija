@@ -92,23 +92,38 @@ the model's stale training memory for model/tool/price/version facts.
   RSS endpoints). Tests mock `fetch`. *Verify:* a corroborated item becomes one scored Desk Notes idea.
 - **T3.3 — schedule the refresh** (folds into Wave 5 scheduling).
 
-## Wave 4 — Swappability hardening (only when a real need appears)  ◀ next
+## Wave 4 — Swappability hardening  ✅ DONE 2026-06-12
+
+**✅ SHIPPED 2026-06-12** (Sonnet-verified PASS, **366 tests green**; uncommitted). Owner scope calls:
+**T4.1 was already done by V5/V6** (timeline seam + compile-remotion + compile-hyperframes; `config.render.engine`
+flips remotion/hyperframes/combo) → Wave 4 = **T4.2 + T4.3**; **unify edge + Azure** (no new provider); the voice
+dispatcher is a **Node selector calling the existing Python backends**. Built `pipeline/02-voice/voice-dispatcher.mjs`
+(the TtsProvider seam — `run.mjs` voice nodes route through `voiceArgs`, default edge-tts, `--final`→Azure per D-024)
+and `pipeline/07-distribute/distributor.mjs` (the Distributor seam — pure plan builder + `distribution.schema.json` +
+a disabled `distribute` config; Noop/Mock/**Postiz-stub** adapters). See `docs/PROGRESS.md` + `docs/BUILD_LOG.md`
+(2026-06-12). Open follow-up: the **live Postiz client + after-upload `distribution.json` write** land in Wave 5 / T5.3.
 
 **Goal:** make the Wave-0 seams real so an engine/TTS swap is a config flip, not a rewrite. Lower
 priority — the Remotion+HyperFrames **combo works today** (D-019); do this when we actually want to
 swap or add a provider.
 
-- **T4.1 — Render engine port (biggest win).** Have `04-render/build-props.mjs` emit the
+- **T4.1 — Render engine port (biggest win).** ✅ **DONE via V5/V6** (see `docs/WAVE_V_HANDOFF.md`).
+  Have `04-render/build-props.mjs` emit the
   engine-agnostic `timeline.json` (`schemas/timeline.schema.json`, seconds-based — already defined),
   then `04-render/compile-remotion.mjs` (→ frames/props) and `compile-hyperframes.mjs` (→ seconds/HTML).
   Decouples the sync crown-jewel from the engine. *Verify:* flip `config.render.engine` and re-render
   the fixture timeline on the other engine with no other change. *Context:* the rich HyperFrames skill
   set is already installed under `templates/hyperframes`.
-- **T4.2 — `TtsProvider` dispatcher.** Wrap `scripts/make_voice.py` / `make_voice_azure.py` behind one
-  `voice-dispatcher` entry; alignment is already engine-agnostic. Adding ElevenLabs/etc. = one adapter.
-- **T4.3 — `Distributor` port** seam (consumed by Wave 5 / D-027).
+- **T4.2 — `TtsProvider` dispatcher.** ✅ **DONE.** `pipeline/02-voice/voice-dispatcher.mjs` wraps
+  `make_voice.py` / `make_voice_azure.py` behind one entry (provider→script registry; pure `voiceArgs` used by
+  `run.mjs`; `--final` flips to the licensed Azure voice, D-024). Alignment is already engine-agnostic. Adding
+  ElevenLabs/etc. = one `VOICE_SCRIPTS` entry + one script.
+- **T4.3 — `Distributor` port** seam (consumed by Wave 5 / T5.3 / D-027). ✅ **DONE (seam only).**
+  `pipeline/07-distribute/distributor.mjs` (pure `buildDistributionPlan` → schema-valid `distribution.json`;
+  Noop/Mock/Postiz-stub adapters + `createDistributor`). NO live network yet — the Postiz HTTP client + the
+  after-upload write are T5.3 (owner one-time Postiz setup).
 
-## Wave 5 — Full autonomy + growth loop
+## Wave 5 — Full autonomy + growth loop  ◀ next
 
 **Goal:** the system self-schedules and closes the data loop; the owner only does final approval +
 thumbnail.
@@ -122,7 +137,11 @@ thumbnail.
   already-installed `googleapis`) → views/CTR/retention into each idea's `metrics` in `ideas.json`
   → re-rank the bank (Phase B #4). *Verify:* a fake stats payload re-orders the bank.
 - **T5.3 — Distribution.** `pipeline/07-distribute/` via **Postiz** (self-hosted, free — D-027):
-  cross-post the Short caption after upload. *Owner:* one-time Postiz setup.
+  cross-post the Short caption after upload. **The seam already exists (Wave 4 / T4.3):**
+  `distributor.mjs` (plan builder + `PostizDistributor` stub + `createDistributor`), `distribution.schema.json`,
+  and a disabled `config.distribute`. T5.3 = inject the live Postiz HTTP client into `PostizDistributor`, flip
+  `config.distribute.enabled`, and write `distribution.json` + call `createDistributor(config).post(plan)` after
+  `upload`. *Owner:* one-time Postiz setup (`POSTIZ_BASE_URL` / `POSTIZ_API_KEY`).
 - **T5.4 — Thumbnail auto-scoring** (legibility/contrast/brand) to inform the owner's 2-variant pick
   (Phase B #6).
 

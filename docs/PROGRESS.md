@@ -15,6 +15,31 @@ Format:
 
 ---
 
+## 2026-06-12 — Wave 4 shipped: TTS dispatcher + Distributor seam (swappability hardening)
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier (PASS) + owner (3 scope calls)
+- did: built **Wave 4 (Swappability hardening)** from `docs/WAVES_3-5_PLAN.md`. Owner calls up front: **T4.1
+  (render-engine port) already done by V5/V6** (timeline seam + compile-remotion + compile-hyperframes;
+  `config.render.engine` already flips) → Wave 4 = **T4.2 + T4.3**; **unify edge + Azure**, no new provider; the
+  dispatcher is a **Node selector calling the existing Python backends** (matches the Runner/Reviewer/Publisher ports).
+  - **T4.2 — TtsProvider dispatcher.** New `pipeline/02-voice/voice-dispatcher.mjs`: pure `selectVoiceProvider` /
+    `selectVoiceBackend` / `voiceArgs` (provider→synth script via `VOICE_SCRIPTS`) + injectable `synthesizeVoice` +
+    a `<id> [--final]` CLI. Draft = `config.voice.provider` (edge-tts), final = `config.voice.final_provider`
+    (Azure) — D-024. `orchestrator/run.mjs` voice nodes now route through `voiceArgs(ctx.config, …)`; **default
+    stays edge-tts** (existing behavior unchanged). Alignment stays a separate, provider-agnostic node
+    (faster-whisper on `narration.mp3`). Adding ElevenLabs later = one map entry + one script.
+  - **T4.3 — Distributor port seam** (consumed by Wave 5 / T5.3 + D-027; **seam only — no live network**). New
+    `pipeline/07-distribute/distributor.mjs`: pure `buildCrossPost` / `buildDistributionPlan` (emits a schema-valid
+    `distribution.json` — the Short cross-post caption + a link back to the long video) + the port
+    (`Distributor`/`Noop`/`Mock`/`Postiz`-stub + `createDistributor`, noop while disabled). New
+    `schemas/distribution.schema.json` (both validators) + a disabled `distribute` config section
+    (`config.json` + `.example` + schema). The live **Postiz** client + the after-upload write land in Wave 5/T5.3.
+  - **gate:** `npm test` 354 → **366 green** (25 author + 12 verifier regression tests). Verifier PASS; it caught a
+    pre-existing CLI gap (`config.example.json` was unmapped) → fixed in both validators (BUILD_LOG 2026-06-12).
+- next: **Wave 5** (full autonomy): T5.1 headless + scheduled run, T5.2 analytics loop, **T5.3 live Postiz
+  distribution** (owner one-time Postiz setup), T5.4 thumbnail auto-scoring. Still pending for the first hands-off
+  video: `GEMINI_API_KEY`, YouTube OAuth, the Short scene-plan. Optional parallel: the brand black/yellow hero recolor.
+- blockers: none. (Owner has not asked to commit — changes left in the working tree.)
+
 ## 2026-06-12 — Wave 3 shipped: anti-stale facts cache + multi-source news watch
 - who: agent (Opus 4.8) + Sonnet 4.6 verifier (PASS) + owner (2 design calls)
 - did: built **Wave 3 (Freshness & news)** from `docs/WAVES_3-5_PLAN.md`.

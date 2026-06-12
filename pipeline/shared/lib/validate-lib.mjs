@@ -26,7 +26,9 @@ export const FILENAME_TO_SCHEMA = {
   "timeline.json": "timeline.schema.json",
   "news.json": "news.schema.json",
   "facts.json": "facts.schema.json",
+  "distribution.json": "distribution.schema.json",
   "config.json": "config.schema.json",
+  "config.example.json": "config.schema.json",
 };
 
 let _ajv = null;

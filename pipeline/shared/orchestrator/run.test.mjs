@@ -120,6 +120,23 @@ test("voice/align executors call the runner with the python scripts (long + shor
   assert.equal(calls[0].cmd, "/repo/.venv/py");
 });
 
+test("voice executors honor config.voice.provider (azure routes to make_voice_azure.py) — T4.2 seam", async () => {
+  const calls = [];
+  const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
+  const ex = defaultExecutors();
+  const ctx = {
+    id: "005-x", root: "/repo", contentDir: "/repo/content/005-x",
+    config: { voice: { provider: "azure" } }, runner, python: "/repo/.venv/py",
+  };
+  await ex.voice_long(ctx);
+  await ex.voice_short(ctx);
+  assert.ok(calls[0].args.includes("scripts/make_voice_azure.py"), "azure provider must route long voice to the Azure script");
+  assert.ok(calls[1].args.includes("scripts/make_voice_azure.py") && calls[1].args.includes("005-x/short"));
+  // alignment stays provider-agnostic (always faster-whisper) regardless of the voice provider.
+  await ex.align_long(ctx);
+  assert.ok(calls[2].args.includes("scripts/make_alignment.py"));
+});
+
 test("a mechanical step that exits non-zero rejects (the DAG converts this to a pause)", async () => {
   const runner = { runCommand: async () => ({ code: 1, stderr: "boom" }) };
   const ex = defaultExecutors();

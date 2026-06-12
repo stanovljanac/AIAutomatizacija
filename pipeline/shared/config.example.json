@@ -103,5 +103,15 @@
   "notify": {
     "channel": "push",
     "email_to_env": "NOTIFY_EMAIL"
+  },
+  "distribute": {
+    "enabled": false,
+    "provider": "postiz",
+    "base_url_env": "POSTIZ_BASE_URL",
+    "api_key_env": "POSTIZ_API_KEY",
+    "channels": {
+      "short_crosspost": ["youtube", "instagram", "tiktok"],
+      "link_post": ["x", "facebook"]
+    }
   }
 }

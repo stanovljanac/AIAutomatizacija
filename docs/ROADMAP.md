@@ -243,9 +243,15 @@ atomize → build → test → verify with a *different* model → fix → docs 
   (≥2 sources ⇒ higher score) → `news.json` → promote top corroborated items to Desk Notes ideas
   (`source.origin:"news"`). **T3.3** (schedule the refresh) folds into Wave 5. Open: wire official-source RSS
   endpoints when verified.
-- **Waves 4–5 — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed, atomized handoff):
-  Wave 4 swappability hardening ◀ next, Wave 5 full autonomy + analytics + distribute. That doc also lists
-  the short path to the **first real video** (Gemini key, YouTube OAuth, the Short scene-plan).
+- **Wave 4 — swappability hardening: ✅ DONE 2026-06-12** (Sonnet-verified, **366 tests green**, UNCOMMITTED).
+  **T4.1** (render-engine port) was already done by V5/V6. **T4.2** the `TtsProvider` dispatcher
+  `pipeline/02-voice/voice-dispatcher.mjs` (provider→script registry; `run.mjs` routes voice through `voiceArgs`;
+  draft=edge-tts, `--final`=Azure, D-024). **T4.3** the `Distributor` port seam
+  `pipeline/07-distribute/distributor.mjs` + `distribution.schema.json` + a disabled `config.distribute` (Noop/Mock/
+  Postiz-**stub**; live Postiz client = Wave 5 / T5.3).
+- **Wave 5 — full autonomy + growth loop ◀ next — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed,
+  atomized handoff): headless + scheduled run, analytics loop, live Postiz distribution, thumbnail auto-scoring.
+  That doc also lists the short path to the **first real video** (Gemini key, YouTube OAuth, the Short scene-plan).
 
 ## What we deliberately deferred
 

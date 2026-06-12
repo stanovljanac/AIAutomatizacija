@@ -16,6 +16,12 @@ captions are positioned in time to match it.
 - **Final/published → Azure AI Speech** (licensed, same Andrew voice, 500k chars/mo free):
   `python scripts/make_voice_azure.py <id>` (needs `AZURE_SPEECH_KEY`/`REGION` in `.env`).
   Run it **once the video + Short are locked** (saves the quota), then re-align.
+- **One dispatcher picks the backend (the TtsProvider seam — Wave 4 / T4.2):**
+  `node pipeline/02-voice/voice-dispatcher.mjs <id> [--final]` — selects the synth script from
+  `config.voice.provider` (draft, default edge-tts) or `config.voice.final_provider` (`--final`, Azure)
+  via the `VOICE_SCRIPTS` registry. The orchestrator's voice nodes route through it (`voiceArgs`), so a
+  provider swap is a config flip and adding a new TTS (ElevenLabs/…) is one registry entry + one script —
+  you still call the same `make_voice*.py` underneath. Alignment is unchanged/provider-agnostic.
 - One consistent channel voice = brand recognition. Each scene's `narration` is concatenated
   in order into one continuous track `voice/narration.mp3`; never cut the audio (PRD R11).
 
