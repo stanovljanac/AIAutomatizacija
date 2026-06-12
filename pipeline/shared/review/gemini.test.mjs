@@ -27,10 +27,10 @@ test("defers when no API key is configured", async () => {
 test("parses a Gemini reply into a normalized review result", async () => {
   let calledUrl = null;
   const fetch = async (url) => { calledUrl = url; return geminiReply(goodReview); };
-  const g = new GeminiReviewer({ name: "gemini", model: "gemini-3-flash" }, { getKey: () => "KEY", fetch });
+  const g = new GeminiReviewer({ name: "gemini", model: "gemini-3.5-flash" }, { getKey: () => "KEY", fetch });
   const r = await g.review({ stage: "script", artifact: { id: "x" } });
   assert.equal(r.reviewer, "gemini");
-  assert.equal(r.model, "gemini-3-flash");
+  assert.equal(r.model, "gemini-3.5-flash");
   assert.equal(r.score, 9.3);
   assert.equal(r.hard_gates.on_screen_source, true);
   assert.match(calledUrl, /generativelanguage\.googleapis\.com/);

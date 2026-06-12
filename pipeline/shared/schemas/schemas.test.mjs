@@ -12,7 +12,7 @@ test("review.schema compiles and accepts a valid auto-band review", () => {
     reviewers: [
       {
         reviewer: "gemini",
-        model: "gemini-3-flash",
+        model: "gemini-3.5-flash",
         score: 9.3,
         hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true },
         category_scores: { retention_structure: 9, originality_depth: 9, hard_rule_craft: 10, style_tone: 9, readaloud_clarity: 9 },

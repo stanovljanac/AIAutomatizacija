@@ -28,7 +28,7 @@ test("createReviewer('claude_subagent') defers in claude-code mode", async () =>
 });
 
 test("gemini reviewer defers when no API key is configured", async () => {
-  const g = await createReviewer({ provider: "gemini", name: "gemini", model: "gemini-3-flash" }, { getKey: () => undefined });
+  const g = await createReviewer({ provider: "gemini", name: "gemini", model: "gemini-3.5-flash" }, { getKey: () => undefined });
   const r = await g.review({ stage: "script", artifact: {} });
   assert.equal(r.deferred, true);
 });

@@ -15,7 +15,7 @@ async function safeText(res) {
 export class GeminiReviewer extends Reviewer {
   constructor(spec = {}, deps = {}) {
     super(spec);
-    this.model = spec.model || "gemini-3-flash";
+    this.model = spec.model || "gemini-3.5-flash";
     this.keyEnv = spec.key_env || "GEMINI_API_KEY";
     this.rpm = spec.rpm || 10;
     this.fetchFn = deps.fetch || ((...a) => globalThis.fetch(...a));
