@@ -19,7 +19,10 @@ before the human gate — and stay correct at publish. (Answer-first + specific 
 ## Modes
 - `draft` (primary): read `script.json` (or a claims brief), extract claims, verify, write
   `sources.md` + `claims.json`. Hand HIGH-severity unverified claims back to `script-writing`.
-- `freshness`: the time-sensitive subset (versions, pricing, limits) — stamp a retrieved
+- `freshness`: the time-sensitive subset (model/tool versions, pricing, free-tier limits).
+  The curated cache **`pipeline/shared/knowledge/facts.json`** is the source of truth for
+  these — read it first; if a needed value is missing or `refresh-facts.mjs` has flagged it
+  stale, fetch it live, then update `facts.json` (`value` + `retrieved`). Stamp a retrieved
   date and a `recheck_by`; flag anything older than the recheck window.
 - `final`: in QA, re-check the claims actually spoken (from `script.json`/`alignment.json`)
   against `sources.md`; confirm nothing drifted; emit a one-line pass for the publish gate.
@@ -32,6 +35,9 @@ before the human gate — and stay correct at publish. (Answer-first + specific 
 3. **Verify**: per claim, `WebSearch` → open the best primary/reputable source with
    `WebFetch` → confirm the exact value. Prefer official docs / vendor pricing pages /
    primary announcements over blogs. (Search snippets are a lead, not proof — always fetch.)
+   For any **model/tool/price/version/limit** value, the value is the one in `facts.json`
+   (verified live, **never recalled from memory**); a script that quotes a different number is
+   `corrected` to the `facts.json` value.
 4. **Record** citation (url, publisher, retrieved date) + status:
    `verified` · `corrected` (source disagrees → propose right value+source) ·
    `unverified` (no reliable source) · `stale-risk` (time-sensitive; mark `recheck_by`).
@@ -66,6 +72,8 @@ before the human gate — and stay correct at publish. (Answer-first + specific 
 
 ## Guardrails
 - Sources give **facts only, never sentences** — cite, don't copy.
+- **Any model/tool/price/version/limit claim is fetched live, never recalled** from training
+  memory — `pipeline/shared/knowledge/facts.json` is the cache of those live-verified values.
 - ≥1 reputable source for MED; ≥2 (incl. a primary) for HIGH or surprising claims.
 - **Never invent a citation.** `unverified` is an honest, acceptable status — surface it.
 - Opinions/predictions/the angle are not claims — leave them.

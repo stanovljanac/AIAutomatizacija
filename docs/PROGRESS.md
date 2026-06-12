@@ -15,6 +15,29 @@ Format:
 
 ---
 
+## 2026-06-12 — Wave 3 shipped: anti-stale facts cache + multi-source news watch
+- who: agent (Opus 4.8) + Sonnet 4.6 verifier (PASS) + owner (2 design calls)
+- did: built **Wave 3 (Freshness & news)** from `docs/WAVES_3-5_PLAN.md`.
+  - **T3.1 — knowledge-freshness cache.** New `pipeline/shared/knowledge/`: `facts.json` (curated,
+    source-backed model/price/version/limit values, each with `source` + `retrieved`; seeded live via the
+    `claude-api` skill + web — never from memory), `refresh-facts.mjs` (a **staleness auditor** that flags
+    stale/unreachable/changed facts and **never overwrites a value**), `facts.schema.json` registered in both
+    validators. Owner decision: **curated + staleness**, NOT auto-extract (auto-parsing a price from a feed
+    risks writing a wrong number — the exact thing the anti-stale rule prevents). Owner also chose **no code
+    checker** this wave (the review loop + fact-check already read facts.json). Rule reinforced in the
+    `fact-check` + `script-writing` skills: model/tool/price/version is **fetched live, never recalled**.
+  - **T3.2 — news watch.** `pipeline/00-ideas/fetch-news.mjs`: no-dep RSS/Atom + HN Algolia JSON parsers,
+    dedup across sources by normalized-title hash (≥2 sources ⇒ higher score), writes `news.json`, promotes
+    top corroborated items to **Desk Notes** ideas (`source.origin:"news"`, idempotent). Every source is
+    fail-soft. the-decoder/tldr config URLs swapped to verified RSS endpoints. Live dry-run: 50 unique items
+    from 3 working feeds.
+  - **gate:** `npm test` 316 → **329 green** (13 author + 12 verifier regression tests). Verifier PASS, no
+    bugs (BUILD_LOG 2026-06-12). `news.json` + `freshness-report.json` git-ignored; `facts.json` committed.
+- next: **owner one-time** before the first hands-off video — `GEMINI_API_KEY` in `.env`, YouTube OAuth, and
+  wire the Short scene-plan (WAVES_3-5_PLAN "What remains"). Then **Wave 4/5**. T3.3 (schedule the news/facts
+  refresh) folds into Wave 5 (T5.1). Wire official-source RSS endpoints when verified.
+- blockers: none. (Owner has not asked to commit — changes left in the working tree.)
+
 ## 2026-06-12 — V7 kickoff: capture push-in + first BOLD hero (`hook-prism`); owner steer captured
 - who: agent (Fable 5 / Opus 4.8) + Sonnet 4.6 verifier + owner (live review)
 - did: owner reviewed V6 and said the restrained `hook-kinetic` looked "the same as a flat card" + the

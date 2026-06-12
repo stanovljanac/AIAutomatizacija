@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "facts.json",
+  "description": "Curated, source-backed cache of time-sensitive facts (model versions, prices, free-tier limits, specs). The single source of truth for any model/tool/price/version claim: these are verified live against `source`, NEVER recalled from model memory. refresh-facts.mjs only AUDITS staleness (writes a freshness report); it never overwrites a value.",
+  "type": "object",
+  "required": ["updated", "policy", "facts"],
+  "properties": {
+    "updated": { "type": "string", "description": "ISO date this cache was last hand-curated." },
+    "policy": {
+      "type": "object",
+      "required": ["max_age_days"],
+      "properties": {
+        "max_age_days": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "A fact older than this (measured from its `retrieved` date) is flagged stale by refresh-facts.mjs and must be re-verified live before it may be used in a script."
+        },
+        "rule": { "type": "string", "description": "Human-readable restatement of the live-never-recalled rule." }
+      }
+    },
+    "facts": {
+      "type": "array",
+      "description": "Flat, multi-tagged list of facts (mirrors the idea-bank's flat model).",
+      "items": {
+        "type": "object",
+        "required": ["id", "subject", "kind", "label", "value", "source", "retrieved"],
+        "properties": {
+          "id": { "type": "string", "description": "Stable dotted id, e.g. anthropic.claude-opus-4-8.price_input." },
+          "subject": { "type": "string", "description": "Vendor/tool the fact is about, e.g. anthropic, openai, google." },
+          "kind": {
+            "type": "string",
+            "enum": ["model_version", "price", "free_tier_limit", "spec", "other"]
+          },
+          "label": { "type": "string", "description": "Human label of what the value means." },
+          "value": {
+            "type": ["string", "number"],
+            "description": "The fact itself: a version id, a price, a limit."
+          },
+          "unit": {
+            "type": ["string", "null"],
+            "description": "e.g. 'USD per million input tokens', 'requests/day'. null for non-numeric facts."
+          },
+          "source": { "type": "string", "format": "uri", "description": "Official page this value was verified against." },
+          "retrieved": { "type": "string", "description": "ISO date the value was last confirmed live against `source`." },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

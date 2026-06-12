@@ -234,10 +234,18 @@ atomize → build → test → verify with a *different* model → fix → docs 
   whole system (Waves 3–5 toward headless autonomy). Motivated-motion + V5 **committed `486b9d0`**; **V6+V7
   committed + pushed 2026-06-12**. **Full handoff: `docs/WAVE_V_HANDOFF.md`** (read this to
   resume). Also see `docs/PROGRESS.md` + `docs/BUILD_LOG.md`.
-- **Waves 3–5 — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed, atomized handoff):
-  Wave 3 news/freshness + anti-stale ◀ next, Wave 4 swappability hardening, Wave 5 full autonomy +
-  analytics + distribute. That doc also lists the short path to the **first real video** (Gemini key,
-  YouTube OAuth, the Short scene-plan).
+- **Wave 3 — freshness & news (anti-stale + Desk Notes): ✅ DONE 2026-06-12** (Sonnet-verified, **329 tests
+  green**, UNCOMMITTED). **T3.1** the knowledge-freshness cache `pipeline/shared/knowledge/facts.json`
+  (curated, source-backed model/price/version/limit values) + `refresh-facts.mjs` (staleness **auditor** —
+  never overwrites; owner chose curated+staleness over auto-extract) + `facts.schema.json`; the
+  live-never-recalled rule reinforced in `fact-check` + `script-writing`. **T3.2** `pipeline/00-ideas/
+  fetch-news.mjs` (`NewsSource` port): no-dep RSS/Atom + HN-Algolia parsers → dedup by normalized-title hash
+  (≥2 sources ⇒ higher score) → `news.json` → promote top corroborated items to Desk Notes ideas
+  (`source.origin:"news"`). **T3.3** (schedule the refresh) folds into Wave 5. Open: wire official-source RSS
+  endpoints when verified.
+- **Waves 4–5 — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed, atomized handoff):
+  Wave 4 swappability hardening ◀ next, Wave 5 full autonomy + analytics + distribute. That doc also lists
+  the short path to the **first real video** (Gemini key, YouTube OAuth, the Short scene-plan).
 
 ## What we deliberately deferred
 

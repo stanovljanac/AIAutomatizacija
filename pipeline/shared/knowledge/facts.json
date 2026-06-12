@@ -1,0 +1,134 @@
+{
+  "updated": "2026-06-12",
+  "policy": {
+    "max_age_days": 45,
+    "rule": "Any model/tool/price/version claim used in a script is the value below, verified live against `source` on `retrieved`. Never recall these from model memory. refresh-facts.mjs flags a fact when it ages past max_age_days or its value no longer appears on `source`; a human/agent then re-confirms live and updates `value` + `retrieved` (the auditor never overwrites)."
+  },
+  "facts": [
+    {
+      "id": "anthropic.flagship.model_id",
+      "subject": "anthropic",
+      "kind": "model_version",
+      "label": "Anthropic flagship Claude model id (default for builds)",
+      "value": "claude-opus-4-8",
+      "unit": null,
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "retrieved": "2026-06-12",
+      "notes": "Opus 4.8 is the current most capable Opus-tier model; claude-fable-5 is the most capable widely released model."
+    },
+    {
+      "id": "anthropic.most_capable.model_id",
+      "subject": "anthropic",
+      "kind": "model_version",
+      "label": "Anthropic most-capable widely released model id",
+      "value": "claude-fable-5",
+      "unit": null,
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "retrieved": "2026-06-12",
+      "notes": "Above Opus-tier pricing; use only when explicitly the most-capable model is wanted."
+    },
+    {
+      "id": "anthropic.claude-opus-4-8.price_input",
+      "subject": "anthropic",
+      "kind": "price",
+      "label": "Claude Opus 4.8 API input price",
+      "value": 5.0,
+      "unit": "USD per million input tokens",
+      "source": "https://www.anthropic.com/pricing",
+      "retrieved": "2026-06-12"
+    },
+    {
+      "id": "anthropic.claude-opus-4-8.price_output",
+      "subject": "anthropic",
+      "kind": "price",
+      "label": "Claude Opus 4.8 API output price",
+      "value": 25.0,
+      "unit": "USD per million output tokens",
+      "source": "https://www.anthropic.com/pricing",
+      "retrieved": "2026-06-12"
+    },
+    {
+      "id": "anthropic.claude-sonnet-4-6.price_input",
+      "subject": "anthropic",
+      "kind": "price",
+      "label": "Claude Sonnet 4.6 API input price",
+      "value": 3.0,
+      "unit": "USD per million input tokens",
+      "source": "https://www.anthropic.com/pricing",
+      "retrieved": "2026-06-12"
+    },
+    {
+      "id": "anthropic.claude-sonnet-4-6.price_output",
+      "subject": "anthropic",
+      "kind": "price",
+      "label": "Claude Sonnet 4.6 API output price",
+      "value": 15.0,
+      "unit": "USD per million output tokens",
+      "source": "https://www.anthropic.com/pricing",
+      "retrieved": "2026-06-12"
+    },
+    {
+      "id": "anthropic.claude-haiku-4-5.price_input",
+      "subject": "anthropic",
+      "kind": "price",
+      "label": "Claude Haiku 4.5 API input price",
+      "value": 1.0,
+      "unit": "USD per million input tokens",
+      "source": "https://www.anthropic.com/pricing",
+      "retrieved": "2026-06-12"
+    },
+    {
+      "id": "anthropic.claude-haiku-4-5.price_output",
+      "subject": "anthropic",
+      "kind": "price",
+      "label": "Claude Haiku 4.5 API output price",
+      "value": 5.0,
+      "unit": "USD per million output tokens",
+      "source": "https://www.anthropic.com/pricing",
+      "retrieved": "2026-06-12"
+    },
+    {
+      "id": "anthropic.claude-opus-4-8.context_window",
+      "subject": "anthropic",
+      "kind": "spec",
+      "label": "Claude Opus 4.8 context window",
+      "value": 1000000,
+      "unit": "tokens",
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "retrieved": "2026-06-12",
+      "notes": "1M context at standard API pricing (no long-context premium)."
+    },
+    {
+      "id": "openai.flagship.model_id",
+      "subject": "openai",
+      "kind": "model_version",
+      "label": "OpenAI flagship model id",
+      "value": "gpt-5.5",
+      "unit": null,
+      "source": "https://openai.com/api/pricing/",
+      "retrieved": "2026-06-12",
+      "notes": "GPT-5.5; GPT-5.5 Pro is a higher tier ($30/$180). Previous flagship GPT-5.4 remains at $2.50/$15."
+    },
+    {
+      "id": "openai.gpt-5-5.price_input",
+      "subject": "openai",
+      "kind": "price",
+      "label": "OpenAI GPT-5.5 API input price",
+      "value": 5.0,
+      "unit": "USD per million input tokens",
+      "source": "https://openai.com/api/pricing/",
+      "retrieved": "2026-06-12",
+      "notes": "Cached-input rate is lower (~$0.50/Mtok)."
+    },
+    {
+      "id": "openai.gpt-5-5.price_output",
+      "subject": "openai",
+      "kind": "price",
+      "label": "OpenAI GPT-5.5 API output price",
+      "value": 30.0,
+      "unit": "USD per million output tokens",
+      "source": "https://openai.com/api/pricing/",
+      "retrieved": "2026-06-12"
+    }
+  ]
+}

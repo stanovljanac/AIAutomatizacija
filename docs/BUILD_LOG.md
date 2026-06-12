@@ -8,6 +8,30 @@ Newest on top.
 
 ---
 
+## 2026-06-12 — Wave 3 (Freshness & news: anti-stale facts cache + news watch) — verifier PASS
+- **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Opus 4.8).
+- **scope — T3.1 + T3.2:**
+  - **T3.1** `pipeline/shared/knowledge/facts.json` (curated, source-backed cache: model/price/version/limit,
+    each with `source` + `retrieved`) + `refresh-facts.mjs` (a **staleness AUDITOR** — flags stale-by-age,
+    unreachable source, value-no-longer-on-page; **never overwrites a value** — owner chose "curated +
+    staleness", not auto-extract) + `schemas/facts.schema.json` registered in both validators. Doc rule
+    reinforced in `fact-check` + `script-writing` (model/tool/price/version **fetched live, never recalled**).
+  - **T3.2** `pipeline/00-ideas/fetch-news.mjs` (`NewsSource` port): no-dep RSS/Atom + HN Algolia JSON parsers,
+    dedup across sources by normalized-title hash (≥2 sources ⇒ higher score), `news.json`, and promotion of
+    top corroborated items to **Desk Notes** ideas (`source.origin:"news"`, idempotent). Fail-soft per source.
+    Config RSS endpoints for the-decoder/tldr verified live and updated.
+- **result:** **329 tests green** (author wrote 12 + 1; verifier added 12 regression tests).
+- **bugs found + fixed:** none by the verifier (clean PASS). Author self-caught + fixed during build:
+  (a) HTML **numeric entity decode** (`&#039;`/`&#x27;`) — generic decimal/hex decoder + test;
+  (b) **relative-URL guard** in `parseRss` (verifier flagged it as a schema-validity risk) — skip non-absolute
+  links so `news.json` stays `format: uri`-valid; regression test added.
+- **verifier regression tests:** boundary staleness (age == max_age is fresh), future/empty/missing facts;
+  same-source-name doesn't inflate corroboration, recency-bucket cutoffs, promotion non-mutation + max cap.
+- **live smoke:** `fetch-news --dry-run` parsed the-decoder (10) + tldr-ai (20) + HN (20) = 50 unique;
+  official HTML sources fail-soft to 0 (RSS endpoints TBD, out of this wave's scope).
+- **verdict:** sound. Open follow-ups: wire official-source RSS endpoints when verified; T3.3 (schedule the
+  refresh) folds into Wave 5.
+
 ## 2026-06-12 — V7 visual-lift kickoff (capture push-in + bold `hook-prism` hero) — verifier PASS
 - **verifier:** Sonnet 4.6 (`claude-sonnet-4-6`), independent of the author (Fable 5 / Opus 4.8). These are
   visual changes (TSX + HTML/JS/Three.js), NOT covered by `node --test`; the gate is `tsc --noEmit` +

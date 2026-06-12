@@ -91,8 +91,8 @@
       { "name": "google-ai", "type": "official", "url": "https://blog.google/technology/ai/", "enabled": true },
       { "name": "microsoft-ai", "type": "official", "url": "https://blogs.microsoft.com/ai/", "enabled": true },
       { "name": "meta-ai", "type": "official", "url": "https://ai.meta.com/blog/", "enabled": true },
-      { "name": "the-decoder", "type": "aggregator", "url": "https://the-decoder.com/", "enabled": true },
-      { "name": "tldr-ai", "type": "aggregator", "url": "https://tldr.tech/ai", "enabled": true },
+      { "name": "the-decoder", "type": "aggregator", "url": "https://the-decoder.com/feed/", "enabled": true },
+      { "name": "tldr-ai", "type": "aggregator", "url": "https://tldr.tech/api/rss/ai", "enabled": true },
       { "name": "hn", "type": "aggregator", "url": "https://hn.algolia.com/api/v1/search_by_date?tags=story&query=AI", "enabled": true }
     ]
   },

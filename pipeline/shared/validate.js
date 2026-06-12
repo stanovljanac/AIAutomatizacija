@@ -32,6 +32,7 @@ const FILENAME_TO_SCHEMA = {
   "review.json": "review.schema.json",
   "timeline.json": "timeline.schema.json",
   "news.json": "news.schema.json",
+  "facts.json": "facts.schema.json",
   "config.json": "config.schema.json",
 };
 

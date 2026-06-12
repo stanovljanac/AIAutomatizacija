@@ -52,7 +52,10 @@ does not self-approve (that's `script-review`, then the human gate).
    30–60 seconds** (AI overviews weight the opening most), then the hook, then the deeper
    build. Use **specific names, dates, numbers, places** — "26,000 workers in Malaysia were
    laid off in 2026 because…", not "lots of people lost jobs." Every specific factual claim
-   traces to `sources.md`.
+   traces to `sources.md`. **Never write a model name, tool version, price, or free-tier
+   limit from memory** — those come live-verified from `pipeline/shared/knowledge/facts.json`
+   (the curated freshness cache) via `fact-check`; if it's not there yet, fact-check fetches
+   and adds it. Recalled numbers go stale and break monetization.
 10. **Human fingerprint + series (D-028).** Carry the owner-approved **original angle/POV** and
    honest "what wasn't worth it" takes; the channel's series tag belongs on the section-header:
    **Desk Fixes** (mini-demo) · **Desk Loops** (ideas/diagram) · **Automation Breakdowns**

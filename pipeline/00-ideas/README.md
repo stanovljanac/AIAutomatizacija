@@ -8,6 +8,17 @@ scaffold. See `docs/WORKFLOW.md` Step 0 and `docs/ARCHITECTURE.md`.
   `pipeline/shared/schemas/ideas.schema.json`).
 - `new-video.mjs` — deterministic scaffold: next `NNN` id, copy `content/_TEMPLATE`,
   init `brief.json`. Run via `npm run new-video -- <slug> "Working title"`.
+- `fetch-news.mjs` — the **news watch** (Wave 3, `NewsSource` port). Pulls each enabled
+  `config.news.sources` entry (official RSS/changelog + The Decoder + TLDR AI + Hacker News
+  Algolia JSON), normalizes them (no-dep RSS/Atom parser), **dedups across sources by
+  normalized-title hash** (≥2 sources ⇒ higher score), writes `news.json`, and promotes the
+  top corroborated items into **Desk Notes** ideas here (`source.origin:"news"`). Every source
+  is fail-soft. Run: `node pipeline/00-ideas/fetch-news.mjs [--dry-run]`.
+- `news.json` — normalized, deduped, scored news (schema:
+  `pipeline/shared/schemas/news.schema.json`). Generated, git-ignored.
+
+> Time-sensitive facts (model/tool versions, prices, free-tier limits) do NOT live here —
+> they're the curated freshness cache in `pipeline/shared/knowledge/` (Wave 3, T3.1).
 
 ## Idea-bank model (DECISIONS D-013/D-018; CHANNEL §5)
 - **Flat list, multi-tagged** (`task`, `sector`, `tool`, `archetype`) **+ a 0–100

@@ -62,7 +62,15 @@ two small build gaps):
 
 ---
 
-## Wave 3 — Freshness & news (anti-stale + Desk Notes)  ◀ next
+## Wave 3 — Freshness & news (anti-stale + Desk Notes)  ✅ DONE 2026-06-12
+
+**✅ SHIPPED 2026-06-12** (Sonnet-verified PASS, **329 tests green**; committed this session). T3.1 + T3.2
+done as below; **T3.3 deferred to Wave 5** (scheduling). Owner calls: facts = **curated + staleness** (the
+auditor never auto-overwrites a value), and **no code-checker** this wave. Built: `pipeline/shared/knowledge/`
+(`facts.json` + `refresh-facts.mjs` + `facts.schema.json`) and `pipeline/00-ideas/fetch-news.mjs` (+ `news.json`).
+Open follow-up: wire the **official-source RSS endpoints** (anthropic/openai/google/microsoft/meta currently
+point at HTML pages → fail-soft to 0 items; the-decoder/tldr/HN work). See `docs/PROGRESS.md` + `docs/BUILD_LOG.md`
+(2026-06-12) for detail.
 
 **Goal:** the system follows AI-automation news from a trusted multi-source feed and never relies on
 the model's stale training memory for model/tool/price/version facts.
@@ -84,7 +92,7 @@ the model's stale training memory for model/tool/price/version facts.
   RSS endpoints). Tests mock `fetch`. *Verify:* a corroborated item becomes one scored Desk Notes idea.
 - **T3.3 — schedule the refresh** (folds into Wave 5 scheduling).
 
-## Wave 4 — Swappability hardening (only when a real need appears)
+## Wave 4 — Swappability hardening (only when a real need appears)  ◀ next
 
 **Goal:** make the Wave-0 seams real so an engine/TTS swap is a config flip, not a rewrite. Lower
 priority — the Remotion+HyperFrames **combo works today** (D-019); do this when we actually want to
