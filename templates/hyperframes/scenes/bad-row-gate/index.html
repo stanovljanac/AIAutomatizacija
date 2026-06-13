@@ -1,0 +1,85 @@
+<!doctype html>
+<!--
+  bad-row-gate — HyperFrames cinematic "one bad row hits the gate" beat for The Automation
+  Desk (owner request 2026-06-13). A single incoming row (a bad date, 31/02/2026) slides toward
+  the validation GATE, is rejected with a reason stamp, and diverts into quarantine — the clean
+  table never sees it. The concrete mini-example that makes the gate idea click.
+
+  Silent by design (narration lives only in the Remotion master track). Deterministic: no
+  Math.random / Date.now; one paused GSAP timeline, seek-driven. GSAP vendored locally.
+
+  VARIABLES CONTRACT (passed by the pipeline via --variables-file):
+    fps, width, height, durationFrames, durationSeconds  (scalars; declared below)
+    revealsSeconds  number[]  clip-relative beats (sentence starts) — drive the 5 key moments
+    props           object    { name?, date?, amount?, reason? } — all optional, sensible defaults
+  revealsSeconds/props pass through getVariables() untouched (NOT declared; no --strict-variables).
+
+  EXACT duration (hyperframes v0.6.70): the renderer reads frame count + canvas size from STATIC
+  entry attributes; make-entry.mjs patches data-duration = (durationFrames - 0.5) / fps.
+
+  Render:
+    ENTRY=$(node scenes/bad-row-gate/make-entry.mjs <vars.json>)
+    npx hyperframes render ./scenes/bad-row-gate -c "$ENTRY" \
+      --variables-file <vars.json> --fps <fps> --quality high --output <clip.mp4>
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":420},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":14}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="bad-row-gate.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="bad-row-gate" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="glow" id="glow"></div>
+        <div class="reject-flash" id="reject-flash"></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text">One bad row</span></div>
+
+        <!-- the incoming row (slides toward the gate) -->
+        <div class="row-incoming" id="row">
+          <span class="cell name" id="cell-name">Sarah Lee</span>
+          <span class="cell date" id="cell-date">31/02/2026</span>
+          <span class="cell amt" id="cell-amt">$420</span>
+        </div>
+
+        <!-- the gate (vertical barrier the row must pass) -->
+        <div class="gate" id="gate">
+          <div class="gate-bar" id="gate-bar"></div>
+          <div class="gate-label">THE GATE</div>
+        </div>
+
+        <!-- the rejection reason stamp -->
+        <div class="stamp" id="stamp"><span class="stamp-x">✗</span><span id="stamp-text">Invalid date</span></div>
+
+        <!-- the clean table (behind the gate) — stays pristine -->
+        <div class="clean" id="clean">
+          <div class="clean-head">Clean table</div>
+          <div class="clean-row"><span>Mark Diaz</span><span>2026-01-14</span><span>$310</span></div>
+          <div class="clean-row"><span>Ana Roy</span><span>2026-02-20</span><span>$540</span></div>
+        </div>
+
+        <!-- quarantine tray (the bad row lands here) -->
+        <div class="quarantine" id="quarantine"><span class="q-dot"></span>Quarantine</div>
+      </div>
+    </div>
+    <script src="bad-row-gate.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["bad-row-gate"] = tl;
+    </script>
+  </body>
+</html>

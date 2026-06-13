@@ -263,11 +263,16 @@ export const Diagram: React.FC<{ data: { title?: string; nodes: { id: string; la
 };
 
 // ── code-block ──────────────────────────────────────────────────────────────
-export const CodeBlock: React.FC<{ data: { title?: string; language?: string; code: string; highlight?: number[] } }> = ({ data }) => {
+export const CodeBlock: React.FC<{ data: { title?: string; language?: string; code: string; highlight?: number[]; showLineNumbers?: boolean; fontSize?: number } }> = ({ data }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const a = fadeUp(frame, fps, 0, 16);
   const lines = data.code.split("\n");
+  // Line numbers are ON by default, but should be turned OFF when code/text wraps to multiple
+  // lines (the gutter then misaligns) — owner rule 2026-06-13. `fontSize` lets a narrow target
+  // (e.g. the vertical Short) shrink the mono so long rows don't overflow the card.
+  const showNums = data.showLineNumbers !== false;
+  const fontSize = data.fontSize ?? 34;
   return (
     <Frame>
       {data.title && <div style={{ fontFamily: theme.font.heading, fontWeight: 800, fontSize: 48, color: theme.color.textPrimary, marginBottom: 26, opacity: a.opacity }}>{data.title}</div>}
@@ -276,8 +281,8 @@ export const CodeBlock: React.FC<{ data: { title?: string; language?: string; co
           const hl = data.highlight?.includes(i + 1);
           const reveal = progress(frame, fps, 12 + i * 8, 12);
           return (
-            <div key={i} style={{ display: "flex", gap: 24, fontFamily: theme.font.mono, fontSize: 34, lineHeight: 1.55, opacity: reveal, background: hl ? "rgba(79,140,255,0.12)" : "transparent", margin: "0 -12px", padding: "0 12px", borderLeft: hl ? `3px solid ${theme.color.accent}` : "3px solid transparent" }}>
-              <span style={{ color: theme.color.textSecondary, opacity: 0.5, width: 36, textAlign: "right" }}>{i + 1}</span>
+            <div key={i} style={{ display: "flex", gap: showNums ? 24 : 0, fontFamily: theme.font.mono, fontSize, lineHeight: 1.55, opacity: reveal, background: hl ? "rgba(79,140,255,0.12)" : "transparent", margin: "0 -12px", padding: "0 12px", borderLeft: hl ? `3px solid ${theme.color.accent}` : "3px solid transparent" }}>
+              {showNums && <span style={{ flex: "0 0 36px", color: theme.color.textSecondary, opacity: 0.5, textAlign: "right" }}>{i + 1}</span>}
               <span style={{ color: theme.color.textPrimary, whiteSpace: "pre" }}>{ln}</span>
             </div>
           );

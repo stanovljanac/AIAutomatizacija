@@ -13,7 +13,7 @@
  *   - `value_missing`— the cached value no longer literally appears on the source page
  *                      (a cheap "the page changed under us" signal).
  * Anything flagged lands in `needs_review`. Curating the new value stays a human/agent
- * step (the owner chose "curated + staleness", not auto-overwrite — see WAVES_3-5_PLAN T3.1).
+ * step (the owner chose "curated + staleness", not auto-overwrite). See ARCHITECTURE.md §12.
  *
  *   node pipeline/shared/knowledge/refresh-facts.mjs            # audit + write freshness-report.json
  *   node pipeline/shared/knowledge/refresh-facts.mjs --strict   # exit 1 if anything needs review

@@ -93,6 +93,10 @@ export function buildTimeline({ script, plan, alignment, fmt, timings, fps, cros
         }
         reveals.push({ at_seconds: snap(absSec) });
       }
+    } else if (bt.revealOn === "sentences" && Array.isArray(bt.sents) && bt.sents.length) {
+      // Generic per-sentence reveals for scenes with no list to map (e.g. a bespoke HyperFrames
+      // scene that wants the narration's sentence beats as its motion cues). One reveal per sentence.
+      reveals = bt.sents.map((s) => ({ at_seconds: snap(s.start) }));
     }
 
     // motivated-motion (opt-in): resolve focalZoom / pip cue words → ABSOLUTE (frame-snapped) seconds.

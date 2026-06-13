@@ -411,7 +411,7 @@ old one (don't delete history).
 ## D-041 — Build-sprint engineering cycle (enforced, never skipped)
 - **Context:** an autonomous system can't rely on a human catching a red test at 2am; quality steps must be mechanical or always-loaded policy.
 - **Decision:** every code change runs **atomize → build → self-test → verify with a DIFFERENT model (Sonnet 4.6; Haiku 4.5 for trivial) → fix → update docs → commit only on explicit owner request**. Enforced by a **Stop test-gate hook** (`.claude/hooks/test-gate.mjs` — fail-open, blocks finishing on red when code changed, `[skip-tests]` escape) + the **`build-sprint` skill** + a `CLAUDE.md` rule + a feedback memory. **Not** for planning/research/doc-only edits.
-- **Consequences:** tests are mechanically gated; different-model verification, doc-freshness and commit-discipline are always-loaded policy; verifier verdicts logged in `docs/BUILD_LOG.md`.
+- **Consequences:** tests are mechanically gated; different-model verification, doc-freshness and commit-discipline are always-loaded policy; the verifier verdict is recorded in the commit/PR message and the PROGRESS entry for that change.
 
 > Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
 > **D-012** (name) → see D-023. **D-014** (TTS) → see D-024. The old "no AI-disclosure" note → see D-025.

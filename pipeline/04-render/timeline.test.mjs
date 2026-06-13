@@ -64,6 +64,31 @@ test("buildTimeline reveal-sync is stored as absolute seconds on the bullet-step
   assert.equal(bullets.props.reveals, undefined);
 });
 
+test("buildTimeline: revealOn 'sentences' yields one reveal per sentence even with no list (HF scenes)", () => {
+  const script = readFixture("script.json");
+  const plan = structuredClone(readFixture("scene-plan.json"));
+  const alignment = readFixture("alignment.json");
+  const brief = readFixture("brief.json");
+  // pick a scene that has NO items/steps/nodes list and >= 2 sentences
+  const target = plan.scenes.find((p) => {
+    const sc = script.scenes.find((s) => s.id === p.scene_id);
+    return sc && sc.sentences.length >= 2 && !(p.props?.items || p.props?.steps || p.props?.nodes);
+  });
+  assert.ok(target, "fixture has a no-list, multi-sentence scene to mark revealOn:sentences");
+  target.revealOn = "sentences";
+  const sc = script.scenes.find((s) => s.id === target.scene_id);
+  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
+  const timings = deriveRenderTimings(fmt, { fps, vertical: false });
+  const t = buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: timings.crossfadeFrames, dims: { width: 1920, height: 1080 }, outId: "_FIXTURE" });
+  const built = t.scenes.find((s) => s.scene_id === `${target.scene_id}.0`);
+  assert.equal(built.reveals?.length, sc.sentences.length, "one reveal per sentence");
+  let prev = -1;
+  for (const r of built.reveals) {
+    assert.ok(r.at_seconds >= prev, "reveals are ordered");
+    prev = r.at_seconds;
+  }
+});
+
 test("buildTimeline caption cues are timed word groups in absolute seconds (<= max_words each)", () => {
   const t = fixtureTimeline();
   assert.ok(t.captions.length > 0);

@@ -134,13 +134,17 @@ Plus the always-on: `Intro` / `IntroShort`, `Outro` / `OutroShort`, `Subtitles`,
 ## 7. Intro / outro spec  *(finalize in Phase 2)*
 
 > **Logo (D-029):** avatar = **Logo 1** — gold "desk" mark on a dark background
-> (`assets/brand/logo.png`). In-video accent **stays electric blue** (hybrid). The gold
-> mark is **not yet baked** into the `Intro`/`ThumbnailTemplate` components — that's a
-> future task; it enters the next videos, not a 002 re-render.
+> (`assets/brand/logo.png`). **Palette split (owner, 2026-06-13):** the **heroes + intro/outro**
+> are brand **black + gold** (`#ffb020`); the **body** keeps **electric blue** as the accent with
+> gold pops. The gold mark **is now baked** into the `Intro`/`Outro` components (over a gold
+> `BrandBackdrop` aurora). (Thumbnails remain owner-generated; `ThumbnailTemplate` is unused per the
+> visual-prompts rule.)
 
-- **Intro (long):** wordmark "The Automation Desk" + tagline, ≤ 3s, accent animation,
-  then straight into the hook. **No music** (sound-design hit only).
-- **Outro (long):** "subscribe / next video" card + brand, ~5s. **No music.**
+- **Intro (long):** the gold desk mark lands over a black+gold aurora, the wordmark rises, a gold
+  rule sweeps, tagline fades in (~1.5s), then straight into the hook. **No music** (sound-design hit only).
+  Built in `components/Intro.tsx` + `components/BrandBackdrop.tsx`.
+- **Outro (long):** gold mark + channel handle + "subscribe" over the same aurora (~2.5s). **No music.**
+  Built in `components/Outro.tsx`.
 - **Short variants:** tighter, vertical, ≤ 1.5s intro, minimal outro; **light music ok**.
 
 ## 8. Music & audio aesthetic

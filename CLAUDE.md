@@ -52,8 +52,7 @@ pivoted from the old Serbian-AI channel: `docs/DECISIONS.md` (D-011…D-019).
 | Follow the production steps                                     | `docs/WORKFLOW.md`                                                                                                       |
 | Know which phase we're in / next                                | `docs/ROADMAP.md`                                                                                                        |
 | Log or read progress                                            | `docs/PROGRESS.md`                                                                                                       |
-| Resume the in-progress build wave (detailed handoff)            | the newest `docs/WAVE*` handoff (now `docs/WAVE_V_HANDOFF.md`)                                                           |
-| Read the different-model verification records                   | `docs/BUILD_LOG.md`                                                                                                      |
+| Understand how autonomy/freshness/swappability are wired        | `docs/ARCHITECTURE.md` §12                                                                                               |
 | Understand a past decision                                      | `docs/DECISIONS.md`                                                                                                      |
 | Install/configure the environment                               | `docs/SETUP.md`                                                                                                          |
 | Write or fix the tone/language                                  | `style/STYLE_GUIDE.md`                                                                                                   |

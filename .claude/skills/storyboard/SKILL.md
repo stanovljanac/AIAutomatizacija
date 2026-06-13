@@ -60,10 +60,16 @@ motion ONLY to **single-focus** scenes; keep tables / multi-row lists / body tex
   `"engine": "hyperframes"` **and** add `"hf_scene": "<dir>"` to its `props`, where `<dir>` is a scene
   folder under `templates/hyperframes/scenes/`. Available heroes (all read `props.title` + optional
   `props.kicker`/`props.accent`):
-  - **`hook-kinetic`** — calmer kinetic-type hook (clean, restrained).
-  - **`hook-prism`** — BOLD 3D/WebGL: aurora-plasma bg + converging glass shards. ⚠ **Draft look** — the
-    owner wants the prism shards REPLACED and the palette moved toward brand black/yellow; use it as the
-    "bold" slot but expect it to be re-skinned (see `docs/WAVE_V_HANDOFF.md` V7 steer).
+  - **`hook-kinetic`** — calmer kinetic-type hook (clean, restrained, electric-blue).
+  - **`hook-prism`** — BOLD 3D/WebGL: a brand **black+gold aurora** plasma bg + a rushing particle tunnel
+    (kinetic title on top). The draft "prism shards" were removed and the palette moved to brand gold
+    (`#ffb020`) in the owner re-skin (2026-06-13) — this is the go-to **bold opener**. Reads `props.title`
+    + optional `props.kicker`/`props.accent`.
+  - **`bad-row-gate`** — a CINEMATIC **content** beat (GSAP, black+gold): one bad row (e.g. a bad date)
+    slides to the validation gate, is rejected with a red reason stamp, and drops into quarantine while
+    the clean table stays pristine. Reads `props.{ name?, date?, amount?, reason? }`; pair it with
+    `revealOn: "sentences"` so its 5 motion beats sync to the scene's 5 narration sentences. Not a hook —
+    a concrete mini-example.
   **Scope (owner): the hook + up to 2 hero moments per video** — surgical, flashy beats only (hook opener,
   a number/section accent). Tables/lists/body text stay in Remotion; do NOT bold-background every scene.
   The clip is rendered to EXACTLY the scene window and Remotion overlays the synced captions on top

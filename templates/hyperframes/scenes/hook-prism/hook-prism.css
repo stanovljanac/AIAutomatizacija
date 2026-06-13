@@ -7,8 +7,8 @@
   --surface: #151b23;
   --text-primary: #f2f5f8;
   --text-secondary: #9aa7b2;
-  --accent: #4f8cff; /* electric blue — overridable via props.accent */
-  --accent-2: #22d3a7; /* mint — contrast moments only */
+  --accent: #ffb020; /* brand gold — overridable via props.accent (owner re-skin 2026-06-13) */
+  --accent-2: #ffd37a; /* pale warm gold — contrast/cores */
   --u: 1; /* min(width,height)/1080 — set from variables for fluid sizing */
 }
 
@@ -131,7 +131,7 @@ body {
   text-shadow:
     0 0 calc(3px * var(--u)) rgba(0, 0, 0, 0.85),
     0 calc(2px * var(--u)) calc(10px * var(--u)) rgba(0, 0, 0, 0.7),
-    0 calc(2px * var(--u)) calc(40px * var(--u)) rgba(79, 140, 255, 0.42);
+    0 calc(2px * var(--u)) calc(40px * var(--u)) rgba(255, 176, 32, 0.42);
 }
 .portrait .title {
   font-size: calc(108px * var(--u));

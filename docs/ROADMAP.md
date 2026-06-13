@@ -195,9 +195,11 @@ Exit criteria:
 
 ## Build execution status (Phase B/C)
 
-Tracked in `docs/PROGRESS.md` + `docs/BUILD_LOG.md`. **v1 = Waves 0–2** (hands-off to a YouTube
+Tracked in `docs/PROGRESS.md`. **v1 = Waves 0–2** (hands-off to a YouTube
 draft, **including** the multi-model loop). Every wave runs the **build-sprint cycle** (D-041):
 atomize → build → test → verify with a *different* model → fix → docs → commit only on request.
+The detailed per-wave build handoffs and verifier-verdict log were removed once the work shipped
+(recoverable from git history); the implementation methods now live in `docs/ARCHITECTURE.md` §12.
 
 - **Wave 0 — foundations: ✅ DONE** (commit `ae92a6c`, Sonnet-verified, 46 tests). Ports
   (Runner/Reviewer), schemas (review/news/timeline/config), test-gate hook, generalized permissions,
@@ -210,7 +212,7 @@ atomize → build → test → verify with a *different* model → fix → docs 
   the loop wired into the script + cut stages. Verified to **fail closed**.
 - **Integration: ✅ DONE.** voice/align → Python (mechanical); render/qa → `video-render` /
   `qa-video` skills via the Runner (real in headless, deferred to the top agent in Claude-Code). 166 tests.
-- **Wave V — modular video formats + pro motion design (Remotion-core → HyperFrames hero scenes): 🔄 IN PROGRESS.**
+- **Wave V — modular video formats + pro motion design (Remotion-core → HyperFrames hero scenes): ✅ DONE.**
   Owner-added before Wave 3 (videos were "slideshow"; want a strong first-30s hook + real motion +
   modular policy; drop stock b-roll). **V0** format-spec foundation (`formats/default.json` +
   `format.schema.json` + `lib/format.mjs` — the single source of truth for hook/motion/pacing/length/
@@ -228,12 +230,8 @@ atomize → build → test → verify with a *different* model → fix → docs 
   `templates/hyperframes/scenes/hook-kinetic`; `render.engine` = `combo`; **sync proven** on a 004 scratch
   (HF clip = exact 440-frame window, captions synced). **V7 kickoff ✅ 2026-06-12** (Sonnet-verified):
   `CaptureSegment` default cinematic **push-in** (demos never flat; auto-off under `focalZoom`) + first
-  BOLD hero `templates/hyperframes/scenes/hook-prism` (Three.js/WebGL aurora + 3D shards). **Owner steer
-  for next hero pass:** keep aurora bg, REPLACE prism shards, recolor toward brand **black/yellow** (flag
-  VISUAL_IDENTITY); scope = **hook + 2 hero moments/video** (surgical). **Next:** hero recolor + build the
-  whole system (Waves 3–5 toward headless autonomy). Motivated-motion + V5 **committed `486b9d0`**; **V6+V7
-  committed + pushed 2026-06-12**. **Full handoff: `docs/WAVE_V_HANDOFF.md`** (read this to
-  resume). Also see `docs/PROGRESS.md` + `docs/BUILD_LOG.md`.
+  BOLD hero `templates/hyperframes/scenes/hook-prism` (Three.js/WebGL aurora + 3D shards). All
+  committed + pushed. The remaining visual polish (hero recolor) is tracked under **Open follow-ups** below.
 - **Wave 3 — freshness & news (anti-stale + Desk Notes): ✅ DONE 2026-06-12** (Sonnet-verified, **329 tests
   green**, UNCOMMITTED). **T3.1** the knowledge-freshness cache `pipeline/shared/knowledge/facts.json`
   (curated, source-backed model/price/version/limit values) + `refresh-facts.mjs` (staleness **auditor** —
@@ -249,9 +247,9 @@ atomize → build → test → verify with a *different* model → fix → docs 
   draft=edge-tts, `--final`=Azure, D-024). **T4.3** the `Distributor` port seam
   `pipeline/07-distribute/distributor.mjs` + `distribution.schema.json` + a disabled `config.distribute` (Noop/Mock/
   Postiz-**stub**; live Postiz client = Wave 5 / T5.3).
-- **Wave 5 — full autonomy + growth loop ◀ in progress — see [`docs/WAVES_3-5_PLAN.md`](WAVES_3-5_PLAN.md)** (detailed,
-  atomized handoff): headless + scheduled run, analytics loop, live Postiz distribution, thumbnail auto-scoring.
-  Done so far (all Sonnet-verified, **456 tests green**): **T5.2 analytics loop**
+- **Wave 5 — full autonomy + growth loop: ✅ core DONE** (headless + scheduled run, analytics loop;
+  T5.3/T5.4 remain — see Open follow-ups). Methods now in `docs/ARCHITECTURE.md` §12.
+  Done (all Sonnet-verified, **456 tests green**): **T5.2 analytics loop**
   (`fetch-analytics.mjs` → idea `metrics` → idempotent cluster-aware re-rank; `auth.mjs` += `yt-analytics.readonly`);
   the **Short scene-plan** build gap (derived from the long plan — no more pause); **T5.1 autonomous driver**
   (`pick-next.mjs` auto-pick + `auto-run.mjs` one-pass loop + gate-aware `notifiesOwner`; HeadlessRunner tested +
@@ -260,6 +258,24 @@ atomize → build → test → verify with a *different* model → fix → docs 
   incl. `yt-analytics.readonly`), and the **CronCreate** routine is registered (weekly, Mon 09:07, session-local,
   loops `auto-run` in Claude-Code mode → auto-draft PRIVATE → PushNotify the owner at gates). Remaining: **T5.3**
   live Postiz, **T5.4** thumbnail auto-scoring. (`GEMINI_API_KEY` already in `.env`; OAuth now done.)
+
+## Open follow-ups (not blocking the first hands-off video)
+
+- ~~**Hero recolor (visual polish).**~~ **DONE 2026-06-13.** `hook-prism` re-skinned: the prism/glass
+  shards were removed (kept the aurora plasma + rushing particle tunnel) and the palette moved to brand
+  **black + gold** (`#ffb020`). Also shipped the same wave: a new cinematic content hero
+  `bad-row-gate` (one bad row → gate → "Invalid date" → quarantine), the gold-mark **black+gold intro/outro**
+  (`Intro`/`Outro` + `BrandBackdrop`), and a `CodeBlock` line-number fix (no-shrink gutter + optional
+  numbers/fontSize). Scope held to **hero + up to 2 hero moments per video** (heroes/stings = black+gold;
+  body stays electric blue + gold pops). First applied to video 006.
+- **T5.3 — live Postiz distribution (D-027).** Inject the live Postiz HTTP client into `PostizDistributor`,
+  flip `config.distribute.enabled`, write `distribution.json` + cross-post the Short caption after upload.
+  Owner one-time: `POSTIZ_BASE_URL` / `POSTIZ_API_KEY`.
+- **T5.4 — thumbnail auto-scoring** (legibility / contrast / brand) to inform the owner's 2-variant pick.
+- **Official-source RSS endpoints.** Some changelogs (anthropic/openai/google/microsoft/meta) currently
+  point at HTML pages → `fetch-news.mjs` fails soft to 0 items; wire verified RSS endpoints when found.
+- **Re-register the weekly autonomous run.** The CronCreate routine is session-local and auto-expires after
+  7 days — re-register it each week (or keep a session alive / use `/loop`).
 
 ## What we deliberately deferred
 

@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 420,
+  "durationSeconds": 14,
+  "revealsSeconds": [0.6, 3.2, 6.0, 8.4, 11.0],
+  "props": { "name": "Sarah Lee", "date": "31/02/2026", "amount": "$420", "reason": "Invalid date" }
+}

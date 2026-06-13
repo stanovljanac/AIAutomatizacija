@@ -42,7 +42,7 @@ var props = V.props && typeof V.props === "object" ? V.props : {};
 var title = typeof props.title === "string" && props.title.trim() ? props.title.trim() : "Stop typing invoices by hand";
 var kicker = typeof props.kicker === "string" && props.kicker.trim() ? props.kicker.trim() : "The Automation Desk";
 var accentHex =
-  typeof props.accent === "string" && /^#[0-9a-fA-F]{3,8}$/.test(props.accent) ? props.accent : "#4f8cff";
+  typeof props.accent === "string" && /^#[0-9a-fA-F]{3,8}$/.test(props.accent) ? props.accent : "#ffb020";
 var beats = Array.isArray(V.revealsSeconds)
   ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; })
   : [];
@@ -111,8 +111,8 @@ for (var g = 0; g < nGroups; g++) {
 }
 var lastLand = wordStart[words.length - 1] + WORD_DUR;
 
-// the moment the title is fully landed — the 3D shards converge here, and the
-// background "settles" from rush to calm. Clamped inside the clip.
+// the moment the title is fully landed — the background "settles" from rush to
+// calm here (aurora intensity + particle rush ease down). Clamped inside the clip.
 var CONVERGE = Math.min(Math.max(lastLand, INTRO + 0.6), D - 0.5);
 
 // ── 5. GSAP timeline for the HTML (paused; the player/renderer seeks it) ──
@@ -219,7 +219,7 @@ function initThree(THREE) {
   // Pin size + pixel ratio for byte-stable video output (no devicePixelRatio).
   renderer.setPixelRatio(1);
   renderer.setSize(W, H, false);
-  renderer.setClearColor(0x05080c, 1);
+  renderer.setClearColor(0x080705, 1); // warm near-black (brand black+gold)
 
   // beat flare envelope: a short bump centered on each revealsSeconds beat
   // (deterministic, pure fn of time). Declared before use by the frame fn.
@@ -235,7 +235,9 @@ function initThree(THREE) {
   }
 
   var accent = hexToRgb(accentHex);
-  var mint = hexToRgb("#22d3a7");
+  // brand secondary: a pale warm gold (was mint) — keeps the aurora/particles in the
+  // black+gold family (owner re-skin 2026-06-13). The var name stays `mint`/`cMint`/`uMint`.
+  var mint = hexToRgb("#ffd37a");
   var cAccent = new THREE.Color(accent.r, accent.g, accent.b);
   var cMint = new THREE.Color(mint.r, mint.g, mint.b);
 
@@ -300,8 +302,8 @@ function initThree(THREE) {
       "  col *= mix(0.35, 1.0, smoothstep(0.0, 0.42, vy));", // darken the bottom caption band
       // beat flare lifts the whole field briefly
       "  col += (uAccent*0.4 + uMint*0.3) * uFlare * field * 0.9;",
-      // deep brand-tinted base so it never goes pure black
-      "  col += vec3(0.012, 0.02, 0.035);",
+      // deep brand-tinted base so it never goes pure black (warm gold-black)
+      "  col += vec3(0.022, 0.016, 0.004);",
       "  gl_FragColor = vec4(col, 1.0);",
       "}",
     ].join("\n"),
@@ -310,7 +312,7 @@ function initThree(THREE) {
   bgQuad.frustumCulled = false;
   bgScene.add(bgQuad);
 
-  // ── 6b. PERSPECTIVE SCENE (particle tunnel + converging shards) ────────────────
+  // ── 6b. PERSPECTIVE SCENE (rushing particle tunnel) ────────────────────────────
   var scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x05080c, 0.05);
   var camera = new THREE.PerspectiveCamera(IS_PORTRAIT ? 74 : 60, W / H, 0.1, 260);
@@ -379,55 +381,10 @@ function initThree(THREE) {
   var points = new THREE.Points(pGeo, pMat);
   scene.add(points);
 
-  // GLASS SHARDS — a ring of metallic icosahedra that start deep + scattered and
-  // CONVERGE toward the title plane, catching brand light, flaring on beats.
-  // Positions are a PURE fn of time + seed (no accumulated state) => seek-exact.
-  var SHARDS = IS_PORTRAIT ? 13 : 16;
-  var shardMeshes = [];
-  var shardSeed = [];
-  var rand2 = mulberry32(0x1234abcd); // separate constant stream
-  var shardGeo = new THREE.IcosahedronGeometry(IS_PORTRAIT ? 0.62 : 0.78, 0);
-  for (var s = 0; s < SHARDS; s++) {
-    var hot = rand2() > 0.5;
-    var mat = new THREE.MeshStandardMaterial({
-      color: hot ? cAccent : cMint,
-      metalness: 0.9,
-      roughness: 0.16,
-      transparent: true,
-      opacity: 0.95,
-      emissive: hot ? cAccent : cMint,
-      emissiveIntensity: 0.6,
-      flatShading: true,
-    });
-    var m = new THREE.Mesh(shardGeo, mat);
-    scene.add(m);
-    shardMeshes.push(m);
-    // settle the constellation toward the UPPER half so it never crowds the bottom
-    // caption band; spread wide horizontally to frame the title.
-    shardSeed.push({
-      ang: (s / SHARDS) * Math.PI * 2 + rand2() * 0.5,
-      startRad: (IS_PORTRAIT ? 10 : 15) + rand2() * 7,
-      startZ: -55 - rand2() * 60,
-      spin: 0.6 + rand2() * 1.8,
-      spinAxis: rand2(),
-      hot: hot,
-      fx: (rand2() - 0.5) * (IS_PORTRAIT ? 7 : 13),
-      // bias final Y upward (positive) so shards sit around/above the title line
-      fy: (IS_PORTRAIT ? 4.5 : 3.0) + (rand2() - 0.3) * (IS_PORTRAIT ? 6 : 4.5),
-    });
-  }
-
-  // dramatic lighting for the shards: bright key + brand rim + cool fill
-  var key = new THREE.DirectionalLight(0xffffff, 3.4);
-  key.position.set(-6, 9, 11);
-  scene.add(key);
-  var rim = new THREE.DirectionalLight(cAccent.getHex(), 3.0);
-  rim.position.set(9, -3, 5);
-  scene.add(rim);
-  var rim2 = new THREE.DirectionalLight(cMint.getHex(), 1.8);
-  rim2.position.set(-8, -5, 7);
-  scene.add(rim2);
-  scene.add(new THREE.AmbientLight(0x1b2a3a, 1.6));
+  // NOTE (owner re-skin 2026-06-13): the converging GLASS SHARDS were removed — the bold
+  // look is now the gold aurora + rushing particle tunnel alone (prism shards rejected). No
+  // MeshStandardMaterial remains, so the shard key/rim/fill lights are gone too (the aurora
+  // ShaderMaterial and additive PointsMaterial are unlit). Keep this scene deterministic + silent.
 
   // ── 6c. The deterministic frame function: ALL state is a PURE function of time. ──
   function renderAt(time) {
@@ -457,24 +414,6 @@ function initThree(THREE) {
     }
     pGeo.attributes.position.needsUpdate = true;
     pMat.opacity = 1.0 - 0.45 * settle; // fade so the words own the final frame
-
-    // --- converging shards ---
-    var conv = smoothstep(0.0, CONVERGE, time);
-    for (var si = 0; si < SHARDS; si++) {
-      var sd = shardSeed[si];
-      var m2 = shardMeshes[si];
-      var rad = sd.startRad * (1 - conv);
-      var px = Math.cos(sd.ang) * rad + sd.fx * conv;
-      var py = Math.sin(sd.ang) * rad + sd.fy * conv;
-      var pz = sd.startZ * (1 - conv) + 2.0 * conv;
-      m2.position.set(px, py, pz);
-      var sp = time * sd.spin;
-      m2.rotation.set(sp * 0.7, sp, sp * 0.5 * (sd.spinAxis + 0.3));
-      m2.material.opacity = 0.95 * smoothstep(0.03, 0.5, conv);
-      m2.material.emissiveIntensity = 0.5 + flare * 1.6;
-      var sc = (1.0 - 0.2 * smoothstep(CONVERGE, D, time)) * (0.6 + 0.4 * smoothstep(0.05, 0.6, conv));
-      m2.scale.setScalar(sc);
-    }
 
     // subtle dolly that eases to rest (motivated by the rush settling)
     camera.position.z = 14 - 2.2 * settle;

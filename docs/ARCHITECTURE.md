@@ -196,3 +196,53 @@ inside its scene window, with auto-zoom/highlight on the cursor.
 | QA finds technical break | no audio / cut / no captions | QA auto-fixes and re-renders that step |
 | Render slow locally | heavy effects | Simplify scene template, or move that block to chosen engine |
 | AI image step needs cloud | optional path | Skip (use code-visual/stock) or run the opt-in Colab notebook |
+
+## 12. Autonomy, freshness & swappability (built — Waves 3–5)
+
+These layers make the studio hands-off and keep facts current. All are pure-core + injected-IO
+(testable without network/keys), obey the §4 pipeline contract, and route agent steps through the
+Runner / Reviewer / Publisher ports.
+
+**Freshness & news (anti-stale).**
+- `pipeline/shared/knowledge/facts.json` — curated, source-backed model/price/version/free-tier values
+  (each with `source` + `retrieved`), seeded **live, never from memory**. `refresh-facts.mjs` is a
+  *staleness auditor*: it flags stale / unreachable / changed facts but **never overwrites a value**
+  (auto-parsing a number risks writing a wrong one — the exact thing the anti-stale rule prevents).
+  Schema `facts.schema.json`.
+- `pipeline/00-ideas/fetch-news.mjs` (the **`NewsSource` port**) — no-dep RSS/Atom + Hacker-News-Algolia
+  parsers, dedup across sources by normalized-title hash (≥2 sources ⇒ higher score), writes `news.json`,
+  promotes top corroborated items to **Desk Notes** ideas. Every source fails soft. *(Open: some official
+  changelogs still serve HTML not RSS → fail-soft to 0 items; wire verified RSS endpoints when found.)*
+
+**Swappability seams (a config flip, not a rewrite).**
+- **Render engine** — `render.engine` = `remotion | hyperframes | combo` (§9); the engine-agnostic
+  `timeline.json` is the seam (§6), so a second compiler never duplicates the sync logic.
+- `pipeline/02-voice/voice-dispatcher.mjs` — the **`TtsProvider`** seam: a Node selector over
+  `VOICE_SCRIPTS` (edge-tts → `make_voice.py`, azure → `make_voice_azure.py`); draft = edge-tts,
+  `--final` = Azure (D-024). Alignment stays provider-agnostic. Adding a provider = one map entry + one script.
+- `pipeline/07-distribute/distributor.mjs` — the **`Distributor`** seam: a pure plan builder →
+  schema-valid `distribution.json` + Noop / Mock / Postiz adapters + `createDistributor` (noop while
+  `config.distribute.enabled` is false). The live Postiz client is the remaining T5.3 (D-027).
+
+**Growth loop (analytics → re-rank).**
+- `pipeline/06-publish/fetch-analytics.mjs` — pulls each produced video's YouTube Analytics
+  (views / retention / CTR) into its idea's `metrics`, then **re-ranks the bank**: produced ideas blend
+  the predicted `score` → measured `performance`; backlog ideas get a bounded task-cluster nudge.
+  Idempotent (`adjusted_score` re-derived from the immutable `score`; effective rank = `adjusted_score ?? score`).
+  Numbers arrive once the first upload sets `youtube_video_id`.
+
+**Autonomous driver (the hands-off pass).**
+- `pipeline/00-ideas/pick-next.mjs` — auto-pick the top backlog idea by effective score → `scaffoldVideo`
+  + seed brief → mark in-progress (persisted **before** the run so a crash can't orphan the pick).
+- `pipeline/shared/orchestrator/auto-run.mjs` — one pass: idle → pick; busy → resume the in-progress
+  video; then run the DAG and `classifyPause` the result into **done / ownerGate / agentTask**. Gate-aware
+  `notifiesOwner` in `run.mjs` pings the owner ONLY at the two real gates / a failed review / OAuth /
+  errors — never on a Claude-Code skill hand-off.
+- **Scheduling:** a session-local **CronCreate** routine loops `auto-run` (weekly); each fire advances one
+  step. In Claude-Code mode the in-session agent fulfils the `agentTask` hand-offs (script-writing, render,
+  qa, …) and PushNotifies the owner at the gates. The video is auto-drafted to YouTube **private** — never
+  published automatically.
+
+**One-time setup (free):** `GEMINI_API_KEY` (2nd reviewer) + YouTube OAuth (`node pipeline/06-publish/auth.mjs`;
+publish the OAuth app to **Production** → non-expiring token; one consent covers upload + read-only Analytics).
+See `docs/SETUP.md`.

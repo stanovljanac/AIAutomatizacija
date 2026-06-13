@@ -29,8 +29,9 @@ the destination is **unattended autonomy** — no human will catch a red test at
    spawn an independent verifier sub-agent — **Sonnet 4.6** (`claude-sonnet-4-6`) by default,
    **Haiku 4.5** (`claude-haiku-4-5-20251001`) for trivial typo/rename changes. It must: run
    the suite, scrutinize the logic for bugs/edge-cases, **add regression tests** for any gap,
-   and report PASS/FAIL + concrete bugs (`file:line`). Append its verdict to `docs/BUILD_LOG.md`.
-   (Wave 0 proved the value: the Sonnet verifier caught a hard-gate scoring bug.)
+   and report PASS/FAIL + concrete bugs (`file:line`). Record its verdict in the commit/PR message and
+   the `docs/PROGRESS.md` entry for the change. (Wave 0 proved the value: the Sonnet verifier caught a
+   hard-gate scoring bug.)
 5. **FIX.** Apply the verifier's findings; re-run until tests are green **and** the verifier signs off.
 6. **DOCUMENT.** Update the docs the change touched so they are never stale — `docs/PROGRESS.md`
    (log), `docs/DECISIONS.md` (if a decision was made), `docs/ROADMAP.md` (status), the relevant
@@ -50,6 +51,6 @@ If you changed code and did not run an independent verifier for the unit, the sp
 
 ## Definition of Done (a unit/wave is done when ALL hold)
 - [ ] `npm test` green; every new artifact schema-validates.
-- [ ] An independent **different-model** verifier ran, its bugs are fixed, and its verdict is in `docs/BUILD_LOG.md`.
+- [ ] An independent **different-model** verifier ran, its bugs are fixed, and its verdict is recorded in the commit/PR message + the `docs/PROGRESS.md` entry.
 - [ ] Affected docs updated.
 - [ ] Changes left in the working tree (commit only on explicit owner request).
