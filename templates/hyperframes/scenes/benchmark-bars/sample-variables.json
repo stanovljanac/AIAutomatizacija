@@ -1,0 +1,18 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 300,
+  "durationSeconds": 10,
+  "revealsSeconds": [1.0, 4.0, 7.0],
+  "props": {
+    "kicker": "Desk Notes",
+    "title": "Most powerful on the hardest math",
+    "leftLabel": "Claude Fable 5",
+    "rightLabel": "GPT-5.5",
+    "leftPct": 88,
+    "rightPct": 75,
+    "delta": "+13",
+    "source": "Source: The Decoder, Jun 2026"
+  }
+}

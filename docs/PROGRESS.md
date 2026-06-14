@@ -19,6 +19,21 @@ Format:
 
 ---
 
+## 2026-06-14 — 007 "Rise & Fall of Fable 5" shipped (long + 2 shorts, private drafts)
+- who: agent (owner gated)
+- did: Produced video 007 (Desk Notes) on the Claude Fable 5 launch→shutdown story surfaced by our
+  own news-watch. Long (218s) + a 2-part Short series (Rise/Fall). Fixed stale `facts.json`
+  (Fable 5 marked suspended). First cut was rejected at Gate ③ (template "slideshow" + a flawed
+  "use a worse model" message), so I **authored 3 new bespoke HyperFrames hero scenes** —
+  `orb-risefall` (rise/fall/full), `benchmark-bars`, `killswitch` (under
+  `templates/hyperframes/scenes/`) — rebuilt all three videos hero-driven, and **reframed the
+  takeaway** to "use any model, keep a fallback" (see [[sensible-takeaway-not-preachy]]). Composited
+  the owner's thumbnail (FABLE 5 gold). Uploaded all three as PRIVATE drafts; cross-linked captions.
+- artifacts: long https://youtu.be/ppuPa2kSOdk · rise https://youtu.be/9eNMhvKqRa4 ·
+  fall https://youtu.be/v8ZJFXf6Fvo (all private). `npm test` 457 green.
+- next: owner sets "Altered content = Yes" + publishes; post Community + Medium; watch reach on the
+  Short series. Owner wants MORE bespoke hero animations on every future video.
+
 ## Where the system stands (2026-06-12)
 
 **The hands-off studio is built and wired end-to-end** (`npm test` = 456 green). The pipeline runs

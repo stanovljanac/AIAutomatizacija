@@ -413,6 +413,11 @@ old one (don't delete history).
 - **Decision:** every code change runs **atomize → build → self-test → verify with a DIFFERENT model (Sonnet 4.6; Haiku 4.5 for trivial) → fix → update docs → commit only on explicit owner request**. Enforced by a **Stop test-gate hook** (`.claude/hooks/test-gate.mjs` — fail-open, blocks finishing on red when code changed, `[skip-tests]` escape) + the **`build-sprint` skill** + a `CLAUDE.md` rule + a feedback memory. **Not** for planning/research/doc-only edits.
 - **Consequences:** tests are mechanically gated; different-model verification, doc-freshness and commit-discipline are always-loaded policy; the verifier verdict is recorded in the commit/PR message and the PROGRESS entry for that change.
 
+## D-042 — Community-tab announcement (YT Posts) for every video
+- **Context:** owner wants a short "just published" post on the channel's Community tab for each upload — good for reach/visibility on a fresh video.
+- **Decision:** generate a **`community_post`** for **every** video (in `publish.json`): a "just published" opener + a **1–2 sentence** teaser of what the video does + the long-video link. Drafted at **script approval** with the rest of the SEO (D-038); `<LONG_URL>` filled at upload. We automate the **text only** — the **owner posts it manually**, because the YouTube Data API has **no endpoint** to create Community posts. Same pattern as the Short caption + Medium (D-038).
+- **Consequences:** every upload ships a ready-to-paste Community post; extends the cross-platform metadata set; documented in the `youtube-publish` skill + `publish.schema.json`.
+
 > Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
 > **D-012** (name) → see D-023. **D-014** (TTS) → see D-024. The old "no AI-disclosure" note → see D-025.
 > Still in force: **D-002** (no YouTube transcripts; clean sources only).

@@ -1,0 +1,88 @@
+/* killswitch — brand black+gold "the Fall climax". A glowing model core goes dark under an
+   export-order stamp. Gold = alive, red = the order, gray = dead. Sizes scale by --u. Content
+   above the bottom 19.5% caption band. */
+
+:root {
+  --bg: #0b0a07;
+  --surface: #16130c;
+  --text-primary: #f5f1e8;
+  --text-secondary: #b6ab93;
+  --gold: #ffb020;
+  --gold-2: #ffd37a;
+  --red: #ff5c5c;
+  --u: 1;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+
+#root {
+  position: relative; width: 100%; height: 100%;
+  background: radial-gradient(ellipse 90% 80% at 50% 42%, #14110a 0%, #0b0a07 72%);
+  overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #4a3c18 calc(89px * var(--u)), #4a3c18 calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #4a3c18 calc(89px * var(--u)), #4a3c18 calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 44%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 44%, #000 30%, transparent 85%);
+}
+.flash {
+  position: absolute; inset: 0; opacity: 0;
+  background: radial-gradient(ellipse 70% 70% at 50% 44%, color-mix(in srgb, var(--red) 40%, transparent) 0%, transparent 72%);
+  will-change: opacity;
+}
+
+.stage { position: absolute; inset: 0; z-index: 2; padding-bottom: 19.5%; }
+
+.kicker { position: absolute; left: 7%; top: 10%; display: flex; align-items: center; gap: calc(14px * var(--u)); }
+.kicker-dash { width: calc(46px * var(--u)); height: calc(4px * var(--u)); border-radius: calc(2px * var(--u)); background: var(--gold); box-shadow: 0 0 calc(16px * var(--u)) color-mix(in srgb, var(--gold) 60%, transparent); }
+.kicker-text { font-weight: 700; font-size: calc(26px * var(--u)); letter-spacing: calc(6px * var(--u)); color: var(--gold-2); text-transform: uppercase; }
+
+/* the core */
+.core-wrap { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); width: calc(520px * var(--u)); height: calc(520px * var(--u)); display: flex; align-items: center; justify-content: center; }
+.core-glow {
+  position: absolute; inset: -20%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--gold) 55%, transparent) 0%, transparent 60%);
+  filter: blur(calc(30px * var(--u))); will-change: opacity, transform;
+}
+.core {
+  position: relative; width: calc(420px * var(--u)); height: calc(420px * var(--u)); border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, #2a2410 0%, #16130c 70%);
+  border: calc(3px * var(--u)) solid color-mix(in srgb, var(--gold) 70%, transparent);
+  box-shadow: 0 0 calc(60px * var(--u)) color-mix(in srgb, var(--gold) 45%, transparent), inset 0 0 calc(60px * var(--u)) color-mix(in srgb, var(--gold) 18%, transparent);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  will-change: filter, opacity, box-shadow;
+}
+.core-ring { position: absolute; inset: calc(36px * var(--u)); border-radius: 50%; border: calc(2px * var(--u)) dashed color-mix(in srgb, var(--gold) 40%, transparent); }
+.core-label { font-weight: 900; font-size: calc(76px * var(--u)); letter-spacing: calc(2px * var(--u)); color: var(--gold-2); text-shadow: 0 0 calc(30px * var(--u)) color-mix(in srgb, var(--gold) 60%, transparent); }
+.core-sub { margin-top: calc(8px * var(--u)); font-weight: 600; font-size: calc(26px * var(--u)); color: var(--text-secondary); letter-spacing: calc(2px * var(--u)); }
+
+/* the export-order stamp */
+.stamp {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(2.4) rotate(-14deg);
+  font-weight: 900; font-size: calc(64px * var(--u)); letter-spacing: calc(4px * var(--u)); text-transform: uppercase;
+  color: var(--red); border: calc(6px * var(--u)) solid var(--red); border-radius: calc(14px * var(--u));
+  padding: calc(16px * var(--u)) calc(34px * var(--u)); background: rgba(255,92,92,0.08);
+  box-shadow: 0 0 calc(50px * var(--u)) rgba(255,92,92,0.4); opacity: 0; will-change: transform, opacity;
+}
+
+/* the verdict */
+.off {
+  position: absolute; left: 0; right: 0; bottom: 22%; text-align: center;
+  font-weight: 900; font-size: calc(84px * var(--u)); letter-spacing: calc(2px * var(--u));
+  color: #fff; text-shadow: 0 0 calc(30px * var(--u)) rgba(255,92,92,0.5);
+  opacity: 0; transform: scale(0.8); will-change: transform, opacity;
+}
+
+/* portrait */
+.portrait .core-wrap { top: 40%; width: calc(620px * var(--u)); height: calc(620px * var(--u)); }
+.portrait .core { width: calc(560px * var(--u)); height: calc(560px * var(--u)); }
+.portrait .core-label { font-size: calc(92px * var(--u)); }
+.portrait .stamp { font-size: calc(72px * var(--u)); }
+.portrait .off { bottom: 18%; font-size: calc(78px * var(--u)); }
+.portrait .kicker { top: 7%; }

@@ -41,6 +41,16 @@ You prepare everything and upload a **private/draft** for the owner's final clic
   `publish.json.short.caption` (the real URL is filled at upload); the owner reuses it across
   other socials (X, IG, TikTok, LinkedIn).
 
+## Community post / YT Posts (every video — owner rule 2026-06-13)
+Generate a short **Community-tab announcement** for EVERY video, stored in
+`publish.json.community_post`. Format: a "just published" opener + a **1–2 sentence** teaser of
+what the video does + the long-video link (e.g. "🎬 Just published — <hook>. <one or two
+sentences>. Watch 👉 <LONG_URL>"). Keep it tight and natural, no hashtag spam. Draft it at SCRIPT
+APPROVAL with the rest of the SEO; `<LONG_URL>` is filled at upload (same substitution as the Short
+caption). **The owner posts it manually** to the channel's Community tab — the YouTube Data API has
+no endpoint to create Community posts, so we automate the *text*, not the posting. Good for reach/
+visibility on a fresh upload.
+
 ## Medium (every video — owner rule 2026-06-07)
 For this and every future video, generate a Medium description optimized to be **cited by AI
 search engines** (ChatGPT, Google AI Overview, Perplexity, Claude). Run this EXACT prompt on

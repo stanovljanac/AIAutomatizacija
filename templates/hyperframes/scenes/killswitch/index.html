@@ -1,0 +1,60 @@
+<!doctype html>
+<!--
+  killswitch — HyperFrames "the Fall climax" beat (007 Fable 5). A glowing model core pulses,
+  an EXPORT ORDER stamp slams in, the core goes dark, and "OFF FOR EVERYONE" lands. The moment
+  the most powerful model is switched off.
+
+  Silent by design. Deterministic: no Math.random / Date.now; one paused, seek-driven GSAP
+  timeline. GSAP vendored locally. Supports 16:9 + 9:16 (portrait class).
+
+  VARIABLES CONTRACT (pipeline passes via --variables-file):
+    fps, width, height, durationFrames, durationSeconds   (scalars; declared below)
+    revealsSeconds  number[]  clip-relative beats — drive core / order / dark / off
+    props           object    { kicker?, coreLabel?, orderLabel?, offLabel?, source? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="killswitch.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="killswitch" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="flash" id="flash"></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text">Desk Notes · The Fall</span></div>
+
+        <div class="core-wrap" id="core-wrap">
+          <div class="core-glow" id="core-glow"></div>
+          <div class="core" id="core">
+            <div class="core-ring"></div>
+            <div class="core-label" id="core-label">FABLE 5</div>
+            <div class="core-sub">most capable model</div>
+          </div>
+          <div class="stamp" id="stamp" data-layout-ignore><span id="stamp-text">EXPORT ORDER</span></div>
+        </div>
+
+        <div class="off" id="off"><span id="off-text">OFF FOR EVERYONE</span></div>
+      </div>
+    </div>
+    <script src="killswitch.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["killswitch"] = tl;
+    </script>
+  </body>
+</html>

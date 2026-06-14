@@ -1,0 +1,69 @@
+<!doctype html>
+<!--
+  orb-risefall — the HERO/hook (007 Fable 5). A gold particle orb climbs an arc, peaks, then
+  shatters into embers and goes dark. Matches the channel thumbnail. The hook SHOWS the story
+  instead of being a title on a flat background.
+
+  Silent by design. Deterministic: no Math.random / Date.now (seeded PRNG); one paused,
+  seek-driven GSAP timeline. GSAP vendored locally. Supports 16:9 + 9:16 (portrait class).
+
+  VARIABLES CONTRACT (pipeline passes via --variables-file):
+    fps, width, height, durationFrames, durationSeconds   (scalars; declared below)
+    revealsSeconds  number[]  clip-relative beats — reveals[0] = title in (optional)
+    props           object    { phase?: "rise"|"fall"|"full", kicker?, title?, subtitle? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="orb-risefall.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="orb-risefall" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="amb"></div>
+      </div>
+
+      <svg id="arc" data-layout-ignore preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="arcgrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ffd37a" stop-opacity="0.2" />
+            <stop offset="50%" stop-color="#ffb020" stop-opacity="0.95" />
+            <stop offset="100%" stop-color="#ff6a4d" stop-opacity="0.9" />
+          </linearGradient>
+        </defs>
+        <path id="arc-path" d="" />
+      </svg>
+
+      <div id="orb-wrap" data-layout-ignore>
+        <div class="orb" id="orb"></div>
+        <div class="orb-ring"></div>
+        <div class="orb-ring r2"></div>
+        <div id="dots"></div>
+        <div class="smoke" id="smoke"></div>
+      </div>
+
+      <div class="content" id="content">
+        <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text">Desk Notes</span></div>
+        <div class="title" id="title">It lasted 72 hours</div>
+        <div class="subtitle" id="subtitle"></div>
+      </div>
+    </div>
+    <script src="orb-risefall.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["orb-risefall"] = tl;
+    </script>
+  </body>
+</html>

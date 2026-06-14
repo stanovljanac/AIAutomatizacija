@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-12",
+  "updated": "2026-06-14",
   "policy": {
     "max_age_days": 45,
     "rule": "Any model/tool/price/version claim used in a script is the value below, verified live against `source` on `retrieved`. Never recall these from model memory. refresh-facts.mjs flags a fact when it ages past max_age_days or its value no longer appears on `source`; a human/agent then re-confirms live and updates `value` + `retrieved` (the auditor never overwrites)."
@@ -13,19 +13,30 @@
       "value": "claude-opus-4-8",
       "unit": null,
       "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "retrieved": "2026-06-12",
-      "notes": "Opus 4.8 is the current most capable Opus-tier model; claude-fable-5 is the most capable widely released model."
+      "retrieved": "2026-06-14",
+      "notes": "Opus 4.8 is the current most-capable AVAILABLE Claude model and the default for all builds. Claude Fable 5 was briefly the most-capable model but is SUSPENDED (unavailable for everyone) since 2026-06-12 — do not use it (see anthropic.fable-5.status)."
     },
     {
       "id": "anthropic.most_capable.model_id",
       "subject": "anthropic",
       "kind": "model_version",
-      "label": "Anthropic most-capable widely released model id",
-      "value": "claude-fable-5",
+      "label": "Anthropic most-capable AVAILABLE model id",
+      "value": "claude-opus-4-8",
       "unit": null,
       "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "retrieved": "2026-06-12",
-      "notes": "Above Opus-tier pricing; use only when explicitly the most-capable model is wanted."
+      "retrieved": "2026-06-14",
+      "notes": "Opus 4.8 is the most-capable model anyone can actually use right now. Claude Fable 5 ranked higher but was suspended on 2026-06-12 (see anthropic.fable-5.status); revert this to claude-fable-5 only if/when access is restored."
+    },
+    {
+      "id": "anthropic.fable-5.status",
+      "subject": "anthropic",
+      "kind": "other",
+      "label": "Claude Fable 5 / Mythos 5 availability status",
+      "value": "suspended",
+      "unit": null,
+      "source": "https://www.marktechpost.com/2026/06/13/anthropic-disables-claude-fable-5-and-mythos-5-after-us-government-order/",
+      "retrieved": "2026-06-14",
+      "notes": "Launched GA 2026-06-09; Anthropic disabled BOTH models for everyone on 2026-06-12 (~3 days later) after a US government export-control directive that bars access by any foreign national (incl. Anthropic's own staff) and can't be filtered in real time. A government suspension, NOT a deprecation; other models (Opus 4.8 etc.) are unaffected. Trigger: Amazon CEO flagged a jailbreak/security report to the White House; 5+ firms piled on."
     },
     {
       "id": "anthropic.claude-opus-4-8.price_input",

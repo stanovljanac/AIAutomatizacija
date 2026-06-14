@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 300,
+  "durationSeconds": 10,
+  "revealsSeconds": [0.8, 4.2, 6.2, 8.0],
+  "props": { "kicker": "Desk Notes · The Fall", "coreLabel": "FABLE 5", "orderLabel": "EXPORT ORDER", "offLabel": "OFF FOR EVERYONE" }
+}

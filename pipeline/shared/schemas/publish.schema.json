@@ -38,6 +38,7 @@
       }
     },
     "pinned_comment": { "type": "string", "description": "Long utility text (e.g. the copy-pasteable master prompt) — not in the 3-sentence description." },
+    "community_post": { "type": "string", "description": "YouTube Community/Posts announcement (D-042): a 'just published' line + a 1-2 sentence teaser + the long-video link. Generated for EVERY video; the owner posts it manually (the Data API can't create Community posts). <LONG_URL> is filled at upload." },
     "medium": {
       "type": "object",
       "description": "Medium cross-post (D-038): keyword-rich title + cover reuse.",

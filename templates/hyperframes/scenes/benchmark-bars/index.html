@@ -1,0 +1,68 @@
+<!doctype html>
+<!--
+  benchmark-bars — HyperFrames "the Rise proof" beat for The Automation Desk (007 Fable 5).
+  Two bars (Claude Fable 5 vs GPT-5.5) grow to their scores on FrontierMath's hardest tier;
+  a gold "+13" badge pops; an on-screen source caption sits above the caption safe-zone.
+
+  Silent by design. Deterministic: no Math.random / Date.now; one paused, seek-driven GSAP
+  timeline. GSAP vendored locally. Supports 16:9 + 9:16 (portrait class).
+
+  VARIABLES CONTRACT (pipeline passes via --variables-file):
+    fps, width, height, durationFrames, durationSeconds   (scalars; declared below)
+    revealsSeconds  number[]  clip-relative beats (sentence starts) — drive bar1, bar2, +13
+    props           object    { kicker?, title?, leftLabel?, rightLabel?, leftPct?, rightPct?,
+                                delta?, source? } — all optional, sensible defaults
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="benchmark-bars.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="benchmark-bars" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="glow" id="glow"></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text">Desk Notes</span></div>
+        <div class="title" id="title">Most powerful on the hardest math</div>
+
+        <div class="bars" id="bars">
+          <div class="bar-col" id="col-left">
+            <div class="bar-val" id="val-left">0%</div>
+            <div class="bar-track"><div class="bar-fill fill-left" id="fill-left"></div></div>
+            <div class="bar-name" id="name-left">Claude Fable 5</div>
+          </div>
+
+          <div class="delta" id="delta">+13</div>
+
+          <div class="bar-col" id="col-right">
+            <div class="bar-val" id="val-right">0%</div>
+            <div class="bar-track"><div class="bar-fill fill-right" id="fill-right"></div></div>
+            <div class="bar-name" id="name-right">GPT-5.5</div>
+          </div>
+        </div>
+
+        <div class="source" id="source">Source: The Decoder, Jun 2026</div>
+      </div>
+    </div>
+    <script src="benchmark-bars.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["benchmark-bars"] = tl;
+    </script>
+  </body>
+</html>
