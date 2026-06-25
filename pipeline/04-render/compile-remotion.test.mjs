@@ -4,11 +4,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { readFixture, fixturePath } from "../shared/testkit/index.mjs";
 import { resolveFormat } from "../shared/lib/format.mjs";
 import { deriveRenderTimings } from "./lib/timings.mjs";
 import { buildTimeline } from "./lib/timeline.mjs";
-import { compileTimeline } from "./compile-remotion.mjs";
+import { compileTimeline, stripAudioCommand, copyCaptureSilent, copyRemotionAssets } from "./compile-remotion.mjs";
 
 const fps = 30;
 
@@ -94,6 +96,86 @@ test("compileTimeline caption durFrames is clamped by the next cue AND the tail 
     assert.ok(cue.durFrames >= 1, "every caption shows at least one frame");
     for (const w of cue.words) assert.ok(w.relDur >= 1 && w.relFrom >= 0);
   }
+});
+
+// ── CAPTURE AUDIO STRIP (item 2 — screen-recording audio must never leak into the final video) ──────
+
+test("stripAudioCommand drops audio (-an) and remuxes video without re-encoding (-c:v copy)", () => {
+  const { cmd, args } = stripAudioCommand({ ffbin: "ffmpeg", src: "in.mp4", dst: "out.mp4" });
+  assert.equal(cmd, "ffmpeg");
+  assert.ok(args.includes("-an"), "audio is dropped");
+  assert.equal(args.at(-1), "out.mp4", "dst is the final arg");
+  assert.ok(args.join(" ").includes("-c:v copy"), "video stream is copied, not re-encoded");
+  assert.equal(args[args.indexOf("-i") + 1], "in.mp4", "src follows -i");
+});
+
+test("copyCaptureSilent runs ffmpeg with -an and emits no warning on success", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cap-strip-"));
+  const src = path.join(dir, "src.mp4");
+  const dst = path.join(dir, "dst.mp4");
+  fs.writeFileSync(src, "FAKEMP4");
+  let seenArgs = null;
+  const spawn = (cmd, args) => { seenArgs = args; fs.writeFileSync(dst, "STRIPPED"); return { status: 0 }; };
+  const warnings = copyCaptureSilent({ root: dir, src, dst, spawn });
+  assert.deepEqual(warnings, [], "no warning when ffmpeg succeeds");
+  assert.ok(seenArgs.includes("-an"), "ffmpeg invoked with -an");
+  assert.equal(fs.readFileSync(dst, "utf8"), "STRIPPED", "dst is the ffmpeg output, not a raw copy");
+});
+
+test("copyCaptureSilent falls back to a raw copy AND warns loudly when ffmpeg is unavailable/fails", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cap-strip-"));
+  const src = path.join(dir, "src.mp4");
+  const dst = path.join(dir, "dst.mp4");
+  fs.writeFileSync(src, "RAWBYTES");
+  const spawn = () => ({ status: 1, stderr: "ffmpeg not found" }); // simulate failure, no dst produced
+  const warnings = copyCaptureSilent({ root: dir, src, dst, spawn });
+  assert.equal(fs.existsSync(dst), true, "render is never blocked — clip is still copied");
+  assert.equal(fs.readFileSync(dst, "utf8"), "RAWBYTES", "fallback is a byte copy of the source");
+  assert.equal(warnings.length, 1);
+  assert.match(warnings[0], /CAPTURE AUDIO NOT STRIPPED/, "the leftover-audio risk is surfaced");
+});
+
+test("copyRemotionAssets strips audio on ALL capture-segment scenes (not just the first)", () => {
+  // Regression: the capture loop must call copyCaptureSilent for every capture-segment scene in the
+  // compiled props. A video with two screen-recordings must have BOTH stripped; leaking even one
+  // introduces desktop/mic audio into the final render.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cap-multi-"));
+  const capturesDir = path.join(dir, "captures");
+  fs.mkdirSync(capturesDir, { recursive: true });
+  fs.writeFileSync(path.join(capturesDir, "cap1.mp4"), "FAKEMP4_1");
+  fs.writeFileSync(path.join(capturesDir, "cap2.mp4"), "FAKEMP4_2");
+
+  const stripped = [];
+  const spawn = (cmd, args) => {
+    // identify which capture is being stripped by reading the dst arg (last arg)
+    const dst = args.at(-1);
+    stripped.push(dst);
+    fs.writeFileSync(dst, "STRIPPED");
+    return { status: 0 };
+  };
+
+  const props = {
+    scenes: [
+      { sceneId: "s1.0", template: "capture-segment", props: { capture_id: "cap1" } },
+      { sceneId: "s2.0", template: "capture-segment", props: { capture_id: "cap2" } },
+    ],
+    captions: [],
+  };
+
+  // stub narration so copyRemotionAssets doesn't crash on the final cpSync
+  const voiceDir = path.join(dir, "voice");
+  fs.mkdirSync(voiceDir, { recursive: true });
+  fs.writeFileSync(path.join(voiceDir, "narration.mp3"), "FAKEAUDIO");
+
+  const warnings = copyRemotionAssets({ root: dir, cdir: dir, outId: "test", props, spawn });
+
+  assert.equal(stripped.length, 2, "copyCaptureSilent must be called once per capture-segment scene");
+  assert.ok(stripped.some((p) => p.endsWith("cap1.mp4")), "cap1 was stripped");
+  assert.ok(stripped.some((p) => p.endsWith("cap2.mp4")), "cap2 was stripped");
+  assert.deepEqual(warnings, [], "no warnings when both ffmpeg calls succeed");
+  // src refs in props are updated for both captures
+  assert.ok(props.scenes[0].props.src.endsWith("cap1.mp4"), "scene 0 src updated");
+  assert.ok(props.scenes[1].props.src.endsWith("cap2.mp4"), "scene 1 src updated");
 });
 
 // ── FP-DRIFT FIX (verifier-found): the real pipeline must equal the legacy inline frame math at FP ──

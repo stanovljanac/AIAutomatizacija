@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 540,
+  "durationSeconds": 18,
+  "revealsSeconds": [0.6, 3.4, 6.0, 8.8, 12.5, 14.8],
+  "props": { "kicker": "The payoff", "title": "Only check the flags", "subtitle": "AI types · the script checks · you glance at the one in doubt" }
+}

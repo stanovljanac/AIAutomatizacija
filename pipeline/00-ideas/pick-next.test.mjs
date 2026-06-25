@@ -8,6 +8,8 @@ import {
   briefFromIdea,
   markIdeaInProgress,
   planNextVideo,
+  recentFromBank,
+  extendsRun,
 } from "./pick-next.mjs";
 import { validate } from "../shared/lib/validate-lib.mjs";
 import { suggestArchetype } from "./fetch-news.mjs";
@@ -110,6 +112,69 @@ test("planNextVideo reports empty when there is no backlog idea", () => {
   assert.equal(calls.length, 0);
 });
 
+// ── content-value gate: reject filter + variety soft-cap (decisions #6/#7) ───────────────────────
+
+test("pickNextIdea skips idea-pass REJECTS (value_band='reject') even if highest-scored", () => {
+  const ideas = { ideas: [
+    { id: "rejected-top", score: 99, status: "backlog", value_band: "reject" },
+    { id: "ok", score: 80, status: "backlog" },
+  ] };
+  assert.equal(pickNextIdea(ideas).id, "ok", "a rejected idea is never picked");
+});
+
+test("recentFromBank returns the last N produced ideas, most-recent-first by video number", () => {
+  const ideas = { ideas: [
+    { id: "a", status: "produced", produced_video_id: "006-a", lane: "desk-fixes", archetype: "mini-demo", tool: "Sheets" },
+    { id: "b", status: "produced", produced_video_id: "008-b", lane: "desk-notes", archetype: "ideas", tool: "Claude" },
+    { id: "c", status: "produced", produced_video_id: "007-c", lane: "desk-fixes", archetype: "mini-demo", tool: "Sheets" },
+    { id: "d", status: "backlog" },
+  ] };
+  const recent = recentFromBank(ideas, 2);
+  assert.deepEqual(recent.map((r) => r.lane), ["desk-notes", "desk-fixes"], "008 then 007");
+});
+
+test("extendsRun is true only when the last runCap produced all share a dimension with the candidate", () => {
+  const recent = [{ lane: "desk-fixes", archetype: "mini-demo", tool: "Sheets" }, { lane: "desk-fixes", archetype: "ideas", tool: "Excel" }];
+  assert.equal(extendsRun({ lane: "desk-fixes" }, recent, 2), true, "third desk-fixes in a row");
+  assert.equal(extendsRun({ lane: "desk-notes" }, recent, 2), false, "different lane is fine");
+  assert.equal(extendsRun({ lane: "desk-fixes" }, recent.slice(0, 1), 2), false, "only one prior — no run yet");
+});
+
+test("pickNextIdea variety soft-cap: nudges off a 2-in-a-row lane to the next-best fresh lane", () => {
+  const ideas = { ideas: [
+    { id: "more-fixes", score: 95, status: "backlog", lane: "desk-fixes" },
+    { id: "a-note", score: 90, status: "backlog", lane: "desk-notes" },
+    // last two produced were both desk-fixes
+    { id: "p1", status: "produced", produced_video_id: "007-p1", lane: "desk-fixes" },
+    { id: "p2", status: "produced", produced_video_id: "008-p2", lane: "desk-fixes" },
+  ] };
+  const pick = pickNextIdea(ideas, { recent: recentFromBank(ideas) });
+  assert.equal(pick.id, "a-note", "top desk-fixes is skipped to avoid a 3rd in a row; next-best fresh lane wins");
+});
+
+test("pickNextIdea variety cap is SOFT: if every candidate repeats the lane, fall back to top score", () => {
+  const ideas = { ideas: [
+    { id: "best-fixes", score: 95, status: "backlog", lane: "desk-fixes" },
+    { id: "other-fixes", score: 90, status: "backlog", lane: "desk-fixes" },
+    { id: "p1", status: "produced", produced_video_id: "007-p1", lane: "desk-fixes" },
+    { id: "p2", status: "produced", produced_video_id: "008-p2", lane: "desk-fixes" },
+  ] };
+  assert.equal(pickNextIdea(ideas, { recent: recentFromBank(ideas) }).id, "best-fixes", "never hard-block — top score wins when all repeat");
+});
+
+test("briefFromIdea carries the idea-pass content-value fields and stays schema-valid", () => {
+  const idea = { id: "x", title: "T", task: "documents", archetype: "mini-demo", lane: "desk-fixes",
+    value_type: ["saves-time", "avoids-mistake"], takeaway: "Keep a fallback model", value_score: 9.1, value_band: "qualify" };
+  const seed = briefFromIdea(idea);
+  assert.equal(seed.lane, "desk-fixes");
+  assert.deepEqual(seed.value_type, ["saves-time", "avoids-mistake"]);
+  assert.equal(seed.takeaway, "Keep a fallback model");
+  assert.equal(seed.value_band, "qualify");
+  const brief = { id: "010-x", target_seconds: 360, format: "long+short", audience: "x", ...seed };
+  const { valid, errors } = validate(brief, "brief");
+  assert.ok(valid, JSON.stringify(errors));
+});
+
 // ── [verifier] regression tests ───────────────────────────────────────────────
 
 test("[verifier] effectiveScore: adjusted_score:0 is a valid score (0 < raw score)", () => {
@@ -162,4 +227,57 @@ test("[verifier] briefFromIdea: invalid archetype string is passed through (not 
   // catches it rather than silently masking it. Only 'absent' (falsy) gets the fallback.
   const seed = briefFromIdea({ id: "x", archetype: "invalid-value" });
   assert.equal(seed.archetype, "invalid-value", "non-falsy invalid archetype passes through for downstream detection");
+});
+
+test("[verifier] pickNextIdea: value_band='reject' skips even when it's the only backlog idea → null", () => {
+  const ideas = { ideas: [
+    { id: "only", score: 99, status: "backlog", value_band: "reject" },
+  ] };
+  assert.equal(pickNextIdea(ideas), null, "all ideas rejected → null, not an error");
+});
+
+test("[verifier] pickNextIdea: value_band='owner' is eligible (only 'reject' is excluded)", () => {
+  const ideas = { ideas: [
+    { id: "rejected", score: 99, status: "backlog", value_band: "reject" },
+    { id: "owner-band", score: 80, status: "backlog", value_band: "owner" },
+  ] };
+  assert.equal(pickNextIdea(ideas)?.id, "owner-band", "value_band='owner' must still be eligible");
+});
+
+test("[verifier] extendsRun: runCap=3 requires at least 3 recent items to trigger (not 2)", () => {
+  // Only 2 recent items: never triggers with runCap=3.
+  const recent2 = [{ lane: "desk-fixes", archetype: "mini-demo", tool: "Sheets" }, { lane: "desk-fixes", archetype: "ideas", tool: "Excel" }];
+  assert.equal(extendsRun({ lane: "desk-fixes" }, recent2, 3), false, "runCap=3 needs 3 in recent, not 2");
+});
+
+test("[verifier] extendsRun: null/undefined dimension on candidate does NOT trigger the cap", () => {
+  const recent = [{ lane: "desk-fixes", archetype: "mini-demo", tool: "Sheets" }, { lane: "desk-fixes", archetype: "ideas", tool: "Excel" }];
+  // candidate with lane=null: should NOT be blocked (undefined dimension → no run)
+  assert.equal(extendsRun({ lane: null, archetype: "diagram" }, recent, 2), false, "null lane on candidate must not trigger the cap");
+  assert.equal(extendsRun({ archetype: "diagram" }, recent, 2), false, "absent lane on candidate must not trigger the cap");
+});
+
+test("[verifier] recentFromBank excludes ideas with null/unparseable produced_video_id", () => {
+  const ideas = { ideas: [
+    { id: "a", status: "produced", produced_video_id: null, lane: "desk-fixes" },
+    { id: "b", status: "produced", produced_video_id: "008-b", lane: "desk-notes" },
+    { id: "c", status: "produced", produced_video_id: "bad-prefix", lane: "desk-loops" }, // no numeric prefix
+  ] };
+  const recent = recentFromBank(ideas, 3);
+  // Only "008-b" has a valid numeric prefix (8 ≥ 0)
+  assert.equal(recent.length, 1, "only ideas with valid numeric prefix in produced_video_id are included");
+  assert.equal(recent[0].lane, "desk-notes");
+});
+
+test("[verifier] pickNextIdea soft-cap never returns null when eligible ideas exist (fall-back to top)", () => {
+  // Even when every candidate extends a run, pickNextIdea must return the top-scored one (soft cap).
+  const ideas = { ideas: [
+    { id: "best", score: 95, status: "backlog", lane: "desk-fixes", archetype: "mini-demo", tool: "Sheets" },
+    { id: "other", score: 90, status: "backlog", lane: "desk-fixes", archetype: "mini-demo", tool: "Sheets" },
+    { id: "p1", status: "produced", produced_video_id: "007-p1", lane: "desk-fixes", archetype: "mini-demo", tool: "Sheets" },
+    { id: "p2", status: "produced", produced_video_id: "008-p2", lane: "desk-fixes", archetype: "mini-demo", tool: "Sheets" },
+  ] };
+  const pick = pickNextIdea(ideas, { recent: recentFromBank(ideas) });
+  assert.ok(pick !== null, "soft-cap must never hard-block when eligible ideas exist");
+  assert.equal(pick.id, "best", "falls back to top score when all extend the run");
 });

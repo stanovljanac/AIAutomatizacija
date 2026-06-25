@@ -30,11 +30,15 @@ pivoted from the old Serbian-AI channel: `docs/DECISIONS.md` (D-011…D-019).
    the **original human angle is mandatory** in every script. Answer the core question early
    with **specific, sourced facts** (names/dates/numbers — D-026). Sources give topics/facts,
    never sentences. Demo data is **synthetic** (never real client data). **Always disclose
-   altered content** at upload (AI voice + visuals — D-025).
+   altered content** at upload (AI voice + visuals — D-025). For how-to/ideas/demo videos,
+   **research the real-world workflow + tools first** (name real tools/competitors; keep the tool
+   modular, the workflow the focus) — see `script-writing` Step 0.
 3. **Every text passes a review agent before a human sees it.** Author → review → fix
    (`.claude/skills/script-review/SKILL.md`).
-4. **Human gates: script → final video.** Gate 1 (topic+angle+type) is **auto** (owner opted
-   out — classify, draft the angle, proceed to script). Storyboard is automatic (fixed
+4. **Human gates: script → final video.** Gate 1 is a **scored content-value gate** (the review's
+   idea-pass, `pipeline/shared/review/`): **≥90% auto-proceeds** to the script, **75–90% asks the
+   owner**, **<75% is auto-rejected**. Above 90% there is no stop (classify, draft the angle, write
+   the brief, proceed). Storyboard is automatic (fixed
    templates). Never publish without final-video approval (`docs/WORKFLOW.md`).
 5. **Audio is one continuous track.** Scenes/captions snap to forced-alignment timestamps;
    audio is never cut (`.claude/skills/voice-synthesis/SKILL.md`).
@@ -57,6 +61,7 @@ pivoted from the old Serbian-AI channel: `docs/DECISIONS.md` (D-011…D-019).
 | Install/configure the environment                               | `docs/SETUP.md`                                                                                                          |
 | Write or fix the tone/language                                  | `style/STYLE_GUIDE.md`                                                                                                   |
 | Match the visual look                                           | `style/VISUAL_IDENTITY.md`                                                                                               |
+| Match the motion/pacing/transition craft (concrete numbers)     | `style/MOTION_SPEC.md`                                                                                                   |
 | Know channel name/niche/SEO/account                             | `style/CHANNEL.md`                                                                                                       |
 | Change how videos are made (hook/motion/pacing/length/captions) | `pipeline/shared/formats/default.json` — the **format recipe** (one place; resolved by `pipeline/shared/lib/format.mjs`) |
 

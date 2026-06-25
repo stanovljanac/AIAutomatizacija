@@ -31,10 +31,15 @@ Storyboard is now automatic (fixed templates). The mini-demo archetype inserts a
 3. If the archetype needs facts (Comparison/stats), research → `sources.md` (paraphrased
    facts, citable links; never transcripts — D-002). Ideas/Demo may skip formal sources.
 
-### ▶ GATE ① — topic + archetype + angle (AUTO — no stop)
-The owner opted out of the Gate-1 stop: the agent classifies the archetype, drafts the
-angle, writes `brief.json`, and **proceeds straight to the script without asking**. The
-owner reviews at the script gate instead. (Keep the brief on record either way.)
+### ▶ GATE ① — scored content-value gate (the review's IDEA pass)
+Before scripting, the review's **idea-pass** (`pipeline/shared/review/`, idea stage) scores the
+idea 0-10 on value / reusable-takeaway / packaging / audience-fit (hard gates: a real value type +
+a single takeaway + on-brand). The score bands the gate:
+- **≥9.0 (≥90%) → auto-proceed** — classify archetype, draft angle, write `brief.json` (now carries
+  `value_type`, `takeaway`, `lane`, `value_score`/`value_band`), go straight to the script. No stop.
+- **7.5–9.0 (75–90%) → ASK the owner** — the only band where Gate ① pauses.
+- **<7.5 (<75%) → auto-reject** — park the idea; `pickNextIdea` skips `value_band:"reject"`.
+A variety soft-cap nudges off >2 of the same lane/archetype/tool in a row (never hard-blocks).
 
 **Output:** `brief.json`, optional `sources.md`.
 

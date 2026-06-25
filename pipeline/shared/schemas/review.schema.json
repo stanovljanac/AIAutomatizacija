@@ -1,14 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "review.json",
-  "description": "Result of one multi-model review pass over a single stage (script | scene-plan | cut). Holds each reviewer's independent score + the merged verdict that drives the loop and the gate bands.",
+  "description": "Result of one multi-model review pass over a single stage (idea | script | scene-plan | cut). Holds each reviewer's independent score + the merged verdict that drives the loop and the gate bands. The 'idea' stage is the pre-script content-value pass; the others judge how the work is made.",
   "type": "object",
   "required": ["stage", "iteration", "reviewers", "verdict", "created"],
   "properties": {
     "stage": {
       "type": "string",
-      "enum": ["script", "scene-plan", "cut"],
-      "description": "Which artifact this review covers."
+      "enum": ["idea", "script", "scene-plan", "cut"],
+      "description": "Which artifact this review covers ('idea' = the topic, pre-script)."
     },
     "target": { "type": "string", "description": "Path or id of the reviewed artifact." },
     "iteration": { "type": "integer", "minimum": 0, "description": "Loop iteration (0-based)." },
@@ -26,26 +26,13 @@
           "score": { "type": "number", "minimum": 0, "maximum": 10, "description": "Final 0-10 score (capped by hard gates)." },
           "hard_gates": {
             "type": "object",
-            "description": "Binary gates; any false caps the score < 9 and blocks auto-pass.",
-            "required": ["accuracy", "original_angle", "synthetic_data", "on_screen_source"],
-            "properties": {
-              "accuracy": { "type": "boolean" },
-              "original_angle": { "type": "boolean" },
-              "synthetic_data": { "type": "boolean" },
-              "on_screen_source": { "type": "boolean" }
-            }
+            "description": "Binary gates (stage-specific keys); any false caps the score and blocks auto-pass. The required keys per stage are enforced by the top-level allOf.",
+            "additionalProperties": { "type": "boolean" }
           },
           "category_scores": {
             "type": "object",
-            "description": "1-10 per scored category (weights live in config.review.panel).",
-            "required": ["retention_structure", "originality_depth", "hard_rule_craft", "style_tone", "readaloud_clarity"],
-            "properties": {
-              "retention_structure": { "type": "number", "minimum": 0, "maximum": 10 },
-              "originality_depth": { "type": "number", "minimum": 0, "maximum": 10 },
-              "hard_rule_craft": { "type": "number", "minimum": 0, "maximum": 10 },
-              "style_tone": { "type": "number", "minimum": 0, "maximum": 10 },
-              "readaloud_clarity": { "type": "number", "minimum": 0, "maximum": 10 }
-            }
+            "description": "1-10 per scored category (stage-specific keys; weights live in config.review.panel). Required keys per stage are enforced by the top-level allOf.",
+            "additionalProperties": { "type": "number", "minimum": 0, "maximum": 10 }
           },
           "fixes": {
             "type": "array",
@@ -89,5 +76,37 @@
         "proceed": { "type": "boolean", "description": "Whether the pipeline may advance past this stage." }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["stage"], "properties": { "stage": { "enum": ["script", "scene-plan", "cut"] } } },
+      "then": {
+        "properties": {
+          "reviewers": {
+            "items": {
+              "properties": {
+                "hard_gates": { "required": ["accuracy", "original_angle", "synthetic_data", "on_screen_source"] },
+                "category_scores": { "required": ["retention_structure", "originality_depth", "hard_rule_craft", "style_tone", "readaloud_clarity"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "required": ["stage"], "properties": { "stage": { "const": "idea" } } },
+      "then": {
+        "properties": {
+          "reviewers": {
+            "items": {
+              "properties": {
+                "hard_gates": { "required": ["value_type_present", "takeaway_present", "on_brand"] },
+                "category_scores": { "required": ["audience_value", "reusable_takeaway", "packaging", "audience_fit"] }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

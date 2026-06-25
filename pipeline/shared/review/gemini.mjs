@@ -64,6 +64,6 @@ export class GeminiReviewer extends Reviewer {
     } catch {
       parsed = JSON.parse(extractJson(text));
     }
-    return normalizeReviewResult(parsed, { reviewer: this.name, model: this.model });
+    return normalizeReviewResult(parsed, { reviewer: this.name, model: this.model, stage });
   }
 }

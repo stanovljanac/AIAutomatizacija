@@ -44,7 +44,7 @@
             "score_threshold": { "type": "number", "minimum": 0, "maximum": 10, "description": "Both reviewers must reach this to pass the loop (9)." },
             "auto_pass_threshold": { "type": "number", "minimum": 0, "maximum": 10, "description": "Both must reach this (+ hard gates) to skip the human script gate (9.2)." },
             "max_iterations": { "type": "integer", "minimum": 1 },
-            "stages": { "type": "array", "items": { "type": "string", "enum": ["script", "scene-plan", "cut"] } },
+            "stages": { "type": "array", "items": { "type": "string", "enum": ["idea", "script", "scene-plan", "cut"] } },
             "reviewers": {
               "type": "array",
               "minItems": 2,
@@ -69,6 +69,19 @@
                 "hard_rule_craft": { "type": "number" },
                 "style_tone": { "type": "number" },
                 "readaloud_clarity": { "type": "number" }
+              }
+            },
+            "stage_overrides": {
+              "type": "object",
+              "description": "Per-stage panel overrides (e.g. the 'idea' content-value gate runs the SAME panel with its own thresholds/weights/gates). Merged over the global panel by resolvePanelCfg.",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "score_threshold": { "type": "number", "minimum": 0, "maximum": 10 },
+                  "auto_pass_threshold": { "type": "number", "minimum": 0, "maximum": 10 },
+                  "required_gates": { "type": "array", "items": { "type": "string" } },
+                  "weights": { "type": "object", "additionalProperties": { "type": "number" } }
+                }
               }
             }
           }

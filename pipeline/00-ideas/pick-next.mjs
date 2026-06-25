@@ -27,16 +27,49 @@ export function effectiveScore(idea) {
   return typeof idea?.adjusted_score === "number" ? idea.adjusted_score : idea?.score ?? 0;
 }
 
+/** Numeric prefix of a produced_video_id ("008-foo" → 8); -1 when absent/unparseable. */
+function videoSeq(idea) {
+  const m = String(idea?.produced_video_id ?? "").match(/^(\d+)/);
+  return m ? Number(m[1]) : -1;
+}
+
 /**
- * The highest-ranked idea eligible to produce. Default = `backlog` only; sorted by effective
- * score desc, ties broken by id asc (deterministic). Returns null when none qualify.
+ * The last `n` produced ideas as {lane, archetype, tool}, most-recent-first (ordered by the numeric
+ * prefix of produced_video_id). Drives the variety soft-cap. Pure.
  */
-export function pickNextIdea(ideas, { statuses = ["backlog"] } = {}) {
-  const eligible = (ideas?.ideas || []).filter((i) => statuses.includes(i.status));
+export function recentFromBank(ideas, n = 2) {
+  return (ideas?.ideas || [])
+    .filter((i) => i.status === "produced" && videoSeq(i) >= 0)
+    .sort((a, b) => videoSeq(b) - videoSeq(a))
+    .slice(0, n)
+    .map((i) => ({ lane: i.lane, archetype: i.archetype, tool: i.tool }));
+}
+
+/**
+ * Would picking `idea` make MORE than a run of `runCap` in a row on ANY of lane/archetype/tool?
+ * True only when the last `runCap` produced all share that (defined) value with the candidate.
+ * The variety soft-cap (no >2 of the same lane/archetype/tool in a row). Pure.
+ */
+export function extendsRun(idea, recent = [], runCap = 2) {
+  if (recent.length < runCap) return false;
+  const lastN = recent.slice(0, runCap);
+  return ["lane", "archetype", "tool"].some((k) => idea?.[k] != null && lastN.every((r) => r?.[k] === idea[k]));
+}
+
+/**
+ * The highest-ranked idea eligible to produce. Default = `backlog` only; sorted by effective score
+ * desc, ties broken by id asc (deterministic). Idea-pass REJECTS (value_band="reject") are skipped.
+ * Variety soft-cap: among eligible ideas, prefer the highest-scored one that does NOT extend a
+ * >runCap run of the same lane/archetype/tool; if every candidate would (rare), fall back to the top
+ * score (never hard-block — reach/variety stays a nudge). Returns null when none qualify.
+ */
+export function pickNextIdea(ideas, { statuses = ["backlog"], recent = [], runCap = 2 } = {}) {
+  const eligible = (ideas?.ideas || []).filter((i) => statuses.includes(i.status) && i.value_band !== "reject");
   if (!eligible.length) return null;
-  return eligible
+  const sorted = eligible
     .slice()
-    .sort((a, b) => effectiveScore(b) - effectiveScore(a) || String(a.id).localeCompare(String(b.id)))[0];
+    .sort((a, b) => effectiveScore(b) - effectiveScore(a) || String(a.id).localeCompare(String(b.id)));
+  return sorted.find((i) => !extendsRun(i, recent, runCap)) ?? sorted[0];
 }
 
 /** The idea already in production (status in-progress), if any — used to avoid double-starting. */
@@ -58,6 +91,12 @@ export function briefFromIdea(idea) {
   if (idea.sector) out.sector = idea.sector;
   const score = effectiveScore(idea);
   if (typeof score === "number") out.score = score;
+  // carry the idea-pass content-value fields so the script-pass can verify the takeaway is delivered
+  if (idea.lane) out.lane = idea.lane;
+  if (Array.isArray(idea.value_type) && idea.value_type.length) out.value_type = idea.value_type;
+  if (idea.takeaway) out.takeaway = idea.takeaway;
+  if (typeof idea.value_score === "number") out.value_score = idea.value_score;
+  if (idea.value_band) out.value_band = idea.value_band;
   return out;
 }
 
@@ -81,7 +120,7 @@ export function planNextVideo(ideas, { scaffold, statuses } = {}) {
   const busy = inProgressIdea(ideas);
   if (busy) return { busy: true, id: busy.produced_video_id ?? null, ideaId: busy.id };
 
-  const idea = pickNextIdea(ideas, { statuses });
+  const idea = pickNextIdea(ideas, { statuses, recent: recentFromBank(ideas) });
   if (!idea) return { empty: true };
 
   const brief = briefFromIdea(idea);
@@ -103,9 +142,9 @@ function main() {
   if (dryRun) {
     const busy = inProgressIdea(ideas);
     if (busy) return console.log(`busy: "${busy.id}" is in-progress (${busy.produced_video_id ?? "no folder yet"}).`);
-    const idea = pickNextIdea(ideas);
+    const idea = pickNextIdea(ideas, { recent: recentFromBank(ideas) });
     if (!idea) return console.log("empty: no backlog idea to pick.");
-    return console.log(`would pick [${effectiveScore(idea)}] ${idea.id} — "${idea.title}" (${idea.archetype}).`);
+    return console.log(`would pick [${effectiveScore(idea)}] ${idea.id} — "${idea.title}" (${idea.archetype}${idea.lane ? ", " + idea.lane : ""}).`);
   }
 
   const res = planNextVideo(ideas, { scaffold: scaffoldVideo });

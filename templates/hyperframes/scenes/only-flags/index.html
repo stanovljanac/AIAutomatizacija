@@ -1,0 +1,67 @@
+<!doctype html>
+<!--
+  only-flags — HyperFrames BODY scene for video 008, s09 ("Only check the flags").
+  The payoff, restored from the script's bespoke intent (storyboard had flattened it to a card):
+  the spreadsheet fills with mostly-CLEAN green rows; the script catches ONE row, which turns into a
+  gold REVIEW; a "glance" ring lands only on that row — so the human checks one row, not a hundred.
+
+  PALETTE: blue + gold (body). Same blue surface + green ✓ / gold REVIEW vocabulary as
+  receipts-mathcheck, and the flagged vendor is Marlow Street Market again — so the body scenes are
+  one continuous story. Silent, deterministic (no Math.random/Date.now; one paused, seek-driven GSAP
+  timeline). make-entry.mjs patches the exact duration.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds (declared) + revealsSeconds[]
+  + props{kicker,title,subtitle} (pass-through, optional).
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":540},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":18}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="only-flags.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="only-flags" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="glow" id="glow"></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="titleblock" id="title">
+          <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text" id="kicker-text">The payoff</span></div>
+          <h1 class="title" id="title-text"><span class="w">Only</span> <span class="w">check</span> <span class="w">the</span> <span class="w">flags</span></h1>
+          <div class="rule" id="rule"></div>
+          <div class="subtitle" id="subtitle">AI types · the script checks · you glance at the one in doubt</div>
+        </div>
+
+        <div class="sheet" id="sheet">
+          <div class="lrow" id="lr1"><span class="lname">Brightleaf Goods</span><span class="status ok"></span></div>
+          <div class="lrow" id="lr2"><span class="lname">Granby Coffee</span><span class="status ok"></span></div>
+          <div class="lrow" id="lr3"><span class="lname">Citypark Garage</span><span class="status ok"></span></div>
+          <div class="lrow" id="lr4"><span class="lname">Northwind Supply</span><span class="status ok"></span></div>
+          <div class="lrow flagged" id="lr5"><span class="lname">Marlow Street Market</span><span class="status ok" id="lr5-ok"></span><span class="pill review" id="lr5-review">REVIEW</span></div>
+          <div class="lrow" id="lr6"><span class="lname">Atlas Hardware</span><span class="status ok"></span></div>
+          <div class="lrow" id="lr7"><span class="lname">Vine &amp; Co.</span><span class="status ok"></span></div>
+          <div class="glance" id="glance"></div>
+        </div>
+
+        <div class="counter" id="counter"><span class="big">1</span><span class="small">row to check —<br/>the rest are clean</span></div>
+      </div>
+    </div>
+    <script src="only-flags.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["only-flags"] = tl;
+    </script>
+  </body>
+</html>

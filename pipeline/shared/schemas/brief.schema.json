@@ -19,6 +19,28 @@
     "sector": { "type": "string", "description": "Optional sector flavor (schools, accounting, hospitality...)." },
     "tool": { "type": "string", "description": "Primary tool shown (Sheets, Excel, Outlook, Notion, Claude...)." },
     "score": { "type": "number", "description": "Predicted popularity 0-100 (free signals + judgment)." },
+    "lane": {
+      "type": "string",
+      "enum": ["desk-fixes", "desk-loops", "automation-breakdowns", "desk-notes", "ai-how-to", "tool-review", "ai-news"],
+      "description": "Content lane / series. Drives the variety soft-cap (no >2 of the same lane in a row)."
+    },
+    "value_type": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["saves-time", "saves-money", "avoids-mistake", "teaches-system", "surprising-truth", "corrects-misbelief"]
+      },
+      "description": "Which audience-value type(s) this video delivers (the idea-pass Audience Value Test). >=1 required to clear the value gate."
+    },
+    "takeaway": { "type": "string", "description": "The ONE reusable thing a viewer can apply or believe differently tomorrow. Defined at the idea-pass; the script-pass checks it was delivered." },
+    "approved_tools": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Paid SaaS product names the OWNER pre-approved to name on screen for this video (paid promo or personal endorsement). Anything not listed is blocked by the QA denylist."
+    },
+    "value_score": { "type": "number", "minimum": 0, "maximum": 10, "description": "Idea-pass content-value score (0-10). >=9 auto-qualify, 7.5-9 owner decides, <7.5 reject." },
+    "value_band": { "type": "string", "enum": ["qualify", "owner", "reject"], "description": "Idea-pass gate decision derived from value_score + hard gates." },
     "sources": {
       "type": "array",
       "items": {

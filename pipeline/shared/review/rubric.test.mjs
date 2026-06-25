@@ -1,7 +1,7 @@
 // R1 — rubric prompt + result normalization (missing gates default to false).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildReviewerPrompt, normalizeReviewResult, extractJson, HARD_GATES } from "./rubric.mjs";
+import { buildReviewerPrompt, normalizeReviewResult, extractJson, HARD_GATES, scoredCategories, hardGates } from "./rubric.mjs";
 
 test("buildReviewerPrompt names the stage, the rubric, the contract and the artifact", () => {
   const p = buildReviewerPrompt({ stage: "script", artifact: { id: "x" } });
@@ -33,4 +33,33 @@ test("extractJson pulls a JSON object out of fenced / prose replies", () => {
   assert.equal(extractJson('```json\n{"a":1}\n```'), '{"a":1}');
   assert.equal(extractJson('Sure! {"a":1} done'), '{"a":1}');
   assert.throws(() => extractJson("no json here"), /no JSON object/);
+});
+
+// ── IDEA STAGE rubric (the pre-script content-value pass) ─────────────────────────────────────────
+
+test("scoredCategories/hardGates are stage-aware (idea vs script default)", () => {
+  assert.deepEqual(hardGates("idea"), ["value_type_present", "takeaway_present", "on_brand"]);
+  assert.deepEqual(scoredCategories("idea"), ["audience_value", "reusable_takeaway", "packaging", "audience_fit"]);
+  // unknown / omitted stage falls back to the script set (back-compat)
+  assert.deepEqual(hardGates(), HARD_GATES);
+});
+
+test("buildReviewerPrompt(idea) names the idea gates, categories and contract", () => {
+  const p = buildReviewerPrompt({ stage: "idea", artifact: { id: "bulk-emails" } });
+  assert.match(p, /video IDEA/);
+  assert.match(p, /value_type_present/);
+  assert.match(p, /reusable_takeaway/);
+  assert.match(p, /audience_fit/);
+  assert.doesNotMatch(p, /retention_structure/, "idea prompt must NOT use script categories");
+});
+
+test("normalizeReviewResult(stage:idea) keeps idea keys and defaults a missing idea gate to false", () => {
+  const r = normalizeReviewResult(
+    { score: 8.4, hard_gates: { value_type_present: true, takeaway_present: true }, category_scores: { audience_value: 8 } },
+    { reviewer: "g", model: "m", stage: "idea" }
+  );
+  assert.equal(r.hard_gates.on_brand, false, "omitted idea gate must be false");
+  assert.ok("audience_value" in r.category_scores && "packaging" in r.category_scores);
+  assert.equal(r.category_scores.packaging, 0, "missing idea category defaults to 0");
+  assert.ok(!("retention_structure" in r.category_scores), "no script keys leak into an idea result");
 });

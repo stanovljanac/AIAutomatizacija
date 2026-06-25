@@ -1,0 +1,85 @@
+<!doctype html>
+<!--
+  swappable-engine — HyperFrames BODY scene for video 008, s06 ("The tool is swappable").
+  The modular-tool thesis, made VISUAL (replaces the rejected icon-list AND drops the Expensify/
+  QuickBooks names the owner banned — see [[no-paid-saas-products]]). A fixed pipeline rail —
+  [Receipt photos] → [ your engine ] → [Checked rows] — where the MIDDLE slot accepts different
+  engine chips one at a time (AI assistant · Vision API · Doc AI) while the folder, the check and the
+  sheet stay identical. The only on-screen tool names are legitimate swappable ENGINES verified in
+  sources.md (vision-model APIs; Google / Amazon document AI) — never a paid bookkeeping app.
+
+  PALETTE: blue + gold (body). Silent, deterministic (no Math.random/Date.now; one paused,
+  seek-driven GSAP timeline). make-entry.mjs patches the exact duration.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds (declared) + revealsSeconds[]
+  + props{kicker,title,subtitle,note} (pass-through, optional).
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":540},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":18}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="swappable-engine.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="swappable-engine" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="glow" id="glow"></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="titleblock" id="title">
+          <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text" id="kicker-text">Modular tool</span></div>
+          <h1 class="title" id="title-text"><span class="w">The</span> <span class="w">tool</span> <span class="w">is</span> <span class="w">swappable</span></h1>
+          <div class="rule" id="rule"></div>
+          <div class="subtitle" id="subtitle">Same workflow — only the engine in the middle changes</div>
+        </div>
+
+        <div class="rail" id="rail">
+          <!-- fixed: the folder -->
+          <div class="node" id="n-folder">
+            <span class="fixedtag">fixed</span>
+            <div class="gly folder"><span class="tab"></span><span class="body"></span></div>
+            <div class="cap">Receipt photos</div>
+          </div>
+
+          <div class="arrow" id="a1"><span class="ln"></span><span class="hd"></span></div>
+
+          <!-- swappable: the engine slot -->
+          <div class="slot" id="slot">
+            <div class="slot-label" id="slot-label">your engine</div>
+            <div class="chip" id="chip-a"><span class="dot" style="background:#ffd37a"></span><span class="ct"><b>AI assistant</b><i>you already pay for</i></span></div>
+            <div class="chip" id="chip-b"><span class="dot" style="background:#6ad0ff"></span><span class="ct"><b>Vision API</b><i>pennies / receipt</i></span></div>
+            <div class="chip" id="chip-c"><span class="dot" style="background:#34d39a"></span><span class="ct"><b>Doc AI</b><i>Google · Amazon</i></span></div>
+          </div>
+
+          <div class="arrow" id="a2"><span class="ln"></span><span class="hd"></span></div>
+
+          <!-- fixed: the checked sheet -->
+          <div class="node" id="n-sheet">
+            <span class="fixedtag">fixed</span>
+            <div class="gly sheet"><span class="r"></span><span class="r"></span><span class="r ok"></span><span class="check"></span></div>
+            <div class="cap">Checked rows</div>
+          </div>
+        </div>
+
+        <div class="honest" id="honest">A chat login isn't an API key — use a key, or an agent that can open your files</div>
+      </div>
+    </div>
+    <script src="swappable-engine.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["swappable-engine"] = tl;
+    </script>
+  </body>
+</html>

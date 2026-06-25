@@ -52,8 +52,23 @@ You catch problems **before** the owner watches (PRD R13–R14), and you produce
   or if that opening is a static hold with no real motion. `build-props.mjs` warns; QA enforces. The
   first ~30s carry the most retention weight — open on a concrete, sourced hook with visible motion.
 
+- **No paid-SaaS product names (HARD — owner rule 2026-06-24):** never name a paid SaaS product
+  (Expensify, QuickBooks, …) on screen or in narration unless it's in `brief.approved_tools` (a paid
+  promo or a tool the owner personally endorses). `check-lib` scans captions + scene-prop strings
+  against `PAID_SAAS_DENYLIST`. Use a generic category instead ("a receipt OCR"). See
+  [[no-paid-saas-products]].
+- **No template slideshow (HARD — owner rule 2026-06-24):** on real-length videos (≥5 scenes) the
+  bespoke ratio `(custom|hyperframes|capture-segment)/total` must be ≥ `format.scene_set.custom_ratio_min`
+  (`bespoke_ratio`), no gallery template may be used more than `max_same_template` (default 3) times
+  (`template_repeat`), and **no identical scene kind back-to-back** at any length (`no_adjacent_repeat`).
+  Bespoke scenes keyed by component/hero don't read as repeats. This is the encoded version of
+  bespoke-first ([[bespoke-first-video-system]], `style/MOTION_SPEC.md` §6) — author distinct scenes,
+  don't reskin one card 5×.
+
 > These HARD checks exist because they were skipped before. Treat a HARD failure like a
 > failed build: fix it (and the upstream skill/script) before the video reaches the owner.
+> The "is each beat *meaningfully* progressing" judgment (vs tic-motion) stays PERCEPTUAL — watch
+> as an average viewer (MOTION_SPEC §1); the code checks are floors, not the whole bar.
 
 ## Fix policy (D-…, owner's rule)
 - **Pure technical breakage** (no audio / cut-off / missing captions / black frames):

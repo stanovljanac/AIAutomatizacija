@@ -117,6 +117,108 @@ test("summarize: green when all pass, lists failures otherwise", () => {
   assert.match(summarize([{ name: "coverage", pass: false, severity: "high" }]), /coverage/);
 });
 
+// --- Content-quality enforcement (items 4/6/9 — paid-SaaS, bespoke ratio, no-repeat) ---
+
+// A real-length (>=5 scenes) all-template, no-bespoke video = the slideshow the owner rejected.
+function slideshowProps(over = {}) {
+  const mkScene = (i, template, extra = {}) => ({ sceneId: `s${i}.0`, template, props: { reveals: [0, 30], ...extra }, fromFrame: 45 + i * 100, durFrames: 100 });
+  return {
+    fps: FPS, introFrames: 45, outroFrames: 75, totalFrames: 1020,
+    scenes: [
+      { sceneId: "hook.0", template: "hook-card", props: {}, fromFrame: 45, durFrames: 100 },
+      mkScene(1, "term-highlight"), mkScene(2, "term-highlight"), mkScene(3, "term-highlight"),
+      mkScene(4, "term-highlight"), mkScene(5, "term-highlight"), mkScene(6, "icon-list"),
+    ],
+    captions: [{ fromFrame: 45, durFrames: 60, words: [{ w: "hello" }] }],
+    ...over,
+  };
+}
+// A good bespoke-first video: distinct HF/custom scenes mixed with a couple of templates.
+function bespokeProps(over = {}) {
+  return {
+    fps: FPS, introFrames: 45, outroFrames: 75, totalFrames: 1020,
+    scenes: [
+      { sceneId: "hook.0", engine: "hyperframes", template: "hook-card", props: { hf_scene: "hook-kinetic" }, fromFrame: 45, durFrames: 100 },
+      { sceneId: "s1.0", template: "custom", props: { component: "ai-flow" }, fromFrame: 145, durFrames: 100 },
+      { sceneId: "s2.0", template: "term-highlight", props: { reveals: [0, 30] }, fromFrame: 245, durFrames: 100 },
+      { sceneId: "s3.0", engine: "hyperframes", template: "section-header", props: { hf_scene: "bad-row-gate" }, fromFrame: 345, durFrames: 100 },
+      { sceneId: "s4.0", template: "flow", props: { reveals: [0, 30] }, fromFrame: 445, durFrames: 100 },
+      { sceneId: "s5.0", template: "custom", props: { component: "spreadsheet-clean" }, fromFrame: 545, durFrames: 100 },
+    ],
+    captions: [{ fromFrame: 45, durFrames: 60, words: [{ w: "hello" }] }],
+    ...over,
+  };
+}
+
+test("no_paid_saas FAILS when narration/props name a paid SaaS not in approved_tools", () => {
+  const props = cleanProps({ captions: [{ fromFrame: 45, durFrames: 60, words: [{ w: "use" }, { w: "Expensify" }, { w: "today" }] }] });
+  const { checks } = check(props);
+  assert.equal(byName(checks, "no_paid_saas").pass, false);
+  assert.equal(byName(checks, "no_paid_saas").severity, "high");
+});
+
+test("no_paid_saas PASSES when the named product is in brief.approved_tools (owner-approved)", () => {
+  const props = cleanProps({ scenes: [
+    { sceneId: "hook.0", template: "hook-card", props: { title: "Why I use QuickBooks" }, fromFrame: 45, durFrames: 900 },
+  ] });
+  assert.equal(byName(check(props, { vertical: false, durationSeconds: 30, approvedTools: ["QuickBooks"] }).checks, "no_paid_saas").pass, true);
+  // …and FAILS again without the approval
+  assert.equal(byName(check(props).checks, "no_paid_saas").pass, false);
+});
+
+test("no_adjacent_repeat FAILS on two identical templates back-to-back", () => {
+  const props = cleanProps({ scenes: [
+    { sceneId: "hook.0", template: "hook-card", props: {}, fromFrame: 45, durFrames: 300 },
+    { sceneId: "a.0", template: "term-highlight", props: { reveals: [0, 30] }, fromFrame: 336, durFrames: 300 },
+    { sceneId: "b.0", template: "term-highlight", props: { reveals: [0, 30] }, fromFrame: 627, durFrames: 318 },
+  ] });
+  const c = byName(check(props).checks, "no_adjacent_repeat");
+  assert.equal(c.pass, false);
+  assert.match(c.detail, /b\.0/);
+});
+
+test("the slideshow (>=5 scenes, all template, no bespoke) FAILS bespoke_ratio + template_repeat", () => {
+  const { pass, checks } = check(slideshowProps());
+  assert.equal(pass, false);
+  assert.equal(byName(checks, "bespoke_ratio").pass, false, "0% bespoke < 25% min");
+  assert.equal(byName(checks, "template_repeat").pass, false, "5× term-highlight > 3");
+});
+
+test("a bespoke-first video (HF/custom mixed, distinct) passes the variety checks", () => {
+  const { checks } = check(bespokeProps());
+  assert.equal(byName(checks, "bespoke_ratio").pass, true);
+  assert.equal(byName(checks, "template_repeat").pass, true);
+  assert.equal(byName(checks, "no_adjacent_repeat").pass, true);
+});
+
+test("template_repeat IGNORES bespoke HF scenes that share a gallery fallback template (008 regression)", () => {
+  // 5 DISTINCT HyperFrames scenes all carrying `section-header` as their render FALLBACK + 1 REAL
+  // remotion section-header outro. The HF scenes render as their distinct hf_scene, so the 6
+  // `section-header` tags must NOT trip template_repeat (only the 1 real gallery scene counts).
+  const props = {
+    fps: FPS, introFrames: 45, outroFrames: 75, totalFrames: 1845,
+    scenes: [
+      { sceneId: "s1.0", engine: "hyperframes", template: "hook-card", props: { hf_scene: "receipts-hook" }, fromFrame: 45, durFrames: 300 },
+      { sceneId: "s2.0", engine: "hyperframes", template: "section-header", props: { hf_scene: "monthly-retype" }, fromFrame: 345, durFrames: 300 },
+      { sceneId: "s3.0", engine: "hyperframes", template: "section-header", props: { hf_scene: "receipts-mathcheck" }, fromFrame: 645, durFrames: 300 },
+      { sceneId: "s4.0", engine: "hyperframes", template: "section-header", props: { hf_scene: "only-flags" }, fromFrame: 945, durFrames: 300 },
+      { sceneId: "s5.0", engine: "hyperframes", template: "section-header", props: { hf_scene: "limits-privacy" }, fromFrame: 1245, durFrames: 300 },
+      { sceneId: "s6.0", template: "section-header", props: {}, fromFrame: 1545, durFrames: 225 },
+    ],
+    captions: [{ fromFrame: 45, durFrames: 60, words: [{ w: "hello" }] }],
+  };
+  const { checks } = check(props);
+  assert.equal(byName(checks, "template_repeat").pass, true, "5 distinct HF scenes + 1 real section-header must not count as 6 gallery repeats");
+  assert.equal(byName(checks, "no_adjacent_repeat").pass, true, "distinct hf_scene => not adjacent repeats");
+  assert.equal(byName(checks, "bespoke_ratio").pass, true, "5/6 bespoke");
+});
+
+test("variety checks are SKIPPED for tiny (<5-scene) clips — not added at all", () => {
+  const checks = check(cleanProps()).checks; // 3 scenes
+  assert.equal(byName(checks, "bespoke_ratio"), undefined);
+  assert.equal(byName(checks, "template_repeat"), undefined);
+});
+
 // --- Regression tests added by the V4b verifier (Sonnet 4.6) ---
 
 // coverage: out-of-order scenes are sorted and coverage still passes

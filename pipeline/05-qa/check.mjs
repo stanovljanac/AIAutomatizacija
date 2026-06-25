@@ -44,7 +44,7 @@ if (!existsSync(propsPath)) {
   };
 } else {
   const props = readJson(propsPath);
-  const { pass, checks } = runChecks(props, fmt, { vertical, durationSeconds: al.duration });
+  const { pass, checks } = runChecks(props, fmt, { vertical, durationSeconds: al.duration, approvedTools: brief.approved_tools ?? [] });
   report = { pass, checked_at: new Date().toISOString(), checks, summary: summarize(checks) };
 }
 

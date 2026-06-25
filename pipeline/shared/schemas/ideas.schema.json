@@ -34,6 +34,22 @@
             "type": "string",
             "enum": ["backlog", "in-progress", "produced", "parked"]
           },
+          "lane": {
+            "type": "string",
+            "enum": ["desk-fixes", "desk-loops", "automation-breakdowns", "desk-notes", "ai-how-to", "tool-review", "ai-news"],
+            "description": "Content lane / series; drives the variety soft-cap (no >2 of the same lane in a row)."
+          },
+          "value_type": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["saves-time", "saves-money", "avoids-mistake", "teaches-system", "surprising-truth", "corrects-misbelief"]
+            },
+            "description": "Audience-value type(s) the idea delivers (idea-pass)."
+          },
+          "takeaway": { "type": "string", "description": "The ONE reusable thing a viewer can apply/believe tomorrow (idea-pass; verified delivered at the script-pass)." },
+          "value_score": { "type": "number", "minimum": 0, "maximum": 10, "description": "Idea-pass content-value score (0-10)." },
+          "value_band": { "type": "string", "enum": ["qualify", "owner", "reject"], "description": "Idea-pass gate decision. A 'reject' idea is skipped by the picker." },
           "produced_video_id": { "type": ["string", "null"] },
           "source": {
             "type": "object",

@@ -1,0 +1,76 @@
+<!doctype html>
+<!--
+  receipts-hook — HyperFrames kinetic OPENER for video 008 ("Photos in, checked rows out").
+  Reworked hook (owner 2026-06-24): NOT a static title over a loop. A short staged story —
+  receipt photos fly in → a spreadsheet types itself row by row → the last row's total reads
+  "??.??" and a gold "NOT SURE" flag stamps on, the row lifts/glows — while the title resolves
+  word-by-word. Black + gold hero palette (matches bad-row-gate + the brand hero look).
+
+  Silent by design (narration lives only in the Remotion master track). Deterministic: no
+  Math.random / Date.now; one paused GSAP timeline, seek-driven. GSAP vendored locally.
+
+  VARIABLES CONTRACT (passed by the pipeline via --variables-file):
+    fps, width, height, durationFrames, durationSeconds  (scalars; declared below)
+    revealsSeconds  number[]  clip-relative beats (sentence starts) — drive the key moments
+    props           object    { kicker?, title?, subtitle? } — all optional, sensible defaults
+  revealsSeconds/props pass through getVariables() untouched (NOT declared; no --strict-variables).
+
+  EXACT duration (hyperframes): make-entry.mjs patches data-duration = (durationFrames - 0.5)/fps.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":420},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":14}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="receipts-hook.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="receipts-hook" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="glow" id="glow"></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <!-- title block (resolves word by word) -->
+        <div class="titleblock" id="title">
+          <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text" id="kicker-text">Desk Fixes</span></div>
+          <h1 class="title" id="title-text"><span class="w">Photos</span> <span class="w">in,</span> <span class="w">checked</span> <span class="w">rows</span> <span class="w">out</span></h1>
+          <div class="rule" id="rule"></div>
+          <div class="subtitle" id="subtitle">AI fills the sheet — and flags what it's unsure of</div>
+        </div>
+
+        <!-- the sheet that types itself -->
+        <div class="sheet" id="sheet">
+          <div class="sheet-head"><span>Vendor</span><span>Date</span><span>Total</span></div>
+          <div class="srow" id="r1"><span class="c name">Brightleaf Goods</span><span class="c date">2026-01-14</span><span class="c total">$128.40</span></div>
+          <div class="srow" id="r2"><span class="c name">Granby Coffee</span><span class="c date">2026-02-02</span><span class="c total">$9.60</span></div>
+          <div class="srow" id="r3"><span class="c name">Citypark Garage</span><span class="c date">2026-03-19</span><span class="c total">$24.00</span></div>
+          <div class="srow flagged" id="r4"><span class="c name">Marlow Street Market</span><span class="c date">2026-05-09</span><span class="c total" id="r4-total">??.??</span><span class="flag" id="flag">NOT SURE</span></div>
+        </div>
+
+        <!-- receipt photos that feed the sheet -->
+        <div class="receipts" id="receipts">
+          <div class="receipt" id="rc1"><i></i><i></i><i></i><i></i></div>
+          <div class="receipt" id="rc2"><i></i><i></i><i></i><i></i></div>
+          <div class="receipt" id="rc3"><i></i><i></i><i></i><i></i></div>
+          <div class="receipt" id="rc4"><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+    </div>
+    <script src="receipts-hook.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["receipts-hook"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<!--
+  receipts-mathcheck — HyperFrames BODY scene for video 008, s07 ("It checks its own math").
+  This is the video's THESIS, restored from the script's bespoke intent (the storyboard had
+  flattened it into a plain text card — the slideshow the owner rejected). A reconciliation panel
+  SHOWS the self-check instead of telling it:
+    • the Printed total appears (the naive "just copy it down")
+    • then Subtotal + Tax re-add into an Expected total that AGREES → green pill
+    • then a flagged strip for the receipt whose total can't be read → gold REVIEW, the row glows
+    • two badges land: the typing AND the double-check are both automated.
+
+  PALETTE: blue + gold (body scenes are blue+gold; heroes/intro/outro are black+gold — the
+  section-color rule in style/MOTION_SPEC + VISUAL_IDENTITY). Vendors/numbers match the hook and
+  the gate (Brightleaf $128.40 clean · Marlow ??.?? flagged) so the three scenes are ONE story.
+
+  Silent by design (narration lives only in the Remotion master track). Deterministic: no
+  Math.random / Date.now; one paused GSAP timeline, seek-driven. GSAP vendored locally.
+
+  VARIABLES CONTRACT (passed by the pipeline via --variables-file):
+    fps, width, height, durationFrames, durationSeconds  (scalars; declared below)
+    revealsSeconds  number[]  clip-relative beats (sentence starts) — drive the key moments
+    props           object    { kicker?, title?, subtitle? } — all optional, sensible defaults
+  revealsSeconds/props pass through getVariables() untouched (NOT declared; no --strict-variables).
+
+  EXACT duration (hyperframes): make-entry.mjs patches data-duration = (durationFrames - 0.5)/fps.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":540},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":18}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="receipts-mathcheck.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="receipts-mathcheck" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="glow" id="glow"></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <!-- title block (resolves word by word) -->
+        <div class="titleblock" id="title">
+          <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text" id="kicker-text">The check</span></div>
+          <h1 class="title" id="title-text"><span class="w">It</span> <span class="w">checks</span> <span class="w">its</span> <span class="w">own</span> <span class="w">math</span></h1>
+          <div class="rule" id="rule"></div>
+          <div class="subtitle" id="subtitle">Re-adds the math — and flags what it can't read</div>
+        </div>
+
+        <!-- the reconciliation card -->
+        <div class="checker" id="checker">
+          <div class="checker-head">What the script does with the total</div>
+
+          <div class="crow printed" id="r-printed">
+            <span class="op"></span><span class="lbl">Printed total</span><span class="val">$128.40</span>
+          </div>
+
+          <div class="recheck" id="recheck">re-add subtotal + tax to be sure</div>
+
+          <div class="crow calc" id="r-sub"><span class="op"></span><span class="lbl">Subtotal</span><span class="val">$118.00</span></div>
+          <div class="crow calc" id="r-tax"><span class="op">+</span><span class="lbl">Tax</span><span class="val">$10.40</span></div>
+          <div class="calc-rule" id="calc-rule"></div>
+          <div class="crow expected" id="r-exp">
+            <span class="op">=</span><span class="lbl">Expected</span><span class="val">$128.40</span>
+            <span class="pill ok" id="pill-ok">AGREES</span>
+          </div>
+
+          <!-- the flagged branch -->
+          <div class="flagstrip" id="flagstrip">
+            <span class="fs-name">Marlow Street Market</span>
+            <span class="fs-printed">Printed <b>??.??</b></span>
+            <span class="pill review" id="pill-review">REVIEW</span>
+          </div>
+
+          <!-- the takeaway -->
+          <div class="badges" id="badges">
+            <span class="badge" id="badge-type"><i></i>Typing — automated</span>
+            <span class="badge" id="badge-check"><i></i>Checking — automated</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="receipts-mathcheck.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["receipts-mathcheck"] = tl;
+    </script>
+  </body>
+</html>

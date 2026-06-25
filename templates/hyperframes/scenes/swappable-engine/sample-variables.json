@@ -1,0 +1,14 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 540,
+  "durationSeconds": 18,
+  "revealsSeconds": [0.6, 4.0, 7.2, 11.5, 15.0],
+  "props": {
+    "kicker": "Modular tool",
+    "title": "The tool is swappable",
+    "subtitle": "Same workflow — only the engine in the middle changes",
+    "note": "A chat login isn't an API key — use a key, or an agent that can open your files"
+  }
+}

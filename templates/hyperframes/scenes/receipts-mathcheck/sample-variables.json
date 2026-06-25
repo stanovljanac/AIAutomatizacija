@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 540,
+  "durationSeconds": 18,
+  "revealsSeconds": [0.6, 4.0, 7.6, 13.0, 16.0],
+  "props": { "kicker": "The check", "title": "It checks its own math", "subtitle": "Re-adds the math — and flags what it can't read" }
+}

@@ -31,6 +31,6 @@ export class ClaudeSubagentReviewer extends Reviewer {
         parsed = JSON.parse(extractJson(parsed));
       }
     }
-    return normalizeReviewResult(parsed, { reviewer: this.name, model: this.model });
+    return normalizeReviewResult(parsed, { reviewer: this.name, model: this.model, stage });
   }
 }

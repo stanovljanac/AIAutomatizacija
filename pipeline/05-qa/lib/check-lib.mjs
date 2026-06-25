@@ -13,14 +13,44 @@ const mk = (name, pass, severity, detail, extra = {}) => ({
   ...extra,
 });
 
+// Paid SaaS products we never tell a viewer to use unless the owner pre-approved them for the video
+// (brief.approved_tools) — owner rule 2026-06-24 ([[no-paid-saas-products]]). Generic categories
+// ("a receipt OCR") and free/generic tools are fine. Owner-extensible via fmt.deny_paid_saas.
+export const PAID_SAAS_DENYLIST = ["expensify", "quickbooks", "freshbooks", "dext", "bill.com", "sap concur", "zoho books"];
+
+// The reskinnable "gallery" templates — the slideshow culprits the variety rules guard against.
+const GALLERY_TEMPLATES = new Set(["bullet-steps", "term-highlight", "icon-list", "stat-callout", "comparison-table", "section-header", "lower-third"]);
+// Below this scene count a video is too small to judge variety (a 1–3 scene test clip isn't a slideshow).
+const VARIETY_MIN_SCENES = 5;
+
+/** A scene's visual "kind": bespoke scenes are identified by their component/hero so two DIFFERENT
+ *  bespoke scenes don't read as a repeat; gallery scenes are identified by their template. */
+function sceneKind(s) {
+  if (s.engine === "hyperframes") return `hf:${s.props?.hf_scene ?? s.props?.hfSrc ?? "hf"}`;
+  if (s.template === "custom") return `custom:${s.props?.component ?? "custom"}`;
+  return s.template;
+}
+/** Bespoke / non-slideshow scenes: authored HyperFrames, custom components, and real screen-capture. */
+function isBespoke(s) {
+  return s.engine === "hyperframes" || s.template === "custom" || s.template === "capture-segment";
+}
+/** Recursively collect every string value (titles, labels, list items…) from a scene's props. */
+function collectStrings(v, out = []) {
+  if (typeof v === "string") out.push(v);
+  else if (Array.isArray(v)) for (const x of v) collectStrings(x, out);
+  else if (v && typeof v === "object") for (const k of Object.keys(v)) collectStrings(v[k], out);
+  return out;
+}
+
 /**
  * Run the artifact-level QA checks over a video's render props.
  * @param props  the emitted Remotion props (fps, introFrames, outroFrames, totalFrames, scenes[], captions[]).
  * @param fmt    the resolved format recipe.
- * @param opts   { vertical, durationSeconds } — vertical = the 9:16 Short; duration from alignment.
+ * @param opts   { vertical, durationSeconds, approvedTools } — vertical = the 9:16 Short; duration
+ *               from alignment; approvedTools = brief.approved_tools (paid SaaS the owner OK'd).
  * @returns { pass, checks } — pass is false if ANY high-severity check fails (fails-closed).
  */
-export function runChecks(props, fmt, { vertical, durationSeconds }) {
+export function runChecks(props, fmt, { vertical, durationSeconds, approvedTools = [] }) {
   const checks = [];
   const fps = props?.fps ?? 30;
   const scenes = props?.scenes ?? [];
@@ -120,6 +150,67 @@ export function runChecks(props, fmt, { vertical, durationSeconds }) {
           ? "scenes cover the full narration window (no black gaps)"
           : `${((gap[1] - gap[0]) / fps).toFixed(1)}s uncovered at ${(gap[0] / fps).toFixed(1)}s — would render black`,
         gap == null ? {} : { fix: "Ensure scenes span every sentence; check the build-props windows." }),
+    );
+  }
+
+  // 6. No paid-SaaS product names (HARD — owner rule 2026-06-24) on screen or in narration, unless the
+  //    owner pre-approved them for this video (brief.approved_tools). Scans captions (= narration) AND
+  //    every scene-prop string (titles/labels/list items).
+  {
+    const approved = new Set((approvedTools ?? []).map((t) => String(t).toLowerCase()));
+    const deny = (fmt.deny_paid_saas ?? PAID_SAAS_DENYLIST).filter((n) => !approved.has(String(n).toLowerCase()));
+    const hay = [
+      ...captions.flatMap((c) => (c.words ?? []).map((w) => w.w)),
+      ...scenes.flatMap((s) => collectStrings(s.props ?? {})),
+    ].join("  ").toLowerCase();
+    const hits = deny.filter((n) => hay.includes(String(n).toLowerCase()));
+    checks.push(
+      mk("no_paid_saas", hits.length === 0, "high",
+        hits.length === 0
+          ? "no paid-SaaS product names on screen or in narration"
+          : `names paid SaaS not in brief.approved_tools: ${hits.join(", ")}`,
+        hits.length === 0 ? {} : { fix: "Use a generic category (e.g. 'a receipt OCR') or add the product to brief.approved_tools if the owner approved it." }),
+    );
+  }
+
+  // 7. No identical scene kind BACK-TO-BACK (HARD) — the visible "same card again" smell. Bespoke
+  //    scenes with different components are NOT repeats; consecutive screen-captures are allowed.
+  {
+    const adjacent = [];
+    for (let i = 1; i < scenes.length; i++) {
+      if (scenes[i].template !== "capture-segment" && sceneKind(scenes[i]) === sceneKind(scenes[i - 1])) adjacent.push(scenes[i].sceneId);
+    }
+    checks.push(
+      mk("no_adjacent_repeat", adjacent.length === 0, "high",
+        adjacent.length === 0 ? "no identical template back-to-back" : `identical template back-to-back at: ${adjacent.join(", ")}`,
+        adjacent.length === 0 ? {} : { fix: "Break consecutive identical scenes with a different layout / bespoke scene." }),
+    );
+  }
+
+  // 8–9. Variety rules (HARD) — only meaningful on real-length videos (>= VARIETY_MIN_SCENES).
+  if (scenes.length >= VARIETY_MIN_SCENES) {
+    // 8. Bespoke ratio — don't ship the template gallery on repeat (the slideshow the owner rejected).
+    const minRatio = fmt.scene_set?.custom_ratio_min ?? 0.25;
+    const bespoke = scenes.filter(isBespoke).length;
+    const ratio = bespoke / scenes.length;
+    checks.push(
+      mk("bespoke_ratio", ratio >= minRatio, "high",
+        `${bespoke}/${scenes.length} bespoke scenes (${Math.round(ratio * 100)}% vs ${Math.round(minRatio * 100)}% min)`,
+        ratio >= minRatio ? {} : { fix: "Author more scenes as bespoke HyperFrames/custom (MOTION_SPEC bespoke-first) instead of reskinned templates." }),
+    );
+
+    // 9. No gallery template used too many times (e.g. 5× term-highlight = the 008 slideshow).
+    //    Count ONLY scenes that actually render as the gallery template — a bespoke HyperFrames/custom
+    //    scene merely carries a gallery `template` as a render FALLBACK (e.g. section-header) and is a
+    //    distinct authored scene, so it must not inflate the repeat count (mirrors sceneKind/no_adjacent_repeat).
+    const counts = {};
+    for (const s of scenes) if (!isBespoke(s) && GALLERY_TEMPLATES.has(s.template)) counts[s.template] = (counts[s.template] ?? 0) + 1;
+    const maxSame = fmt.scene_set?.max_same_template ?? 3;
+    const over = Object.entries(counts).filter(([, n]) => n > maxSame);
+    checks.push(
+      mk("template_repeat", over.length === 0, "high",
+        over.length === 0 ? `no gallery template used > ${maxSame}×` : `${over.map(([k, n]) => `${k} ×${n}`).join(", ")} (> ${maxSame})`,
+        over.length === 0 ? {} : { fix: "Replace repeated gallery cards with distinct bespoke scenes (no slideshow on repeat)." }),
     );
   }
 

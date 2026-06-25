@@ -14,6 +14,11 @@ write `script.review.json` with `pass: true|false` + a list of issues.
 > (hard-gates + 5 weighted categories), the author merges fixes, and the loop repeats until both
 > reviewers ≥9 (`loop.mjs`, schema `review.schema.json`). The checklist below is the human-readable
 > source of truth for that rubric; keep them in sync.
+>
+> **This is the SCRIPT pass of ONE unified review.** A pre-script **idea-pass** (`stage:"idea"`,
+> same panel/rubric) already decided the topic was worth making and recorded its **value_type +
+> one takeaway** in `brief.json`. So this pass does NOT re-judge whether the idea is worth it — it
+> checks the script is made well **and** that the promised `brief.takeaway` is actually delivered.
 
 ## Checklist (mirror of STYLE_GUIDE §10)
 > Numeric thresholds come from the **FORMAT recipe** (`pipeline/shared/formats/default.json` via
@@ -30,8 +35,11 @@ write `script.review.json` with `pass: true|false` + a list of issues.
 - [ ] **Answer-first (D-026):** the topic's core question is answered in the first 30–60s.
 - [ ] **Specific, not vague (D-026):** real names/dates/numbers/places where possible; flag
       hand-wavy stats ("a lot of people…") and require a sourced specific instead.
-- [ ] **Series + fingerprint (D-028):** a series tag fits (Desk Fixes/Loops/Breakdowns/Notes);
-      original angle present; ≥1 custom/bespoke scene planned.
+- [ ] **Series + fingerprint (D-028):** a `lane` fits (Desk Fixes/Loops/Breakdowns/Notes or the
+      broader AI How-To / Tool Review / AI News — `style/CHANNEL.md`); original angle present; ≥1
+      custom/bespoke scene planned.
+- [ ] **Takeaway delivered (idea-pass promise):** the one reusable takeaway named in `brief.takeaway`
+      is actually landed in the script (a viewer can apply/believe it tomorrow) — not just implied.
 - [ ] "Scale it to your own process" close where relevant; we don't build full systems.
 - [ ] Sentences are clean timing units; no over-long scenes (≤ ~4 sentences).
 - [ ] Every scene has a **valid `template`** tag (script.schema.json) and sensible role order.

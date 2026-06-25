@@ -10,6 +10,27 @@ tagged JSON (`script.json`, schema `pipeline/shared/schemas/script.schema.json`)
 Read `style/STYLE_GUIDE.md` first — it is the writing law. This skill produces; it
 does not self-approve (that's `script-review`, then the human gate).
 
+## Step 0 — Real-world workflow research (NON-NEGOTIABLE; all archetypes except news & comparison)
+Before you script a how-to / ideas / mini-demo / diagram video, research how the process is
+**actually done in the real world right now** — do NOT design an automation from imagination.
+(We learned this the hard way: an unresearched build hung a recurring job on a free hosted tier
+that returned 503s in real use. Research would have caught it.)
+
+Research and write up (in a `research.md` next to the brief, or a `research` block in `brief.json`):
+1. **How is this task really done today, and with which tools?** Name the real ones, **including
+   competitor firms / models / other tools** (e.g. off-the-shelf apps, no-code platforms, AI agents,
+   purpose-built APIs). Use `WebSearch` — this is current-state, not from memory.
+2. **Stress-test the weak link for realism + reliability BEFORE building** (free-tier limits/503,
+   session caps, accuracy, privacy). If the obvious approach isn't reliable for the real use
+   (especially recurring tasks), say so and route around it.
+3. **What's the best-practice way to automate this specific process?**
+4. Output **a few options + an explicit recommendation.**
+
+Then design so the **WORKFLOW (the process automation) is the focus and the TOOL is modular**:
+feature the one we used, but **name alternatives/competitors on-screen** so any viewer can replicate
+with their own tool or a substitute. Tools sit to the side and are swappable; the lesson is the
+workflow. (Sourced tool/price/model facts still follow rule 9 — verified, not from memory.)
+
 ## Inputs
 - `brief.json` — has `archetype`, `angle`, `task`, `tool`, `target_seconds`.
 - `sources.md` — facts (Comparisons/stats only; Ideas/Demo may have none).
@@ -24,6 +45,10 @@ does not self-approve (that's `script-review`, then the human gate).
 ## Non-negotiables (from STYLE_GUIDE §2, PRD R4/R8/R9)
 1. **Bake in the original human angle** (from `brief.angle`) — surface it in/after the
    hook. No generic info-dump.
+1b. **Deliver the promised takeaway.** The idea-pass already set `brief.takeaway` (the ONE reusable
+   thing a viewer applies/believes tomorrow) and `brief.value_type`. The script MUST land that
+   takeaway clearly — the script-review checks it was delivered, not just implied. Never name a paid
+   SaaS product as a tool to use unless it's in `brief.approved_tools` (see [[no-paid-saas-products]]).
 2. **Ideas + minimal example**; end with "scale this to your own process." We do not
    build full systems.
 3. **Accuracy by archetype:** Comparisons/stats trace to `sources.md`; demos use

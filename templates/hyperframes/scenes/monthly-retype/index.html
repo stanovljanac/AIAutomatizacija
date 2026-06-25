@@ -1,0 +1,78 @@
+<!doctype html>
+<!--
+  monthly-retype — HyperFrames INTRO scene for video 008, s02 ("The monthly retype").
+  The pain beat, restored from the script's bespoke intent (storyboard had flattened it to a card).
+  It is the deliberate OPPOSITE of the hook: where receipts-hook shows the clean AUTO-fill, this
+  shows the manual chore — a pile of crumpled receipts, a caret hand-typing rows one cell at a time,
+  and one fat-fingered total that flashes RED ("quietly throws off the books"). A small "~10 min"
+  clock conveys the tedium.
+
+  PALETTE: black + gold (intro/hero section — heroes/intro/outro are black+gold; body scenes are
+  blue+gold). Reuses the hook's receipt + sheet vocabulary so it reads as the same world, but the
+  MOTION and the red error make it a distinct scene (reuse techniques, not a reskinned card).
+
+  Silent by design. Deterministic: no Math.random / Date.now; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds (declared) + revealsSeconds[]
+  + props{kicker,title,subtitle} (pass-through). make-entry.mjs patches the exact duration.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":510},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":17}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="monthly-retype.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="monthly-retype" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="glow" id="glow"></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <!-- title block -->
+        <div class="titleblock" id="title">
+          <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text" id="kicker-text">Desk Fixes</span></div>
+          <h1 class="title" id="title-text"><span class="w">The</span> <span class="w">monthly</span> <span class="w">retype</span></h1>
+          <div class="rule" id="rule"></div>
+          <div class="subtitle" id="subtitle">Ten dull minutes, by hand, every month</div>
+        </div>
+
+        <!-- the sheet typed BY HAND (slow caret, one red mistake) -->
+        <div class="sheet" id="sheet">
+          <div class="sheet-head"><span>Date</span><span>Vendor</span><span>Amount</span></div>
+          <div class="srow" id="r1"><span class="cell date">2026-01-09</span><span class="cell vendor">Taxi</span><span class="cell amount">$24.00</span></div>
+          <div class="srow" id="r2"><span class="cell date">2026-01-15</span><span class="cell vendor">Parking</span><span class="cell amount">$9.00</span></div>
+          <div class="srow" id="r3"><span class="cell date">2026-01-22</span><span class="cell vendor">Coffee</span><span class="cell amount" id="bad-amount">$84.00</span></div>
+          <div class="caret" id="caret"></div>
+          <div class="errtag" id="errtag">typo — $8.40</div>
+        </div>
+
+        <!-- the clock badge (tedium) -->
+        <div class="clock" id="clock"><span class="dot"></span>≈ 10 min</div>
+
+        <!-- the pile of crumpled receipts -->
+        <div class="receipts" id="receipts">
+          <div class="receipt" id="rc1"><i></i><i></i><i></i><i></i></div>
+          <div class="receipt" id="rc2"><i></i><i></i><i></i><i></i></div>
+          <div class="receipt" id="rc3"><i></i><i></i><i></i><i></i></div>
+          <div class="receipt" id="rc4"><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+    </div>
+    <script src="monthly-retype.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["monthly-retype"] = tl;
+    </script>
+  </body>
+</html>

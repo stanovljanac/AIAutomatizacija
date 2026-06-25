@@ -19,6 +19,140 @@ Format:
 
 ---
 
+## 2026-06-25 — 008 fully re-authored bespoke + full re-render (owner: "make all scenes + render")
+- who: agent (owner directed)
+- did: Authored the remaining four bespoke HF scenes the storyboard had flattened into cards, each
+  render-verified standalone then wired into the pipeline (engine:"hyperframes" + `revealOn:"sentences"`
+  so `buildTimeline` feeds them per-sentence reveal beats):
+    • s02 `monthly-retype` (intro, black+gold) — manual hand-typing + a red mistyped total.
+    • s06 `swappable-engine` (body, blue+gold) — a fixed rail (folder → engine slot → checked sheet)
+      with engine chips swapping in; REPLACES the icon-list AND the banned Expensify/QuickBooks. The
+      s06 NARRATION was rewritten to drop Expensify/QuickBooks/Veryfi (tool-agnostic; engine names
+      shown on-screen, verified) → re-voiced (edge-tts) + re-aligned (faster-whisper); 0 paid-SaaS
+      words remain in the track.
+    • s07 `receipts-mathcheck` (body) — the self-check thesis (subtotal+tax → Expected AGREES → gold
+      REVIEW). • s09 `only-flags` (body) — clean green rows, one gold REVIEW, a glance ring + "1 to
+      check" counter. • s11 `limits-privacy` (body) — three illustrated honest-note cards (scrawl ✗ /
+      keep-image + IRS source chip irs.gov / green privacy lock).
+  Determinism guardrail applied across scenes: color/flag states are TWEENED, never class-toggled,
+  because the renderer SEEKS frames and GSAP suppresses callbacks on seek. Consistent vendors/numbers
+  across hook/gate/math/flags (Brightleaf $128.40 · Marlow ??.??) so the cut tells one story; section
+  colours: heroes/intro/outro black+gold, body blue+gold.
+  Ran the full combo pipeline: re-voice+align → compile-hyperframes --force (7 clips at real scene
+  windows) → build-props (timeline 9218f/307.3s, hfSrc wired) → Remotion render.
+- verify: each scene render-verified by frame extraction (meaningful per-beat progression, no
+  tic-motion); script.json + scene-plan.json schema-PASS; alignment 303.3s with the new s06 VO;
+  look-test clips in `content/008-receipt-to-spreadsheet/looktest/` (01..07). Full-cut QA + owner
+  Gate ③ next.
+- next: QA the rendered mp4 (sync / captions / no-paid-saas / anti-slideshow) + spot-check frames;
+  present the assembled cut + before/after to the owner; (Short + thumbnails + publish after approval).
+
+## 2026-06-25 — 008 bespoke re-author: hook receipts fix + s07 math-check scene (owner-approved look)
+- who: agent (owner directed)
+- did: Owner approved the new kinetic hook + redesigned gate look ("clear, not cluttered"), with one
+  fix: the receipt cards overlapped the subtitle. Lowered them in `receipts-hook` (resting `top`
+  40%→52%, portrait 30%→36%) and made the sheet handoff orientation-aware so they feed the sheet
+  without re-crossing the text — render-verified (frames at 2.8s/3.6s/13.5s, no overlap). Then started
+  restoring the script's bespoke intent that the storyboard had flattened: the script marks s02/s07/
+  s09/s11 as `custom` scenes but scene-plan had collapsed them into `term-highlight` cards (the
+  slideshow root cause). Authored the first one — **`receipts-mathcheck`** (s07, the video's thesis):
+  a reconciliation panel that SHOWS the self-check (Printed total → re-add Subtotal+Tax → Expected
+  AGREES in green → a gold REVIEW strip for Marlow's unreadable total → "Typing/Checking — automated"
+  badges). **Blue+gold body palette** (heroes/intro/outro stay black+gold) for section variety; same
+  vendors/numbers as the hook + gate (Brightleaf $128.40 · Marlow ??.??) so the three scenes are one
+  continuous story. Pointed scene-plan s01 at `receipts-hook` (was `hook-prism`).
+- verify: render-verified each beat (frames 4.6/9.4/13.9/17.3s) — meaningful progression, not
+  tic-motion; fixed a pill/value collision on the Expected row. `npm test` **508 green** (no pipeline
+  code changed — new scene is template HTML/CSS/JS; render IS the verification). Look-test clips for
+  owner: `content/008-receipt-to-spreadsheet/looktest/{01-hook,02-gate,03-mathcheck}.mp4`.
+- next: author the remaining flattened-`custom` scenes (s02 "the monthly retype", s09 "only check the
+  flags", s11 "limits + privacy"); rework s06 to drop Expensify/QuickBooks (VO rewrite + re-synth +
+  bespoke "swappable engine" visual); then wire scene-plan → full render → QA against the new rules →
+  before/after to owner at Gate ③.
+
+## 2026-06-24 — Layer 1: QA enforcement (anti-slideshow + paid-SaaS) + gate layout fix
+- who: agent (owner directed)
+- did: Encoded the quality rules as HARD QA checks in `pipeline/05-qa/lib/check-lib.mjs` so a
+  slideshow/paid-SaaS cut fails the build, not just review: **`no_paid_saas`** (scans captions +
+  scene props vs `PAID_SAAS_DENYLIST`, allows `brief.approved_tools`), **`no_adjacent_repeat`** (no
+  identical scene kind back-to-back; bespoke scenes keyed by component/hero), and on real-length
+  videos (≥5 scenes) **`bespoke_ratio`** (≥ `custom_ratio_min`) + **`template_repeat`** (no gallery
+  template > `max_same_template`=3). `check.mjs` passes `approved_tools`. qa-video skill documents
+  them. The OLD 008 (5× term-highlight, 0 bespoke, Expensify/QuickBooks) would now FAIL the build.
+  Began the bespoke phase: **redesigned `bad-row-gate`** so the gate bar can't bisect the row — the
+  row is now compact + seated in the left third, gate at 47% (right of it), clean table further
+  right; travel nudges the row to the gate (item 5).
+- verify: `npm test` **508 green** (6 new QA tests). **NOTE:** the different-model verifier for the
+  QA-enforcement unit was INTERRUPTED (session limit / classifier unavailable) and did NOT complete —
+  **re-verify pending**. The `bad-row-gate` fix WAS render-verified: rendered the scene with the real
+  008 values ("Marlow Street Market … total ??.??") and inspected frames at 7s/9s — the row now sits
+  fully left of the gate, no bisecting; flag stamp clears the gate. (item 5 ✓)
+- next: re-run the QA-enforcement verifier; author the new kinetic 008 hook (rework per owner);
+  render hook+gate look-test for owner; then author the remaining bespoke scenes → full render → QA.
+
+## 2026-06-24 — Layer 0: content-value gate (unified review idea-pass) + lanes broadened
+- who: agent (owner directed)
+- did: Added the *worth-making* gate the system lacked. Made the existing multi-model review
+  **stage-parametric** (`pipeline/shared/review/rubric.mjs` `STAGE_RUBRICS`, `panel.mjs`
+  stage-aware gates + `resolvePanelCfg`/`ideaGateDecision`/`reviewIdea`) and added an **`idea`
+  stage** — same panel, one rubric, no parallel rulebook; the **script stage stays byte-identical**.
+  The idea-pass scores a topic (value / reusable-takeaway / packaging / audience-fit; gates:
+  value-type + takeaway + on-brand) and bands it: **≥9.0 qualify (auto) · 7.5–9.0 owner · <7.5
+  reject**. Schemas carry `value_type`/`takeaway`/`lane`/`value_score`/`value_band`/`approved_tools`
+  (`brief`+`ideas`); `review.schema` allOf enforces per-stage keys; `config` adds the idea
+  `stage_override` (9.0/7.5). `pick-next` skips `value_band:"reject"` + a **variety soft-cap**
+  (`recentFromBank`/`extendsRun` — no >2 same lane/archetype/tool in a row, never hard-blocks).
+  Broadened lanes in `style/CHANNEL.md` (added AI How-To / Tool Review / AI News); Gate 1 is now the
+  scored gate in WORKFLOW + CLAUDE + the [[gate1-autoproceed]] memory; script-writing/script-review
+  skills carry + verify the takeaway. Reframed `MOTION_SPEC.md` §1 ("meaningful progression, not
+  tic-motion"; code check is a floor). Owner decisions: bespoke-first, broaden lanes now, soft
+  declare gate with a <75% reject floor, named-tools = no paid SaaS unless approved.
+- verify: different-model verifier = **Sonnet 4.6** → **PASS**, no bugs (noted my required-gates
+  change also fixed a latent partial-hard-gate pass); added 23 regression tests. `npm test` **502 green**.
+- next: Layer 1 QA enforcement in code (paid-SaaS denylist, custom-ratio, no-repeat-template,
+  capture-silence) → redesign `bad-row-gate` (item 5) → re-author 008 bespoke (items 1,4,6,7,8,9)
+  → render → QA → Gate ③.
+
+## 2026-06-24 — Bespoke-first pivot + first two render fixes (008 rejected, root-caused)
+- who: agent (owner directed)
+- did: Owner rejected the 008 render as another "template slideshow" and called the root cause:
+  the render system is a fixed gallery (14 Remotion templates + ~12 prebuilt customs + 6 HF heroes)
+  whose only lever is filling props, so every video is the same deck with new words. **Decisions
+  (owner):** (1) **bespoke-first authoring** — HyperFrames becomes the default scene surface,
+  Remotion is the assembler (timeline, narration, captions, intro/outro, capture zoom); (2)
+  **re-author 008 fresh** as the proof; (3) **named tools:** free/generic OK, never paid SaaS
+  (Expensify/QuickBooks) unless owner-approved. Plan in `.claude/plans/uzas-…`. Ran a craft-research
+  pass (pacing/transitions/kinetic-type/icons) → to become `style/MOTION_SPEC.md`. Shipped the two
+  unambiguous code fixes: **(item 3)** monotonic reveal clamp in `lib/timeline.mjs` (008 flow nodes
+  revealed out of order when a downstream cue word was spoken before an upstream one); **(item 2)**
+  strip capture audio at ingest in `compile-remotion.mjs` (`stripAudioCommand`/`copyCaptureSilent`
+  via vendored ffmpeg `-an -c:v copy`, raw-copy fallback + loud warning) so screen-recording audio
+  can't leak into the final video.
+- verify: different-model verifier = **Sonnet 4.6** → **PASS**, no bugs; added 3 regression tests
+  (equal-time reveals unchanged, single-element untouched, all captures stripped). `npm test`
+  **464 green**.
+- next: distill `MOTION_SPEC.md` + wire format knobs; encode QA rules (paid-SaaS denylist,
+  custom-ratio, no-repeat-template, capture-silence); redesign `bad-row-gate` (item 5); re-author
+  008 bespoke (items 1,4,6,7,8,9); render → QA → owner Gate ③.
+
+## 2026-06-14 — 008 "Stop Retyping Receipts" started (Desk Fixes mini-demo) — through Gate ② + capture assets
+- who: agent (owner gated)
+- did: Picked next video via research (owner chose a Desk Fixes mini-demo on "messy PDF/receipt →
+  clean sheet" — idea `expense-receipt-to-sheet`, 83). Scaffolded `content/008-receipt-to-spreadsheet`,
+  wrote brief + 15-scene script (angle: "AI removes the typing, not the responsibility — it lies on
+  the total"). Fact-check (draft): 3 verified, 1 corrected (IRS accepts legible digital copies →
+  fixed the s11 "keep paper" line). script-review PASS. **Owner APPROVED at Gate ②**; generated SEO
+  (publish.json) + medium.md at approval. Built the capture assets: a synthetic-receipt generator
+  (`gen-receipts.mjs` → 8 fake receipts + answer key), the tested parse/flag core
+  (`receipt-parse.mjs`), the deployable Apps Script give-away (`receipt-to-sheet.gs`), and
+  `captures/plan.md`. The s07 "catch" is made REAL (not staged) by printing+creasing+photographing
+  the faint-total receipt so OCR genuinely flags it.
+- verify: different-model verifier = **Sonnet 4.6** → PASS, no behavioral bugs (2 cosmetic .gs-mirror
+  notes, benign), added 11 regression tests. Captures suite 32/32; full repo `npm test` **457 green**.
+- next: **owner records 3 OBS clips** (cap-extract-one, cap-catch-error, cap-scale-it) per
+  `captures/plan.md` → then voice → render → QA → Gate ③ → draft upload. (Mini-demo capture is the
+  one owner-blocking step.)
+
 ## 2026-06-14 — 007 "Rise & Fall of Fable 5" shipped (long + 2 shorts, private drafts)
 - who: agent (owner gated)
 - did: Produced video 007 (Desk Notes) on the Claude Fable 5 launch→shutdown story surfaced by our

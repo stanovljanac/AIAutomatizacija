@@ -99,6 +99,17 @@ export function buildTimeline({ script, plan, alignment, fmt, timings, fps, cros
       reveals = bt.sents.map((s) => ({ at_seconds: snap(s.start) }));
     }
 
+    // Sequential reveals MUST build in author order. A later element's cue word can resolve EARLIER
+    // in the narration than an earlier element's (008 flow: node 3 "re-checks" landed before node 2
+    // "reads"), which pops a downstream node before its upstream one — the chain assembled out of
+    // order on screen. Clamp the reveal times to be non-decreasing so a flow/list/diagram always
+    // builds left-to-right / top-to-bottom regardless of where its cue words fall.
+    if (Array.isArray(reveals)) {
+      for (let i = 1; i < reveals.length; i++) {
+        if (reveals[i].at_seconds < reveals[i - 1].at_seconds) reveals[i] = { at_seconds: reveals[i - 1].at_seconds };
+      }
+    }
+
     // motivated-motion (opt-in): resolve focalZoom / pip cue words → ABSOLUTE (frame-snapped) seconds.
     const sceneWords = wordsByScene[bt.sid] ?? [];
     if (props.focalZoom) props.focalZoom = resolveCueWindowSeconds(props.focalZoom, sceneWords, { introFrames, fps });

@@ -89,6 +89,96 @@ test("buildTimeline: revealOn 'sentences' yields one reveal per sentence even wi
   }
 });
 
+test("buildTimeline clamps list/flow reveals to NON-DECREASING order even when cue words resolve out of order", () => {
+  // Regression for the 008 flow bug: a downstream node's cue word ("re-checks") was spoken EARLIER in
+  // the narration than an upstream node's ("reads"), so the chain assembled out of order on screen.
+  // Here step 2's cue ("gamma") is the FIRST word; without the clamp its reveal would precede steps 0/1.
+  const script = { archetype: "diagram", scenes: [{ id: "s1", sentences: ["gamma alpha beta"] }] };
+  const plan = {
+    id: "x",
+    scenes: [{
+      scene_id: "s1", template: "flow",
+      props: { title: "T", steps: [{ label: "a" }, { label: "b" }, { label: "c" }] },
+      cueWords: ["alpha", "beta", "gamma"],
+    }],
+  };
+  const alignment = {
+    duration: 3,
+    sentences: [{ scene: "s1", start: 0.5, end: 3 }],
+    words: [
+      { scene: "s1", w: "gamma", start: 0.5, end: 0.9 }, // cue for step 2 — earliest in time
+      { scene: "s1", w: "alpha", start: 1.0, end: 1.4 }, // cue for step 0
+      { scene: "s1", w: "beta", start: 1.5, end: 1.9 },  // cue for step 1
+    ],
+  };
+  const fmt = resolveFormat({ archetype: "diagram" });
+  const timings = deriveRenderTimings(fmt, { fps, vertical: false });
+  const t = buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "x" });
+  const flow = t.scenes.find((s) => s.template === "flow");
+  assert.equal(flow.reveals.length, 3, "one reveal per step");
+  let prev = -Infinity;
+  for (const r of flow.reveals) { assert.ok(r.at_seconds >= prev, "reveals are non-decreasing after the clamp"); prev = r.at_seconds; }
+  // step 2 (gamma, time 0.5) is clamped up to step 1's reveal (beta, time 1.5) — never appears first
+  assert.equal(flow.reveals[2].at_seconds, flow.reveals[1].at_seconds, "out-of-order downstream reveal is pinned to its upstream neighbour");
+});
+
+test("buildTimeline clamp: equal-time reveals are unchanged (clamp is strictly-less-than, not <=)", () => {
+  // Two cue words that both happen to resolve to the SAME snapped second must each keep that value —
+  // the clamp must not disturb them. This guards against an accidental <= comparison.
+  const script = { archetype: "diagram", scenes: [{ id: "s1", sentences: ["alpha alpha beta"] }] };
+  const plan = {
+    id: "x",
+    scenes: [{
+      scene_id: "s1", template: "flow",
+      props: { title: "T", steps: [{ label: "a" }, { label: "b" }, { label: "c" }] },
+      cueWords: ["alpha", "alpha", "beta"], // steps 0 and 1 share the same cue word → same time
+    }],
+  };
+  const alignment = {
+    duration: 3,
+    sentences: [{ scene: "s1", start: 0.5, end: 3 }],
+    words: [
+      { scene: "s1", w: "alpha", start: 1.0, end: 1.4 }, // matched by both step 0 and step 1
+      { scene: "s1", w: "beta",  start: 2.0, end: 2.4 }, // cue for step 2
+    ],
+  };
+  const fmt = resolveFormat({ archetype: "diagram" });
+  const timings = deriveRenderTimings(fmt, { fps, vertical: false });
+  const t = buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "x" });
+  const flow = t.scenes.find((s) => s.template === "flow");
+  assert.equal(flow.reveals.length, 3, "one reveal per step");
+  // steps 0 and 1 both resolved to the same second — equal is ok, neither should be pushed later
+  assert.equal(flow.reveals[0].at_seconds, flow.reveals[1].at_seconds, "equal-time reveals stay equal");
+  assert.ok(flow.reveals[2].at_seconds >= flow.reveals[1].at_seconds, "step 2 is non-decreasing");
+});
+
+test("buildTimeline clamp: single-element reveals are untouched (no predecessor to compare against)", () => {
+  // A scene with exactly one item must not have its reveal altered by the clamp loop (which starts at i=1).
+  const script = { archetype: "diagram", scenes: [{ id: "s1", sentences: ["alpha"] }] };
+  const plan = {
+    id: "x",
+    scenes: [{
+      scene_id: "s1", template: "flow",
+      props: { title: "T", steps: [{ label: "only" }] },
+      cueWords: ["alpha"],
+    }],
+  };
+  const alignment = {
+    duration: 2,
+    sentences: [{ scene: "s1", start: 1.0, end: 2 }],
+    words: [{ scene: "s1", w: "alpha", start: 1.0, end: 1.5 }],
+  };
+  const fmt = resolveFormat({ archetype: "diagram" });
+  const timings = deriveRenderTimings(fmt, { fps, vertical: false });
+  const t = buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "x" });
+  const flow = t.scenes.find((s) => s.template === "flow");
+  assert.equal(flow.reveals.length, 1, "single-item scene gets exactly one reveal");
+  // The reveal time must equal snap(1.0) — the clamp loop (starting at i=1) never executes on length=1
+  const introFrames = timings.introFrames;
+  const expected = (introFrames + Math.round(1.0 * fps)) / fps;
+  assert.equal(flow.reveals[0].at_seconds, expected, "single reveal is the snapped cue time, not clamped");
+});
+
 test("buildTimeline caption cues are timed word groups in absolute seconds (<= max_words each)", () => {
   const t = fixtureTimeline();
   assert.ok(t.captions.length > 0);

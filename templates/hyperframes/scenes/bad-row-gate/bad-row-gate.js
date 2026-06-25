@@ -63,10 +63,10 @@ var tHit = Math.max(beatAt(2, 0.5), tTravel + 0.7);
 var tStamp = Math.max(beatAt(3, 0.64), tHit + 0.3);
 var tDrop = Math.max(beatAt(4, 0.8), tStamp + 0.5);
 
-// travel geometry (px). The row sits just LEFT of the gate at rest; it only NUDGES into the
-// gate (never crosses it — the clean table on the right must never be touched). Portrait nudges
-// down toward the horizontal gate bar.
-var travel = IS_PORTRAIT ? 0 : W * 0.03;
+// travel geometry (px). The compact row sits in the left third; it travels RIGHT until its edge
+// reaches the gate (which is seated to its right — they never overlap, so the bar can't bisect the
+// row). Portrait nudges down toward the horizontal gate bar.
+var travel = IS_PORTRAIT ? 0 : W * 0.05;
 var travelY = IS_PORTRAIT ? H * 0.06 : 0;
 var recoil = IS_PORTRAIT ? 0 : W * 0.05;
 var recoilY = IS_PORTRAIT ? H * 0.04 : 0;

@@ -12,6 +12,7 @@
  *   node pipeline/04-render/compile-remotion.mjs 004-foo
  *   node pipeline/04-render/compile-remotion.mjs 004-foo/short
  */
+import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -84,12 +85,43 @@ export function compileTimeline(timeline, { leadFrames = 0, tailSeconds = 0 } = 
 }
 
 /**
+ * PURE: the vendored-ffmpeg argv that copies the VIDEO stream and DROPS the audio. Screen-recorded
+ * capture clips often carry the owner's desktop/mic audio; the final video has exactly ONE audio track
+ * (the narration in Remotion), so every ingested capture must be provably silent (-an). `-c:v copy`
+ * remuxes without re-encoding (fast, lossless); `-map 0:v:0` keeps only the first video stream.
+ */
+export function stripAudioCommand({ ffbin, src, dst }) {
+  return { cmd: ffbin, args: ["-y", "-loglevel", "error", "-i", src, "-map", "0:v:0", "-c:v", "copy", "-an", dst] };
+}
+
+/**
+ * Side-effecting: copy a capture clip to `dst` with its audio stripped (see stripAudioCommand). Uses the
+ * repo's vendored ffmpeg (templates/hyperframes/.bin) when present, else a system `ffmpeg`. If ffmpeg is
+ * missing or fails, falls back to a raw copy so a render is never blocked — but returns a LOUD warning
+ * (qa-video asserts the clip is silent). `spawn` is injectable for tests.
+ * @returns {string[]} warnings
+ */
+export function copyCaptureSilent({ root, src, dst, spawn = spawnSync }) {
+  const exe = process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg";
+  const vendored = join(root, "templates", "hyperframes", ".bin", exe);
+  const ffbin = existsSync(vendored) ? vendored : "ffmpeg";
+  const { cmd, args } = stripAudioCommand({ ffbin, src, dst });
+  const res = spawn(cmd, args, { encoding: "utf8" });
+  if (res?.error || res?.status !== 0 || !existsSync(dst)) {
+    cpSync(src, dst); // never block the render — but make the leftover-audio risk impossible to miss
+    const why = res?.error ? res.error.message : `exit ${res?.status}`;
+    return [`CAPTURE AUDIO NOT STRIPPED: ${src} (ffmpeg ${why}) — copied as-is; the clip may carry desktop/mic audio. Install ffmpeg or vendor it at templates/hyperframes/.bin.`];
+  }
+  return [];
+}
+
+/**
  * Side-effecting: copy this engine's assets into templates/remotion/public/<outId>/ and resolve the
  * logical refs in the (already-compiled) Remotion `props` to public/ paths. Mutates `props.scenes[*].props`.
  * Returns a list of human warnings (missing clips, disabled b-roll…). The narration track lives ONLY in
- * Remotion (HF scenes are silent), so it is always copied here.
+ * Remotion (HF scenes are silent), so it is always copied here. `spawn` is injectable for tests.
  */
-export function copyRemotionAssets({ root, cdir, outId, props, brollEnabled = true }) {
+export function copyRemotionAssets({ root, cdir, outId, props, brollEnabled = true, spawn = spawnSync }) {
   const warnings = [];
   const pubDir = join(root, "templates/remotion/public", outId);
 
@@ -101,7 +133,7 @@ export function copyRemotionAssets({ root, cdir, outId, props, brollEnabled = tr
     const srcFile = join(cdir, "captures", `${capId}.mp4`);
     if (!existsSync(srcFile)) { warnings.push(`capture clip missing: ${srcFile}`); continue; }
     mkdirSync(pubDir, { recursive: true });
-    cpSync(srcFile, join(pubDir, `${capId}.mp4`));
+    for (const w of copyCaptureSilent({ root, src: srcFile, dst: join(pubDir, `${capId}.mp4`), spawn })) warnings.push(w);
     sc.props.src = `${outId}/${capId}.mp4`;
   }
 

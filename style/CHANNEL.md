@@ -18,17 +18,26 @@ channel.
 **Differentiation:** we own the *unglamorous* automations (data entry, invoices, scheduling,
 reminder emails) and present them as a real show with recurring formats — not a content farm.
 
-## 2. The series system (maps onto the 4 archetypes — D-028)
+## 2. The series system (the content lanes — `lane` in brief/ideas)
 
-| Series | Archetype | What it is |
-|---|---|---|
-| **Desk Fixes** | mini-demo | a small real fix shown on a tiny example (owner screen-capture) |
-| **Desk Loops** | ideas / diagram | "N ways to automate X" + the trigger→AI→check loop |
-| **Automation Breakdowns** | comparison | "best tool/model for X", honest analysis |
-| **Desk Notes** | news / short | quick takes on automation/AI news |
+Broadened 2026-06-24: the automation core stays the center of gravity, but we deliberately run
+wider lanes for reach (variety is a feature — owner decision). Each lane has a dominant
+audience-value type; the idea-pass (`pipeline/shared/review/`, idea stage) scores every idea
+against it, and a **variety soft-cap** (`pickNextIdea`) avoids >2 of the same lane in a row.
 
-The series tag appears on the section-header and in titles/playlists → topical authority +
-recognizable show.
+| Series / lane | `lane` | Archetype | What it is | Dominant value |
+|---|---|---|---|---|
+| **Desk Fixes** | `desk-fixes` | mini-demo | a small real fix on a tiny example (owner screen-capture) | saves-time / avoids-mistake |
+| **Desk Loops** | `desk-loops` | ideas / diagram | "N ways to automate X" + the trigger→AI→check loop | teaches-system |
+| **Automation Breakdowns** | `automation-breakdowns` | comparison | "best tool/model for X", a hands-on experiment | corrects-misbelief |
+| **Desk Notes** | `desk-notes` | news / short | quick takes on automation/AI news, with a usable lesson | surprising-truth |
+| **AI How-To** | `ai-how-to` | ideas / mini-demo | broader practical AI tutorials (beyond back-office automation) | teaches-system |
+| **Tool Review** | `tool-review` | comparison | honest review/test of an AI tool or model | corrects-misbelief |
+| **AI News** | `ai-news` | news / short | timely AI news/zeitgeist that carries a takeaway | surprising-truth |
+
+The lane tag appears on the section-header and in titles/playlists → topical authority +
+recognizable show. **Rule:** any lane — including news — must still clear the idea-pass value +
+takeaway gate; "this happened" with no usable lesson does not qualify.
 
 ## 3. Topical clusters (answer-engine authority — D-026/D-028)
 

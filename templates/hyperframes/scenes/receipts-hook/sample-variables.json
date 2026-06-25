@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 420,
+  "durationSeconds": 14,
+  "revealsSeconds": [0.5, 3.0, 5.5, 8.0, 10.5],
+  "props": { "kicker": "Desk Fixes", "title": "Photos in, checked rows out", "subtitle": "AI fills the sheet — and flags what it's unsure of" }
+}

@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 480,
+  "durationSeconds": 16,
+  "revealsSeconds": [0.6, 3.4, 6.4, 10.8],
+  "props": { "kicker": "Desk Fixes", "title": "The monthly retype", "subtitle": "Ten dull minutes, by hand, every month" }
+}

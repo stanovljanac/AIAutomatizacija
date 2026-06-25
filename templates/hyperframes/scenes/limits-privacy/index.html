@@ -1,0 +1,83 @@
+<!doctype html>
+<!--
+  limits-privacy — HyperFrames BODY scene for video 008, s11 ("Limits + a privacy win").
+  Restored from the script's bespoke intent (storyboard had flattened it to a card). Three honest
+  notes, each with its OWN small illustration (so it is not a reskinned icon-list):
+    A — limit:   a messy "scrawl" receipt with a red ✗ — handwritten/blurry isn't read; it loves print.
+    B — keep:    a receipt with a gold KEEP ribbon + an on-screen SOURCE chip (IRS accepts legible
+                 digital copies — irs.gov; the retention claim is verified in sources.md, D-026).
+    C — privacy: a closing lock glowing green — run it local, receipts never leave your computer.
+
+  PALETTE: blue + gold (body), red only for the "can't read" mark, green for the privacy win — same
+  vocabulary as the other body scenes. Silent, deterministic (no Math.random/Date.now; one paused,
+  seek-driven GSAP timeline). make-entry.mjs patches the exact duration.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds (declared) + revealsSeconds[]
+  + props{kicker,title,subtitle,sourceNote} (pass-through, optional).
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":510},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":17}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="limits-privacy.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="limits-privacy" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="glow" id="glow"></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="titleblock" id="title">
+          <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text" id="kicker-text">Honest notes</span></div>
+          <h1 class="title" id="title-text"><span class="w">Limits,</span> <span class="w">and</span> <span class="w">a</span> <span class="w">privacy</span> <span class="w">win</span></h1>
+          <div class="rule" id="rule"></div>
+        </div>
+
+        <div class="notes" id="notes">
+          <!-- A — the limit -->
+          <div class="note" id="note-a">
+            <div class="icon">
+              <div class="rcpt scrawl"><span class="ln"></span><span class="ln"></span><span class="ln"></span></div>
+              <span class="badge xbad" id="xbad"><i></i><i></i></span>
+            </div>
+            <div class="label">Handwritten or blurry? <b>Not yet</b> — it loves printed text.</div>
+          </div>
+
+          <!-- B — keep the image -->
+          <div class="note" id="note-b">
+            <div class="icon">
+              <div class="rcpt keep"><span class="ln"></span><span class="ln"></span><span class="ln"></span><span class="ribbon"></span></div>
+            </div>
+            <div class="label">Keep the <b>image</b>, not just the row.</div>
+            <div class="src" id="src-chip">IRS: legible digital copies count · irs.gov</div>
+          </div>
+
+          <!-- C — privacy win -->
+          <div class="note win" id="note-c">
+            <div class="icon">
+              <div class="lock"><span class="shackle"></span><span class="body"></span><span class="hole"></span></div>
+            </div>
+            <div class="label">Run it <b>local</b> — receipts never leave your computer.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="limits-privacy.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["limits-privacy"] = tl;
+    </script>
+  </body>
+</html>

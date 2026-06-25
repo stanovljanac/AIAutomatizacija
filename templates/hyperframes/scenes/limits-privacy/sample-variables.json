@@ -1,0 +1,13 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 480,
+  "durationSeconds": 16,
+  "revealsSeconds": [0.6, 3.4, 7.2, 11.0],
+  "props": {
+    "kicker": "Honest notes",
+    "title": "Limits, and a privacy win",
+    "sourceNote": "IRS: legible digital copies count · irs.gov"
+  }
+}
