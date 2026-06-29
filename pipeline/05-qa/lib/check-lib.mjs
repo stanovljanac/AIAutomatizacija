@@ -20,6 +20,13 @@ export const PAID_SAAS_DENYLIST = ["expensify", "quickbooks", "freshbooks", "dex
 
 // The reskinnable "gallery" templates — the slideshow culprits the variety rules guard against.
 const GALLERY_TEMPLATES = new Set(["bullet-steps", "term-highlight", "icon-list", "stat-callout", "comparison-table", "section-header", "lower-third"]);
+// TITLE-ONLY "card" kinds — a title/subtitle on a background with NO concrete visualization. These are
+// the exact scenes the owner rejected on 009 ([[no-title-card-scenes]]): "empty slides with just a
+// title". A bespoke custom component or a RICH HF hero VISUALIZES its point (= fine); these do not.
+// (hook-card is the sanctioned opener and is excluded; lower-third is covered by the no-empty rule.)
+const TEXT_CARD_TEMPLATES = new Set(["section-header", "term-highlight", "stat-callout", "cta-card"]);
+// HyperFrames heroes that are just kinetic text on a background (no subject visualization).
+const TEXT_ONLY_HF = new Set(["hook-kinetic"]);
 // Below this scene count a video is too small to judge variety (a 1–3 scene test clip isn't a slideshow).
 const VARIETY_MIN_SCENES = 5;
 
@@ -33,6 +40,14 @@ function sceneKind(s) {
 /** Bespoke / non-slideshow scenes: authored HyperFrames, custom components, and real screen-capture. */
 function isBespoke(s) {
   return s.engine === "hyperframes" || s.template === "custom" || s.template === "capture-segment";
+}
+/** A "title card": a title/subtitle on a background with no concrete visualization — the owner's
+ *  rejected 009 scenes. Custom components and RICH HF heroes visualize their point and are NOT cards;
+ *  text-only HF heroes (hook-kinetic) and the gallery TEXT templates ARE. (capture-segment = real footage.) */
+function isTitleCard(s) {
+  if (s.engine === "hyperframes") return TEXT_ONLY_HF.has(s.props?.hf_scene);
+  if (s.template === "custom" || s.template === "capture-segment") return false;
+  return TEXT_CARD_TEMPLATES.has(s.template);
 }
 /** Recursively collect every string value (titles, labels, list items…) from a scene's props. */
 function collectStrings(v, out = []) {
@@ -184,6 +199,21 @@ export function runChecks(props, fmt, { vertical, durationSeconds, approvedTools
       mk("no_adjacent_repeat", adjacent.length === 0, "high",
         adjacent.length === 0 ? "no identical template back-to-back" : `identical template back-to-back at: ${adjacent.join(", ")}`,
         adjacent.length === 0 ? {} : { fix: "Break consecutive identical scenes with a different layout / bespoke scene." }),
+    );
+  }
+
+  // 7b. No TITLE-ONLY card scenes (HARD — owner rule 2026-06-28, [[no-title-card-scenes]]). A title/
+  //     subtitle on a background with no concrete visualization is the "empty slide" the owner rejected
+  //     on 009; EVERY scene must VISUALIZE its point like s4 (MoneyLeakRun). Custom components + rich HF
+  //     heroes pass; the gallery TEXT templates + text-only HF (hook-kinetic) fail. Runs at any length.
+  {
+    const cards = scenes.filter(isTitleCard);
+    checks.push(
+      mk("no_title_card", cards.length === 0, "high",
+        cards.length === 0
+          ? "no title-only card scenes — every scene visualizes its point"
+          : `title-only card scene(s): ${cards.map((s) => `${s.sceneId} (${sceneKind(s)})`).join(", ")}`,
+        cards.length === 0 ? {} : { fix: "Replace title-on-background cards with a bespoke custom component or a rich HF hero that VISUALIZES the point (s4 = MoneyLeakRun is the bar)." }),
     );
   }
 

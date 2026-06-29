@@ -19,6 +19,84 @@ Format:
 
 ---
 
+## 2026-06-29 — 009 Short S1 hook rebuilt (doom-scroll feed) + dropped second-model verification (D-049)
+- who: agent (owner directed — rejected the S1 opener as a static title card)
+- did: Two owner-directed changes.
+  - **S1 hook rebuilt from scratch.** Owner rejected the old S1 (the `money-hero` HyperFrames clip: gold
+    aurora + "Desk Notes" kicker + word-by-word "make me money" that then sat static — dynamic background,
+    dead foreground). Replaced with a bespoke Remotion custom component **`HookFeedHype`** (`hook-feed-hype`,
+    registered in `Main.tsx`): a full-bleed, fast **doom-scroll of AI get-rich hype** — "EVERYONE'S FEED ·
+    RIGHT NOW" + a search bar reading "make me money with AI" (blinking caret), endless upward-scrolling hype
+    cards (`$10k/month`, `AI trading bot +480%`, `money while you sleep`, viral/AD/LIVE/HOT tags, green pump
+    sparklines, fake view counts) + gold "$" rain + a gold glow that pulses on the narration beats and a
+    scroll that accelerates on beat 2 ("trading bots, side hustles, money while you sleep"). Frame-pure,
+    seek-accurate, reveals-synced; caption zone kept clear (viewport clipped to top ~75%, edge-faded).
+    `scene-plan.json` S1 switched from `engine:hyperframes`/`hf_scene:money-hero` to `template:custom`
+    `component:hook-feed-hype` → this Short is now pure Remotion (no HF clips). Old `templates/hyperframes/
+    scenes/money-hero/` is now orphaned (left in place — owner to decide on removal).
+  - **Removed the different-model (Sonnet) verification** from the build-sprint cycle per owner (D-049):
+    the owner is the real reviewer, so no model-on-model check. Updated the `build-sprint` skill, `CLAUDE.md`
+    golden rule, `docs/ROADMAP.md`, `docs/DECISIONS.md` (D-041 amended + new D-049), and the
+    `build-sprint-cycle` memory. Scoped to code only — the video review panel (D-040) is unaffected.
+- verify: `npm test` **513 green**; rebuilt props OK (no hook-rule / engine-mismatch warnings); rendered S1
+  preview stills at frames 70/175/270 — feed scrolls, tags/charts/$-rain render, captions clear. No
+  second-model verification (per D-049).
+- next: owner reviews the new S1 hook; if approved, re-render the full 009 Short.
+
+## 2026-06-28 — 009 Short REBUILT: every scene bespoke (killed the title-card deck) + anti-title-card QA gate
+- who: agent (owner directed — rejected the first 009 render as a reskinned-template slideshow)
+- did: Owner reviewed the rendered 009 Short and rejected it — only S4 (MoneyLeakRun, a spreadsheet that
+  visibly RUNS) was good; every other scene was a title/subtitle on a dark/aurora background ("empty
+  slides with just titles"). Frame-extraction confirmed it. REBUILT every scene to the S4 bar:
+  - 5 new bespoke Remotion components (frame-pure, reveals-synced like MoneyLeakRun): `HypeFlip` (S2
+    hype→leak flip), `WeekGridLeak` (S3 week-grid + $28,500 counter + on-screen source), `ErrorCascade`
+    (S5 typo→wrong-invoice→never-paid causal chain w/ arrows), `TimeReturned` (S6 week-grid callback,
+    lost hours flip gold→green), `RecapCta` (S7 stop-the-printer + recap checks + Subscribe).
+  - S1 hook = NEW bespoke 3D HF hero `money-hero` (fork of hook-prism): rushing GOLD-COIN money-storm in
+    gold-black behind kinetic "make me money" (replaces the generic aurora). Deterministic/seek-driven.
+  - Re-wired Main.tsx CUSTOM map + 009 scene-plan; re-ran build-props + compile-hyperframes; re-rendered.
+    Mechanical QA 10/10 green; bespoke_ratio now 7/7 (100%) vs the rejected 4/8.
+  - ENFORCED in code (not just docs): new HARD QA check `no_title_card` fails title-only kinds
+    (section-header/term-highlight/stat-callout/cta-card + text-only HF hook-kinetic) in
+    `pipeline/05-qa/lib/check-lib.mjs` + tests. Full suite 513 green.
+  - QA model: verified GEMINI_API_KEY valid + `gemini-3.5-flash` reachable + `.env` auto-loaded by
+    load-env.mjs. Configured panel = claude-subagent (sonnet) + gemini-3.5-flash. The prior Sonnet+Haiku
+    panel (see 2026-06-27 entry) was a wrong manual substitution when Gemini was assumed broken — corrected.
+- next: owner reviews the rebuilt render (`templates/remotion/out/009-rebuild.mp4`; old
+  `content/009-boring-money-leak/short/video/final.mp4` left intact for comparison). On approval: replace
+  final.mp4 + re-voice to the Azure final voice + re-render. Build-sprint different-model verifier (Sonnet)
+  NOT spawned (harness no-spawn default) — available on request.
+- blockers: **C: drive 100% full (~1.7 GB free)** — Remotion/Chrome temp had to be redirected to F: to
+  render; flag to owner (will keep breaking renders/other tools until freed).
+
+## 2026-06-27 — 009 standalone viral Short (counter-trend money) through script gate + S4 component
+- who: agent (owner directed, plan: uradi-mi-reserach-za-delegated-tarjan.md)
+- did: Scaffolded `content/009-boring-money-leak/` (short-only, Desk Notes); researched + fact-checked
+  the stats ($28,500/yr & 9hrs≈¼-week from the Parseur 2025 survey; up-to-4% error from industry
+  benchmarks) → `sources.md` + `claims.json`; wrote the 7-beat Short (`short/script.json`),
+  reviewed by a **different-model panel** (Sonnet 4.6 + Haiku 4.5, 3 iterations) → owner APPROVED at
+  the script gate with mandated fixes (S4 visible-run, S5 single escalating chain, new title).
+  Hand-authored `short/scene-plan.json` (HF heroes hook-prism/hook-kinetic + bespoke S4). Parked the
+  4 ideas into `ideas.json` (#5 mapped onto ai-vs-macros-excel, not duplicated) + added the
+  "Everyone asks AI to X, I asked it to Y" repeatable Short series.
+  Built new portrait Remotion component **`MoneyLeakRun`** (S4 visible run: messy rows → Running…
+  live counter → 39 ✔ / 1 ⚠ Review → invoice flips to Chased), registered in Main.tsx CUSTOM map.
+- verify: Sonnet 4.6 verifier — PASS (tsc --noEmit exit 0; frame-pure/deterministic; valid icons;
+  robust final-state hold). Fixed its 2 findings (3-frame Running/Done flicker; redundant identity
+  interpolate). Root `npm test` 509/509 green.
+- did (cont. — render+QA): edge-tts voice + faster-whisper alignment (87.9s, ~90.3s total, gate OK);
+  compiled 3 HF heroes; V6 combo render to 1080×1920 (2708f). QA mechanical gate caught
+  `no_adjacent_repeat` (S3 split was two stat-callouts) → auto-fixed beat-1 to term-highlight.
+  Perceptual still-review (remotion still, no ffmpeg) caught that MoneyLeakRun's beats were on fixed
+  seconds → resolved ~8s before narrated; fixed the component to drive beats off `data.reveals`
+  (sentence-start frames) so the run lands on "watch it run", the resolve on "39 clean/1 flagged",
+  and the invoice flip on "already chased" — verified on stills, re-rendered. qa.report.json = 13
+  checks green, every on-screen stat shows its source. 2 thumbnail PROMPTS written (never auto).
+- next: stage YouTube PRIVATE draft (SEO title/desc/tags) → owner FINAL-VIDEO gate. On approval:
+  Azure final voice (same Andrew voice) → re-align → re-render before publish (edge-tts is draft-only).
+- blockers: GEMINI_API_KEY in .env is invalid (panel ran Sonnet+Haiku instead); ffmpeg not on PATH
+  (Remotion bundles its own; used `remotion still` for QA frames instead of ffmpeg extraction).
+
 ## 2026-06-25 — 008 fully re-authored bespoke + full re-render (owner: "make all scenes + render")
 - who: agent (owner directed)
 - did: Authored the remaining four bespoke HF scenes the storyboard had flattened into cards, each

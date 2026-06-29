@@ -22,6 +22,13 @@ import { MorningSynthesis } from "./custom/MorningSynthesis";
 import { VersusNote } from "./custom/VersusNote";
 import { HookStatReveal } from "./custom/HookStatReveal";
 import { PromptFocus } from "./custom/PromptFocus";
+import { MoneyLeakRun } from "./custom/MoneyLeakRun";
+import { HypeFlip } from "./custom/HypeFlip";
+import { WeekGridLeak } from "./custom/WeekGridLeak";
+import { ErrorCascade } from "./custom/ErrorCascade";
+import { TimeReturned } from "./custom/TimeReturned";
+import { RecapCta } from "./custom/RecapCta";
+import { HookFeedHype } from "./custom/HookFeedHype";
 
 /** Custom (bespoke) scene dispatch — template:"custom" routes by props.component. */
 const CUSTOM: Record<string, React.FC<{ data?: any }>> = {
@@ -37,6 +44,13 @@ const CUSTOM: Record<string, React.FC<{ data?: any }>> = {
   "calendar-find": CalendarFind,
   "inbox-triage": InboxTriage,
   "morning": MorningSynthesis,
+  "money-leak-run": MoneyLeakRun,
+  "hype-flip": HypeFlip,
+  "week-grid-leak": WeekGridLeak,
+  "error-cascade": ErrorCascade,
+  "time-returned": TimeReturned,
+  "recap-cta": RecapCta,
+  "hook-feed-hype": HookFeedHype,
 };
 
 export type Scene = {

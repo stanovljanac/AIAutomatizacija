@@ -17,6 +17,44 @@ on screen at a time, beat-synced reveals. Emulate the *technique*, keep our clea
 
 ---
 
+## 0. The strategist standard — every scene is *conceived*, not filled
+
+**The bar (owner, 2026-06-29): every scene must be thought through like a strategist before a
+single prop is placed — and each new scene should meet this standard or beat it.** Do not reach
+for a template and swap the words. Ask, in order: *what does this beat need to make the viewer
+feel or realize, and what is the single most disarming way to show it?* Then author the scene to
+that answer. A scene that merely "displays the line" is a reject ([[no-title-card-scenes]]); a
+scene that **lands the idea** is the floor.
+
+**The reference scene — 009 S1 / `HookFeedHype`** (the first scene authored to this standard).
+The strategist move: the strongest possible hook is to **mirror the viewer's own feed back at
+them.** A full-bleed, fast doom-scroll of AI "get-rich" hype — a faux search bar typing *"make me
+money with AI"*, an endless stream of hype cards (`$10,000/month`, `AI trading bot +1,240%`, *make
+money while you sleep*) with VIRAL/AD/LIVE tags, pumping green charts, fake view counts, a gold "$"
+rain, a glow that pulses on the narration beats and a scroll that *accelerates* on beat 2. It is
+recognized instantly ("that IS my feed"), it never stops moving, and it **sets up the very next
+beat** — the S2 flip, "so I asked mine to do the opposite." See
+[`templates/remotion/src/custom/HookFeedHype.tsx`](../templates/remotion/src/custom/HookFeedHype.tsx).
+
+What made it good — the checklist every scene is now held to:
+- **Strategic premise.** It earns its place with one sharp idea (here: empathy/recognition), not a
+  decorated title. State that premise in the component's top comment, as `HookFeedHype` does.
+- **Instant legibility.** The viewer "gets it" in <1s, mobile-legible, no reading required.
+- **Full of motivated motion.** Constant secondary motion tied to the meaning and **keyed to the
+  narration beats** (§1, §2), never tic-motion for its own sake.
+- **Sets up the next beat.** Each scene hands off to the one after it; the video is a line of
+  dominoes, not a slideshow.
+- **Frame-pure & deterministic.** `useCurrentFrame`/anim helpers only — no `Date`/`Math.random`
+  in the timeline — so it seeks and renders identically every time.
+- **Caption-safe & on-palette.** Viewport clipped/faded clear of the caption band; hook family
+  black+gold, body blue+gold ([[bespoke-first-video-system]], [[video-dynamism-and-length]]).
+
+This is the meta-rule the rest of this file (pacing, hook, transitions, variety) operationalizes.
+When a scene clears §1–§6 but still feels *templated*, it has failed §0. Push every scene to
+out-think 009 S1 ([[proof-must-be-visible]]).
+
+---
+
 ## 1. Pacing — meaningful progression, not motion for its own sake
 
 **The rule: every ~3s the viewer's understanding or attention must MOVE forward.** Not "pixels

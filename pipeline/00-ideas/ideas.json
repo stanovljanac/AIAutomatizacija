@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-02",
+  "updated": "2026-06-27",
   "ideas": [
     {
       "id": "bulk-personalized-emails",
@@ -354,15 +354,18 @@
     },
     {
       "id": "ai-vs-macros-excel",
-      "title": "AI vs Excel Macros: Which Should You Use?",
+      "title": "AI vs a 10-Year-Old Excel Macro",
       "search_term": "ai vs excel macros",
       "task": "other",
       "sector": "general",
       "tool": "Excel",
       "archetype": "comparison",
-      "angle_hint": "Macros aren't dead — they're just boring, and that's a virtue.",
-      "score": 75,
+      "angle_hint": "Short / Type A experiment (credibility): race a modern AI against a dusty 10-year-old macro on the SAME real task. Non-obvious result — the macro wins the repetitive, rigid job; AI wins the messy, judgement job; the real answer is use both. Macros aren't dead — they're just boring, and that's a virtue. (Parked idea #5 from the counter-trend-money round; this is the canonical home — do not duplicate.)",
+      "score": 84,
       "status": "backlog",
+      "lane": "tool-review",
+      "value_type": ["surprising-truth", "teaches-system"],
+      "takeaway": "Don't pick AI vs macros — match the tool to the task: rigid+repetitive = macro, messy+judgement = AI.",
       "produced_video_id": null
     },
     {
@@ -663,6 +666,74 @@
       "score": 60,
       "status": "backlog",
       "produced_video_id": null
+    },
+    {
+      "id": "ai-vs-human-stopwatch-race",
+      "title": "I Raced AI Against Myself on a Boring Task",
+      "search_term": "ai vs human speed test",
+      "task": "data-entry",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + a spreadsheet",
+      "archetype": "mini-demo",
+      "angle_hint": "Short / Type A experiment (credibility): literal stopwatch race — me vs an AI on one real back-office task. Twist line (use verbatim): 'AI finished first… but that's not why it won.' The point isn't speed, it's that it runs unattended / never gets bored / doesn't fat-finger row 200. Predicted ~84. (Parked idea #2 from the counter-trend-money round.)",
+      "score": 84,
+      "status": "backlog",
+      "lane": "desk-notes",
+      "value_type": ["surprising-truth", "saves-time"],
+      "takeaway": "Speed is the obvious win and the wrong one — the real value is that it runs unattended and never tires.",
+      "produced_video_id": null,
+      "source": { "origin": "manual", "added": "2026-06-27" }
+    },
+    {
+      "id": "before-coffee-automation-montage",
+      "title": "What My Automations Did Before I Finished My Coffee",
+      "search_term": "morning automation routine",
+      "task": "other",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + a spreadsheet",
+      "archetype": "ideas",
+      "angle_hint": "Short / Type B-ish discovery (fast, visual, new-audience entry point — may out-view the credibility ones, so do NOT auto-rank it last). A tight before-coffee montage of small jobs already done by the time you sit down: rows filled, invoice chased, inbox triaged. Build as a visual discovery Short (optionally a light timed framing). Must differentiate from 003 (003 is the '5 secretary jobs' list; this is a single-morning montage, not a numbered list). Predicted ~80. (Parked idea #4 from the counter-trend-money round.)",
+      "score": 80,
+      "status": "backlog",
+      "lane": "desk-notes",
+      "value_type": ["surprising-truth", "saves-time"],
+      "takeaway": "The payoff of boring automation is invisible: the work is just already done when you show up.",
+      "produced_video_id": null,
+      "source": { "origin": "manual", "added": "2026-06-27" }
+    },
+    {
+      "id": "money-leak-shock-stat",
+      "title": "The Hidden Number Small Businesses Lose Every Year",
+      "search_term": "how much time wasted copy paste work",
+      "task": "data-entry",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + a spreadsheet",
+      "archetype": "ideas",
+      "angle_hint": "Short / big-number shock-stat. CAUTION before building: shares 009's stat ($28,500/yr, ~quarter of the workday) — DO NOT reuse the same number, it will feel recycled. Re-angle around a DIFFERENT sourced number or a different test (e.g. error-cost, no-show cost, late-invoice cost) and lead relatable-first like 009. Predicted ~75. (Parked idea #3 from the counter-trend-money round.)",
+      "score": 75,
+      "status": "backlog",
+      "lane": "desk-notes",
+      "value_type": ["surprising-truth", "saves-money"],
+      "takeaway": "A small, boring leak compounds into a real yearly number — naming it is what makes people fix it.",
+      "produced_video_id": null,
+      "source": { "origin": "manual", "added": "2026-06-27" }
+    },
+    {
+      "id": "everyone-asks-ai-series",
+      "title": "\"Everyone Asks AI to X. I Asked It to Y.\" (repeatable Short series)",
+      "search_term": "ai to make money",
+      "task": "other",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + a spreadsheet",
+      "archetype": "ideas",
+      "angle_hint": "OWNER-ENDORSED REPEATABLE SHORT FORMAT (not a single idea): 'Everyone asks AI to [hyped thing]. I asked it to [boring back-office opposite]. Here's what happened.' Each entry rides a hyped search term, delivers our boring-automation angle, keeps the VISIBLE-PROOF beat (see proof-must-be-visible) + promise discipline (saves/keeps, never earns). 009 = make-money -> chase-invoices. Owner's other seeds: replace jobs -> replace copy-paste; write code -> clean spreadsheets. Pick the next one from these.",
+      "score": 88,
+      "status": "backlog",
+      "lane": "desk-notes",
+      "value_type": ["surprising-truth", "corrects-misbelief"],
+      "takeaway": "Point AI at the boring opposite of the hype, and show the run — that's the recognizable format.",
+      "produced_video_id": "009-boring-money-leak",
+      "source": { "origin": "manual", "added": "2026-06-27" }
     }
   ]
 }

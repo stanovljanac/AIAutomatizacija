@@ -196,8 +196,9 @@ Exit criteria:
 ## Build execution status (Phase B/C)
 
 Tracked in `docs/PROGRESS.md`. **v1 = Waves 0–2** (hands-off to a YouTube
-draft, **including** the multi-model loop). Every wave runs the **build-sprint cycle** (D-041):
-atomize → build → test → verify with a *different* model → fix → docs → commit only on request.
+draft, **including** the multi-model loop). Every wave runs the **build-sprint cycle** (D-041,
+amended D-049): atomize → build → self-test → fix → docs → commit only on request (no second-model
+verification — the owner reviews).
 The detailed per-wave build handoffs and verifier-verdict log were removed once the work shipped
 (recoverable from git history); the implementation methods now live in `docs/ARCHITECTURE.md` §12.
 

@@ -133,14 +133,15 @@ function slideshowProps(over = {}) {
     ...over,
   };
 }
-// A good bespoke-first video: distinct HF/custom scenes mixed with a couple of templates.
+// A good bespoke-first video: distinct HF/custom scenes mixed with a visual template. No title-only
+// cards (a rich HF hook + custom components + a flow) — the bar after the 009 owner rule.
 function bespokeProps(over = {}) {
   return {
     fps: FPS, introFrames: 45, outroFrames: 75, totalFrames: 1020,
     scenes: [
-      { sceneId: "hook.0", engine: "hyperframes", template: "hook-card", props: { hf_scene: "hook-kinetic" }, fromFrame: 45, durFrames: 100 },
+      { sceneId: "hook.0", engine: "hyperframes", template: "hook-card", props: { hf_scene: "hook-prism" }, fromFrame: 45, durFrames: 100 },
       { sceneId: "s1.0", template: "custom", props: { component: "ai-flow" }, fromFrame: 145, durFrames: 100 },
-      { sceneId: "s2.0", template: "term-highlight", props: { reveals: [0, 30] }, fromFrame: 245, durFrames: 100 },
+      { sceneId: "s2.0", template: "custom", props: { component: "calendar-find" }, fromFrame: 245, durFrames: 100 },
       { sceneId: "s3.0", engine: "hyperframes", template: "section-header", props: { hf_scene: "bad-row-gate" }, fromFrame: 345, durFrames: 100 },
       { sceneId: "s4.0", template: "flow", props: { reveals: [0, 30] }, fromFrame: 445, durFrames: 100 },
       { sceneId: "s5.0", template: "custom", props: { component: "spreadsheet-clean" }, fromFrame: 545, durFrames: 100 },
@@ -189,6 +190,46 @@ test("a bespoke-first video (HF/custom mixed, distinct) passes the variety check
   assert.equal(byName(checks, "bespoke_ratio").pass, true);
   assert.equal(byName(checks, "template_repeat").pass, true);
   assert.equal(byName(checks, "no_adjacent_repeat").pass, true);
+  assert.equal(byName(checks, "no_title_card").pass, true);
+});
+
+// --- no_title_card (owner rule 2026-06-28): every scene must VISUALIZE its point, not be a card ---
+
+test("no_title_card FAILS on a title-only card template (term-highlight/stat-callout/section-header/cta-card)", () => {
+  for (const tpl of ["term-highlight", "stat-callout", "section-header", "cta-card"]) {
+    const props = cleanProps({ scenes: [
+      { sceneId: "hook.0", template: "hook-card", props: {}, fromFrame: 45, durFrames: 300 },
+      { sceneId: "c.0", template: tpl, props: { reveals: [0, 30] }, fromFrame: 336, durFrames: 609 },
+    ] });
+    const c = byName(check(props).checks, "no_title_card");
+    assert.equal(c.pass, false, `${tpl} should be flagged as a title card`);
+    assert.equal(c.severity, "high");
+    assert.match(c.detail, /c\.0/);
+  }
+});
+
+test("no_title_card FAILS on a text-only HF hero (hook-kinetic), even though it is 'bespoke'", () => {
+  const props = cleanProps({ scenes: [
+    { sceneId: "hook.0", engine: "hyperframes", template: "hook-card", props: { hf_scene: "hook-kinetic" }, fromFrame: 45, durFrames: 450 },
+    { sceneId: "p.0", template: "flow", props: { reveals: [0, 30] }, fromFrame: 486, durFrames: 459 },
+  ] });
+  const { checks } = check(props);
+  assert.equal(byName(checks, "no_title_card").pass, false, "hook-kinetic is a text-only HF card");
+});
+
+test("no_title_card PASSES when every scene is custom or a RICH HF hero", () => {
+  const props = cleanProps({ scenes: [
+    { sceneId: "hook.0", engine: "hyperframes", template: "hook-card", props: { hf_scene: "money-hero" }, fromFrame: 45, durFrames: 300 },
+    { sceneId: "s1.0", template: "custom", props: { component: "money-leak-run" }, fromFrame: 336, durFrames: 300 },
+    { sceneId: "s2.0", template: "custom", props: { component: "hype-flip" }, fromFrame: 627, durFrames: 318 },
+  ] });
+  assert.equal(byName(check(props).checks, "no_title_card").pass, true);
+});
+
+test("no_title_card does NOT flag the sanctioned hook-card or visual templates (flow/bullet-steps)", () => {
+  // cleanProps = hook-card + bullet-steps + flow → all allowed (hook-card is the opener; flow/bullet
+  // -steps have visual structure). Only the TEXT cards are banned.
+  assert.equal(byName(check(cleanProps()).checks, "no_title_card").pass, true);
 });
 
 test("template_repeat IGNORES bespoke HF scenes that share a gallery fallback template (008 regression)", () => {

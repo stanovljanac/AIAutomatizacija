@@ -130,9 +130,9 @@ Run `/novi-video` (`.claude/commands/novi-video.md`) or follow `docs/WORKFLOW.md
   a task or a "continue" is NOT commit permission; leave changes in the working tree. Offer push
   separately.
 - **Never delete/overwrite an existing file or asset without asking first** (principle 6).
-- **Every code change runs the build-sprint cycle** (atomize → build → test → verify with a
-  _different_ model → fix → docs); `npm test` must be green (Stop hook enforces). Not for
-  planning/research/doc-only edits. See `.claude/skills/build-sprint/SKILL.md`.
+- **Every code change runs the build-sprint cycle** (atomize → build → self-test → fix → docs);
+  `npm test` must be green (Stop hook enforces). No second-model verification — the owner reviews.
+  Not for planning/research/doc-only edits. See `.claude/skills/build-sprint/SKILL.md`.
 - Free/local first (flag any cost); original English scripts only, each with a human angle;
   one continuous audio track; synthetic demo data; review agent before human; human approves
   the final video. _(All expanded in the operating principles above.)_
