@@ -1,0 +1,44 @@
+<!doctype html>
+<!--
+  prompt-card — HyperFrames artifact scene for 010 (long s11 + Short s6). The copy-pasteable
+  cite-or-refuse prompt, shown FULL-FRAME and CENTERED, large and legible, held for pause &
+  screenshot. NEVER a corner PiP, NEVER zoomed (owner rule 2026-07-03). BLUE + GOLD body palette.
+  Silent + deterministic; seek-driven; beats = sentences.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ heading?, prompt?, hint? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="prompt-card.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="prompt-card" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+      <div class="stage" id="stage">
+        <div class="heading" id="heading">The cite-or-refuse prompt</div>
+        <div class="card" id="card">
+          <div class="card-head"><span class="dot"></span><span id="card-label">PROMPT · paste at the top of any AI chat</span></div>
+          <div class="card-body" id="prompt">For every factual claim, name the specific real source it comes from (title, author/site, date). If you can't point to a real, checkable source, don't make the claim — say "I couldn't verify this." Never invent citations, quotes, case names, numbers, or links.</div>
+        </div>
+        <div class="hint" id="hint">⧉ pause &amp; screenshot · full text in the description</div>
+      </div>
+    </div>
+    <script src="prompt-card.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["prompt-card"] = tl;
+    </script>
+  </body>
+</html>

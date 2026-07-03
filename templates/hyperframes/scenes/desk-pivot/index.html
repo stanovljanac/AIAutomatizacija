@@ -1,0 +1,44 @@
+<!doctype html>
+<!--
+  desk-pivot — HyperFrames transition for 010 (s04 "not one careless lawyer" · s09 "how serious AI
+  users handle this"). A motion-rich Desk Notes chapter turn: a gold rule sweeps across and a
+  chevron drives the eye forward while the section title snaps in. BLUE + GOLD body palette. Not a
+  static title card — a designed, moving pivot. Silent + deterministic; seek-driven.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ kicker?, title? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":150},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":5}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="desk-pivot.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="desk-pivot" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+      <div class="stage" id="stage">
+        <div class="sweep" id="sweep" data-layout-ignore></div>
+        <div class="block" id="block">
+          <div class="kicker" id="kicker"><span class="kdash"></span><span class="ktext" id="ktext">Desk Notes</span></div>
+          <div class="ttl" id="ttl">Not one careless lawyer</div>
+        </div>
+        <div class="chev" id="chev" data-layout-ignore><span>›</span><span>›</span><span>›</span></div>
+      </div>
+    </div>
+    <script src="desk-pivot.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["desk-pivot"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<!--
+  citation-build — HyperFrames body scene for 010 (s03 mechanic). A synthetic citation assembles
+  segment by segment, looks authoritative (gold underline + check), then a magnifier reveals the
+  panel behind it is empty (source/link/record — none), and the text de-renders into particles.
+  Synthetic/illustrative citation (invented — never a real case). BLUE + GOLD body palette.
+  Silent + deterministic; seek-driven GSAP; beats = sentences.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="citation-build.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="citation-build" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid"></div></div>
+
+      <div class="stage" id="stage">
+        <div class="col">
+          <div class="cite-wrap" id="cite-wrap">
+            <div class="cite-line">
+              <span class="seg" id="seg1">Ellison v. Vance,</span>
+              <span class="seg" id="seg2">412 F.3d 771</span>
+              <span class="seg" id="seg3">(9th Cir. 2016)</span>
+            </div>
+            <div class="underline" id="underline"></div>
+            <div class="badge" id="badge"><span class="tick">✓</span> reads as authoritative</div>
+            <div class="magnifier" id="magnifier" data-layout-ignore>⌕</div>
+            <div class="particles" id="particles" data-layout-ignore>
+              <span class="pt"></span><span class="pt"></span><span class="pt"></span><span class="pt"></span>
+              <span class="pt"></span><span class="pt"></span><span class="pt"></span><span class="pt"></span>
+              <span class="pt"></span><span class="pt"></span><span class="pt"></span><span class="pt"></span>
+            </div>
+          </div>
+
+          <div class="behind" id="behind">
+            <div class="behind-head">what's behind it</div>
+            <div class="brow"><span class="bk">Source</span><span class="none">— none</span></div>
+            <div class="brow"><span class="bk">Link</span><span class="none">— none</span></div>
+            <div class="brow"><span class="bk">Court record</span><span class="none">— none</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="citation-build.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["citation-build"] = tl;
+    </script>
+  </body>
+</html>

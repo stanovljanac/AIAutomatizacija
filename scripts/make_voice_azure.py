@@ -44,6 +44,15 @@ def main(cid: str):
     text = " ".join(s for sc in script["scenes"] for s in sc["sentences"])
     voice = az.get("voice", "en-US-AndrewMultilingualNeural")
     rate = az.get("rate", "+0%")
+    # Per-video pacing override (brief.json.voice_rate) — matches the draft so the final voice keeps
+    # the same pace. The Short inherits the parent brief.
+    for bdir in (cdir, cdir.parent):
+        bpath = bdir / "brief.json"
+        if bpath.exists():
+            vr = json.loads(bpath.read_text(encoding="utf-8")).get("voice_rate")
+            if isinstance(vr, str) and vr.strip():
+                rate = vr.strip()
+            break
 
     ssml = (
         f"<speak version='1.0' xml:lang='en-US'>"

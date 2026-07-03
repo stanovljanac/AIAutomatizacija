@@ -1,0 +1,47 @@
+<!doctype html>
+<!--
+  closing — HyperFrames CTA/outro for 010 (s13 long + s7 Short). Back to BLACK + GOLD to match the
+  hook. Two closing lines land as kinetic beats — "Good AI doesn't always answer." then the gold
+  "knows when it doesn't know." — followed by one subtle subscribe/follow pill + the brand. Calm,
+  confident, forensic — not fear. Silent + deterministic; seek-driven; beats = sentences.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ line1?, line2?, ctaLabel?, brand? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="closing.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="closing" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid"></div></div>
+      <div class="stage" id="stage">
+        <div class="lines">
+          <div class="line line1" id="line1">Good AI doesn't always answer.</div>
+          <div class="line line2" id="line2">It knows when it doesn't know.</div>
+        </div>
+        <div class="cta" id="cta">
+          <span class="cta-dash"></span>
+          <span class="cta-pill" id="cta-pill">Subscribe</span>
+          <span class="cta-brand" id="cta-brand">The Automation Desk</span>
+        </div>
+      </div>
+    </div>
+    <script src="closing.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["closing"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<!--
+  counter-map — HyperFrames body scene for 010 (s06, ON-SCREEN NUMBER 2 of 2). A global dot field
+  lights up while a counter rolls to 1,695 and then ticks past to sell "and counting". The mandatory
+  on-screen SOURCE (D-026) is baked in. BLUE + GOLD body palette. Silent + deterministic (seeded
+  PRNG, no Math.random); seek-driven; beats = sentences.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
+    props: { value?, label?, source? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="counter-map.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="counter-map" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+
+      <div class="stage" id="stage">
+        <div class="mapwrap" id="mapwrap" data-layout-ignore>
+          <div class="meridian m1"></div><div class="meridian m2"></div><div class="meridian m3"></div>
+          <div class="dots" id="dots"></div>
+        </div>
+        <div class="readout" id="readout">
+          <span class="big" id="big">0</span>
+          <span class="label" id="label">documented cases worldwide — and counting</span>
+        </div>
+        <div class="source" id="source"><span class="src-dot"></span><span id="source-text">damiencharlotin.com/hallucinations · as of Jul 3 2026</span></div>
+      </div>
+    </div>
+    <script src="counter-map.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["counter-map"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<!--
+  stat-grid — HyperFrames body scene for 010 (s05, ON-SCREEN NUMBER 1 of 2). A grid of 63 citation
+  cells; on cue 57 cascade to red, 6 stay gold, and a counter rolls to 57. The mandatory on-screen
+  SOURCE (D-026) is baked in so it always renders next to the number. BLUE + GOLD body palette.
+  Also reused (portrait) by the Short. Silent + deterministic; seek-driven; beats = sentences.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
+    props: { value?, of?, caption?, source? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="stat-grid.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="stat-grid" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+
+      <div class="stage" id="stage">
+        <div class="content">
+          <div class="numblock">
+            <div class="statline" id="statline">
+              <span class="big" id="big">0</span>
+              <span class="of" id="of">of 63 citations</span>
+            </div>
+            <div class="caption" id="caption">were defective — fake cases, invented quotes</div>
+          </div>
+          <div class="grid" id="grid"></div>
+        </div>
+        <div class="source" id="source"><span class="src-dot"></span><span id="source-text">Nebraska Supreme Court · Kingston v. Kingston (2026)</span></div>
+      </div>
+    </div>
+    <script src="stat-grid.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["stat-grid"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+/* desk-pivot — brand blue+gold transition. A gold sweep + chevrons + snapping section title.
+   Sizes scale by --u. Content above the bottom 19.5% caption band. */
+:root {
+  --bg: #0B0F14; --text: #F2F5F8; --text2: #9AA7B2; --blue: #4F8CFF; --blue-2: #8fb6ff; --gold: #FFB020; --gold-2: #ffd37a; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse 92% 82% at 50% 46%, #10161f 0%, #0B0F14 78%); overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid-bg { position: absolute; inset: 0; opacity: 0.05; background-image: repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))), repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))); -webkit-mask-image: radial-gradient(ellipse 76% 60% at 50% 50%, #000 30%, transparent 85%); mask-image: radial-gradient(ellipse 76% 60% at 50% 50%, #000 30%, transparent 85%); }
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding-bottom: 19.5%; }
+.sweep { position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 60%; height: calc(4px * var(--u)); background: linear-gradient(90deg, transparent, var(--gold), transparent); box-shadow: 0 0 calc(26px * var(--u)) rgba(255,176,32,0.6); will-change: transform, opacity; }
+
+.block { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: calc(24px * var(--u)); }
+.kicker { display: flex; align-items: center; gap: calc(14px * var(--u)); opacity: 0; will-change: opacity, transform; }
+.kdash { width: calc(46px * var(--u)); height: calc(4px * var(--u)); border-radius: calc(2px * var(--u)); background: var(--gold); box-shadow: 0 0 calc(16px * var(--u)) rgba(255,176,32,0.6); }
+.ktext { font-weight: 700; font-size: calc(28px * var(--u)); letter-spacing: calc(6px * var(--u)); color: var(--gold-2); text-transform: uppercase; }
+.ttl { font-weight: 900; font-size: calc(84px * var(--u)); letter-spacing: calc(0.5px * var(--u)); color: var(--text); text-align: center; max-width: 84vw; will-change: opacity, transform; }
+
+.chev { position: absolute; right: 8%; top: 50%; transform: translateY(-50%); display: flex; gap: calc(10px * var(--u)); font-weight: 900; font-size: calc(90px * var(--u)); color: var(--blue-2); }
+.chev span { opacity: 0; will-change: opacity, transform; }
+
+.portrait .ttl { font-size: calc(76px * var(--u)); }
+.portrait .chev { display: none; }
+.portrait .sweep { width: 78%; }

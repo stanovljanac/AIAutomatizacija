@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 480,
+  "durationSeconds": 16,
+  "revealsSeconds": [0.3, 1.4, 2.6, 4.0, 5.6, 7.8, 11.0, 12.2, 13.2],
+  "props": { "gapLabel": "THE POINT OF TRUST" }
+}

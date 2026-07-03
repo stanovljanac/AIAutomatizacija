@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 360,
+  "durationSeconds": 12,
+  "revealsSeconds": [0.3, 2.0, 3.6, 6.0, 8.4, 10.0],
+  "props": { "line1": "Good AI doesn't always answer.", "line2": "It knows when it doesn't know.", "ctaLabel": "Subscribe", "brand": "The Automation Desk" }
+}

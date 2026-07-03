@@ -1,0 +1,47 @@
+<!doctype html>
+<!--
+  suspended-stamp — HyperFrames scene for the 010 Short (s4). A law license card; a single clean
+  SUSPENDED stamp slams down and the license desaturates. Not the AI — the person who trusted it.
+  BLACK + GOLD; the only alarm imagery is the functional stamp. Accuracy: SUSPENDED (temporary),
+  never "revoked". Silent + deterministic; seek-driven; beats = sentences. Portrait-first (also 16:9).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ stampLabel? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":150},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":5}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="suspended-stamp.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="suspended-stamp" data-start="0" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="flash" id="flash"></div></div>
+      <div class="stage" id="stage">
+        <div class="license" id="license">
+          <div class="lseal" id="lseal">§</div>
+          <div class="ltitle">LAW LICENSE</div>
+          <div class="lname">Attorney at Law</div>
+          <div class="lline"></div>
+          <div class="lmeta">Bar No. ••••  ·  Active</div>
+          <div class="stamp" id="stamp" data-layout-ignore><span id="stamp-text">SUSPENDED</span></div>
+        </div>
+        <div class="sub" id="sub">the person who trusted it</div>
+      </div>
+    </div>
+    <script src="suspended-stamp.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["suspended-stamp"] = tl;
+    </script>
+  </body>
+</html>

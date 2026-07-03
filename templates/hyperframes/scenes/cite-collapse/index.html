@@ -1,0 +1,67 @@
+<!doctype html>
+<!--
+  cite-collapse — HyperFrames hook for video 010 ("the point of trust"). A real-looking legal
+  filing scrolls up; four authoritative citations sit in gold. On cue, red verification stamps
+  land row by row (NOT FOUND · NOT FOUND · DOESN'T EXIST), then a single SUSPENDED stamp slams
+  over the whole brief as it desaturates. BLACK + GOLD hero palette; the ONLY alarm imagery in
+  the video is these functional stamps (analytical, not true-crime).
+
+  Synthetic/illustrative citations — invented case names, never a real cited case.
+  Silent + deterministic (no Math.random / Date.now); one paused, seek-driven GSAP timeline.
+  Beats come from revealsSeconds (sentence starts). 16:9 + 9:16 (portrait class).
+
+  VARIABLES CONTRACT (pipeline --variables-file):
+    fps, width, height, durationFrames, durationSeconds  (scalars)
+    revealsSeconds number[]   clip-relative sentence beats
+    props object              { kicker?, suspendedLabel? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="cite-collapse.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cite-collapse" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore>
+        <div class="grid"></div>
+        <div class="flash" id="flash"></div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="kicker" id="kicker"><span class="kicker-dash"></span><span class="kicker-text">Desk Notes</span></div>
+
+        <div class="doc" id="doc">
+          <div class="doc-head">
+            <span class="doc-title">BRIEF — Filed with the Court</span>
+            <span class="doc-tag">Table of Authorities</span>
+          </div>
+          <div class="cites">
+            <div class="cite" id="cite0"><span class="cnum">1.</span><span class="ctext">Hartwell v. Bronson, 214 F.3d 88 (8th Cir. 2019)</span><span class="stamp" id="stamp0" data-layout-ignore>NOT FOUND</span></div>
+            <div class="cite" id="cite1"><span class="cnum">2.</span><span class="ctext">In re Calder Holdings, 519 U.S. 442 (1998)</span><span class="stamp" id="stamp1" data-layout-ignore>NOT FOUND</span></div>
+            <div class="cite" id="cite2"><span class="cnum">3.</span><span class="ctext">Pemberton v. State, 88 Neb. 210 (2021)</span><span class="stamp" id="stamp2" data-layout-ignore>DOESN'T EXIST</span></div>
+            <div class="cite" id="cite3"><span class="cnum">4.</span><span class="ctext">Voss v. Aldercott, 301 F.Supp.2d 55 (2004)</span></div>
+          </div>
+          <div class="synthetic" id="synthetic">illustrative citations</div>
+        </div>
+
+        <div class="verdict" id="verdict" data-layout-ignore><span id="verdict-text">SUSPENDED</span></div>
+      </div>
+    </div>
+    <script src="cite-collapse.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["cite-collapse"] = tl;
+    </script>
+  </body>
+</html>

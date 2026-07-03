@@ -1,0 +1,54 @@
+/* citation-build — brand blue+gold body. A citation assembles, looks authoritative, then reveals
+   nothing behind it and dissolves. Sizes scale by --u. Content above bottom 19.5% caption band. */
+
+:root {
+  --bg: #0B0F14; --surface: #151B23; --text: #F2F5F8; --text2: #9AA7B2;
+  --blue: #4F8CFF; --blue-2: #8fb6ff; --gold: #FFB020; --gold-2: #ffd37a; --red: #ff5c5c; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%;
+  background: radial-gradient(ellipse 92% 82% at 50% 40%, #10161f 0%, #0B0F14 74%);
+  overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.06;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 42%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 42%, #000 30%, transparent 85%);
+}
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding-bottom: 19.5%; }
+.col { display: flex; flex-direction: column; align-items: center; gap: calc(60px * var(--u)); width: calc(1200px * var(--u)); max-width: 86%; }
+
+.cite-wrap { position: relative; display: flex; flex-direction: column; align-items: center; gap: calc(20px * var(--u)); padding: calc(20px * var(--u)) calc(30px * var(--u)); }
+.cite-line { display: flex; flex-wrap: wrap; justify-content: center; gap: calc(16px * var(--u)); font-family: "Georgia", "Times New Roman", serif; font-size: calc(64px * var(--u)); color: var(--gold-2); letter-spacing: calc(0.5px * var(--u)); }
+.seg { will-change: opacity, transform, filter; }
+.underline { width: calc(760px * var(--u)); height: calc(4px * var(--u)); border-radius: calc(2px * var(--u)); background: linear-gradient(90deg, transparent, var(--gold), transparent); box-shadow: 0 0 calc(18px * var(--u)) rgba(255,176,32,0.5); transform-origin: center; will-change: transform, opacity; }
+.badge { display: flex; align-items: center; gap: calc(12px * var(--u)); font-weight: 700; font-size: calc(28px * var(--u)); color: var(--text2); letter-spacing: calc(1px * var(--u)); opacity: 0; will-change: opacity; }
+.badge .tick { color: var(--gold); font-size: calc(30px * var(--u)); }
+
+.magnifier { position: absolute; left: 50%; top: 42%; font-size: calc(120px * var(--u)); color: var(--blue-2); text-shadow: 0 0 calc(26px * var(--u)) rgba(79,140,255,0.6); opacity: 0; transform: translate(-50%,-50%); will-change: opacity, transform; }
+
+.particles { position: absolute; left: 50%; top: 32%; width: 0; height: 0; }
+.pt { position: absolute; left: 0; top: 0; width: calc(12px * var(--u)); height: calc(12px * var(--u)); border-radius: 50%; background: var(--gold); box-shadow: 0 0 calc(12px * var(--u)) rgba(255,176,32,0.7); opacity: 0; will-change: transform, opacity; }
+
+.behind {
+  width: calc(720px * var(--u)); background: linear-gradient(180deg, #141c28 0%, #10161f 100%);
+  border: calc(1.5px * var(--u)) solid rgba(79,140,255,0.22); border-radius: calc(16px * var(--u));
+  padding: calc(26px * var(--u)) calc(34px * var(--u)); opacity: 0; will-change: opacity, transform;
+  box-shadow: 0 calc(20px * var(--u)) calc(50px * var(--u)) rgba(0,0,0,0.45);
+}
+.behind-head { font-weight: 700; font-size: calc(24px * var(--u)); color: var(--text2); letter-spacing: calc(3px * var(--u)); text-transform: uppercase; margin-bottom: calc(18px * var(--u)); }
+.brow { display: flex; align-items: center; justify-content: space-between; padding: calc(12px * var(--u)) 0; border-top: calc(1px * var(--u)) solid rgba(255,255,255,0.07); }
+.bk { font-size: calc(30px * var(--u)); color: var(--text); font-weight: 600; }
+.none { font-size: calc(30px * var(--u)); color: var(--red); font-weight: 700; letter-spacing: calc(1px * var(--u)); }
+
+.portrait .cite-line { font-size: calc(58px * var(--u)); }
+.portrait .col { width: 90%; }
+.portrait .underline { width: 80%; }
+.portrait .behind { width: 90%; }

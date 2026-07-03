@@ -1,0 +1,14 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 330,
+  "durationSeconds": 11,
+  "revealsSeconds": [0.3, 2.0, 6.5, 8.4],
+  "props": {
+    "value": "57",
+    "of": "of 63 citations",
+    "caption": "were defective — fake cases, invented quotes",
+    "source": "Nebraska Supreme Court · Kingston v. Kingston (2026)"
+  }
+}

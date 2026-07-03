@@ -1,0 +1,13 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 360,
+  "durationSeconds": 12,
+  "revealsSeconds": [0.3, 1.6, 3.4, 6.0, 10.0],
+  "props": {
+    "value": "1695",
+    "label": "documented cases worldwide — and counting",
+    "source": "damiencharlotin.com/hallucinations · as of Jul 3 2026"
+  }
+}

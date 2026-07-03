@@ -1,0 +1,49 @@
+<!doctype html>
+<!--
+  human-gate — HyperFrames body scene for 010 (s12). The structural fix: a draft answer reaches a
+  gate labelled money · law · reputation, a HUMAN check approves it with a gold ✓, and only then does
+  it ship. Not "AI is useless" — design where you trust it. BLUE + GOLD body palette. Silent +
+  deterministic; seek-driven; beats = sentences.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ gateLabel? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="human-gate.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="human-gate" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+      <div class="stage" id="stage">
+        <div class="flow" id="flow">
+          <div class="doc" id="doc"><span class="doc-line"></span><span class="doc-line short"></span><span class="doc-line"></span><span class="doc-tag">DRAFT ANSWER</span></div>
+          <div class="gate" id="gate">
+            <div class="gate-pillar" id="gate-pillar">
+              <div class="gate-title">HUMAN CHECK</div>
+              <div class="gate-sub" id="gate-sub">money · law · reputation</div>
+              <div class="approve" id="approve" data-layout-ignore>✓</div>
+            </div>
+          </div>
+          <div class="shipped" id="shipped"><span class="ship-check">✓</span><span>SHIPPED</span></div>
+        </div>
+      </div>
+    </div>
+    <script src="human-gate.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["human-gate"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 300,
+  "durationSeconds": 10,
+  "revealsSeconds": [0.3, 3.0, 4.0, 5.0, 6.4],
+  "props": { "kicker": "Desk Notes", "suspendedLabel": "SUSPENDED" }
+}

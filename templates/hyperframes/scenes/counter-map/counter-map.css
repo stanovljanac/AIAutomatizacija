@@ -1,0 +1,47 @@
+/* counter-map — brand blue+gold body. A global dot field lights up under a rolling counter.
+   Sizes scale by --u. Content above the bottom 19.5% caption band. */
+
+:root {
+  --bg: #0B0F14; --surface: #151B23; --text: #F2F5F8; --text2: #9AA7B2;
+  --blue: #4F8CFF; --blue-2: #8fb6ff; --gold: #FFB020; --gold-2: #ffd37a; --red: #ff5c5c; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%;
+  background: radial-gradient(ellipse 92% 82% at 50% 40%, #10161f 0%, #0B0F14 76%);
+  overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid-bg {
+  position: absolute; inset: 0; opacity: 0.04;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 44%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 44%, #000 30%, transparent 85%);
+}
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 19.5%; }
+
+/* the abstract globe: faint meridians + a seeded dot field */
+.mapwrap { position: absolute; left: 50%; top: 43%; transform: translate(-50%, -50%); width: calc(1220px * var(--u)); height: calc(660px * var(--u)); }
+.meridian { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border: calc(1.5px * var(--u)) solid rgba(79,140,255,0.10); border-radius: 50%; }
+.m1 { width: calc(660px * var(--u)); height: calc(660px * var(--u)); }
+.m2 { width: calc(320px * var(--u)); height: calc(660px * var(--u)); }
+.m3 { width: calc(660px * var(--u)); height: calc(320px * var(--u)); }
+.dots { position: absolute; inset: 0; -webkit-mask-image: radial-gradient(ellipse 52% 52% at 50% 50%, #000 55%, transparent 88%); mask-image: radial-gradient(ellipse 52% 52% at 50% 50%, #000 55%, transparent 88%); }
+.dot { position: absolute; width: calc(9px * var(--u)); height: calc(9px * var(--u)); border-radius: 50%; background: rgba(79,140,255,0.22); will-change: background-color, box-shadow, transform; }
+
+.readout { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: calc(8px * var(--u)); }
+.big { font-weight: 900; font-size: calc(210px * var(--u)); line-height: 0.9; color: var(--gold-2); text-shadow: 0 0 calc(50px * var(--u)) rgba(255,176,32,0.4); font-variant-numeric: tabular-nums; }
+.label { font-weight: 700; font-size: calc(38px * var(--u)); color: var(--text); letter-spacing: calc(0.4px * var(--u)); }
+
+.source { position: relative; z-index: 3; display: flex; align-items: center; gap: calc(12px * var(--u)); margin-top: calc(26px * var(--u)); font-weight: 600; font-size: calc(24px * var(--u)); color: var(--text2); letter-spacing: calc(0.5px * var(--u)); opacity: 0; will-change: opacity; }
+.src-dot { width: calc(12px * var(--u)); height: calc(12px * var(--u)); border-radius: 50%; background: var(--gold); box-shadow: 0 0 calc(10px * var(--u)) rgba(255,176,32,0.7); }
+
+.portrait .mapwrap { width: calc(940px * var(--u)); height: calc(760px * var(--u)); top: 40%; }
+.portrait .m1, .portrait .m3 { width: calc(560px * var(--u)); }
+.portrait .big { font-size: calc(220px * var(--u)); }
+.portrait .label { font-size: calc(40px * var(--u)); text-align: center; max-width: 90%; }
+.portrait .source { font-size: calc(26px * var(--u)); text-align: center; max-width: 92%; }

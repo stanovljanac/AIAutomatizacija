@@ -1,0 +1,48 @@
+<!doctype html>
+<!--
+  plausible-true — HyperFrames body scene for 010 (s08, "why it happens"). Two words line up under
+  a gold "=", then drift apart as the operator becomes a red "≠": a model predicts plausible text,
+  and with nothing to anchor to, plausible isn't the same as true. We never say "RAG". BLUE + GOLD.
+  Silent + deterministic; two crossfading operators (no mid-timeline text swap); beats = sentences.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="plausible-true.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="plausible-true" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+
+      <div class="stage" id="stage">
+        <div class="words">
+          <span class="w wp" id="wp">plausible</span>
+          <span class="op" id="op">
+            <span class="op-eq" id="op-eq">=</span>
+            <span class="op-ne" id="op-ne">&ne;</span>
+          </span>
+          <span class="w wt" id="wt">true</span>
+        </div>
+        <div class="tag" id="tag">a model predicts likely text — likely isn't the same as real</div>
+      </div>
+    </div>
+    <script src="plausible-true.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["plausible-true"] = tl;
+    </script>
+  </body>
+</html>

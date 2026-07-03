@@ -19,6 +19,32 @@ Format:
 
 ---
 
+## 2026-07-04 — 010 SEO/publish prep + Medium post (owner-requested)
+- who: agent (owner directed)
+- did: Prepared the publish-side deliverables for 010 "the point of trust" (Desk Notes / ideas).
+  Finalized `content/010-point-of-trust/seo.json` — trimmed the description to the owner
+  MAX-3-sentence answer-first rule (full cite-or-refuse prompt lives in the pinned comment),
+  locked the 8 chapter timestamps from `timeline.json` (0:00→3:54), set the home playlist
+  **Desk Notes**, added the Community-tab post + Medium metadata (title + cover = thumb_final).
+  Wrote `content/010-point-of-trust/medium.md` (AI-search-optimized, ~640 words). Recommended
+  title: **"AI Wrote Fake Court Cases. A Lawyer Got Suspended."**
+- next: owner picks a thumbnail, uploads 010 as private/draft (altered content = Yes), adds it to
+  the Desk Notes playlist, pins the comment, then publishes. (010's `content/` files are
+  git-ignored per design — they stay local; only this log entry is committed.)
+
+## 2026-06-29 — New "Everyone Asks AI" series lane + strategist-scene standard
+- who: agent (owner directed)
+- did:
+  - **Strategist-scene standard** written into `style/MOTION_SPEC.md` §0: every scene is *conceived*
+    like a strategist (meet or beat 009 S1 `HookFeedHype` — mirror the viewer's feed), never a
+    templated title card. Reference scene + 6-point checklist.
+  - **New content lane `everyone-asks-ai`** added to `ideas.schema.json` + `brief.schema.json` enums
+    and the `CHANNEL.md` series table (the repeatable "I did the opposite" reframe format). Clarified
+    `ai-news` (weekly roundup = owner's "Desk News" playlist) vs `desk-notes` vs `everyone-asks-ai`.
+    Re-tagged 009 brief `desk-notes` → `everyone-asks-ai`.
+- next: 009 gets its own "Everyone Asks AI" YouTube playlist (owner-side); build more in the format.
+- verify: `npm test` green (513); `validate.js` PASS on 009 brief with the new lane.
+
 ## 2026-06-29 — 009 Short S1 hook rebuilt (doom-scroll feed) + dropped second-model verification (D-049)
 - who: agent (owner directed — rejected the S1 opener as a static title card)
 - did: Two owner-directed changes.

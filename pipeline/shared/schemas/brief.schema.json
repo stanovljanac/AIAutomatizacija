@@ -21,7 +21,7 @@
     "score": { "type": "number", "description": "Predicted popularity 0-100 (free signals + judgment)." },
     "lane": {
       "type": "string",
-      "enum": ["desk-fixes", "desk-loops", "automation-breakdowns", "desk-notes", "ai-how-to", "tool-review", "ai-news"],
+      "enum": ["desk-fixes", "desk-loops", "automation-breakdowns", "desk-notes", "ai-how-to", "tool-review", "ai-news", "everyone-asks-ai"],
       "description": "Content lane / series. Drives the variety soft-cap (no >2 of the same lane in a row)."
     },
     "value_type": {

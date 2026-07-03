@@ -1,0 +1,61 @@
+<!doctype html>
+<!--
+  trust-gap — HyperFrames body scene for 010 (s07, the thesis center; reused by the Short). A 3-node
+  flow builds: PROMPT → CONFIDENT ANSWER (no source) → SHIPPED / COURT (no check). The gap between
+  the answer and shipping pulses gold and is labelled "the point of trust". BLUE + GOLD body palette.
+  Silent + deterministic; seek-driven; beats = sentences.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
+    props: { gapLabel? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="trust-gap.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="trust-gap" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+
+      <div class="stage" id="stage">
+        <div class="flow" id="flow">
+          <div class="node" id="n1">
+            <div class="ntitle">PROMPT</div>
+            <div class="nsub">your question goes in</div>
+          </div>
+          <div class="arrow" id="a1">→</div>
+          <div class="node node-warn" id="n2">
+            <div class="ntitle">CONFIDENT ANSWER</div>
+            <div class="nsub">sounds completely right</div>
+            <div class="flag" id="flag2" data-layout-ignore>NO SOURCE</div>
+          </div>
+          <div class="gap" id="gap">
+            <div class="gap-line" id="gap-line"></div>
+            <div class="gap-pill" id="gap-pill">THE POINT OF TRUST</div>
+          </div>
+          <div class="node node-warn" id="n3">
+            <div class="ntitle">SHIPPED → COURT</div>
+            <div class="nsub">filed as fact</div>
+            <div class="flag" id="flag3" data-layout-ignore>NO CHECK</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="trust-gap.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["trust-gap"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 180,
+  "durationSeconds": 6,
+  "revealsSeconds": [0.3, 2.4, 4.2],
+  "props": { "stampLabel": "SUSPENDED" }
+}

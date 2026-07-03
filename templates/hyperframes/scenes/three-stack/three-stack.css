@@ -1,0 +1,69 @@
+/* three-stack — brand blue+gold body. Three stacked plates, then a gold "point of trust" seam.
+   Sizes scale by --u. Content above the bottom 19.5% caption band. */
+
+:root {
+  --bg: #0B0F14;
+  --surface: #151B23;
+  --text: #F2F5F8;
+  --text2: #9AA7B2;
+  --blue: #4F8CFF;
+  --blue-2: #8fb6ff;
+  --gold: #FFB020;
+  --gold-2: #ffd37a;
+  --red: #ff5c5c;
+  --u: 1;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+
+#root {
+  position: relative; width: 100%; height: 100%;
+  background: radial-gradient(ellipse 92% 82% at 50% 42%, #10161f 0%, #0B0F14 74%);
+  overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.06;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 44%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 44%, #000 30%, transparent 85%);
+}
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding-bottom: 19.5%; }
+.plates { position: relative; width: calc(1120px * var(--u)); max-width: 84%; display: flex; flex-direction: column; gap: calc(26px * var(--u)); }
+
+.plate {
+  display: flex; align-items: center; gap: calc(28px * var(--u));
+  padding: calc(30px * var(--u)) calc(40px * var(--u));
+  background: linear-gradient(180deg, #1a2432 0%, #141c28 100%);
+  border: calc(1.5px * var(--u)) solid rgba(79,140,255,0.28);
+  border-radius: calc(18px * var(--u));
+  box-shadow: 0 calc(20px * var(--u)) calc(50px * var(--u)) rgba(0,0,0,0.45);
+  will-change: transform, opacity, filter;
+}
+.plate-teeth { border-color: rgba(255,176,32,0.4); background: linear-gradient(180deg, #211d12 0%, #171207 100%); }
+
+.chip {
+  flex: 0 0 auto; width: calc(72px * var(--u)); height: calc(72px * var(--u)); border-radius: calc(16px * var(--u));
+  display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: calc(34px * var(--u));
+}
+.chip-b { background: rgba(79,140,255,0.16); color: var(--blue-2); border: calc(1.5px * var(--u)) solid rgba(79,140,255,0.45); }
+.chip-g { background: rgba(255,176,32,0.16); color: var(--gold-2); border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.5); }
+.plabel { font-weight: 700; font-size: calc(42px * var(--u)); color: var(--text); letter-spacing: calc(0.3px * var(--u)); }
+
+/* the point-of-trust seam */
+.seam { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: calc(22px * var(--u)); opacity: 0; will-change: opacity; }
+.seam-line { flex: 1; height: calc(3px * var(--u)); background: linear-gradient(90deg, transparent, var(--gold), transparent); box-shadow: 0 0 calc(18px * var(--u)) rgba(255,176,32,0.5); }
+.seam-pill {
+  flex: 0 0 auto; font-weight: 800; font-size: calc(30px * var(--u)); letter-spacing: calc(4px * var(--u)); text-transform: uppercase;
+  color: #1a1206; background: linear-gradient(180deg, var(--gold-2), var(--gold)); padding: calc(12px * var(--u)) calc(28px * var(--u));
+  border-radius: calc(999px * var(--u)); box-shadow: 0 0 calc(40px * var(--u)) rgba(255,176,32,0.55);
+}
+
+/* portrait */
+.portrait .plates { width: 90%; gap: calc(30px * var(--u)); }
+.portrait .plabel { font-size: calc(46px * var(--u)); }
+.portrait .seam-pill { font-size: calc(28px * var(--u)); }

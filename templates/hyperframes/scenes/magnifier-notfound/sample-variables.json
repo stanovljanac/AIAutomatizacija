@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 210,
+  "durationSeconds": 7,
+  "revealsSeconds": [0.3, 3.0, 5.2],
+  "props": { "stampLabel": "NOT FOUND" }
+}

@@ -47,6 +47,15 @@ async def main(cid: str):
     cfg = json.loads((ROOT / "pipeline" / "shared" / "config.json").read_text(encoding="utf-8"))
     voice = cfg["voice"]["edge_tts"]["voice"]
     rate = cfg["voice"]["edge_tts"].get("rate", "+0%")
+    # Per-video pacing override: brief.json.voice_rate (this video only; the Short inherits the
+    # parent brief). Keeps the global default intact while letting one video run slower/faster.
+    for bdir in (cdir, cdir.parent):
+        bpath = bdir / "brief.json"
+        if bpath.exists():
+            vr = json.loads(bpath.read_text(encoding="utf-8")).get("voice_rate")
+            if isinstance(vr, str) and vr.strip():
+                rate = vr.strip()
+            break
 
     script = json.loads((cdir / "script.json").read_text(encoding="utf-8"))
 

@@ -1,0 +1,59 @@
+<!doctype html>
+<!--
+  three-stack — HyperFrames body scene for 010 (s02 intro). The "easy version is wrong": three
+  plates slide in and STACK — AI made it up · no one checked · a court with teeth — deliberately
+  NOT a single-cause arrow. Then everything dims except a gold marker on the seam: "the point of
+  trust". BLUE + GOLD body palette. Silent + deterministic; seek-driven GSAP; beats = sentences.
+
+  VARIABLES CONTRACT: fps, width, height, durationFrames, durationSeconds, revealsSeconds[], props{}
+    props: { markerLabel? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="three-stack.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="three-stack" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid"></div></div>
+
+      <div class="stage" id="stage">
+        <div class="plates" id="plates">
+          <div class="plate" id="plateA">
+            <span class="chip chip-b">AI</span>
+            <span class="plabel">An AI made something up</span>
+          </div>
+          <div class="plate" id="plateB">
+            <span class="chip chip-b">✕</span>
+            <span class="plabel">A check that never happened</span>
+          </div>
+          <div class="plate plate-teeth" id="plateC">
+            <span class="chip chip-g">§</span>
+            <span class="plabel">A court where being wrong has teeth</span>
+          </div>
+          <div class="seam" id="seam" data-layout-ignore>
+            <span class="seam-line"></span>
+            <span class="seam-pill" id="seam-pill">THE POINT OF TRUST</span>
+            <span class="seam-line"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="three-stack.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["three-stack"] = tl;
+    </script>
+  </body>
+</html>

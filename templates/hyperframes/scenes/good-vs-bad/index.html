@@ -1,0 +1,54 @@
+<!doctype html>
+<!--
+  good-vs-bad — HyperFrames body scene for 010 (s10, the principle: fail loudly, not silently). Two
+  chat panels: LEFT invents a confident cited answer (silent failure); RIGHT refuses — "I couldn't
+  verify this" — and is framed as the STRONGER behavior. BLUE + GOLD body palette. Silent +
+  deterministic; seek-driven; beats = sentences.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":300},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="good-vs-bad.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="good-vs-bad" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+
+      <div class="stage" id="stage">
+        <div class="panels">
+          <div class="panel panel-bad" id="panel-bad">
+            <div class="phead phead-bad">Silent failure</div>
+            <div class="bubble user" id="b-user1">Any cases supporting this?</div>
+            <div class="bubble ai ai-bad" id="b-ai1">Yes — see <i>Ellison v. Vance</i>, 412 F.3d 771 (9th Cir. 2016).</div>
+            <div class="verdict verdict-bad" id="v-bad">✗ invented, sounds confident</div>
+          </div>
+
+          <div class="panel panel-good" id="panel-good">
+            <div class="phead phead-good">Loud failure</div>
+            <div class="bubble user" id="b-user2">Any cases supporting this?</div>
+            <div class="bubble ai ai-good" id="b-ai2">I couldn't verify this — no reliable source found.</div>
+            <div class="verdict verdict-good" id="v-good">✓ honest, and far more useful</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="good-vs-bad.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["good-vs-bad"] = tl;
+    </script>
+  </body>
+</html>

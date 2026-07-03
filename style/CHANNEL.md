@@ -34,9 +34,16 @@ against it, and a **variety soft-cap** (`pickNextIdea`) avoids >2 of the same la
 | **AI How-To** | `ai-how-to` | ideas / mini-demo | broader practical AI tutorials (beyond back-office automation) | teaches-system |
 | **Tool Review** | `tool-review` | comparison | honest review/test of an AI tool or model | corrects-misbelief |
 | **AI News** | `ai-news` | news / short | timely AI news/zeitgeist that carries a takeaway | surprising-truth |
+| **Everyone Asks AI** | `everyone-asks-ai` | ideas / short | repeatable hook format: "Everyone asks AI to [hyped X]. I asked it to [boring opposite Y]." A mental-model flip toward the unglamorous automation that actually pays off | surprising-truth |
 
 The lane tag appears on the section-header and in titles/playlists → topical authority +
-recognizable show. **Rule:** any lane — including news — must still clear the idea-pass value +
+recognizable show.
+
+> **Note — `ai-news` vs `everyone-asks-ai` vs `desk-notes`.** `ai-news` is the **weekly roundup**
+> (new models/tools/skills of the past week); the owner's "Desk News" playlist is this lane. `desk-notes`
+> is a single-topic quick take with a usable lesson. `everyone-asks-ai` is the recurring "I did the
+> opposite" reframe series (009 = make-money → chase-invoices, [[everyone-asks-ai-template]]) — its own
+> playlist, **not** the weekly news roundup. **Rule:** any lane — including news — must still clear the idea-pass value +
 takeaway gate; "this happened" with no usable lesson does not qualify.
 
 ## 3. Topical clusters (answer-engine authority — D-026/D-028)

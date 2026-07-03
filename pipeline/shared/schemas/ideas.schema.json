@@ -36,7 +36,7 @@
           },
           "lane": {
             "type": "string",
-            "enum": ["desk-fixes", "desk-loops", "automation-breakdowns", "desk-notes", "ai-how-to", "tool-review", "ai-news"],
+            "enum": ["desk-fixes", "desk-loops", "automation-breakdowns", "desk-notes", "ai-how-to", "tool-review", "ai-news", "everyone-asks-ai"],
             "description": "Content lane / series; drives the variety soft-cap (no >2 of the same lane in a row)."
           },
           "value_type": {

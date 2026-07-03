@@ -1,0 +1,55 @@
+/* good-vs-bad — brand blue+gold body. Two chat panels: invent (silent) vs refuse (loud). The
+   refusal is the stronger one. Sizes scale by --u. Content above the bottom 19.5% caption band. */
+
+:root {
+  --bg: #0B0F14; --surface: #151B23; --text: #F2F5F8; --text2: #9AA7B2;
+  --blue: #4F8CFF; --blue-2: #8fb6ff; --gold: #FFB020; --gold-2: #ffd37a; --red: #ff5c5c; --green: #22D3A7; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%;
+  background: radial-gradient(ellipse 92% 82% at 50% 42%, #10161f 0%, #0B0F14 76%);
+  overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid-bg {
+  position: absolute; inset: 0; opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 74% 70% at 50% 44%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 74% 70% at 50% 44%, #000 30%, transparent 85%);
+}
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding-bottom: 19.5%; }
+.panels { display: flex; gap: calc(40px * var(--u)); width: 90%; align-items: stretch; justify-content: center; }
+
+.panel {
+  flex: 1 1 0; max-width: calc(700px * var(--u)); display: flex; flex-direction: column; gap: calc(20px * var(--u));
+  background: linear-gradient(180deg, #141c28 0%, #10161f 100%); border-radius: calc(22px * var(--u));
+  padding: calc(30px * var(--u)) calc(32px * var(--u)); box-shadow: 0 calc(20px * var(--u)) calc(50px * var(--u)) rgba(0,0,0,0.45);
+  will-change: transform, opacity, box-shadow; border: calc(1.5px * var(--u)) solid rgba(255,255,255,0.06);
+}
+.panel-bad { border-color: rgba(255,92,92,0.25); }
+.panel-good { border-color: rgba(255,176,32,0.3); }
+
+.phead { font-weight: 800; font-size: calc(30px * var(--u)); letter-spacing: calc(3px * var(--u)); text-transform: uppercase; margin-bottom: calc(4px * var(--u)); }
+.phead-bad { color: var(--red); }
+.phead-good { color: var(--gold-2); }
+
+.bubble { font-size: calc(30px * var(--u)); line-height: 1.32; padding: calc(18px * var(--u)) calc(22px * var(--u)); border-radius: calc(16px * var(--u)); max-width: 92%; will-change: opacity, transform; }
+.bubble.user { align-self: flex-end; background: rgba(79,140,255,0.16); border: calc(1.5px * var(--u)) solid rgba(79,140,255,0.4); color: var(--blue-2); border-bottom-right-radius: calc(5px * var(--u)); font-weight: 600; }
+.bubble.ai { align-self: flex-start; color: var(--text); border-bottom-left-radius: calc(5px * var(--u)); }
+.ai-bad { background: rgba(255,92,92,0.1); border: calc(1.5px * var(--u)) solid rgba(255,92,92,0.35); }
+.ai-good { background: rgba(255,176,32,0.1); border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.4); font-weight: 600; }
+.ai-bad i { color: var(--gold-2); font-style: italic; }
+
+.verdict { margin-top: auto; font-weight: 700; font-size: calc(26px * var(--u)); letter-spacing: calc(0.4px * var(--u)); will-change: opacity; }
+.verdict-bad { color: var(--red); }
+.verdict-good { color: var(--gold); }
+
+/* portrait 9:16 — stack panels */
+.portrait .panels { flex-direction: column; width: 88%; gap: calc(24px * var(--u)); }
+.portrait .panel { max-width: 100%; }
+.portrait .bubble { font-size: calc(32px * var(--u)); }

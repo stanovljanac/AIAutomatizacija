@@ -1,0 +1,9 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 420,
+  "durationSeconds": 14,
+  "revealsSeconds": [0.3, 3.4, 7.0, 10.4],
+  "props": {}
+}

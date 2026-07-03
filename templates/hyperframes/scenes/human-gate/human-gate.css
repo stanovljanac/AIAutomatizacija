@@ -1,0 +1,31 @@
+/* human-gate — brand blue+gold body. Draft → HUMAN CHECK gate (money·law·reputation) → shipped.
+   Sizes scale by --u. Content above the bottom 19.5% caption band. */
+:root {
+  --bg: #0B0F14; --surface: #151B23; --text: #F2F5F8; --text2: #9AA7B2;
+  --blue: #4F8CFF; --blue-2: #8fb6ff; --gold: #FFB020; --gold-2: #ffd37a; --red: #ff5c5c; --green: #22D3A7; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse 92% 82% at 50% 42%, #10161f 0%, #0B0F14 76%); overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid-bg { position: absolute; inset: 0; opacity: 0.05; background-image: repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))), repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))); -webkit-mask-image: radial-gradient(ellipse 74% 70% at 50% 44%, #000 30%, transparent 85%); mask-image: radial-gradient(ellipse 74% 70% at 50% 44%, #000 30%, transparent 85%); }
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding-bottom: 19.5%; }
+.flow { display: flex; align-items: center; justify-content: center; gap: calc(70px * var(--u)); }
+
+.doc { position: relative; width: calc(300px * var(--u)); height: calc(360px * var(--u)); background: linear-gradient(180deg, #1a2432 0%, #141c28 100%); border: calc(1.5px * var(--u)) solid rgba(79,140,255,0.35); border-radius: calc(16px * var(--u)); box-shadow: 0 calc(18px * var(--u)) calc(46px * var(--u)) rgba(0,0,0,0.45); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(20px * var(--u)); padding: calc(40px * var(--u)); will-change: transform, opacity; }
+.doc-line { width: 80%; height: calc(12px * var(--u)); border-radius: calc(6px * var(--u)); background: rgba(143,182,255,0.35); }
+.doc-line.short { width: 52%; }
+.doc-tag { margin-top: calc(14px * var(--u)); font-weight: 800; font-size: calc(24px * var(--u)); letter-spacing: calc(2px * var(--u)); color: var(--blue-2); }
+
+.gate { position: relative; flex: 0 0 auto; }
+.gate-pillar { position: relative; width: calc(360px * var(--u)); padding: calc(40px * var(--u)) calc(30px * var(--u)); border-radius: calc(18px * var(--u)); background: linear-gradient(180deg, #211d12 0%, #171207 100%); border: calc(2px * var(--u)) solid rgba(255,176,32,0.4); box-shadow: 0 calc(18px * var(--u)) calc(46px * var(--u)) rgba(0,0,0,0.45); display: flex; flex-direction: column; align-items: center; gap: calc(14px * var(--u)); will-change: box-shadow; }
+.gate-title { font-weight: 900; font-size: calc(38px * var(--u)); letter-spacing: calc(2px * var(--u)); color: var(--gold-2); }
+.gate-sub { font-weight: 700; font-size: calc(28px * var(--u)); color: var(--text2); letter-spacing: calc(0.5px * var(--u)); }
+.approve { position: absolute; left: 50%; top: calc(-42px * var(--u)); transform: translateX(-50%) scale(2.2); width: calc(90px * var(--u)); height: calc(90px * var(--u)); border-radius: 50%; background: linear-gradient(180deg, var(--gold-2), var(--gold)); color: #1a1206; font-weight: 900; font-size: calc(56px * var(--u)); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 calc(40px * var(--u)) rgba(255,176,32,0.6); opacity: 0; will-change: opacity, transform; }
+
+.shipped { display: flex; align-items: center; gap: calc(16px * var(--u)); font-weight: 900; font-size: calc(46px * var(--u)); letter-spacing: calc(2px * var(--u)); color: var(--gold-2); opacity: 0; will-change: opacity, transform; }
+.ship-check { width: calc(56px * var(--u)); height: calc(56px * var(--u)); border-radius: 50%; border: calc(3px * var(--u)) solid var(--gold); display: flex; align-items: center; justify-content: center; font-size: calc(34px * var(--u)); }
+
+.portrait .flow { flex-direction: column; gap: calc(30px * var(--u)); }
+.portrait .doc { width: calc(360px * var(--u)); height: calc(280px * var(--u)); }

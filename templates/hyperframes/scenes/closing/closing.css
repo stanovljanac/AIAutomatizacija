@@ -1,0 +1,27 @@
+/* closing — brand black+gold CTA/outro. Two kinetic lines + a subscribe pill. Sizes scale by --u. */
+:root {
+  --bg: #0b0a07; --text-primary: #f5f1e8; --text-secondary: #b6ab93;
+  --gold: #ffb020; --gold-2: #ffd37a; --blue: #4F8CFF; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse 90% 80% at 50% 44%, #14110a 0%, #0b0a07 74%); overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid { position: absolute; inset: 0; opacity: 0.05; background-image: repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #4a3c18 calc(89px * var(--u)), #4a3c18 calc(90px * var(--u))), repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #4a3c18 calc(89px * var(--u)), #4a3c18 calc(90px * var(--u))); -webkit-mask-image: radial-gradient(ellipse 72% 68% at 50% 44%, #000 30%, transparent 85%); mask-image: radial-gradient(ellipse 72% 68% at 50% 44%, #000 30%, transparent 85%); }
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(70px * var(--u)); padding: 0 6% 19.5%; }
+.lines { display: flex; flex-direction: column; align-items: center; gap: calc(22px * var(--u)); text-align: center; max-width: 88%; }
+.line { font-weight: 900; letter-spacing: calc(0.4px * var(--u)); line-height: 1.1; will-change: opacity, transform; max-width: 100%; }
+.line1 { font-size: calc(80px * var(--u)); color: var(--text-primary); }
+.line2 { font-size: calc(92px * var(--u)); color: var(--gold-2); text-shadow: 0 0 calc(36px * var(--u)) rgba(255,176,32,0.4); }
+
+.cta { display: flex; align-items: center; gap: calc(22px * var(--u)); opacity: 0; will-change: opacity, transform; }
+.cta-dash { width: calc(46px * var(--u)); height: calc(4px * var(--u)); border-radius: calc(2px * var(--u)); background: var(--gold); box-shadow: 0 0 calc(16px * var(--u)) rgba(255,176,32,0.6); }
+.cta-pill { font-weight: 900; font-size: calc(40px * var(--u)); letter-spacing: calc(1px * var(--u)); color: #0b0a07; background: linear-gradient(180deg, var(--gold-2), var(--gold)); padding: calc(14px * var(--u)) calc(38px * var(--u)); border-radius: calc(999px * var(--u)); box-shadow: 0 0 calc(34px * var(--u)) rgba(255,176,32,0.45); }
+.cta-brand { font-weight: 800; font-size: calc(40px * var(--u)); color: var(--text-primary); letter-spacing: calc(0.5px * var(--u)); }
+
+.portrait .lines { gap: calc(28px * var(--u)); max-width: 92%; }
+.portrait .line1 { font-size: calc(62px * var(--u)); }
+.portrait .line2 { font-size: calc(72px * var(--u)); }
+.portrait .cta { flex-direction: column; gap: calc(18px * var(--u)); }
+.portrait .cta-brand { font-size: calc(44px * var(--u)); }

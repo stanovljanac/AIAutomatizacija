@@ -1,0 +1,23 @@
+/* magnifier-notfound — brand black+gold. One citation, magnifier sweep, red NOT FOUND stamp.
+   Sizes scale by --u. Content above the bottom caption band. */
+:root {
+  --bg: #0b0a07; --text-primary: #f5f1e8; --text-secondary: #b6ab93;
+  --gold: #ffb020; --gold-2: #ffd37a; --red: #ff5c5c; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse 92% 82% at 50% 44%, #14110a 0%, #0b0a07 74%); overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid { position: absolute; inset: 0; opacity: 0.05; background-image: repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #4a3c18 calc(89px * var(--u)), #4a3c18 calc(90px * var(--u))), repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #4a3c18 calc(89px * var(--u)), #4a3c18 calc(90px * var(--u))); -webkit-mask-image: radial-gradient(ellipse 72% 60% at 50% 46%, #000 30%, transparent 85%); mask-image: radial-gradient(ellipse 72% 60% at 50% 46%, #000 30%, transparent 85%); }
+.flash { position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse 72% 60% at 50% 46%, color-mix(in srgb, var(--red) 42%, transparent) 0%, transparent 72%); will-change: opacity; }
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(50px * var(--u)); padding-bottom: 16%; }
+.card { position: relative; width: 86%; max-width: calc(1400px * var(--u)); padding: calc(56px * var(--u)) calc(56px * var(--u)); background: linear-gradient(180deg, #17140d 0%, #120f09 100%); border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.28); border-radius: calc(22px * var(--u)); box-shadow: 0 calc(30px * var(--u)) calc(80px * var(--u)) rgba(0,0,0,0.55); display: flex; flex-direction: column; align-items: center; gap: calc(20px * var(--u)); will-change: transform, opacity, filter; }
+.cite { font-family: "Georgia", "Times New Roman", serif; font-size: calc(62px * var(--u)); color: var(--gold-2); text-align: center; }
+.underline { width: 74%; height: calc(4px * var(--u)); border-radius: calc(2px * var(--u)); background: linear-gradient(90deg, transparent, var(--gold), transparent); box-shadow: 0 0 calc(18px * var(--u)) rgba(255,176,32,0.5); }
+.magnifier { position: absolute; left: 20%; top: 46%; font-size: calc(150px * var(--u)); color: #8fb6ff; text-shadow: 0 0 calc(26px * var(--u)) rgba(79,140,255,0.6); opacity: 0; transform: translate(-50%,-50%); will-change: opacity, transform; }
+.stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) scale(2.4) rotate(-11deg); font-weight: 900; font-size: calc(96px * var(--u)); letter-spacing: calc(5px * var(--u)); text-transform: uppercase; color: #fff; border: calc(8px * var(--u)) solid var(--red); border-radius: calc(16px * var(--u)); padding: calc(16px * var(--u)) calc(40px * var(--u)); background: rgba(255,92,92,0.12); text-shadow: 0 0 calc(24px * var(--u)) rgba(255,92,92,0.5); box-shadow: 0 0 calc(60px * var(--u)) rgba(255,92,92,0.4); opacity: 0; will-change: opacity, transform; }
+.sub { font-weight: 700; font-size: calc(46px * var(--u)); color: var(--text-secondary); letter-spacing: calc(1px * var(--u)); opacity: 0; will-change: opacity; }
+
+.portrait .cite { font-size: calc(56px * var(--u)); }
+.portrait .stamp { font-size: calc(96px * var(--u)); }

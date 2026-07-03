@@ -1,0 +1,62 @@
+/* trust-gap — brand blue+gold body. A 3-node flow with a gold "point of trust" gap.
+   Sizes scale by --u. Content above the bottom 19.5% caption band. */
+
+:root {
+  --bg: #0B0F14; --surface: #151B23; --text: #F2F5F8; --text2: #9AA7B2;
+  --blue: #4F8CFF; --blue-2: #8fb6ff; --gold: #FFB020; --gold-2: #ffd37a; --red: #ff5c5c; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%;
+  background: radial-gradient(ellipse 92% 82% at 50% 42%, #10161f 0%, #0B0F14 76%);
+  overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid-bg {
+  position: absolute; inset: 0; opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 74% 70% at 50% 44%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 74% 70% at 50% 44%, #000 30%, transparent 85%);
+}
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding-bottom: 19.5%; }
+.flow { display: flex; align-items: center; justify-content: center; gap: calc(20px * var(--u)); width: 92%; }
+
+.node {
+  position: relative; flex: 0 0 auto; width: calc(360px * var(--u));
+  background: linear-gradient(180deg, #1a2432 0%, #141c28 100%);
+  border: calc(1.5px * var(--u)) solid rgba(79,140,255,0.3); border-radius: calc(18px * var(--u));
+  padding: calc(30px * var(--u)) calc(28px * var(--u)); box-shadow: 0 calc(18px * var(--u)) calc(46px * var(--u)) rgba(0,0,0,0.45);
+  will-change: transform, opacity;
+}
+.node-warn { border-color: rgba(255,92,92,0.32); }
+.ntitle { font-weight: 800; font-size: calc(34px * var(--u)); color: var(--text); letter-spacing: calc(0.5px * var(--u)); }
+.nsub { margin-top: calc(8px * var(--u)); font-weight: 600; font-size: calc(24px * var(--u)); color: var(--text2); }
+.flag {
+  position: absolute; right: calc(-14px * var(--u)); top: calc(-18px * var(--u));
+  font-weight: 900; font-size: calc(22px * var(--u)); letter-spacing: calc(2px * var(--u)); color: var(--red);
+  background: rgba(255,92,92,0.12); border: calc(2.5px * var(--u)) solid var(--red); border-radius: calc(8px * var(--u));
+  padding: calc(6px * var(--u)) calc(14px * var(--u)); box-shadow: 0 0 calc(22px * var(--u)) rgba(255,92,92,0.35);
+  opacity: 0; will-change: opacity, transform;
+}
+.arrow { flex: 0 0 auto; font-size: calc(56px * var(--u)); color: var(--blue-2); opacity: 0.85; will-change: opacity; }
+
+.gap { position: relative; flex: 0 0 auto; width: calc(140px * var(--u)); height: calc(210px * var(--u)); display: flex; align-items: center; justify-content: center; }
+.gap-line { width: calc(4px * var(--u)); height: 78%; border-radius: calc(2px * var(--u)); background: linear-gradient(180deg, transparent, var(--gold), transparent); box-shadow: 0 0 calc(26px * var(--u)) rgba(255,176,32,0.6); opacity: 0; will-change: opacity, transform; }
+.gap-pill {
+  position: absolute; left: 50%; bottom: calc(-64px * var(--u)); transform: translateX(-50%);
+  white-space: nowrap; font-weight: 800; font-size: calc(24px * var(--u)); letter-spacing: calc(3px * var(--u)); text-transform: uppercase;
+  color: #1a1206; background: linear-gradient(180deg, var(--gold-2), var(--gold)); padding: calc(10px * var(--u)) calc(22px * var(--u));
+  border-radius: calc(999px * var(--u)); box-shadow: 0 0 calc(34px * var(--u)) rgba(255,176,32,0.5); opacity: 0; will-change: opacity, transform;
+}
+
+/* portrait 9:16 — stack vertically, arrows point down */
+.portrait .flow { flex-direction: column; gap: calc(16px * var(--u)); width: 88%; }
+.portrait .node { width: 100%; }
+.portrait .arrow { transform: rotate(90deg); font-size: calc(48px * var(--u)); }
+.portrait .gap { width: calc(200px * var(--u)); height: calc(150px * var(--u)); }
+.portrait .gap-line { width: 70%; height: calc(4px * var(--u)); background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.portrait .gap-pill { bottom: auto; top: 50%; transform: translate(-50%,-50%); }
