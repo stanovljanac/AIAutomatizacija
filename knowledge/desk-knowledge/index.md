@@ -13,7 +13,9 @@ and for where new knowledge comes from. Authoring rules: follow
 - [PROJECT.md](PROJECT.md) — profile: goal, canonical map, knowledge sources, local rules
 - [lessons/](lessons/index.md) — insights distilled from our own experience (owner
   rejections, incidents, analytics), each with Finding / Evidence / Decision
+- [research/](research/index.md) — what external sources say (platform policies, tool
+  landscapes, genre scans), every claim sourced with a retrieved-date
 
-Other categories (`concepts/`, `patterns/`, `experiments/`, `research/`, `glossary/`,
-`archive/`) don't exist yet — they are created the first time a note of that type
-exists (create-on-demand; `decisions/` is permanently unused here, see PROJECT.md).
+Other categories (`concepts/`, `patterns/`, `experiments/`, `glossary/`, `archive/`)
+don't exist yet — they are created the first time a note of that type exists
+(create-on-demand; `decisions/` is permanently unused here, see PROJECT.md).

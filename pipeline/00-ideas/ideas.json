@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-27",
+  "updated": "2026-07-08",
   "ideas": [
     {
       "id": "bulk-personalized-emails",
@@ -364,7 +364,10 @@
       "score": 84,
       "status": "backlog",
       "lane": "tool-review",
-      "value_type": ["surprising-truth", "teaches-system"],
+      "value_type": [
+        "surprising-truth",
+        "teaches-system"
+      ],
       "takeaway": "Don't pick AI vs macros — match the tool to the task: rigid+repetitive = macro, messy+judgement = AI.",
       "produced_video_id": null
     },
@@ -679,10 +682,16 @@
       "score": 84,
       "status": "backlog",
       "lane": "desk-notes",
-      "value_type": ["surprising-truth", "saves-time"],
+      "value_type": [
+        "surprising-truth",
+        "saves-time"
+      ],
       "takeaway": "Speed is the obvious win and the wrong one — the real value is that it runs unattended and never tires.",
       "produced_video_id": null,
-      "source": { "origin": "manual", "added": "2026-06-27" }
+      "source": {
+        "origin": "manual",
+        "added": "2026-06-27"
+      }
     },
     {
       "id": "before-coffee-automation-montage",
@@ -696,10 +705,16 @@
       "score": 80,
       "status": "backlog",
       "lane": "desk-notes",
-      "value_type": ["surprising-truth", "saves-time"],
+      "value_type": [
+        "surprising-truth",
+        "saves-time"
+      ],
       "takeaway": "The payoff of boring automation is invisible: the work is just already done when you show up.",
       "produced_video_id": null,
-      "source": { "origin": "manual", "added": "2026-06-27" }
+      "source": {
+        "origin": "manual",
+        "added": "2026-06-27"
+      }
     },
     {
       "id": "money-leak-shock-stat",
@@ -713,10 +728,16 @@
       "score": 75,
       "status": "backlog",
       "lane": "desk-notes",
-      "value_type": ["surprising-truth", "saves-money"],
+      "value_type": [
+        "surprising-truth",
+        "saves-money"
+      ],
       "takeaway": "A small, boring leak compounds into a real yearly number — naming it is what makes people fix it.",
       "produced_video_id": null,
-      "source": { "origin": "manual", "added": "2026-06-27" }
+      "source": {
+        "origin": "manual",
+        "added": "2026-06-27"
+      }
     },
     {
       "id": "everyone-asks-ai-series",
@@ -726,14 +747,196 @@
       "sector": "general",
       "tool": "AI (model-agnostic) + a spreadsheet",
       "archetype": "ideas",
-      "angle_hint": "OWNER-ENDORSED REPEATABLE SHORT FORMAT (not a single idea): 'Everyone asks AI to [hyped thing]. I asked it to [boring back-office opposite]. Here's what happened.' Each entry rides a hyped search term, delivers our boring-automation angle, keeps the VISIBLE-PROOF beat (see proof-must-be-visible) + promise discipline (saves/keeps, never earns). 009 = make-money -> chase-invoices. Owner's other seeds: replace jobs -> replace copy-paste; write code -> clean spreadsheets. Pick the next one from these.",
+      "angle_hint": "OWNER-ENDORSED REPEATABLE SHORT FORMAT (not a single idea): 'Everyone asks AI to [hyped thing]. I asked it to [boring back-office opposite]. Here's what happened.' Each entry rides a hyped search term, delivers our boring-automation angle, keeps the VISIBLE-PROOF beat (see proof-must-be-visible) + promise discipline (saves/keeps, never earns). 009 = make-money -> chase-invoices. Owner's other seeds: replace jobs -> replace copy-paste; write code -> clean spreadsheets. NEW SEED (2026-07-08, from the external review): write emails -> find the emails I shouldn't answer. Pick the next one from these.",
       "score": 88,
       "status": "backlog",
       "lane": "desk-notes",
-      "value_type": ["surprising-truth", "corrects-misbelief"],
+      "value_type": [
+        "surprising-truth",
+        "corrects-misbelief"
+      ],
       "takeaway": "Point AI at the boring opposite of the hype, and show the run — that's the recognizable format.",
       "produced_video_id": "009-boring-money-leak",
-      "source": { "origin": "manual", "added": "2026-06-27" }
+      "source": {
+        "origin": "manual",
+        "added": "2026-06-27"
+      }
+    },
+    {
+      "id": "read-my-inbox",
+      "title": "Everyone Asks AI to Build an App. I Asked It to Read My Inbox.",
+      "search_term": "ask ai to build an app",
+      "task": "documents",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + Gmail filters & labels",
+      "archetype": "ideas",
+      "lane": "everyone-asks-ai",
+      "angle_hint": "The hype asks AI to build; the win is AI that reads — triage, not construction.",
+      "score": 88,
+      "status": "produced",
+      "produced_video_id": "011-read-my-inbox",
+      "youtube_video_id": "-pBNgF-zPgU"
+    },
+    {
+      "id": "inbox-ai-week-long",
+      "title": "I Let AI Run My Inbox for 7 Days",
+      "search_term": "ai inbox management",
+      "task": "documents",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + Gmail filters & labels",
+      "archetype": "mini-demo",
+      "lane": "ai-how-to",
+      "angle_hint": "LONG follow-up to 011 (read-my-inbox). HARD CONDITION before scripting: actually run the system on the real inbox for 7 days first — the real logs, saves AND misses are the material (build first, film after). Trust-design beats: where it was wrong, what stayed behind a human gate. Title candidates (pick at the SEO step): 'I Let AI Run My Inbox for 7 Days', 'AI Ran My Inbox for a Week. Here's What It Got Wrong.', '7 Days of AI Email Triage — the Honest Log'.",
+      "score": 87,
+      "status": "backlog",
+      "value_type": [
+        "surprising-truth",
+        "saves-time"
+      ],
+      "takeaway": "An AI inbox run earns trust through its misses — run it for real, log what it got wrong, keep the human gate.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      }
+    },
+    {
+      "id": "ai-employee-studio-reveal",
+      "title": "I Built an AI Employee. It Makes These Videos.",
+      "search_term": "ai employee",
+      "task": "other",
+      "sector": "general",
+      "tool": "Claude Code (agent) — our own studio pipeline",
+      "archetype": "diagram",
+      "lane": "ai-how-to",
+      "angle_hint": "STUDIO REVEAL, anti-hype positioning (sequel to 010 point-of-trust). The channel's own autonomous studio as a public case-study: the system + review loops + QA + human gates + where it fails. Keep the searchable phrase 'AI employee' but with self-referential specificity; explicitly distance from the get-rich faceless genre (YouTube's July-2025 inauthentic-content policy punishes lazy mass automation — we position AS the counterexample: AI as production accelerator, human as creative direction + gates). Absorbs the 'Stop Building AI Agents Wrong' story (Input -> Validation -> Retries -> Human review). Message: leverage for a solo operator, not a magic worker.",
+      "score": 88,
+      "status": "backlog",
+      "value_type": [
+        "teaches-system",
+        "corrects-misbelief"
+      ],
+      "takeaway": "An 'AI employee' is leverage with human gates — validation, retries, review — not a magic worker you can walk away from.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      }
+    },
+    {
+      "id": "freelance-automation-capstone",
+      "title": "I Built a Freelance Automation System From Scratch",
+      "search_term": "freelance automation system",
+      "task": "other",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + Google Sheets + Apps Script",
+      "archetype": "diagram",
+      "lane": "ai-how-to",
+      "angle_hint": "CAPSTONE — produce AFTER the freelance cluster episodes (invoice-emails-sheets @86, chase-unpaid-invoices @80, follow-up-quiet-leads / meeting-notes-to-tasks) have shipped and actually run. Honest solo-builder 'From Scratch' framing (NOT 'I automated my entire freelance business'): chain the parts that already worked in real runs, synthetic data only. Cluster/topical-authority play: the episodes answer the single queries, this answers the system query.",
+      "score": 85,
+      "status": "backlog",
+      "value_type": [
+        "teaches-system",
+        "saves-time"
+      ],
+      "takeaway": "A freelance 'system' is just proven small automations chained — build each part alone before you connect them.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      }
+    },
+    {
+      "id": "automation-maintenance-story",
+      "title": "Your Automation Will Break — Here's How Mine Told Me",
+      "search_term": "automation stopped working",
+      "task": "other",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + validation & alerts",
+      "archetype": "diagram",
+      "lane": "ai-how-to",
+      "angle_hint": "ONLY REAL INCIDENTS — never invented (accuracy rule). Candidates from the studio log: 008 Gemini free-tier 503s, review-loop rejections, QA catches; plus whatever Phase-B automations actually break. Produce as a LONG only after the freelance cluster has lived; if a good incident lands earlier, a desk-notes Short is allowed immediately. Frame: failure-design (validation, alerts, fallbacks, human gates), not war stories.",
+      "score": 84,
+      "status": "backlog",
+      "value_type": [
+        "avoids-mistake",
+        "teaches-system"
+      ],
+      "takeaway": "Every automation breaks eventually — the design goal is that it tells you, loudly, instead of failing silently.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      }
+    },
+    {
+      "id": "client-mess-onboarding",
+      "title": "AI Onboarded Me onto a Client's Mess",
+      "search_term": "client onboarding automation",
+      "task": "lookups-reports",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + client files (synthetic)",
+      "archetype": "mini-demo",
+      "lane": "ai-how-to",
+      "angle_hint": "Dev idea reframed for freelancers (the dev/OSS lane stays parked — Phase 3). Every freelancer inherits a client's messy folder/inbox/spreadsheet on day one. Point AI at the mess READ-ONLY first: inventory, map, list of dangers before touching anything. Synthetic client data only.",
+      "score": 80,
+      "status": "backlog",
+      "value_type": [
+        "saves-time",
+        "surprising-truth"
+      ],
+      "takeaway": "AI's best onboarding trick isn't writing — it's reading: point it at the mess and get the map before you touch anything.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      }
+    },
+    {
+      "id": "landing-page-designer-experiment",
+      "title": "Can AI Replace a Designer? I Tried Building My Landing Page",
+      "search_term": "can ai replace designers",
+      "task": "other",
+      "sector": "general",
+      "tool": "Claude Design (paid research preview — needs brief.approvedTools)",
+      "archetype": "mini-demo",
+      "lane": "tool-review",
+      "angle_hint": "EXPERIMENT framing, not a tutorial: 'Can AI replace a designer?' tested on our own real landing page. Claude Design VERIFIED to exist (Anthropic Labs, claude.ai/design, research preview) but it requires a paid plan (Pro/Max) -> must go through brief.approvedTools per the no-paid-SaaS rule; keep the tool modular + disclose. Honest verdict beats hype either way.",
+      "score": 78,
+      "status": "backlog",
+      "value_type": [
+        "surprising-truth",
+        "corrects-misbelief"
+      ],
+      "takeaway": "AI design tools get you a credible draft, not a designer — the gap is judgement, and that stays with you.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      }
+    },
+    {
+      "id": "design-tools-experiment",
+      "title": "Claude Design vs Stitch on the Same Brief",
+      "search_term": "claude design vs stitch",
+      "task": "other",
+      "sector": "general",
+      "tool": "Claude Design vs Google Stitch",
+      "archetype": "comparison",
+      "lane": "tool-review",
+      "angle_hint": "Comparison-as-experiment (see comparison-as-experiment memory): Claude Design vs Google Stitch on the SAME real brief (our landing page or a client-style brief), never a feature-list review. LOW PRIORITY — news-decay risk; paid/preview tools -> brief.approvedTools. Only produce if the landing-page experiment performs.",
+      "score": 72,
+      "status": "backlog",
+      "value_type": [
+        "surprising-truth",
+        "teaches-system"
+      ],
+      "takeaway": "Same brief, two tools — judge design AIs on a shared real task, not on feature lists.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      }
     }
   ]
 }
