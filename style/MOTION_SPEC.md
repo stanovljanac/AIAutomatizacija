@@ -48,6 +48,12 @@ What made it good — the checklist every scene is now held to:
   in the timeline — so it seeks and renders identically every time.
 - **Caption-safe & on-palette.** Viewport clipped/faded clear of the caption band; hook family
   black+gold, body blue+gold ([[bespoke-first-video-system]], [[video-dynamism-and-length]]).
+- **Fill the stage (owner rule, 2026-07-07).** Scene content spans the **top 5% → 85% band**
+  (bottom ~15% is the caption band): big type, big icons — never a small cluster floating in
+  the middle of the frame. On portrait especially, scale content up until the band is used.
+  And **transitions never reflow layout**: swap visuals with absolutely-positioned layers moved
+  by `transform`/`opacity` (fly-out, slide-up, crossfade) — an element whose *height* collapses
+  mid-scene visibly "shifts the page" and is a reject (011 S2 v1).
 
 This is the meta-rule the rest of this file (pacing, hook, transitions, variety) operationalizes.
 When a scene clears §1–§6 but still feels *templated*, it has failed §0. Push every scene to

@@ -15,7 +15,8 @@ import { fadeUp, progress, pop } from "../lib/anim";
  *   title + recap checks · reveals[2] "follow The Automation Desk" → brand + subscribe. HOLDS at end.
  */
 type Recap = { icon: IconName; label: string };
-type Data = { title?: string; brand?: string; recap?: Recap[]; reveals?: number[] };
+type Strike = { icon: IconName; label: string };
+type Data = { title?: string; brand?: string; recap?: Recap[]; strike?: Strike; reveals?: number[] };
 
 const DEFAULT_RECAP: Recap[] = [
   { icon: "spreadsheet", label: "Sheet cleaned" },
@@ -31,6 +32,13 @@ export const RecapCta: React.FC<{ data?: Data }> = ({ data }) => {
   const title = data?.title ?? "Plug the boring leak";
   const brand = data?.brand ?? "The Automation Desk";
   const recap = data?.recap ?? DEFAULT_RECAP;
+  const strike = data?.strike ?? { icon: "factory" as IconName, label: "stop chasing the money printer" };
+  // render the title with its last word accented (generic version of the old hardcoded
+  // "Plug the <gold>boring leak</gold>" — title was declared but ignored before; 009 masked it
+  // because its title matched the hardcode)
+  const tWords = title.split(" ");
+  const tHead = tWords.slice(0, -1).join(" ");
+  const tLast = tWords[tWords.length - 1];
 
   const rv: number[] = Array.isArray(data?.reveals) ? (data!.reveals as number[]) : [];
   const fStop = rv[0] ?? t(0.4); // stop chasing the printer
@@ -49,33 +57,35 @@ export const RecapCta: React.FC<{ data?: Data }> = ({ data }) => {
   const pulse = frame >= fBrand + 16 ? 1 + 0.035 * Math.sin((frame - fBrand) / fps * Math.PI * 2 * 0.9) : 1;
 
   return (
-    <AbsoluteFill style={{ padding: "0 8%", justifyContent: "center", alignItems: "center" }}>
-      {/* stop chasing the money printer */}
-      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 36, opacity: stop.opacity, transform: `translateY(${stop.y}px)` }}>
+    // fill the 5%→85% band (owner layout rule 2026-07-07): spread the beats across the stage
+    // instead of a small centered cluster; bottom 15% stays free for captions.
+    <AbsoluteFill style={{ padding: "7% 8% 15%", justifyContent: "space-evenly", alignItems: "center" }}>
+      {/* strike line (the hyped ask, struck out) */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, opacity: stop.opacity, transform: `translateY(${stop.y}px)` }}>
         <div style={{ position: "relative" }}>
-          <Icon name="factory" size={56} color={RED} accent={RED} />
-          <div style={{ position: "absolute", inset: -4, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.font.heading, fontWeight: 900, fontSize: 64, color: RED }}>✕</div>
+          <Icon name={strike.icon} size={68} color={RED} accent={RED} />
+          <div style={{ position: "absolute", inset: -4, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.font.heading, fontWeight: 900, fontSize: 76, color: RED }}>✕</div>
         </div>
-        <div style={{ position: "relative", fontFamily: theme.font.heading, fontWeight: 800, fontSize: 38, color: theme.color.textSecondary }}>
-          stop chasing the money printer
+        <div style={{ position: "relative", fontFamily: theme.font.heading, fontWeight: 800, fontSize: 46, color: theme.color.textSecondary }}>
+          {strike.label}
         </div>
       </div>
 
       {/* the boring-leak title */}
-      <div style={{ fontFamily: theme.font.heading, fontWeight: 900, fontSize: 84, color: theme.color.textPrimary, textAlign: "center", lineHeight: 1.04, opacity: titleIn, transform: `scale(${interpolate(titleIn, [0, 1], [0.92, 1])})`, marginBottom: 40 }}>
-        Plug the <span style={{ color: gold }}>boring leak</span>
+      <div style={{ fontFamily: theme.font.heading, fontWeight: 900, fontSize: 96, color: theme.color.textPrimary, textAlign: "center", lineHeight: 1.04, opacity: titleIn, transform: `scale(${interpolate(titleIn, [0, 1], [0.92, 1])})` }}>
+        {tHead ? `${tHead} ` : ""}<span style={{ color: gold }}>{tLast}</span>
       </div>
 
       {/* recap checks */}
-      <div style={{ display: "flex", gap: 18, marginBottom: 48 }}>
+      <div style={{ display: "flex", gap: 20 }}>
         {recap.map((r, i) => {
           const inP = progress(frame, fps, fTitle + 8 + i * 6, 14);
           return (
-            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, padding: "20px 22px", borderRadius: 16, background: theme.color.surface, border: `2px solid ${mint}`, opacity: inP, transform: `translateY(${interpolate(inP, [0, 1], [22, 0])}px)`, minWidth: 180 }}>
-              <Icon name={r.icon} size={52} color={mint} accent={mint} />
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Icon name="check" size={26} color={mint} accent={mint} />
-                <div style={{ fontFamily: theme.font.heading, fontWeight: 700, fontSize: 28, color: theme.color.textPrimary }}>{r.label}</div>
+            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "26px 24px", borderRadius: 18, background: theme.color.surface, border: `2px solid ${mint}`, opacity: inP, transform: `translateY(${interpolate(inP, [0, 1], [22, 0])}px)`, minWidth: 210, flex: 1 }}>
+              <Icon name={r.icon} size={62} color={mint} accent={mint} />
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <Icon name="check" size={30} color={mint} accent={mint} />
+                <div style={{ fontFamily: theme.font.heading, fontWeight: 700, fontSize: 32, color: theme.color.textPrimary }}>{r.label}</div>
               </div>
             </div>
           );
@@ -84,13 +94,13 @@ export const RecapCta: React.FC<{ data?: Data }> = ({ data }) => {
 
       {/* brand + subscribe */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 22, opacity: brandIn, transform: `translateY(${interpolate(brandIn, [0, 1], [24, 0])}px)` }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ width: 14, height: 44, background: gold, borderRadius: 3 }} />
-          <div style={{ fontFamily: theme.font.heading, fontWeight: 900, fontSize: 52, color: theme.color.textPrimary }}>{brand}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{ width: 16, height: 52, background: gold, borderRadius: 3 }} />
+          <div style={{ fontFamily: theme.font.heading, fontWeight: 900, fontSize: 60, color: theme.color.textPrimary }}>{brand}</div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px 40px", borderRadius: 999, background: blue, transform: `scale(${pulse * pop(frame, fBrand + 16, 0.1)})`, boxShadow: `0 8px 30px ${blue}55` }}>
-          <Icon name="bell" size={34} color="#0B0F14" accent="#0B0F14" />
-          <div style={{ fontFamily: theme.font.heading, fontWeight: 900, fontSize: 38, color: "#0B0F14" }}>Subscribe</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "18px 48px", borderRadius: 999, background: blue, transform: `scale(${pulse * pop(frame, fBrand + 16, 0.1)})`, boxShadow: `0 8px 30px ${blue}55` }}>
+          <Icon name="bell" size={40} color="#0B0F14" accent="#0B0F14" />
+          <div style={{ fontFamily: theme.font.heading, fontWeight: 900, fontSize: 44, color: "#0B0F14" }}>Subscribe</div>
         </div>
       </div>
     </AbsoluteFill>

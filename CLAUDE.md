@@ -64,6 +64,7 @@ pivoted from the old Serbian-AI channel: `docs/DECISIONS.md` (D-011…D-019).
 | Match the motion/pacing/transition craft (concrete numbers)     | `style/MOTION_SPEC.md`                                                                                                   |
 | Know channel name/niche/SEO/account                             | `style/CHANNEL.md`                                                                                                       |
 | Change how videos are made (hook/motion/pacing/length/captions) | `pipeline/shared/formats/default.json` — the **format recipe** (one place; resolved by `pipeline/shared/lib/format.mjs`) |
+| Read/write what the project has **learned** (lessons/experiments/research/glossary) | `knowledge/desk-knowledge/index.md` — read first; author per `knowledge/bootstrap/SYSTEM.md`; after writing run `node scripts/knowledge-lint.mjs --fix` |
 
 ## The skills (auto-invoked per task)
 

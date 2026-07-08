@@ -42,7 +42,8 @@
       "WebFetch(domain:news.ycombinator.com)",
       "Edit(**)",
       "Write(**)",
-      "PowerShell(Set-Location \"f:\\\\AI\\\\AI Automatizacija\"; node pipeline/shared/validate.js pipeline/shared/config.example.json --schema config 2>&1 | Select-Object -Last 3; \"exit: $LASTEXITCODE\")"
+      "PowerShell(Set-Location \"f:\\\\AI\\\\AI Automatizacija\"; node pipeline/shared/validate.js pipeline/shared/config.example.json --schema config 2>&1 | Select-Object -Last 3; \"exit: $LASTEXITCODE\")",
+      "Read(//c/Users/Mihailo/.claude/plans/**)"
     ]
   },
   "hooks": {

@@ -49,6 +49,11 @@ workflow. (Sourced tool/price/model facts still follow rule 9 — verified, not 
    thing a viewer applies/believes tomorrow) and `brief.value_type`. The script MUST land that
    takeaway clearly — the script-review checks it was delivered, not just implied. Never name a paid
    SaaS product as a tool to use unless it's in `brief.approved_tools` (see [[no-paid-saas-products]]).
+1c. **The honest-catch beat never announces itself (owner rule, 2026-07-07).** No "now the honest
+   part" / "to be honest" — open the beat directly on the strongest limitation ("It won't ship you
+   a startup…"); vary the phrasing per video, never repeat a stock beat-opener across videos
+   (STYLE_GUIDE §9 blacklist). Sole kept signature: "Unsexy — that's the point.", `everyone-asks-ai`
+   lane only.
 2. **Ideas + minimal example**; end with "scale this to your own process." We do not
    build full systems.
 3. **Accuracy by archetype:** Comparisons/stats trace to `sources.md`; demos use

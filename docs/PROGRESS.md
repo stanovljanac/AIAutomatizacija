@@ -19,6 +19,71 @@ Format:
 
 ---
 
+## 2026-07-07 — 011 "read my inbox" scripted (first KOS-driven video) + 2 review-born lessons
+- who: agent (owner directed — "ideas for the next video + test the new KOS system on it")
+- did: Ran the first video through the **KOS loop end to end**. READ the 3 `desk-knowledge/lessons/`
+  first, applied them, then WROTE knowledge back from a real review.
+  - **011 `everyone-asks-ai` Short** — "Everyone Asks AI to Build an App. I Asked It to Read My
+    Inbox." Scaffolded `content/011-read-my-inbox/` (git-ignored); Step-0 **research-first**
+    (vibe-coding hype vs AI inbox triage; tool routed FREE/model-agnostic, paid apps kept
+    off-screen) → `research.md` + `sources.md`; wrote `brief.json` (score 88) + `short/script.json`
+    (7 beats, mirrors the gate-passed 009 arc; each scene notes the KOS lesson it honors —
+    S4 visible-run proof, no title-card, S6 model-agnostic). `validate.js` PASS.
+  - **Owner-relayed 2nd-model review → 4 edits applied:** S3 stat de-recited (momentum) → demoted
+    to a sourced corner chip, opened experience-first on the mess; S5 invented anecdote removed →
+    general truth; S4 got an "aha" zoom-on-the-buried-mail beat; CTA rewritten for identity
+    ("the most useful AI I built doesn't build anything"). Re-validated PASS.
+  - **KOS write-back (the loop closing):** authored 2 evidence-backed lessons —
+    `dont-break-momentum-with-a-spoken-stat` + `no-invented-anecdotes-in-scripts` — and ran
+    `node scripts/knowledge-lint.mjs --fix` (0 errors).
+- did (cont. — production): owner APPROVED at the script gate → SEO package → edge-tts voice +
+  faster-whisper align → scene-plan (6 bespoke inbox components + recap-cta reuse) → 6 new
+  frame-pure Remotion components built (hook-inbox-feed doom-scroll, app-to-inbox-flip,
+  inbox-pile, inbox-sort-run centerpiece w/ aha zoom, forgotten-cascade, sort-you-decide) →
+  render → mechanical QA 10/10 → perceptual still-review caught 3 (S7 reused RecapCta HARDCODED
+  009's text — declared-but-ignored title prop; S6 sparse open; S3 layout hole) → fixed → v2.
+- did (cont. — owner final-gate feedback, 3 rules born):
+  - **Fill-the-stage layout rule** (owner): content spans the 5%→85% band, big type; transitions
+    NEVER reflow layout (S2 v1 height-collapse jank rejected) → S2 rebuilt as absolute fly-out/
+    slide-up swap; S3/S5/S6/S7 upsized + spread → rule written into `MOTION_SPEC.md` §0.
+  - **No announced honesty** (owner): "Now the honest part" was a stock beat-opener tic across
+    videos → 011 S6 rewritten to open directly on the limitation; blacklisted in STYLE_GUIDE §9 +
+    script-writing rule 1c. "Unsexy — that's the point." KEPT as the everyone-asks-ai series
+    signature (owner decision).
+  - Re-voiced (81.0s) + re-aligned + re-rendered.
+- KOS write-back: **5 lessons total this cycle** (momentum-stat, no-invented-anecdotes,
+  fill-the-stage, no-stock-beat-openers, prop-driven-reuse); `knowledge-lint --fix` 0/0;
+  `npm test` 531 green.
+- did (cont. — 2026-07-08, SHIPPED): owner approved v4 at the FINAL-VIDEO gate → Azure final
+  voice (~0.24% quota) → re-align → final render → QA 10/10 → 2 thumbnail prompts →
+  **uploaded PRIVATE draft https://youtu.be/-pBNgF-zPgU** (publish.json `uploaded_private`,
+  brief `ready`). 011 is the first video produced end-to-end through the KOS loop.
+- next: owner in Studio — Altered content = Yes, thumbnail, pinned comment, playlists
+  (Everyone Asks AI + Desk Notes), community post, Publish. Analytics → ideas.json (growth loop).
+
+## 2026-07-04 — KOS v1.0 implemented: knowledge base standard + validator + adoption (D-050)
+- who: agent (owner directed — "implement KOS per `knowledge/KOSplan.md`")
+- did: Implemented the Knowledge Operating System per the approved plan:
+  - **Bootstrap standard** `knowledge/bootstrap/` — `SYSTEM.md` (entry, Agent-Skills-compatible)
+    + 9 specs (philosophy / architecture / metadata / linking / sizing-and-splitting / lifecycle /
+    adoption / maintenance / validation); 855 lines total, every file under its §5 budget.
+  - **Validator** `scripts/knowledge-lint.mjs` — the 9 checks of plan §4.9 (frontmatter schema
+    via ajv, Purpose header, link resolution + no-wikilinks, size caps by role, orphans/
+    reachability, category integrity, deprecated placement, stale drafts, evidence-for-canon)
+    + `--fix` (generates Backlinks footers + AUTO-INDEX category listings); exit 0/1/2.
+    18 tests in `scripts/knowledge-lint.test.mjs`; `npm test` widened to `pipeline/ scripts/`.
+  - **Adoption (Phases A–E)** on this repo — mapping per plan §2.3 (canonical stays in place:
+    DECISIONS/style/facts.json/rubric/skills); instantiated `knowledge/desk-knowledge/`:
+    `index.md`, `PROJECT.md` (canonical map + knowledge sources + local rules), and `lessons/`
+    seeded with 3 evidence-backed lessons (title-card rejections → MOTION_SPEC §0 + `no_title_card`;
+    proof-must-be-visible; research-real-workflow-first / 008 Gemini-503). CLAUDE.md got the
+    pointer row ("Where everything lives").
+- verify: `npm test` **531 green** (513 + 18 new); `node scripts/knowledge-lint.mjs --fix` →
+  **0 errors, 0 warnings** across 6 instance files; second `--fix` run = no changes (idempotent).
+- next: live the loop — write/update lessons + research after each video cycle, run the
+  validator on every instance write; monthly maintenance sweep; consider Stop-hook wiring
+  once the instance is stable.
+
 ## 2026-07-04 — 010 SEO/publish prep + Medium post (owner-requested)
 - who: agent (owner directed)
 - did: Prepared the publish-side deliverables for 010 "the point of trust" (Desk Notes / ideas).

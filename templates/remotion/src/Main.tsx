@@ -29,6 +29,12 @@ import { ErrorCascade } from "./custom/ErrorCascade";
 import { TimeReturned } from "./custom/TimeReturned";
 import { RecapCta } from "./custom/RecapCta";
 import { HookFeedHype } from "./custom/HookFeedHype";
+import { InboxSortRun } from "./custom/InboxSortRun";
+import { InboxHookFeed } from "./custom/InboxHookFeed";
+import { AppToInboxFlip } from "./custom/AppToInboxFlip";
+import { InboxPile } from "./custom/InboxPile";
+import { ForgottenCascade } from "./custom/ForgottenCascade";
+import { SortYouDecide } from "./custom/SortYouDecide";
 
 /** Custom (bespoke) scene dispatch — template:"custom" routes by props.component. */
 const CUSTOM: Record<string, React.FC<{ data?: any }>> = {
@@ -51,6 +57,12 @@ const CUSTOM: Record<string, React.FC<{ data?: any }>> = {
   "time-returned": TimeReturned,
   "recap-cta": RecapCta,
   "hook-feed-hype": HookFeedHype,
+  "inbox-sort-run": InboxSortRun,
+  "hook-inbox-feed": InboxHookFeed,
+  "app-to-inbox-flip": AppToInboxFlip,
+  "inbox-pile": InboxPile,
+  "forgotten-cascade": ForgottenCascade,
+  "sort-you-decide": SortYouDecide,
 };
 
 export type Scene = {

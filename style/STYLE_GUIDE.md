@@ -116,6 +116,12 @@ wall of narration as one scene.
 
 - Filler: "basically", "literally", "in this video we'll…", "without further ado".
 - Hype with no substance: "this will change your life", "insane", "mind-blowing".
+- **Announced honesty (owner rule, 2026-07-07):** "now the honest part", "to be honest",
+  "honestly", "let me be real". The honest-catch beat opens **directly on the strongest
+  limitation** ("It won't ship you a startup…") — honesty is shown by content, never
+  announced. Vary the beat's phrasing per video; no stock beat-opener repeats across videos.
+  (Exception: "Unsexy — that's the point." is the **kept series signature** of the
+  `everyone-asks-ai` lane only — deliberate, owner-approved; don't use it outside that lane.)
 - Pretend authority: don't claim a concept is tested if it's just an idea (§2.3).
 - Walls of text on screen; tiny unreadable screenshots.
 - Begging for engagement; multiple CTAs.
