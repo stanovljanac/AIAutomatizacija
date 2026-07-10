@@ -1,0 +1,52 @@
+<!doctype html>
+<!--
+  lab-outro — 012 s17 CTA (black+gold outro palette begins). The s14 diagram lingers dimly behind;
+  ONE station glows gold (the "next build" tease); single subtle subscribe. Silent + deterministic;
+  seek-driven; beats = sentences (3).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ title?, subtitle? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":360},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":12}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="lab-outro.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="lab-outro" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="aurora"></div></div>
+      <div class="minidiag" id="minidiag">
+        <span class="mnode" style="left:14%;top:26%"></span><span class="mnode" style="left:26%;top:26%"></span>
+        <span class="mnode" style="left:38%;top:26%"></span><span class="mnode" style="left:50%;top:26%"></span>
+        <span class="mnode gold" style="left:62%;top:26%"></span><span class="mnode" style="left:76%;top:26%"></span>
+        <span class="mnode" style="left:76%;top:78%"></span><span class="mnode hot" id="hotnode" style="left:60%;top:78%"></span>
+        <span class="mnode" style="left:44%;top:78%"></span><span class="mnode gold" style="left:28%;top:78%"></span>
+        <span class="mnode" style="left:14%;top:78%"></span>
+        <span class="nexttag" id="nexttag">next build</span>
+      </div>
+      <div class="stage">
+        <div class="lab" id="lab">THE ONGOING LAB</div>
+        <div class="labsub" id="labsub">every station gets its own build — gates and all</div>
+        <div class="subrow" id="subrow">
+          <span class="subbtn">SUBSCRIBE</span>
+          <span class="handle">@TheAutomationDesk</span>
+        </div>
+      </div>
+    </div>
+    <script src="lab-outro.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["lab-outro"] = tl;
+    </script>
+  </body>
+</html>

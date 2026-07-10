@@ -1,0 +1,25 @@
+/* machine-section — the blue+gold body chapter begins. Sizes scale by --u.
+   Content above the bottom 19.5% caption band. */
+:root {
+  --bg: #0B0F14; --text: #F2F5F8; --text2: #9AA7B2;
+  --blue: #4F8CFF; --blue-2: #8fb6ff; --gold: #FFB020; --gold-2: #ffd37a; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse 92% 82% at 50% 42%, #10161f 0%, #0B0F14 76%); overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid-bg { position: absolute; inset: 0; opacity: 0.05; background-image: repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))), repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))); }
+.bluewash { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(79,140,255,0.28) 0%, transparent 62%); opacity: 0; }
+
+.canvasdots { position: absolute; inset: 0 0 19.5% 0; z-index: 1; opacity: 0; }
+.socket { position: absolute; width: calc(64px * var(--u)); height: calc(64px * var(--u)); margin: calc(-32px * var(--u)) 0 0 calc(-32px * var(--u)); border-radius: 50%; border: calc(2.5px * var(--u)) dashed rgba(79,140,255,0.4); }
+.socket.gold { border-color: rgba(255,176,32,0.5); }
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(22px * var(--u)); padding: 4% 0 19.5%; }
+.kicker { font-weight: 900; font-size: calc(30px * var(--u)); letter-spacing: calc(8px * var(--u)); color: var(--blue-2); will-change: transform, opacity; }
+.title { font-weight: 900; font-size: calc(150px * var(--u)); letter-spacing: calc(4px * var(--u)); color: var(--text); line-height: 1; text-shadow: 0 0 calc(60px * var(--u)) rgba(79,140,255,0.25); will-change: transform, opacity; }
+.rule { width: calc(560px * var(--u)); height: calc(7px * var(--u)); border-radius: calc(4px * var(--u)); background: linear-gradient(90deg, var(--gold), var(--gold-2)); transform: scaleX(0); transform-origin: left center; box-shadow: 0 0 calc(26px * var(--u)) rgba(255,176,32,0.45); will-change: transform; }
+.subtitle { font-weight: 700; font-size: calc(38px * var(--u)); color: var(--text2); opacity: 0; will-change: opacity, transform; }
+.subtitle em { font-style: normal; color: var(--gold-2); font-weight: 900; }
+
+.portrait .title { font-size: calc(110px * var(--u)); }

@@ -1,0 +1,58 @@
+<!doctype html>
+<!--
+  hook-self-assembly — 012 s01 HOOK HERO (black+gold). Strategic premise: self-referential proof —
+  the frame the viewer is watching assembles ITSELF (script/voice/scene tracks fly in, waveform
+  draws, caption chip snaps, render bar ticks), then FREEZES as hype thumbnails shove in and get
+  flicked back out. Silent + deterministic; seek-driven; beats = sentences (3).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ title?, kicker?, hypeCards?[] }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":360},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":12}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="hook-self-assembly.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="hook-self-assembly" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="aurora"></div><div class="aurora a2"></div></div>
+      <div class="stage">
+        <div class="player" id="player">
+          <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="chrome-title" id="kicker">THE AUTOMATION DESK</span></div>
+          <div class="canvas">
+            <h1 class="headline" id="headline"></h1>
+            <svg class="wave" id="wave" viewBox="0 0 900 120" preserveAspectRatio="none">
+              <path id="wavepath" fill="none" d="M0,60 L30,60 45,28 60,88 75,45 95,70 115,60 135,20 150,95 170,55 190,66 210,60 232,32 250,84 268,48 290,72 310,60 330,25 350,90 372,52 392,64 412,60 434,36 452,80 470,50 492,68 512,60 532,22 552,93 574,55 594,62 614,60 636,30 654,86 672,46 694,74 714,60 734,27 754,91 776,54 796,63 816,60 838,34 856,82 874,50 900,60"/>
+            </svg>
+            <div class="capchip" id="capchip">and captions snap to the voice</div>
+          </div>
+          <div class="tracks">
+            <div class="track t-script" id="tr1"><span class="track-tag">SCRIPT</span><span class="blocks"><i></i><i></i><i></i></span></div>
+            <div class="track t-voice" id="tr2"><span class="track-tag">VOICE</span><span class="blocks"><i></i><i></i></span></div>
+            <div class="track t-scenes" id="tr3"><span class="track-tag">SCENES</span><span class="blocks"><i></i><i></i><i></i><i></i></span></div>
+          </div>
+          <div class="renderbar"><div class="fill" id="fill"></div><span class="pct" id="pct">0%</span></div>
+        </div>
+        <div class="hype h1" id="hype1"><span class="hype-num">$40K/MONTH</span><span class="hype-sub">AUTOPILOT 🤑</span><span class="hype-tag">VIRAL</span></div>
+        <div class="hype h2" id="hype2"><span class="hype-num">FIRE YOURSELF</span><span class="hype-sub">AI DOES IT ALL</span><span class="hype-tag">AD</span></div>
+        <div class="hype h3" id="hype3"><span class="hype-num">1-CLICK</span><span class="hype-sub">FACELESS EMPIRE</span><span class="hype-tag">LIVE</span></div>
+        <div class="flash" id="flash" data-layout-ignore></div>
+      </div>
+    </div>
+    <script src="hook-self-assembly.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["hook-self-assembly"] = tl;
+    </script>
+  </body>
+</html>

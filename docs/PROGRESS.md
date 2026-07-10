@@ -19,6 +19,20 @@ Format:
 
 ---
 
+## 2026-07-10 — 012 Gate ③ passed with fixes; 012 locked as the minimum visual benchmark; publish pack (manual upload)
+- who: agent (owner directed)
+- did: Owner reviewed 012 and set it as the **minimum benchmark for visuals/animations/transitions**
+  going forward (MOTION_SPEC §0 "whole-video floor" + memory). Applied his 2 fixes: MY DESK nodes
+  centered in their GATE fields (s14 `pipeline-recap`), and the `lab-outro` "next build" tag +
+  station row moved below the text stack so late-appearing elements never cover text (long + Short).
+  Re-rendered the 3 affected HF clips (frame-verified), re-assembled both finals. Wrote the full
+  publish pack: `publish.json` (schema PASS — titles, 3-sentence answer-first description, 15
+  real-timestamp chapters, tags, pinned comment, community post, Short caption) + `medium.md`
+  (AI-search-optimized blog). **Owner decisions:** skip the Azure re-voice (ship edge-tts for 012)
+  and **NO API upload — owner uploads manually** (testing his draft-underperformance theory; memory
+  + publish.json note). npm test 534/534.
+- next: owner uploads long + Short manually (Altered content = Yes), posts community text + Medium.
+
 ## 2026-07-07 — 011 "read my inbox" scripted (first KOS-driven video) + 2 review-born lessons
 - who: agent (owner directed — "ideas for the next video + test the new KOS system on it")
 - did: Ran the first video through the **KOS loop end to end**. READ the 3 `desk-knowledge/lessons/`

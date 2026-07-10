@@ -80,9 +80,13 @@ The Medium **post** also needs (owner rule 2026-06-07), stored in `publish.json.
   The real URL is filled at upload.
 
 ## Upload
-- Via YouTube Data API v3 as **private/draft** with all metadata + thumbnail, plus the
-  Short. Uploads are quota-heavy — space them.
-- The owner reviews title/description/tags and **clicks publish**.
+- **SUSPENDED — D-055 (owner, 2026-07-10): do NOT upload via the API or create YouTube drafts.**
+  The owner uploads **manually** (he is testing whether API drafts flipped private→public get
+  fewer first-day views). Produce the full package (`publish.json`, `medium.md`, thumbnail,
+  captions) and stop; the owner sets "Altered content = Yes" in Studio himself.
+- (Pre-D-055 flow, if the owner re-enables it: YouTube Data API v3 as **private/draft** with all
+  metadata + thumbnail, plus the Short; uploads are quota-heavy — space them. The owner reviews
+  title/description/tags and **clicks publish**.)
 
 ## After publish
 - Set `brief.json.status: "published"`. Append outcome to `content/<id>/log.md`,

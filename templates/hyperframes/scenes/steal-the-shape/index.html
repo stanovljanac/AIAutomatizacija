@@ -1,0 +1,72 @@
+<!doctype html>
+<!--
+  steal-the-shape — 012 s16 FINALE. DCG reinvented (owner 2026-07-09: NEVER three icons in a row):
+  three consecutive FULL-FRAME word-worlds — DRAFT (text churns inside the letterforms), CHECK
+  (red scan grid slams, strokes flip green, one letter shatters+reforms), GATE (gold bars lower,
+  light through) — then a VERTICAL monolith + context re-skins (video→invoice→inbox→report) and
+  the kinetic formula line, held ≥4s. Silent + deterministic; seek-driven; beats = sentences (4).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ acts?[], reskins?[] }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":750},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":25}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="steal-the-shape.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="steal-the-shape" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div><div class="goldwash" id="goldwash"></div></div>
+      <div class="stage">
+        <div class="opener" id="opener">STEAL THE SHAPE<span class="op-sub">not the stack</span></div>
+
+        <div class="act act-draft" id="actDraft">
+          <div class="word churn" id="wDraft"><span>D</span><span>R</span><span>A</span><span>F</span><span>T</span></div>
+        </div>
+
+        <div class="act act-check" id="actCheck">
+          <div class="word" id="wCheck"><span>C</span><span>H</span><span class="shatter" id="shE">E</span><span>C</span><span>K</span></div>
+          <div class="scangrid" id="scangrid"></div>
+        </div>
+
+        <div class="act act-gate" id="actGate">
+          <div class="word gateword" id="wGate"><span>G</span><span>A</span><span>T</span><span>E</span></div>
+          <div class="gbars"><span class="gbar" style="left:12%"></span><span class="gbar" style="left:32%"></span><span class="gbar" style="left:52%"></span><span class="gbar" style="left:72%"></span><span class="gbar" style="left:90%"></span></div>
+          <div class="lightrays" id="lightrays"></div>
+        </div>
+
+        <div class="mono" id="mono">
+          <div class="slab s-draft">DRAFT</div>
+          <div class="slab s-check">CHECK</div>
+          <div class="slab s-gate">GATE</div>
+        </div>
+        <div class="reskins" id="reskins">
+          <span class="rskin" id="rs1">🎬 video</span>
+          <span class="rskin" id="rs2">🧾 invoice</span>
+          <span class="rskin" id="rs3">✉ inbox</span>
+          <span class="rskin" id="rs4">📊 report</span>
+        </div>
+        <div class="formula" id="formula">
+          <span class="f-chip f-draft">Draft</span><span class="f-arrow">→</span>
+          <span class="f-chip f-check">Check</span><span class="f-arrow">→</span>
+          <span class="f-chip f-gate">Gate</span>
+        </div>
+      </div>
+    </div>
+    <script src="steal-the-shape.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["steal-the-shape"] = tl;
+    </script>
+  </body>
+</html>

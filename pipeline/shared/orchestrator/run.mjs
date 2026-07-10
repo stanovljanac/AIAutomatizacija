@@ -58,7 +58,8 @@ async function agentStep(ctx, role, payload, deferReason) {
 /** Run the live review panel loop for one stage; pause (surface to owner) if it can't pass inline. */
 async function reviewStage(stage, artifact, { config, runner }) {
   const reviewers = await buildReviewers(config, { runner });
-  if (reviewers.length < 2) return { proceed: true, note: "review panel disabled (<2 reviewers)" };
+  // A single-reviewer panel still gates (Gemini retired 2026-07-09, D-053); only an EMPTY panel skips.
+  if (reviewers.length < 1) return { proceed: true, note: "review panel disabled (no reviewers)" };
   const out = await reviewLoop({
     stage,
     target: stage,

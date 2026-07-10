@@ -1,0 +1,54 @@
+<!doctype html>
+<!--
+  gray-pile-flaw — 012 s05 (black+gold act one). The playbook's flaw made visible: identical gray
+  videos rain into an absurd z-stacked pile (counter → 60/month), three checkpoint slots blink
+  red and EMPTY ("true? original? watchable?"), then the tilting pile FREEZES on "hold that
+  thought". Silent + deterministic; seek-driven; beats = sentences (3).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ value?, label?, source?, questions?[] }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":600},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":20}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="gray-pile-flaw.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="gray-pile-flaw" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="aurora"></div><div class="vignette" id="vignette"></div></div>
+      <div class="stage">
+        <div class="left">
+          <div class="pilewrap" id="pilewrap"><div class="pile" id="pile"></div></div>
+        </div>
+        <div class="right">
+          <div class="counter" id="counter">
+            <span class="c-value" id="cval">0</span>
+            <span class="c-unit">videos<br />a month</span>
+          </div>
+          <div class="c-source" id="csource">Medium · AI Monks (2026)</div>
+          <div class="slots" id="slots">
+            <div class="slot" id="slot1"><span class="slot-q">true?</span></div>
+            <div class="slot" id="slot2"><span class="slot-q">original?</span></div>
+            <div class="slot" id="slot3"><span class="slot-q">watchable?</span></div>
+          </div>
+          <div class="hold" id="hold">HOLD THAT THOUGHT</div>
+        </div>
+      </div>
+    </div>
+    <script src="gray-pile-flaw.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["gray-pile-flaw"] = tl;
+    </script>
+  </body>
+</html>

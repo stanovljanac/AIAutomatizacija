@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+  qa-eye — 012 s12 (blue+gold body). A scanning lens walks a filmstrip; checklist items tick; ONE
+  frame flags red (caption overflowing the safe band), pops out, gets FIXED, and returns green —
+  show the catch, not just the checkmark. Silent + deterministic; seek-driven; beats = sentences (4).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ items?[] }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":660},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":22}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="qa-eye.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="qa-eye" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+      <div class="stage">
+        <div class="striprow" id="striprow">
+          <div class="filmstrip" id="filmstrip">
+            <div class="fframe"><span class="ff-art"></span><span class="ff-cap"></span></div>
+            <div class="fframe"><span class="ff-art alt"></span><span class="ff-cap"></span></div>
+            <div class="fframe bad" id="badframe"><span class="ff-art"></span><span class="ff-cap over" id="badcap"></span><span class="flagx" id="flagx">!</span></div>
+            <div class="fframe"><span class="ff-art alt"></span><span class="ff-cap"></span></div>
+            <div class="fframe"><span class="ff-art"></span><span class="ff-cap"></span></div>
+            <div class="fframe"><span class="ff-art alt"></span><span class="ff-cap"></span></div>
+          </div>
+          <div class="lens" id="lens"><span class="lens-ring"></span><span class="lens-cross v"></span><span class="lens-cross h"></span></div>
+        </div>
+        <div class="checks" id="checks">
+          <div class="chk" id="chk1"><span class="chk-box">✓</span><span class="chk-text">No scene change mid-sentence</span></div>
+          <div class="chk" id="chk2"><span class="chk-box">✓</span><span class="chk-text">Captions readable</span></div>
+          <div class="chk" id="chk3"><span class="chk-box">✓</span><span class="chk-text">Loudness broadcast-safe</span></div>
+          <div class="chk" id="chk4"><span class="chk-box">✓</span><span class="chk-text">No unapproved paid tools</span></div>
+        </div>
+        <div class="caught" id="caught">CAUGHT & FIXED: 1</div>
+      </div>
+    </div>
+    <script src="qa-eye.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["qa-eye"] = tl;
+    </script>
+  </body>
+</html>

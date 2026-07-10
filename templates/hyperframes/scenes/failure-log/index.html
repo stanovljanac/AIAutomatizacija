@@ -1,0 +1,62 @@
+<!doctype html>
+<!--
+  failure-log — 012 s15 HONEST CATCH (blue+gold body → dusk). Opens on the limitation: the real
+  503 incident scrolls in a terminal, the build HALTS and flags the owner; flip — a counter ticks
+  to 531 tests WITH ITS SOURCE CHIP; end on a lone desk lamp + silhouette: one person, running a
+  studio. Silent + deterministic; seek-driven; beats = sentences (4).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ value?, label?, source?, logLines?[] }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":900},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":30}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="failure-log.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="failure-log" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div><div class="dusk" id="dusk"></div></div>
+      <div class="stage">
+        <div class="headline" id="headline">WON'T RUN WITHOUT ME<span class="bydesign" id="bydesign">— by design</span></div>
+        <div class="term" id="term">
+          <div class="term-head"><span class="th-dot"></span><span class="th-dot"></span><span class="th-title">build · 2026-06 · video 008</span></div>
+          <div class="term-body">
+            <div class="tline t1" id="tl1">→ generate(receipt_batch) … <b class="err">503 SERVICE UNAVAILABLE</b></div>
+            <div class="tline t2" id="tl2">→ retry 2/6 … <b class="err">503</b>&nbsp;&nbsp;→ retry 3/6 … <b class="err">503</b></div>
+            <div class="tline t3" id="tl3">⏸ <b class="halt">BUILD HALTED</b> — flagged for owner · nothing improvised</div>
+          </div>
+          <div class="incident" id="incident">INCIDENT · free API down mid-build → shipped late, redesigned, not faked</div>
+        </div>
+        <div class="testszone" id="testszone">
+          <div class="bigcount"><span class="count" id="count">0</span><span class="count-label" id="countlabel">automated tests behind the pipeline</span></div>
+          <div class="srcchip" id="srcchip">npm test — this repo, Jul 2026</div>
+          <div class="checkwave" id="checkwave">
+            <span>✓</span><span>✓</span><span>✓</span><span>✓</span><span>✓</span><span>✓</span><span>✓</span><span>✓</span><span>✓</span><span>✓</span><span>✓</span><span>✓</span>
+          </div>
+        </div>
+        <div class="desk" id="desk">
+          <div class="lampcone" id="lampcone"></div>
+          <div class="lamp"></div>
+          <div class="person"></div>
+          <div class="desktop"></div>
+          <div class="deskline" id="deskline">one person, running a studio</div>
+        </div>
+      </div>
+    </div>
+    <script src="failure-log.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["failure-log"] = tl;
+    </script>
+  </body>
+</html>

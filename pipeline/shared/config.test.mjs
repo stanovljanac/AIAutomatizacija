@@ -33,9 +33,11 @@ for (const [label, file] of targets) {
     assert.ok(p.auto_pass_threshold >= p.score_threshold);
   });
 
-  test(`${label} has at least 2 enabled reviewers`, () => {
+  // D-053 (2026-07-09): Gemini retired — a single-reviewer panel is the configured policy now.
+  // Review must never be EMPTY (that would silently skip the gate); ≥2 is an owner decision.
+  test(`${label} has at least 1 enabled reviewer`, () => {
     const enabled = readJson(file).review.panel.reviewers.filter((r) => r.enabled !== false);
-    assert.ok(enabled.length >= 2, `only ${enabled.length} enabled`);
+    assert.ok(enabled.length >= 1, `only ${enabled.length} enabled`);
   });
 }
 

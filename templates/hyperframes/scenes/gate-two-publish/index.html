@@ -1,0 +1,57 @@
+<!doctype html>
+<!--
+  gate-two-publish — 012 s13 (blue+gold body). GATE 2: the owner watches the cut (player scrub),
+  the system uploads a PRIVATE draft with metadata written, the "altered/synthetic" disclosure
+  toggle flips YES, and a human cursor presses PUBLISH. Silent + deterministic; seek-driven;
+  beats = sentences (4).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ disclosureLabel? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":750},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":25}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="gate-two-publish.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="gate-two-publish" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+      <div class="stage">
+        <div class="gateglyph" id="gate2"><div class="g-arch"></div><div class="g-bar" style="left:30%"></div><div class="g-bar" style="left:50%"></div><div class="g-bar" style="left:70%"></div><div class="g-label">GATE 2</div></div>
+        <div class="player" id="player">
+          <div class="pv"><span class="pv-art a1"></span><span class="pv-art a2"></span><span class="pv-cap"></span></div>
+          <div class="scrub"><span class="scrub-fill" id="scrubfill"></span><span class="playhead" id="playhead"></span></div>
+          <div class="ptime"><span id="tcur">0:00</span><span>watching start → end</span><span>6:05</span></div>
+        </div>
+        <div class="draft" id="draft">
+          <div class="d-row head"><span class="d-title">Upload · draft</span><span class="badge private" id="bpriv">PRIVATE</span><span class="badge public" id="bpub">PUBLIC</span></div>
+          <span class="d-line w90"></span><span class="d-line w70"></span>
+          <div class="d-sec">chapters ✓ &nbsp; description ✓ &nbsp; tags ✓</div>
+          <div class="disclose" id="disclose">
+            <span class="disc-label" id="disclabel">Altered or synthetic content</span>
+            <span class="toggle" id="toggle"><span class="knob" id="knob"></span><span class="tg-yes">YES</span></span>
+          </div>
+          <div class="publishbtn" id="publishbtn">PUBLISH</div>
+          <div class="burst" id="burst" data-layout-ignore></div>
+        </div>
+        <div class="cursor" id="cursor">➤</div>
+        <div class="finger" id="finger">the publish button is still a human finger</div>
+      </div>
+    </div>
+    <script src="gate-two-publish.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["gate-two-publish"] = tl;
+    </script>
+  </body>
+</html>

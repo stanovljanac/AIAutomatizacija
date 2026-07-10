@@ -1,0 +1,40 @@
+/* verdict-not-trusted — black+gold answer-first verdict composite.
+   Sizes scale by --u. Content above the bottom 19.5% caption band. */
+:root {
+  --bg: #070605; --text: #F2F5F8; --text2: #9AA7B2;
+  --gold: #FFB020; --gold-2: #ffd37a; --red: #ff5c5c; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse 95% 85% at 50% 40%, #0e0a05 0%, #070605 78%); overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.aurora { position: absolute; width: 70%; height: 62%; left: 15%; top: -20%; background: radial-gradient(ellipse at center, rgba(255,176,32,0.14) 0%, transparent 68%); filter: blur(calc(30px * var(--u))); }
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(34px * var(--u)); padding: 4% 0 19.5%; }
+
+.question { font-weight: 900; font-size: calc(64px * var(--u)); line-height: 1.12; letter-spacing: calc(1px * var(--u)); color: var(--text); text-align: center; will-change: transform, opacity; }
+.q-gold { color: var(--gold); }
+
+.verdict { position: relative; width: calc(860px * var(--u)); height: calc(400px * var(--u)); display: flex; align-items: center; justify-content: center; }
+.episodes { position: absolute; bottom: calc(6px * var(--u)); left: 50%; transform: translateX(-50%); display: flex; gap: calc(14px * var(--u)); }
+.ep { width: calc(120px * var(--u)); height: calc(68px * var(--u)); border-radius: calc(10px * var(--u)); background: linear-gradient(160deg, #1d1810 0%, #120e08 100%); border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.4); box-shadow: 0 calc(10px * var(--u)) calc(26px * var(--u)) rgba(0,0,0,0.5); will-change: transform, opacity; }
+.stamp { position: absolute; padding: calc(18px * var(--u)) calc(56px * var(--u)); border-radius: calc(14px * var(--u)); font-weight: 900; letter-spacing: calc(6px * var(--u)); will-change: transform, opacity; }
+.stamp.works { top: calc(64px * var(--u)); font-size: calc(120px * var(--u)); color: var(--gold); border: calc(6px * var(--u)) solid var(--gold); background: rgba(255,176,32,0.08); text-shadow: 0 0 calc(46px * var(--u)) rgba(255,176,32,0.45); box-shadow: 0 0 calc(70px * var(--u)) rgba(255,176,32,0.25), inset 0 0 calc(34px * var(--u)) rgba(255,176,32,0.10); opacity: 0; }
+.stamp.trust { top: calc(150px * var(--u)); font-size: calc(84px * var(--u)); color: var(--red); border: calc(6px * var(--u)) solid var(--red); background: rgba(10,6,6,0.82); box-shadow: 0 calc(20px * var(--u)) calc(60px * var(--u)) rgba(0,0,0,0.6), 0 0 calc(46px * var(--u)) rgba(255,92,92,0.28); transform: rotate(-8deg); opacity: 0; }
+.ring { position: absolute; left: 50%; top: 38%; width: calc(340px * var(--u)); height: calc(340px * var(--u)); margin: calc(-170px * var(--u)) 0 0 calc(-170px * var(--u)); border-radius: 50%; border: calc(4px * var(--u)) solid rgba(255,176,32,0.75); opacity: 0; }
+
+.gates { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.gateglyph { position: absolute; bottom: 24%; width: calc(190px * var(--u)); height: calc(260px * var(--u)); opacity: 0; will-change: transform, opacity; }
+.gateglyph.left { left: 8%; }
+.gateglyph.right { right: 8%; }
+.g-arch { position: absolute; inset: 0; border: calc(5px * var(--u)) solid rgba(255,176,32,0.8); border-bottom: none; border-radius: calc(95px * var(--u)) calc(95px * var(--u)) 0 0; box-shadow: 0 0 calc(36px * var(--u)) rgba(255,176,32,0.25); }
+.g-bar { position: absolute; top: calc(30px * var(--u)); bottom: 0; width: calc(5px * var(--u)); background: rgba(255,176,32,0.7); transform-origin: top center; }
+.g-bar.b1 { left: 30%; } .g-bar.b2 { left: 50%; } .g-bar.b3 { left: 70%; }
+.g-label { position: absolute; bottom: calc(-44px * var(--u)); width: 100%; text-align: center; font-weight: 900; font-size: calc(26px * var(--u)); letter-spacing: calc(4px * var(--u)); color: var(--gold-2); }
+
+.tagline { position: relative; font-weight: 800; font-size: calc(40px * var(--u)); letter-spacing: calc(2px * var(--u)); color: var(--text); opacity: 0; will-change: opacity, transform; }
+.rule { position: absolute; left: 0; bottom: calc(-10px * var(--u)); height: calc(6px * var(--u)); width: 100%; transform-origin: left center; transform: scaleX(0); background: linear-gradient(90deg, var(--gold), var(--gold-2)); border-radius: calc(3px * var(--u)); }
+
+.portrait .question { font-size: calc(56px * var(--u)); }
+.portrait .verdict { width: calc(760px * var(--u)); }
+.portrait .gateglyph.left { left: 3%; } .portrait .gateglyph.right { right: 3%; }

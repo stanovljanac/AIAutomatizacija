@@ -1,0 +1,41 @@
+/* policy-punchline — official sheet over the frozen pile; marker sweeps; red strike.
+   Sizes scale by --u. Content above the bottom 19.5% caption band. */
+:root {
+  --bg: #070605; --text: #F2F5F8; --text2: #9AA7B2; --paper: #f4efe4; --ink: #17130a;
+  --gold: #FFB020; --gold-2: #ffd37a; --red: #ff5c5c; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse 95% 85% at 50% 40%, #0e0a05 0%, #070605 78%); overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.aurora { position: absolute; width: 70%; height: 55%; right: -12%; top: -14%; background: radial-gradient(ellipse at center, rgba(255,176,32,0.11) 0%, transparent 68%); filter: blur(calc(30px * var(--u))); }
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 4% 0 19.5%; }
+
+.pilebg { position: absolute; left: 6%; bottom: 21%; width: calc(420px * var(--u)); height: calc(420px * var(--u)); transform: rotate(5.8deg); transform-origin: 50% 96%; opacity: 0.5; filter: brightness(0.55); }
+.pb { position: absolute; left: 50%; width: calc(240px * var(--u)); height: calc(140px * var(--u)); margin-left: calc(-120px * var(--u)); border-radius: calc(10px * var(--u)); background: linear-gradient(160deg, #3a3f46 0%, #23272d 100%); border: calc(2px * var(--u)) solid rgba(154,167,178,0.4); }
+.pb:nth-child(1) { bottom: 0; transform: rotate(-2deg); }
+.pb:nth-child(2) { bottom: calc(56px * var(--u)); transform: rotate(3deg); }
+.pb:nth-child(3) { bottom: calc(112px * var(--u)); transform: rotate(-4deg); }
+.pb:nth-child(4) { bottom: calc(168px * var(--u)); transform: rotate(2deg); }
+.pb:nth-child(5) { bottom: calc(224px * var(--u)); transform: rotate(-1deg); }
+
+.sheet { position: relative; width: calc(980px * var(--u)); border-radius: calc(14px * var(--u)); background: linear-gradient(180deg, var(--paper) 0%, #e9e2d2 100%); color: var(--ink); box-shadow: 0 calc(34px * var(--u)) calc(90px * var(--u)) rgba(0,0,0,0.65); padding: calc(38px * var(--u)) calc(52px * var(--u)) calc(42px * var(--u)); transform-origin: top center; will-change: transform, opacity, clip-path; }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; }
+.sheet-brand { font-weight: 900; font-size: calc(28px * var(--u)); color: #b3261e; letter-spacing: calc(0.5px * var(--u)); }
+.datechip { padding: calc(5px * var(--u)) calc(16px * var(--u)); border-radius: calc(9px * var(--u)); background: var(--ink); color: var(--gold-2); font-weight: 900; font-size: calc(24px * var(--u)); letter-spacing: calc(1px * var(--u)); opacity: 0; will-change: opacity, transform; }
+.sheet-title { margin-top: calc(10px * var(--u)); font-weight: 800; font-size: calc(30px * var(--u)); color: #4a4230; }
+.sheet-rule { margin: calc(16px * var(--u)) 0 calc(22px * var(--u)); height: calc(3px * var(--u)); background: rgba(23,19,10,0.25); border-radius: 2px; }
+.policy-name { font-weight: 900; font-size: calc(64px * var(--u)); letter-spacing: calc(1px * var(--u)); color: var(--ink); margin-bottom: calc(20px * var(--u)); will-change: transform, opacity; }
+.sheet-line { font-weight: 600; font-size: calc(36px * var(--u)); line-height: 1.5; color: #2c2517; }
+.sheet-line.strong { font-weight: 800; }
+.sheet-line u { text-decoration-color: var(--red); text-decoration-thickness: calc(4px * var(--u)); }
+.mark { position: relative; display: inline-block; padding: 0 calc(8px * var(--u)); }
+.mark b { position: relative; z-index: 1; font-weight: 900; }
+.marker { position: absolute; left: 0; top: 8%; bottom: 8%; width: 100%; background: var(--gold); opacity: 0.75; border-radius: calc(6px * var(--u)); transform: scaleX(0); transform-origin: left center; will-change: transform; }
+.srcchip { margin-top: calc(26px * var(--u)); display: inline-block; padding: calc(6px * var(--u)) calc(14px * var(--u)); border-radius: calc(8px * var(--u)); border: calc(1.5px * var(--u)) solid rgba(23,19,10,0.5); background: rgba(23,19,10,0.08); font-weight: 700; font-size: calc(20px * var(--u)); color: #3c3320; opacity: 0; will-change: opacity, transform; }
+
+.strike { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%) rotate(-14deg) scale(2.6); padding: calc(14px * var(--u)) calc(60px * var(--u)); border: calc(8px * var(--u)) solid var(--red); border-radius: calc(16px * var(--u)); color: var(--red); font-weight: 900; font-size: calc(110px * var(--u)); letter-spacing: calc(8px * var(--u)); background: rgba(20,6,6,0.25); box-shadow: 0 0 calc(70px * var(--u)) rgba(255,92,92,0.35), inset 0 0 calc(40px * var(--u)) rgba(255,92,92,0.15); opacity: 0; will-change: transform, opacity; }
+
+.portrait .sheet { width: calc(880px * var(--u)); }
+.portrait .strike { font-size: calc(88px * var(--u)); }

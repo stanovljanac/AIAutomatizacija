@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-14",
+  "updated": "2026-07-09",
   "policy": {
     "max_age_days": 45,
     "rule": "Any model/tool/price/version claim used in a script is the value below, verified live against `source` on `retrieved`. Never recall these from model memory. refresh-facts.mjs flags a fact when it ages past max_age_days or its value no longer appears on `source`; a human/agent then re-confirms live and updates `value` + `retrieved` (the auditor never overwrites)."
@@ -140,6 +140,28 @@
       "unit": "USD per million output tokens",
       "source": "https://openai.com/api/pricing/",
       "retrieved": "2026-06-12"
+    },
+    {
+      "id": "youtube.policy.inauthentic_content.renamed",
+      "subject": "youtube",
+      "kind": "other",
+      "label": "YouTube monetization policy renamed 'repetitious content' -> 'inauthentic content'",
+      "value": "2025-07-15",
+      "unit": null,
+      "source": "https://support.google.com/youtube/answer/1311392?hl=en",
+      "retrieved": "2026-07-09",
+      "notes": "Inauthentic content = mass-produced/repetitive/templated (incl. AI content from generic templates), ineligible for monetization; applies channel-wide. Stable policy fact; used in 012."
+    },
+    {
+      "id": "n8n.faceless-template-2875.cost_per_video",
+      "subject": "n8n",
+      "kind": "price",
+      "label": "n8n faceless-video template (simonscrapes) quoted production cost per video",
+      "value": 0.8,
+      "unit": "USD per finished video",
+      "source": "https://n8n.io/workflows/2875-an-ai-agent-to-create-faceless-youtube-videos/",
+      "retrieved": "2026-07-09",
+      "notes": "Template chains OpenAI + ElevenLabs + Leonardo + Shotstack + Whisper. Spoken in 012 s04 as 'about eighty cents per finished video'."
     }
   ]
 }

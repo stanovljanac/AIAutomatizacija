@@ -1,0 +1,51 @@
+<!doctype html>
+<!--
+  verdict-not-trusted — 012 s02 ANSWER-FIRST (black+gold). The whole video's tension in one
+  composite: "WORKS" slams in gold, "NOT TRUSTED" rotates over it, two gold gate glyphs rise
+  (motif planted for s09/s13). Silent + deterministic; seek-driven; beats = sentences (4).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ stampA?, stampB? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":600},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":20}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="verdict-not-trusted.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="verdict-not-trusted" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="aurora"></div></div>
+      <div class="stage">
+        <div class="question" id="question">DOES AN AI EMPLOYEE<br />ACTUALLY <span class="q-gold">WORK?</span></div>
+        <div class="verdict" id="verdict">
+          <div class="episodes" id="episodes">
+            <span class="ep"></span><span class="ep"></span><span class="ep"></span><span class="ep"></span><span class="ep"></span>
+          </div>
+          <div class="stamp works" id="stampWorks">WORKS</div>
+          <div class="stamp trust" id="stampTrust">NOT&nbsp;TRUSTED</div>
+          <div class="ring" id="ring" data-layout-ignore></div>
+        </div>
+        <div class="gates">
+          <div class="gateglyph left" id="gateL"><div class="g-arch"></div><div class="g-bar b1"></div><div class="g-bar b2"></div><div class="g-bar b3"></div><div class="g-label">GATE 1</div></div>
+          <div class="gateglyph right" id="gateR"><div class="g-arch"></div><div class="g-bar b1"></div><div class="g-bar b2"></div><div class="g-bar b3"></div><div class="g-label">GATE 2</div></div>
+        </div>
+        <div class="tagline" id="tagline">two hard gates<span class="rule" id="rule"></span></div>
+      </div>
+    </div>
+    <script src="verdict-not-trusted.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["verdict-not-trusted"] = tl;
+    </script>
+  </body>
+</html>

@@ -52,3 +52,4 @@ QA gate).
 - [Proof must be visible — show the work running, don't narrate the result](2026-06-27-proof-must-be-visible.md)
 - [Fill the stage; transitions must never reflow layout](2026-07-07-fill-the-stage-no-reflow-transitions.md)
 - [Reused scene components must be prop-driven — a matching default masks a hardcode](2026-07-07-reused-components-must-be-prop-driven.md)
+- [Frameworks drawn as three-icons-in-a-row get rejected — give concepts full-stage treatment](2026-07-09-no-flow-strip-framework-visuals.md)

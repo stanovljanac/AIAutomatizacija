@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+  policy-punchline — 012 s03 (black+gold act one; plays AFTER s05). The act-one payoff: an
+  official policy sheet unrolls OVER the frozen gray pile, "mass-produced" / "templated" get
+  marker sweeps on the narration beats, the date + source chip land, and a red DEMONETIZED
+  strike slams across everything. Silent + deterministic; seek-driven; beats = sentences (3).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ value?, source?, strike? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":510},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":17}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="policy-punchline.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="policy-punchline" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="aurora"></div></div>
+      <div class="stage">
+        <div class="pilebg" id="pilebg">
+          <span class="pb"></span><span class="pb"></span><span class="pb"></span><span class="pb"></span><span class="pb"></span>
+        </div>
+        <div class="sheet" id="sheet">
+          <div class="sheet-head">
+            <span class="sheet-brand">▶ YouTube Help</span>
+            <span class="datechip" id="datechip">Jul 15, 2025</span>
+          </div>
+          <div class="sheet-title">Channel monetization policies</div>
+          <div class="sheet-rule"></div>
+          <div class="policy-name" id="policyname">“INAUTHENTIC CONTENT”</div>
+          <div class="sheet-line">Content that is <span class="mark" id="mark1"><i class="marker"></i><b>mass-produced</b></span> or repetitive,</div>
+          <div class="sheet-line">made with a <span class="mark" id="mark2"><i class="marker"></i><b>templated</b></span> format at scale,</div>
+          <div class="sheet-line strong">is <u>ineligible for ads</u> — channel-wide.</div>
+          <div class="srcchip" id="srcchip">source: YouTube Help — monetization policies</div>
+        </div>
+        <div class="strike" id="strike">DEMONETIZED</div>
+      </div>
+    </div>
+    <script src="policy-punchline.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["policy-punchline"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<!--
+  human-gate-one — 012 s09 (blue+gold body). GATE 1: the whole production line smear-STOPS, a
+  massive gold gate lowers full-frame, the script page gets READ (a highlight bar walks its
+  lines, a margin note lands), APPROVED stamps, and the line restarts. All-new asset (not 010's
+  human-gate). Silent + deterministic; seek-driven; beats = sentences (3).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ term?, definition? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":480},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":16}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="human-gate-one.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="human-gate-one" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+      <div class="stream" id="stream">
+        <span class="schip" style="top:24%"></span><span class="schip" style="top:38%"></span>
+        <span class="schip" style="top:52%"></span><span class="schip" style="top:30%"></span>
+        <span class="schip" style="top:46%"></span><span class="schip" style="top:60%"></span>
+      </div>
+      <div class="stage">
+        <div class="gatebig" id="gatebig">
+          <div class="gb-beam"></div>
+          <div class="gb-bar" style="left:16%"></div><div class="gb-bar" style="left:36%"></div>
+          <div class="gb-bar" style="left:56%"></div><div class="gb-bar" style="left:76%"></div>
+          <div class="gb-title" id="gtitle">GATE 1 — A HUMAN</div>
+        </div>
+        <div class="page" id="page">
+          <div class="p-head">script.json · v3</div>
+          <span class="p-line"></span><span class="p-line"></span><span class="p-line short"></span>
+          <span class="p-line"></span><span class="p-line short"></span><span class="p-line"></span>
+          <div class="hl" id="hl"></div>
+          <div class="note" id="note">tighten this ✎</div>
+          <div class="approve" id="approve">APPROVED</div>
+        </div>
+      </div>
+    </div>
+    <script src="human-gate-one.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["human-gate-one"] = tl;
+    </script>
+  </body>
+</html>

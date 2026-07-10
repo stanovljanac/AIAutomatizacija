@@ -1,0 +1,63 @@
+<!doctype html>
+<!--
+  writer-vs-reviewer — 012 s07 (blue+gold body). Two agents volley a glowing script: every return
+  gets a different red REJECT stamp, the document visibly EDITS itself (a bad line rewrites), the
+  version badge ticks v1→v3, and the draft finally passes. Diagram nodes 1-2 land on the canvas.
+  Silent + deterministic; seek-driven; beats = sentences (4).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ rejectStamps?[], versionBadges?[] }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":720},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":24}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="writer-vs-reviewer.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="writer-vs-reviewer" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+      <div class="stage">
+        <div class="agent left" id="botL">
+          <div class="a-head"><span class="a-eye"></span><span class="a-eye"></span></div>
+          <div class="a-body">✍</div>
+          <div class="a-label">AGENT 1 · WRITES</div>
+        </div>
+        <div class="court">
+          <div class="doc" id="doc">
+            <div class="vbadge" id="vb1">v1</div>
+            <div class="vbadge over" id="vb2">v2</div>
+            <div class="vbadge over" id="vb3">v3</div>
+            <span class="dline" id="dl1"></span>
+            <span class="dline bad" id="dl2"></span>
+            <span class="dline short" id="dl3"></span>
+            <span class="dline" id="dl4"></span>
+            <div class="stamp" id="stamp1">WEAK HOOK</div>
+            <div class="stamp" id="stamp2">UNSOURCED</div>
+          </div>
+          <div class="net"></div>
+        </div>
+        <div class="agent right" id="botR">
+          <div class="a-head gold"><span class="a-eye"></span><span class="a-eye"></span></div>
+          <div class="a-body gold">✕</div>
+          <div class="a-label">AGENT 2 · REJECTS</div>
+        </div>
+        <div class="passchip" id="passchip">✓ PASSED — third try</div>
+      </div>
+    </div>
+    <script src="writer-vs-reviewer.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["writer-vs-reviewer"] = tl;
+    </script>
+  </body>
+</html>

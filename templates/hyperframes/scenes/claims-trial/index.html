@@ -1,0 +1,60 @@
+<!doctype html>
+<!--
+  claims-trial — 012 s08 (blue+gold body). Every number goes on trial: claim chips drop out of a
+  sentence strip into a VERTICAL column, fire scan-beams at a source card, flip green — and the
+  one that can't be sourced shatters and is never spoken. RECURSION: the featured chip is THIS
+  video's own policy claim → "YouTube Help". Silent + deterministic; seek-driven; beats = sentences (3).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ exampleClaim?{text,source} }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":510},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":17}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="claims-trial.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="claims-trial" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+      <div class="stage">
+        <div class="strip" id="strip"><span class="strip-line"></span><span class="strip-line short"></span><span class="strip-tag">DRAFT SENTENCE</span></div>
+        <div class="trial">
+          <div class="column">
+            <div class="chipclaim" id="chipA"><span class="cc-text">“about 80¢ a video”</span><span class="cc-badge ok">✓</span></div>
+            <div class="chipclaim featured" id="chipB"><span class="cc-text" id="featText">“Jul 15, 2025 — inauthentic content”</span><span class="cc-badge ok">✓</span></div>
+            <div class="chipclaim" id="chipC">
+              <span class="cc-text">“saves 10 hours a day”</span><span class="cc-badge no">✕</span>
+              <span class="frag f1"></span><span class="frag f2"></span><span class="frag f3"></span><span class="frag f4"></span>
+            </div>
+            <div class="muted" id="muted">unsourced → never spoken</div>
+          </div>
+          <div class="beams">
+            <div class="beam" id="beamA"></div>
+            <div class="beam" id="beamB"></div>
+            <div class="beam red" id="beamC"></div>
+          </div>
+          <div class="srccard" id="srccard">
+            <div class="src-title" id="srcTitle">YouTube Help</div>
+            <div class="src-sub">live source · fetched</div>
+            <div class="src-lines"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="claims-trial.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["claims-trial"] = tl;
+    </script>
+  </body>
+</html>

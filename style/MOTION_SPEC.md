@@ -26,6 +26,13 @@ feel or realize, and what is the single most disarming way to show it?* Then aut
 that answer. A scene that merely "displays the line" is a reject ([[no-title-card-scenes]]); a
 scene that **lands the idea** is the floor.
 
+**The whole-video floor (owner, 2026-07-10): video 012 `studio-reveal` is the MINIMUM benchmark
+for visuals, animation, and transitions — every future video meets or beats it, never below.**
+What earned it: per-scene icons, and a visual flow *conceived to follow the script itself* (each
+beat drawn as its own bespoke HF scene: territory fields, a flowing token, a self-building scene).
+Layout craft it also pinned down: any element that appears later in a scene (badge, CTA, tag)
+gets its own reserved space — it must never land on top of existing text (012 lab-outro fix).
+
 **The reference scene — 009 S1 / `HookFeedHype`** (the first scene authored to this standard).
 The strategist move: the strongest possible hook is to **mirror the viewer's own feed back at
 them.** A full-bleed, fast doom-scroll of AI "get-rich" hype — a faux search bar typing *"make me
@@ -155,7 +162,10 @@ fallback where feasible.
 ## 6. Visual variety — every scene is its own
 
 Signals of "same template" (banned): one card layout reused N× with only words swapped; one looping
-background; no color change across sections; no diagrams/B-roll/data-viz.
+background; no color change across sections; no diagrams/B-roll/data-viz; the **three-icons-in-a-row
+flow strip** (icon → arrow → icon → arrow → icon) for any concept/framework — owner ban 2026-07-09
+("draft-check-gate as 3 dumb icons in a horizontal row"): frameworks get **full-stage acts,
+territory fields, or morphs** — big, new, dynamic — never a horizontal icon strip.
 
 Rules:
 - **No layout used twice in a row.** Rotate among: full-bleed statement, split-screen, flow/diagram,

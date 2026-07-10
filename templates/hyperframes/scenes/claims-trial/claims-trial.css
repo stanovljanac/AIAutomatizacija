@@ -1,0 +1,49 @@
+/* claims-trial — blue+gold body; vertical claim column vs source card.
+   Sizes scale by --u. Content above the bottom 19.5% caption band. */
+:root {
+  --bg: #0B0F14; --text: #F2F5F8; --text2: #9AA7B2;
+  --blue: #4F8CFF; --blue-2: #8fb6ff; --gold: #FFB020; --gold-2: #ffd37a; --red: #ff5c5c; --green: #22D3A7; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse 92% 82% at 50% 42%, #10161f 0%, #0B0F14 76%); overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid-bg { position: absolute; inset: 0; opacity: 0.05; background-image: repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))), repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))); }
+
+.stage { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(36px * var(--u)); padding: 4.5% 4% 19.5%; }
+
+.strip { position: relative; width: calc(1050px * var(--u)); padding: calc(22px * var(--u)) calc(34px * var(--u)); border-radius: calc(16px * var(--u)); background: linear-gradient(180deg, #1a2432 0%, #141c28 100%); border: calc(2px * var(--u)) solid rgba(79,140,255,0.45); box-shadow: 0 calc(16px * var(--u)) calc(40px * var(--u)) rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: calc(12px * var(--u)); will-change: transform, opacity; }
+.strip-line { height: calc(13px * var(--u)); width: 92%; border-radius: calc(7px * var(--u)); background: rgba(143,182,255,0.4); }
+.strip-line.short { width: 61%; }
+.strip-tag { position: absolute; top: calc(-16px * var(--u)); left: calc(26px * var(--u)); padding: calc(3px * var(--u)) calc(12px * var(--u)); border-radius: calc(7px * var(--u)); background: var(--blue); color: #0a1220; font-weight: 900; font-size: calc(17px * var(--u)); letter-spacing: calc(1px * var(--u)); }
+
+.trial { position: relative; display: flex; align-items: center; gap: calc(60px * var(--u)); width: calc(1300px * var(--u)); }
+.column { display: flex; flex-direction: column; gap: calc(22px * var(--u)); flex: 0 0 46%; }
+.chipclaim { position: relative; display: flex; align-items: center; justify-content: space-between; gap: calc(14px * var(--u)); padding: calc(18px * var(--u)) calc(24px * var(--u)); border-radius: calc(14px * var(--u)); background: linear-gradient(180deg, #1a2432 0%, #141c28 100%); border: calc(2.5px * var(--u)) solid rgba(143,182,255,0.5); box-shadow: 0 calc(12px * var(--u)) calc(30px * var(--u)) rgba(0,0,0,0.5); will-change: transform, opacity, border-color; opacity: 0; }
+.chipclaim.featured { border-width: calc(3px * var(--u)); }
+.cc-text { font-weight: 800; font-size: calc(30px * var(--u)); color: var(--text); }
+.cc-badge { width: calc(46px * var(--u)); height: calc(46px * var(--u)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: calc(28px * var(--u)); opacity: 0; will-change: opacity, transform; }
+.cc-badge.ok { background: rgba(34,211,167,0.15); border: calc(2.5px * var(--u)) solid var(--green); color: var(--green); }
+.cc-badge.no { background: rgba(255,92,92,0.15); border: calc(2.5px * var(--u)) solid var(--red); color: var(--red); }
+.frag { position: absolute; border-radius: calc(4px * var(--u)); background: #2a3442; border: calc(1.5px * var(--u)) solid rgba(255,92,92,0.5); opacity: 0; will-change: transform, opacity; }
+.frag.f1 { left: 8%; bottom: calc(-4px * var(--u)); width: calc(60px * var(--u)); height: calc(20px * var(--u)); }
+.frag.f2 { left: 32%; bottom: calc(-4px * var(--u)); width: calc(44px * var(--u)); height: calc(16px * var(--u)); }
+.frag.f3 { left: 56%; bottom: calc(-4px * var(--u)); width: calc(70px * var(--u)); height: calc(22px * var(--u)); }
+.frag.f4 { left: 80%; bottom: calc(-4px * var(--u)); width: calc(38px * var(--u)); height: calc(14px * var(--u)); }
+.muted { align-self: flex-start; padding: calc(6px * var(--u)) calc(16px * var(--u)); border-radius: calc(9px * var(--u)); border: calc(2px * var(--u)) dashed rgba(255,92,92,0.7); color: var(--red); font-weight: 800; font-size: calc(23px * var(--u)); opacity: 0; will-change: opacity, transform; }
+
+.beams { position: absolute; left: 46%; top: 0; bottom: 0; width: calc(230px * var(--u)); }
+.beam { position: absolute; left: 0; height: calc(5px * var(--u)); width: 100%; border-radius: 3px; background: linear-gradient(90deg, rgba(143,182,255,0.1), var(--blue-2)); transform: scaleX(0); transform-origin: left center; will-change: transform, opacity; }
+.beam.red { background: linear-gradient(90deg, rgba(255,92,92,0.1), var(--red)); }
+
+.srccard { flex: 0 0 32%; margin-left: auto; padding: calc(28px * var(--u)) calc(32px * var(--u)); border-radius: calc(18px * var(--u)); background: linear-gradient(180deg, #211d12 0%, #171207 100%); border: calc(2.5px * var(--u)) solid rgba(255,176,32,0.55); box-shadow: 0 calc(18px * var(--u)) calc(46px * var(--u)) rgba(0,0,0,0.5), 0 0 calc(40px * var(--u)) rgba(255,176,32,0.15); display: flex; flex-direction: column; gap: calc(12px * var(--u)); opacity: 0; will-change: transform, opacity; }
+.src-title { font-weight: 900; font-size: calc(38px * var(--u)); color: var(--gold-2); }
+.src-sub { font-weight: 700; font-size: calc(21px * var(--u)); color: var(--text2); }
+.src-lines { display: flex; flex-direction: column; gap: calc(9px * var(--u)); margin-top: calc(6px * var(--u)); }
+.src-lines span { height: calc(10px * var(--u)); border-radius: calc(5px * var(--u)); background: rgba(255,211,122,0.35); }
+.src-lines span:nth-child(2) { width: 74%; }
+.src-lines span:nth-child(3) { width: 52%; }
+
+.portrait .trial { flex-direction: column; width: 92%; }
+.portrait .beams { display: none; }
+.portrait .srccard { margin-left: 0; }

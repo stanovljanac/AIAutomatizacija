@@ -1,0 +1,60 @@
+<!doctype html>
+<!--
+  waveform-alignment — 012 s10 (blue+gold body). One continuous synthetic take: the waveform draws
+  and PULSES, word tokens rise off it and click onto a timeline ruler, a caption + scene chip snap
+  magnetically — and the scissors get banned (audio is never cut). Silent + deterministic;
+  seek-driven; beats = sentences (4).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ term? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":630},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":21}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="waveform-alignment.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="waveform-alignment" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+      <div class="stage">
+        <div class="toplabel" id="toplabel">ONE CONTINUOUS TAKE<span class="live" id="live">● SYNTHETIC</span></div>
+        <div class="ruler" id="ruler">
+          <span class="tick" style="left:8%"></span><span class="tick" style="left:20%"></span><span class="tick major" style="left:32%"></span>
+          <span class="tick" style="left:44%"></span><span class="tick major" style="left:56%"></span><span class="tick" style="left:68%"></span>
+          <span class="tick major" style="left:80%"></span><span class="tick" style="left:92%"></span>
+          <div class="token tk1" id="tk1">every</div>
+          <div class="token tk2" id="tk2">word</div>
+          <div class="token tk3" id="tk3">mapped</div>
+          <div class="snapchip cap" id="snapCap">CAPTION</div>
+          <div class="snapchip scn" id="snapScn">SCENE</div>
+        </div>
+        <div class="wavezone">
+          <svg class="bigwave" id="bigwave" viewBox="0 0 1400 200" preserveAspectRatio="none">
+            <path id="bwpath" fill="none" d="M0,100 L40,100 60,58 80,140 100,80 125,118 150,100 175,40 200,155 225,90 250,108 275,100 300,64 325,132 350,82 375,115 400,100 425,48 450,148 475,88 500,105 525,100 550,70 575,126 600,85 625,112 650,100 675,44 700,152 725,92 750,104 775,100 800,60 825,136 850,80 875,118 900,100 925,52 950,144 975,86 1000,108 1025,100 1050,66 1075,130 1100,84 1125,114 1150,100 1175,46 1200,150 1225,90 1250,106 1275,100 1300,72 1325,124 1350,88 1400,100"/>
+          </svg>
+          <div class="connector c1" id="cn1"></div>
+          <div class="connector c2" id="cn2"></div>
+          <div class="connector c3" id="cn3"></div>
+          <div class="scissors" id="scissors">✂</div>
+          <div class="ban" id="ban"></div>
+        </div>
+        <div class="bottomline" id="bottomline">audio is <b>never</b> cut — everything else snaps <b>to it</b></div>
+      </div>
+    </div>
+    <script src="waveform-alignment.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["waveform-alignment"] = tl;
+    </script>
+  </body>
+</html>

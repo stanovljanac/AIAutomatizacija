@@ -1,0 +1,51 @@
+<!doctype html>
+<!--
+  machine-section — 012 s06 SECTION SHIFT (palette flips to body BLUE+GOLD here). "Here's the
+  machine that made this video. Watch the shape — you'll steal it at the end." An empty diagram
+  canvas (dim node sockets) fades in behind — the next scenes land nodes onto it. NO icon-strip
+  (owner ban 2026-07-09). Silent + deterministic; seek-driven; beats = sentences (2).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ kicker?, title?, subtitle? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":240},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":8}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="machine-section.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="machine-section" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div><div class="bluewash" id="bluewash"></div></div>
+      <div class="canvasdots" id="canvasdots">
+        <span class="socket" style="left:12%;top:30%"></span>
+        <span class="socket" style="left:26%;top:52%"></span>
+        <span class="socket" style="left:40%;top:28%"></span>
+        <span class="socket gold" style="left:50%;top:56%"></span>
+        <span class="socket" style="left:62%;top:30%"></span>
+        <span class="socket" style="left:74%;top:54%"></span>
+        <span class="socket gold" style="left:86%;top:32%"></span>
+      </div>
+      <div class="stage">
+        <div class="kicker" id="kicker">DESK LOOPS</div>
+        <h1 class="title" id="title">THE MACHINE</h1>
+        <div class="rule" id="rule"></div>
+        <div class="subtitle" id="subtitle">Watch the shape — you'll steal it at the end.</div>
+      </div>
+    </div>
+    <script src="machine-section.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["machine-section"] = tl;
+    </script>
+  </body>
+</html>

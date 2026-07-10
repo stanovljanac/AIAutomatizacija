@@ -9,11 +9,13 @@ You are the quality reviewer. Every script passes you **before** a human sees it
 (PRD R10). You read `script.json` against `style/STYLE_GUIDE.md` and the brief, then
 write `script.review.json` with `pass: true|false` + a list of issues.
 
-> **Autonomous path (D-040/D-041):** this same rubric is now also scored by the **multi-model
-> panel** in `pipeline/shared/review/` — two other models score 1–10 against `rubric.mjs`
-> (hard-gates + 5 weighted categories), the author merges fixes, and the loop repeats until both
-> reviewers ≥9 (`loop.mjs`, schema `review.schema.json`). The checklist below is the human-readable
-> source of truth for that rubric; keep them in sync.
+> **Autonomous path (D-040/D-041/D-053):** this same rubric is also scored by the **reviewer
+> panel** in `pipeline/shared/review/` — every enabled reviewer scores 1–10 against `rubric.mjs`
+> (hard-gates + 5 weighted categories), the author merges fixes, and the loop repeats until every
+> reviewer ≥9 (`loop.mjs`, schema `review.schema.json`). **Since 2026-07-09 (D-053) the panel is a
+> single Claude sub-agent (Sonnet)** — Gemini was retired when the grown system exceeded its
+> free-tier daily quota (20 req/day; sustained 503s); do not add/re-enable a reviewer without the
+> owner. The checklist below is the human-readable source of truth for that rubric; keep them in sync.
 >
 > **This is the SCRIPT pass of ONE unified review.** A pre-script **idea-pass** (`stage:"idea"`,
 > same panel/rubric) already decided the topic was worth making and recorded its **value_type +

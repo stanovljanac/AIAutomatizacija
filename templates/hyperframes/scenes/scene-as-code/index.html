@@ -1,0 +1,66 @@
+<!doctype html>
+<!--
+  scene-as-code — 012 s11 (blue+gold body). The signature recursion: SPLIT SCREEN — left, this
+  scene's own definition types itself; right, the rendered result assembles in lockstep. Tool
+  chips (Claude mark + modular alternatives) sit small below. Right half expands at the end.
+  Silent + deterministic; seek-driven; beats = sentences (3).
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ heading? }
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":570},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":19}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="scene-as-code.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="scene-as-code" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid-bg"></div></div>
+      <div class="stage">
+        <div class="split">
+          <div class="pane code" id="codepane">
+            <div class="pane-head"><span class="ph-dot"></span><span class="ph-dot"></span><span class="ph-title">s11 · scene-as-code.json</span></div>
+            <div class="codebody">
+              <div class="cline" id="cl1"><span class="k">"scene_id"</span>: <span class="v">"s11"</span>,</div>
+              <div class="cline" id="cl2"><span class="k">"title"</span>: <span class="v">"Every scene, written fresh"</span>,</div>
+              <div class="cline" id="cl3"><span class="k">"rule"</span>: <span class="v">"gold-sweep"</span>,</div>
+              <div class="cline" id="cl4"><span class="k">"chip"</span>: <span class="v">"NO TEMPLATE DECK"</span>,</div>
+              <div class="cline" id="cl5"><span class="k">"status"</span>: <span class="v2">"rendering…"</span></div>
+              <div class="caret" id="caret"></div>
+            </div>
+          </div>
+          <div class="pane render" id="renderpane">
+            <div class="pane-head gold"><span class="ph-dot"></span><span class="ph-dot"></span><span class="ph-title">render · live</span></div>
+            <div class="renderbody">
+              <div class="r-title" id="rt">Every scene, written fresh</div>
+              <div class="r-rule" id="rr"></div>
+              <div class="r-chip" id="rc">NO TEMPLATE DECK</div>
+              <div class="r-progress" id="rp"><span class="rp-fill" id="rpfill"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="toolrow" id="toolrow">
+          <span class="tool main"><img src="logos/claude.svg" alt="" /> Claude Code</span>
+          <span class="tool sep">or any capable agent</span>
+          <span class="tool"><img src="logos/n8n.svg" alt="" /> n8n</span>
+          <span class="tool"><img src="logos/make.svg" alt="" /> Make</span>
+        </div>
+      </div>
+    </div>
+    <script src="scene-as-code.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["scene-as-code"] = tl;
+    </script>
+  </body>
+</html>

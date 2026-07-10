@@ -153,7 +153,11 @@ Everything else is automated, including drafting to YouTube.
 ### C1. Multi-model self-review loop (the core)
 - **Author:** this agent drafts `script.json`, then `scene-plan.json` + "video-prep" (props).
 - **Two independent reviewers = two different external models** (e.g. Gemini + one other —
-  NOT the author model, and not the same as each other), each scoring against a rubric
+  NOT the author model, and not the same as each other), each scoring against a rubric.
+  **Amended 2026-07-09 (D-053):** Gemini retired — the grown system exceeded its free-tier
+  daily quota (20 req/day; sustained 503s during 012). The panel now runs a **single Claude
+  sub-agent reviewer** and still gates; a second reviewer returns only by owner decision
+  (groq/llama entry exists, disabled and untested)
   (original angle, accuracy vs `claims.json`, retention/structure, our hard rules: no-empty
   scene, captions ≤2 lines, Short 45–120s, on-screen sources, b-roll-fit, etc.). Each returns
   a **1–10 score + concrete fixes**.

@@ -1,0 +1,39 @@
+/* pipeline-recap — blue+gold body; serpentine diagram + territory FIELDS.
+   Sizes scale by --u. Content above the bottom 19.5% caption band. */
+:root {
+  --bg: #0B0F14; --text: #F2F5F8; --text2: #9AA7B2;
+  --blue: #4F8CFF; --blue-2: #8fb6ff; --gold: #FFB020; --gold-2: #ffd37a; --green: #22D3A7; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse 92% 82% at 50% 42%, #10161f 0%, #0B0F14 76%); overflow: hidden; font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid-bg { position: absolute; inset: 0; opacity: 0.05; background-image: repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))), repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #23324a calc(89px * var(--u)), #23324a calc(90px * var(--u))); }
+
+.stage { position: absolute; inset: 0 0 19.5% 0; z-index: 2; }
+
+.field { position: absolute; border-radius: calc(30px * var(--u)); opacity: 0; will-change: opacity, transform; }
+.field.draft { background: radial-gradient(ellipse at center, rgba(79,140,255,0.16) 0%, rgba(79,140,255,0.05) 70%, transparent 100%); border: calc(1.5px * var(--u)) solid rgba(79,140,255,0.25); }
+.field.check { background: radial-gradient(ellipse at center, rgba(34,211,167,0.14) 0%, rgba(34,211,167,0.04) 70%, transparent 100%); border: calc(1.5px * var(--u)) solid rgba(34,211,167,0.25); }
+.field.gate { background: radial-gradient(ellipse at center, rgba(255,176,32,0.16) 0%, rgba(255,176,32,0.05) 70%, transparent 100%); border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.3); }
+.f-label { position: absolute; left: 50%; top: calc(-24px * var(--u)); transform: translateX(-50%); font-weight: 900; font-size: calc(34px * var(--u)); letter-spacing: calc(8px * var(--u)); opacity: 0.85; }
+.field.draft .f-label { color: var(--blue-2); }
+.field.check .f-label { color: var(--green); }
+.field.gate .f-label { color: var(--gold-2); }
+
+.node { position: absolute; width: calc(180px * var(--u)); padding: calc(14px * var(--u)) calc(10px * var(--u)); border-radius: calc(16px * var(--u)); background: linear-gradient(180deg, #1a2432 0%, #141c28 100%); border: calc(2.5px * var(--u)) solid rgba(143,182,255,0.5); box-shadow: 0 calc(12px * var(--u)) calc(28px * var(--u)) rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; gap: calc(6px * var(--u)); opacity: 0; will-change: transform, opacity, border-color, box-shadow; }
+.node .n-ico { font-size: calc(38px * var(--u)); line-height: 1; color: var(--blue-2); }
+.node .n-label { font-weight: 900; font-size: calc(21px * var(--u)); letter-spacing: calc(1px * var(--u)); color: var(--text); }
+.node.chk { border-color: rgba(34,211,167,0.55); }
+.node.chk .n-ico { color: var(--green); }
+.node.gatenode { border-color: rgba(255,176,32,0.65); background: linear-gradient(180deg, #211d12 0%, #171207 100%); }
+.node.gatenode .n-ico { color: var(--gold-2); }
+.node.pub .n-ico { color: var(--gold); }
+
+.token { position: absolute; width: calc(34px * var(--u)); height: calc(34px * var(--u)); border-radius: 50%; background: radial-gradient(circle at 35% 35%, var(--gold-2), var(--gold)); box-shadow: 0 0 calc(30px * var(--u)) rgba(255,176,32,0.75); opacity: 0; will-change: transform, opacity; z-index: 5; }
+
+.tally { position: absolute; left: 50%; top: 44%; transform: translateX(-50%); display: flex; align-items: center; gap: calc(18px * var(--u)); padding: calc(12px * var(--u)) calc(30px * var(--u)); border-radius: calc(16px * var(--u)); background: rgba(10,14,20,0.85); border: calc(2px * var(--u)) solid rgba(143,182,255,0.35); font-weight: 900; font-size: calc(38px * var(--u)); letter-spacing: calc(2px * var(--u)); opacity: 0; will-change: opacity, transform; }
+.t-gold { color: var(--gold-2); } .t-green { color: var(--green); } .t-blue { color: var(--blue-2); } .t-dot { color: var(--text2); }
+
+.portrait .node { width: calc(150px * var(--u)); }
+.portrait .tally { font-size: calc(30px * var(--u)); }

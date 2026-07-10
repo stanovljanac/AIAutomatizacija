@@ -61,7 +61,7 @@
       "stages": ["script", "scene-plan", "cut"],
       "reviewers": [
         { "name": "claude-subagent", "provider": "claude_subagent", "model": "claude-sonnet-4-6", "enabled": true },
-        { "name": "gemini", "provider": "gemini", "model": "gemini-3.5-flash", "enabled": true },
+        { "name": "gemini", "provider": "gemini", "model": "gemini-3.5-flash", "enabled": false },
         { "name": "groq", "provider": "groq", "model": "meta-llama/llama-4-scout-17b-16e-instruct", "enabled": false }
       ],
       "weights": {
@@ -77,7 +77,7 @@
     "author": { "provider": "claude", "model": "claude-opus-4-8" },
     "providers": {
       "claude_subagent": { "kind": "subagent", "model": "claude-sonnet-4-6" },
-      "gemini": { "kind": "http", "model": "gemini-3.5-flash", "key_env": "GEMINI_API_KEY", "rpm": 10, "free_tier": true, "enabled": true },
+      "gemini": { "kind": "http", "model": "gemini-3.5-flash", "key_env": "GEMINI_API_KEY", "rpm": 10, "free_tier": true, "enabled": false },
       "groq": { "kind": "http", "model": "meta-llama/llama-4-scout-17b-16e-instruct", "key_env": "GROQ_API_KEY", "rpm": 30, "free_tier": true, "enabled": false }
     }
   },
