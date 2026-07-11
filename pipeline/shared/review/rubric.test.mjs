@@ -63,3 +63,28 @@ test("normalizeReviewResult(stage:idea) keeps idea keys and defaults a missing i
   assert.equal(r.category_scores.packaging, 0, "missing idea category defaults to 0");
   assert.ok(!("retention_structure" in r.category_scores), "no script keys leak into an idea result");
 });
+
+// ── PUBLISH STAGE rubric (metadata/SEO pass before the owner gate — plan v2 Phase 2) ─────────────
+
+test("publish stage: gates + categories are the SEO/claims set", () => {
+  assert.deepEqual(hardGates("publish"), ["accuracy", "no_overpromise", "disclosure_set"]);
+  assert.deepEqual(scoredCategories("publish"), ["title_ctr", "seo_keywords", "answer_first_description", "metadata_consistency"]);
+});
+
+test("buildReviewerPrompt(publish) names the publish gates and categories, not script ones", () => {
+  const p = buildReviewerPrompt({ stage: "publish", artifact: { title_options: ["T"], description: "D" } });
+  assert.match(p, /publish metadata package/);
+  assert.match(p, /no_overpromise/);
+  assert.match(p, /title_ctr/);
+  assert.doesNotMatch(p, /retention_structure/, "publish prompt must NOT use script categories");
+});
+
+test("normalizeReviewResult(stage:publish) defaults a missing publish gate to false", () => {
+  const r = normalizeReviewResult(
+    { score: 9, hard_gates: { accuracy: true, no_overpromise: true }, category_scores: { title_ctr: 9 } },
+    { reviewer: "g", model: "m", stage: "publish" }
+  );
+  assert.equal(r.hard_gates.disclosure_set, false, "omitted disclosure gate must be false");
+  assert.equal(r.category_scores.seo_keywords, 0, "missing publish category defaults to 0");
+  assert.ok(!("accuracy" in r.category_scores));
+});

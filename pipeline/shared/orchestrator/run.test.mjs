@@ -66,7 +66,7 @@ test("end-to-end on _FIXTURE runs to the owner gate and writes real artifacts", 
     for (const id of [
       "brief", "script", "review_script", "short_script", "plan_long", "plan_short",
       "voice_long", "align_long", "render_long", "voice_short", "align_short", "render_short",
-      "qa", "review_cut", "metadata", "upload",
+      "qa", "review_cut", "thumbnails", "metadata", "review_publish", "upload",
     ]) {
       assert.equal(r.manifest.nodes[id]?.status, "done", `${id} should be done`);
     }
@@ -109,7 +109,7 @@ test("agent phases (render/qa) defer to the top agent in Claude-Code mode → th
 
 // ── T5.1b: gate-aware notify (owner pinged only when truly needed) ───────────
 test("notifiesOwner: the 2 gates + review fails + upload ping the owner", () => {
-  for (const node of ["review_script", "review_cut", "upload", "gate_owner"]) {
+  for (const node of ["review_script", "review_cut", "review_publish", "upload", "gate_owner"]) {
     assert.equal(notifiesOwner({ node, kind: "gate" }), true, `${node} must ping the owner`);
   }
 });
@@ -248,6 +248,28 @@ test("[verifier] ctx.root and ctx.python are set by runVideo — direct executor
   const ctxBad = { id: "005-w", root: "/r", contentDir: "/c", config: {}, runner: badRunner, python: undefined };
   await assert.rejects(() => ex.voice_long(ctxBad), /voice\(long\) failed/,
     "voice_long with missing python and spawn error must throw");
+});
+
+test("thumbnails executor runs the 04b extractor CLI on the video id (mechanical step)", async () => {
+  const calls = [];
+  const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
+  const ex = defaultExecutors();
+  const ctx = { id: "005-x", root: "/repo", contentDir: "/repo/content/005-x", config: {}, runner, python: "py" };
+  await ex.thumbnails(ctx);
+  assert.equal(calls[0].cmd, "node");
+  assert.deepEqual(calls[0].args, ["pipeline/04b-thumbnails/extract.mjs", "005-x"]);
+  const bad = { runCommand: async () => ({ code: 1, stderr: "no timeline" }) };
+  await assert.rejects(() => ex.thumbnails({ ...ctx, runner: bad }), /thumbnails failed/);
+});
+
+test("review_publish reviews the metadata artifact at the publish stage (stage override resolved)", async () => {
+  // Mock reviewers are stage-aware: they pass the PUBLISH gates/categories, so a green run
+  // proves the resolved panelCfg scored publish categories (script weights would score 0 → pause).
+  const config = testConfig();
+  const ex = defaultExecutors();
+  const ctx = { id: "005-x", root: "/r", contentDir: "/r/c", config, runner: okRun };
+  const out = await ex.review_publish(ctx, { metadata: { id: "005-x", title_options: ["T"], description: "D", tags: [], status: "draft_pending" } });
+  assert.equal(out.proceed, true, `publish review must pass with stage-aware mocks (got ${JSON.stringify(out)})`);
 });
 
 test("[verifier] qa step passes ctx.id to runAgent (not a Short-specific id)", async () => {

@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "thumb_candidates.json",
+  "description": "Scoring record of the 3 thumbnail candidate stills extracted from the video's own timeline (04b-thumbnails). Persists score + fired criteria per candidate for future CTR correlation; at publish time the owner's pick is written back as chosen:true (without the pick, score↔CTR learning is impossible). Owner picks — no AI ranking beyond candidate selection.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["scene", "score", "reasons", "timestamp_s", "file", "chosen"],
+    "properties": {
+      "scene": { "type": "string", "description": "Timeline scene_id the still came from (e.g. s03.0)." },
+      "template": { "type": "string", "description": "The scene's template tag (provenance)." },
+      "score": { "type": "number", "minimum": 0, "description": "Deterministic thumbnailScore (sum of fired WEIGHTS criteria)." },
+      "reasons": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Exactly the criteria that fired (keys of score-scenes WEIGHTS)."
+      },
+      "timestamp_s": { "type": "number", "minimum": 0, "description": "Absolute video-second of the grabbed frame (settled: after the last enter-beat, before any exit)." },
+      "file": { "type": "string", "description": "Candidate still, relative to the content dir (images/thumb_candidate_N.png, 1280x720, caption-free)." },
+      "final": { "type": "string", "description": "Final-ready composited PNG (images/thumb_final_N.png) for YouTube Studio Test & Compare." },
+      "source": {
+        "type": "string",
+        "enum": ["hf-clip", "final-mp4"],
+        "description": "Where the frame was grabbed: the scene's silent HyperFrames clip (caption-free by construction) or the final mp4 at a caption gap (fallback)."
+      },
+      "chosen": { "type": "boolean", "description": "Set true on the owner's pick at publish time (build-metadata --choose-thumb)." }
+    }
+  }
+}

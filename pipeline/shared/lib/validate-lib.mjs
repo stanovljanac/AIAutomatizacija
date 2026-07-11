@@ -29,6 +29,7 @@ export const FILENAME_TO_SCHEMA = {
   "distribution.json": "distribution.schema.json",
   "config.json": "config.schema.json",
   "config.example.json": "config.schema.json",
+  "thumb_candidates.json": "thumb-candidates.schema.json",
 };
 
 let _ajv = null;

@@ -115,20 +115,23 @@ On approval → `status: "script_approved"`.
 
 ## Step 4 — Render  → `pipeline/04-render`
 
-**Goal:** assemble the final mp4 + a Short + 2 thumbnails.
+**Goal:** assemble the final mp4 + a Short + 3 thumbnail candidates.
 
 1. Use `.claude/skills/video-render/SKILL.md`. Build `render/props.json` from
    `script.json` + `alignment.json` + `scene-plan.json` + asset paths.
 2. Scenes are placed in time from `alignment.json` (scene i = first sentence start →
    last sentence end). Captures play inside `capture-segment` scenes with auto-zoom/
    highlight. Subtitles use the same timings (burned-in, animated, English).
-3. Add the reusable **intro/outro** (no music on long-form). Generate **2 thumbnail
-   variants**. Render via the selected `render.engine` (Remotion / hyperframes / combo).
+3. Add the reusable **intro/outro** (no music on long-form). Render via the selected
+   `render.engine` (Remotion / hyperframes / combo).
 4. Build the **Short** (1–2 key beats; light music allowed).
-5. Set `status: "rendered"`.
+5. **Thumbnail candidates (04b, D-056):** `node pipeline/04b-thumbnails/extract.mjs <id>`
+   grabs 3 **caption-free** stills from the video's own timeline (scored deterministically;
+   you pick — no AI ranking). Fallback: 2 image prompts (`visual-prompts` skill).
+6. Set `status: "rendered"`.
 
-**Output:** `video/final.mp4`, `video/short.mp4`, `video/thumb_a.png`, `thumb_b.png`,
-`render/props.json` (media git-ignored).
+**Output:** `video/final.mp4`, `video/short.mp4`, `images/thumb_candidate_{1..3}.png` +
+`thumb_final_{1..3}.png` + `thumb_candidates.json`, `render/props.json` (media git-ignored).
 
 ---
 
@@ -160,10 +163,13 @@ You watch `video/final.mp4` (with the digest). Last gate. Approve → `status: "
 **Goal:** prepare everything and upload as a draft for your final click.
 
 1. Use `.claude/skills/youtube-publish/SKILL.md`. Generate English SEO title,
-   description (keyword in first lines), tags, **chapters**, and pick the thumbnail
-   (your choice of the 2 variants).
-2. Upload via YouTube Data API as **private/draft** with all metadata + thumbnail, plus
-   the **Short**.
+   description (keyword in first lines), tags, **chapters** → `publish.json` +
+   **`publish.md`** (copy-paste export). The package passes the **publish review stage**
+   (single-Sonnet panel, D-057) before you see it. Pick the thumbnail from the **3
+   candidates** (Test & Compare takes all 3); record it with
+   `node pipeline/06-publish/build-metadata.mjs <id> --choose-thumb <#>`.
+2. **You upload manually (D-055 — API drafts suspended)**, copy-pasting from `publish.md`,
+   and set "Altered content = Yes" in Studio.
 3. You review title/description/tags and **click publish**.
 4. Set `status: "published"`. Append outcome to `content/<id>/log.md`,
    `docs/PROGRESS.md`, and the idea's `metrics` (for re-ranking the idea-bank).

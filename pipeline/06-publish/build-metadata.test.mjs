@@ -1,8 +1,15 @@
 // P1 — metadata is schema-valid; chapters start at 0:00 and track alignment; tags + <=3-sentence desc.
+// Plus the publish.md human export (fields match 1:1, JSON stays canonical) and the owner's
+// thumbnail-pick write-back (chosen:true — the seed of future CTR↔score learning).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildMetadata, buildChapters, buildDescription, buildTags, fmtTime } from "./build-metadata.mjs";
-import { readFixture, assertValid, validate } from "../shared/testkit/index.mjs";
+import fs from "node:fs";
+import path from "node:path";
+import {
+  buildMetadata, buildChapters, buildDescription, buildTags, fmtTime,
+  publishMarkdown, writeMarkdownExport, recordThumbnailChoice,
+} from "./build-metadata.mjs";
+import { readFixture, assertValid, validate, withTempDir } from "../shared/testkit/index.mjs";
 
 const brief = () => readFixture("brief.json");
 const script = () => readFixture("script.json");
@@ -121,4 +128,77 @@ test("[verifier] invalid publish.json is rejected by schema", () => {
   const { valid, errors } = validate(bad, "publish");
   assert.equal(valid, false);
   assert.ok(errors.some((e) => e.message.includes("status")));
+});
+
+// --- publish.md export (plan v2 Phase 2) ---
+
+const sampleCandidates = () => [
+  { scene: "s01.0", template: "hook-card", score: 95, reasons: ["hero_scene", "high_contrast"], timestamp_s: 9.5, file: "images/thumb_candidate_1.png", final: "images/thumb_final_1.png", source: "hf-clip", chosen: false },
+  { scene: "s05.0", template: "stat-callout", score: 90, reasons: ["hero_scene", "dominant_focal"], timestamp_s: 63.7, file: "images/thumb_candidate_2.png", final: "images/thumb_final_2.png", source: "hf-clip", chosen: false },
+];
+
+test("publishMarkdown: every publish.json field appears 1:1 (titles, description, tags, chapters, short)", () => {
+  const pub = buildMetadata({ brief: readFixture("brief.json"), script: readFixture("script.json"), alignment: readFixture("alignment.json") });
+  const md = publishMarkdown(pub);
+  assert.ok(md.startsWith(`# ${pub.id} — publish pack`));
+  for (const t of pub.title_options) assert.ok(md.includes(t), `title option "${t}" missing`);
+  assert.ok(md.includes(pub.description), "description missing");
+  assert.ok(md.includes(pub.tags.join(", ")), "tags line missing");
+  for (const c of pub.chapters) assert.ok(md.includes(`${c.time} ${c.label}`), `chapter ${c.time} missing`);
+  assert.ok(md.includes(pub.short.title), "short title missing");
+  assert.ok(md.includes("Altered/synthetic content: **Yes**"), "D-025 disclosure reminder missing");
+});
+
+test("publishMarkdown: thumbnail candidate table appears when candidates exist, with the pick command", () => {
+  const pub = buildMetadata({ brief: readFixture("brief.json"), script: readFixture("script.json"), alignment: readFixture("alignment.json") });
+  const md = publishMarkdown(pub, { candidates: sampleCandidates() });
+  assert.ok(md.includes("## Thumbnail candidates"));
+  assert.ok(md.includes("images/thumb_final_1.png"));
+  assert.ok(md.includes("hero_scene, high_contrast"), "score reasons surfaced to the owner");
+  assert.ok(md.includes("--choose-thumb"), "pick-recording command included");
+  assert.ok(!publishMarkdown(pub).includes("## Thumbnail candidates"), "no table without candidates");
+});
+
+test("writeMarkdownExport: writes publish.md next to publish.json, picks up thumb_candidates.json", async () => {
+  await withTempDir(async (tmp) => {
+    const pub = buildMetadata({ brief: readFixture("brief.json"), script: readFixture("script.json"), alignment: readFixture("alignment.json") });
+    fs.writeFileSync(path.join(tmp, "publish.json"), JSON.stringify(pub));
+    fs.writeFileSync(path.join(tmp, "thumb_candidates.json"), JSON.stringify(sampleCandidates()));
+    const out = writeMarkdownExport(tmp);
+    assert.equal(path.basename(out), "publish.md");
+    const md = fs.readFileSync(out, "utf8");
+    assert.ok(md.includes(pub.description), "reads publish.json from disk");
+    assert.ok(md.includes("## Thumbnail candidates"), "candidates auto-discovered");
+    // publish.json untouched by the md export
+    assert.deepEqual(JSON.parse(fs.readFileSync(path.join(tmp, "publish.json"), "utf8")), pub);
+  });
+});
+
+test("recordThumbnailChoice: exactly one chosen:true (by index or file), schema-valid, md refreshed", async () => {
+  await withTempDir(async (tmp) => {
+    const pub = buildMetadata({ brief: readFixture("brief.json"), script: readFixture("script.json"), alignment: readFixture("alignment.json") });
+    fs.writeFileSync(path.join(tmp, "publish.json"), JSON.stringify(pub));
+    fs.writeFileSync(path.join(tmp, "thumb_candidates.json"), JSON.stringify(sampleCandidates()));
+    fs.mkdirSync(path.join(tmp, "images"), { recursive: true });
+    for (const c of sampleCandidates()) fs.writeFileSync(path.join(tmp, c.final), `png-${c.scene}`);
+
+    const picked = recordThumbnailChoice(tmp, "2");
+    assert.equal(picked.scene, "s05.0");
+    assert.equal(
+      fs.readFileSync(path.join(tmp, "images", "thumb_final.png"), "utf8"),
+      "png-s05.0",
+      "chosen final copied to the canonical images/thumb_final.png (medium.cover reference)"
+    );
+    let onDisk = JSON.parse(fs.readFileSync(path.join(tmp, "thumb_candidates.json"), "utf8"));
+    assertValid(onDisk, "thumb_candidates.json");
+    assert.deepEqual(onDisk.map((c) => c.chosen), [false, true]);
+    assert.ok(fs.readFileSync(path.join(tmp, "publish.md"), "utf8").includes("✔"), "pick visible in publish.md");
+
+    // re-picking by file flips the flags — still exactly one true
+    recordThumbnailChoice(tmp, "images/thumb_candidate_1.png");
+    onDisk = JSON.parse(fs.readFileSync(path.join(tmp, "thumb_candidates.json"), "utf8"));
+    assert.deepEqual(onDisk.map((c) => c.chosen), [true, false]);
+
+    assert.throws(() => recordThumbnailChoice(tmp, "9"), /no thumbnail candidate matches/);
+  });
 });

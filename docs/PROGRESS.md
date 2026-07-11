@@ -19,6 +19,28 @@ Format:
 
 ---
 
+## 2026-07-11 — Thumbnail intelligence (04b) + publish.md + publish review stage (plan v2, Phases 1+2)
+- who: agent (owner-approved plan `serialized-plotting-sundae.md`)
+- did: Built plan v2's "build now" scope. **(1) `pipeline/04b-thumbnails/`** — `score-scenes.mjs`
+  (deterministic thumbnail score from scene metadata; ONE exported `WEIGHTS` object, `reasons` =
+  fired criteria; icon walls lose, bare title cards + CTA/outro scenes excluded) + `extract.mjs`
+  (settled-frame selection from the timeline's own reveals; HF clips grabbed caption-free by
+  construction, Remotion scenes only at caption gaps in final.mp4; 3 candidates + final-ready
+  composites + schema-valid `thumb_candidates.json`). **(2) Publish side** — `publish.md` human
+  export (fields 1:1 with publish.json, which stays canonical; `--md-only` / `--choose-thumb`
+  CLI; the pick writes `chosen:true` + the canonical `images/thumb_final.png`) and a **publish
+  review stage** on the single-Sonnet panel (SEO/claims rubric; `stage_overrides.publish`;
+  orchestrator `review_publish` node; `reviewStage` now resolves stage overrides). Wired
+  `thumbnails` + `review_publish` into the DAG. **Verified on 012:** 3 clean 1280×720
+  caption-free stills (hook freeze / NOT-TRUSTED verdict / gray-pile 60-a-month), `publish.md`
+  generated with publish.json untouched, live Sonnet publish review scored 7.4 (pause band) with
+  real fixes (incl. the stale `medium.cover` path — fixed via the canonical-copy on pick).
+  Decisions D-056/D-057. npm test green.
+- next: owner eyeballs 012's 3 candidates and picks (`--choose-thumb <#>`); consider the
+  reviewer's description nit (the "80¢-a-video, 60-a-month" unit ambiguity) before upload.
+  Phase 3 (LinkedIn skill, research-first) in a later round; CTR→weights learning stays a
+  separate project.
+
 ## 2026-07-10 — 012 Gate ③ passed with fixes; 012 locked as the minimum visual benchmark; publish pack (manual upload)
 - who: agent (owner directed)
 - did: Owner reviewed 012 and set it as the **minimum benchmark for visuals/animations/transitions**

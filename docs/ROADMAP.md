@@ -276,11 +276,22 @@ The detailed per-wave build handoffs and verifier-verdict log were removed once 
 - **T5.3 — live Postiz distribution (D-027).** Inject the live Postiz HTTP client into `PostizDistributor`,
   flip `config.distribute.enabled`, write `distribution.json` + cross-post the Short caption after upload.
   Owner one-time: `POSTIZ_BASE_URL` / `POSTIZ_API_KEY`.
-- **T5.4 — thumbnail auto-scoring** (legibility / contrast / brand) to inform the owner's 2-variant pick.
+- ~~**T5.4 — thumbnail auto-scoring**~~ **DONE 2026-07-11 (D-056).** Shipped as `pipeline/04b-thumbnails/`:
+  deterministic `WEIGHTS` scorer over scene metadata + 3 caption-free candidate stills from the video's own
+  timeline; the owner picks (recorded `chosen:true`); prompts flow is the fallback. Publish metadata now also
+  passes the panel's `publish` stage and exports `publish.md` (D-057).
 - **Official-source RSS endpoints.** Some changelogs (anthropic/openai/google/microsoft/meta) currently
   point at HTML pages → `fetch-news.mjs` fails soft to 0 items; wire verified RSS endpoints when found.
 - **Re-register the weekly autonomous run.** The CronCreate routine is session-local and auto-expires after
   7 days — re-register it each week (or keep a session alive / use `/loop`).
+- **LinkedIn skill (plan v2 Phase 3, research-first).** Research LinkedIn writing style, then
+  `.claude/skills/linkedin-post/SKILL.md` + a `linkedin_post` kind in `distribution.schema.json`
+  (the `pipeline/07-distribute` seam already accommodates it); built around an extracted **essence
+  block** (core lesson / hook / framework / quote) so future formats derive from the same source.
+- **CTR→weights learning + analytics→KOS lessons (separate project — plan v2 "future roadmap").**
+  Owner logs Studio Test & Compare winners (`--choose-thumb` records the pick); when data accumulates,
+  tune `score-scenes.mjs` WEIGHTS from pick/CTR history and emit draft KOS lessons for clear
+  over/under-performers. No AI thumbnail reviewer until then (owner decision, D-056).
 
 ## What we deliberately deferred
 

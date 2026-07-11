@@ -2,6 +2,7 @@
 // Each reviewer returns a result shaped like a review.schema `reviewers[]` item.
 // Live adapters (claude-subagent, gemini, groq) are wired in Wave 2 (R2/R3); the
 // interface + a MockReviewer live here so the panel math is testable now.
+import { hardGates, scoredCategories } from "./rubric.mjs";
 
 /** @typedef {{reviewer:string,model:string,score:number,hard_gates:object,category_scores:object,fixes:Array,summary?:string}} ReviewResult */
 
@@ -18,24 +19,20 @@ export class Reviewer {
   }
 }
 
-/** Tests: returns a canned result (or one computed by `responder`). */
+/** Tests: returns a canned result (or one computed by `responder`). Stage-aware: the default
+ *  responder passes the REVIEWED stage's gates/categories (script, idea, publish, …) at 9s,
+ *  so DAG tests exercise every review stage without a per-stage fake. */
 export class MockReviewer extends Reviewer {
   constructor(spec = {}) {
     super(spec);
     this.responder =
       spec.responder ||
-      (() => ({
+      (({ stage } = {}) => ({
         reviewer: this.name,
         model: this.model,
         score: 9,
-        hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true },
-        category_scores: {
-          retention_structure: 9,
-          originality_depth: 9,
-          hard_rule_craft: 9,
-          style_tone: 9,
-          readaloud_clarity: 9,
-        },
+        hard_gates: Object.fromEntries(hardGates(stage).map((g) => [g, true])),
+        category_scores: Object.fromEntries(scoredCategories(stage).map((c) => [c, 9])),
         fixes: [],
       }));
   }

@@ -58,7 +58,7 @@
       "score_threshold": 9,
       "auto_pass_threshold": 9.2,
       "max_iterations": 3,
-      "stages": ["script", "scene-plan", "cut"],
+      "stages": ["script", "scene-plan", "cut", "publish"],
       "reviewers": [
         { "name": "claude-subagent", "provider": "claude_subagent", "model": "claude-sonnet-4-6", "enabled": true },
         { "name": "gemini", "provider": "gemini", "model": "gemini-3.5-flash", "enabled": false },
@@ -70,6 +70,17 @@
         "hard_rule_craft": 0.20,
         "style_tone": 0.15,
         "readaloud_clarity": 0.15
+      },
+      "stage_overrides": {
+        "publish": {
+          "required_gates": ["accuracy", "no_overpromise", "disclosure_set"],
+          "weights": {
+            "title_ctr": 0.35,
+            "seo_keywords": 0.25,
+            "answer_first_description": 0.20,
+            "metadata_consistency": 0.20
+          }
+        }
       }
     }
   },

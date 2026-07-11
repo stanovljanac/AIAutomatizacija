@@ -1,14 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "review.json",
-  "description": "Result of one multi-model review pass over a single stage (idea | script | scene-plan | cut). Holds each reviewer's independent score + the merged verdict that drives the loop and the gate bands. The 'idea' stage is the pre-script content-value pass; the others judge how the work is made.",
+  "description": "Result of one multi-model review pass over a single stage (idea | script | scene-plan | cut | publish). Holds each reviewer's independent score + the merged verdict that drives the loop and the gate bands. The 'idea' stage is the pre-script content-value pass; 'publish' reviews the metadata package (SEO/claims) before the owner sees it; the others judge how the work is made.",
   "type": "object",
   "required": ["stage", "iteration", "reviewers", "verdict", "created"],
   "properties": {
     "stage": {
       "type": "string",
-      "enum": ["idea", "script", "scene-plan", "cut"],
-      "description": "Which artifact this review covers ('idea' = the topic, pre-script)."
+      "enum": ["idea", "script", "scene-plan", "cut", "publish"],
+      "description": "Which artifact this review covers ('idea' = the topic, pre-script; 'publish' = the metadata package)."
     },
     "target": { "type": "string", "description": "Path or id of the reviewed artifact." },
     "iteration": { "type": "integer", "minimum": 0, "description": "Loop iteration (0-based)." },
@@ -102,6 +102,21 @@
               "properties": {
                 "hard_gates": { "required": ["value_type_present", "takeaway_present", "on_brand"] },
                 "category_scores": { "required": ["audience_value", "reusable_takeaway", "packaging", "audience_fit"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "required": ["stage"], "properties": { "stage": { "const": "publish" } } },
+      "then": {
+        "properties": {
+          "reviewers": {
+            "items": {
+              "properties": {
+                "hard_gates": { "required": ["accuracy", "no_overpromise", "disclosure_set"] },
+                "category_scores": { "required": ["title_ctr", "seo_keywords", "answer_first_description", "metadata_consistency"] }
               }
             }
           }

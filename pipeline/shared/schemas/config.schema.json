@@ -44,7 +44,7 @@
             "score_threshold": { "type": "number", "minimum": 0, "maximum": 10, "description": "Both reviewers must reach this to pass the loop (9)." },
             "auto_pass_threshold": { "type": "number", "minimum": 0, "maximum": 10, "description": "Both must reach this (+ hard gates) to skip the human script gate (9.2)." },
             "max_iterations": { "type": "integer", "minimum": 1 },
-            "stages": { "type": "array", "items": { "type": "string", "enum": ["idea", "script", "scene-plan", "cut"] } },
+            "stages": { "type": "array", "items": { "type": "string", "enum": ["idea", "script", "scene-plan", "cut", "publish"] } },
             "reviewers": {
               "type": "array",
               "minItems": 2,

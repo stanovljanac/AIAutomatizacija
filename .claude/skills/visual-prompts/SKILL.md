@@ -1,6 +1,6 @@
 ---
 name: visual-prompts
-description: Use to produce the thumbnail spec (2 variants) and the rare optional concept-image prompt — most visuals are code-driven templates/diagrams, so this skill is narrow. Triggers on "thumbnail", "image prompt", "generate visuals", or Step 3.2 of the workflow. Does NOT design scenes (that's the scene-plan in storyboard); AI images are opt-in only.
+description: Use for the thumbnail step — candidates-first (3 stills extracted from the video's own timeline by pipeline/04b-thumbnails; the owner picks), with 2 image prompts as the FALLBACK when no scene scores well — plus the rare optional concept-image prompt. Triggers on "thumbnail", "image prompt", "generate visuals", or Step 3.2 of the workflow. Does NOT design scenes (that's the scene-plan in storyboard); AI images are opt-in only.
 ---
 
 # Skill: Visual prompts (thumbnails + rare concept images)
@@ -8,16 +8,25 @@ description: Use to produce the thumbnail spec (2 variants) and the rare optiona
 Most visuals are **code-driven** (fixed templates + code-drawn diagrams), so this skill
 is small. It handles two things only:
 
-## 1. Thumbnail = always 2 PROMPTS for the owner (HARD — owner rule 2026-06-07)
-- **NEVER auto-generate the thumbnail yourself** (neither the old code-drawn `Thumbnail`
-  composition nor any agent-made image — they were poor). **Always write exactly 2 image
-  prompts** the owner runs in a **free** tool (Bing Image Creator / Google ImageFX /
-  Ideogram; Colab SDXL/Flux fallback) → into `visual-prompts.json`. The prompt makes the
-  dramatic BACKGROUND and leaves clean space; do **not** bake words into the image.
-- After the owner drops their chosen image in `images/`, the agent **only composites**
-  what the owner asks (e.g. the tool logos from `assets/brand/`) via the Remotion
-  `ThumbComposite` still — **no title unless the owner asks**. Render to a final PNG; the
-  owner uploads it. (The legacy code-drawn `Thumbnail` composition is retired for production.)
+## 1. Thumbnail = CANDIDATES FIRST, owner picks (2026-07-11); prompts are the FALLBACK
+- **Primary flow (04b):** after the long render, `node pipeline/04b-thumbnails/extract.mjs <id>`
+  extracts **3 caption-free candidate stills** from the video's own timeline — scored
+  deterministically from scene metadata (`score-scenes.mjs` `WEIGHTS`: one large focal object,
+  high contrast, minimal text; icon walls and bare title cards lose). Outputs
+  `images/thumb_candidate_{1..3}.png`, final-ready `thumb_final_{1..3}.png`, and
+  `thumb_candidates.json` (score + reasons — kept for future CTR learning).
+- **The OWNER picks — no AI thumbnail reviewer/ranking** (owner decision 2026-07-11; revisit
+  only with real CTR data). Hand all 3 finals to YouTube Studio's native **Test & Compare**
+  when in doubt; record the pick with
+  `node pipeline/06-publish/build-metadata.mjs <id> --choose-thumb <#>` (writes `chosen:true`
+  + the canonical `images/thumb_final.png`).
+- **Fallback (when no scene scores well or the owner rejects all 3): 2 image PROMPTS** the
+  owner runs in a **free** tool (Bing Image Creator / Google ImageFX / Ideogram; Colab
+  SDXL/Flux fallback) → into `visual-prompts.json`. The prompt makes the dramatic BACKGROUND
+  and leaves clean space; do **not** bake words into the image. Never auto-generate an image
+  yourself (owner rule 2026-06-07; the code-drawn `Thumbnail` composition stays retired).
+- Compositing: the agent **only composites** what the owner asks (e.g. tool logos from
+  `assets/brand/`) via the Remotion `ThumbComposite` still — **no title unless the owner asks**.
 
 ## 2. Rare concept image (optional, opt-in)
 - Only when code-visual + stock genuinely won't convey an idea. Prefer **free stock**

@@ -30,6 +30,25 @@ export const STAGE_RUBRICS = {
       `- readaloud_clarity: clean timing units, consistent terms, natural for an AI voice.`,
     ],
   },
+  // The PUBLISH pass reviews the metadata package (title options, description, tags, chapters,
+  // Short caption) BEFORE the owner sees it — operating principle 3 applies to publish copy too.
+  // One focused SEO/claims rubric on the existing panel; no new reviewer (D-053: single Sonnet).
+  publish: {
+    blurb: "publish metadata package (title options, description, tags, chapters, Short caption)",
+    categories: ["title_ctr", "seo_keywords", "answer_first_description", "metadata_consistency"],
+    gates: ["accuracy", "no_overpromise", "disclosure_set"],
+    gateLines: [
+      `- accuracy: every claim/number in the title, description and chapters matches the video's sourced facts; nothing invented.`,
+      `- no_overpromise: the title promises nothing the video does not deliver (honest packaging; no clickbait lie).`,
+      `- disclosure_set: altered_content is true — AI voice + visuals must be disclosed at upload, every time.`,
+    ],
+    categoryLines: [
+      `- title_ctr: would the best title option stop the scroll for our audience while staying honest? Specific + curiosity beats generic.`,
+      `- seo_keywords: keyword-first description, search-term coverage in tags, no keyword stuffing.`,
+      `- answer_first_description: the description answers the core question in its first sentence(s), <=3 sentences.`,
+      `- metadata_consistency: chapters chronological and matching the content; Short title/caption present and consistent; tags coherent with the topic.`,
+    ],
+  },
   // The IDEA pass scores the TOPIC before a script exists — "is this worth a video?" It is tuned so
   // broad/zeitgeist reach plays still score well (variety is a feature), but a topic with no real
   // value or no single reusable takeaway cannot pass.

@@ -1,6 +1,6 @@
 ---
 name: video-render
-description: Use to assemble the final video — building render props from script, alignment, scene-plan, and assets, placing scenes in time from the alignment timestamps, playing capture-segments with auto-zoom, adding burned-in animated English subtitles and the reusable intro/outro, rendering the mp4 + a Short + 2 thumbnails via the configured engine (Remotion / HyperFrames / combo). Triggers on "render", "build the video", or Step 4 of the workflow.
+description: Use to assemble the final video — building render props from script, alignment, scene-plan, and assets, placing scenes in time from the alignment timestamps, playing capture-segments with auto-zoom, adding burned-in animated English subtitles and the reusable intro/outro, rendering the mp4 + a Short + 3 thumbnail candidate stills via the configured engine (Remotion / HyperFrames / combo). Triggers on "render", "build the video", or Step 4 of the workflow.
 ---
 
 # Skill: Video render
@@ -51,9 +51,15 @@ You assemble the final video deterministically from `script.json` + `alignment.j
 ## Outputs
 - `video/final.mp4` (long), `short/video/final.mp4` (the nested Short — 1–2 key beats,
   **light music allowed**; length per **STYLE_GUIDE §7** — ~50–60s target, hard max 2:00,
-  `config.defaults.short_seconds` / `short_seconds_max`), `images/thumb_a.png` +
-  `thumb_b.png` (from `visual-prompts`).
+  `config.defaults.short_seconds` / `short_seconds_max`).
 - `render/props.json`. Set `brief.json.status: "rendered"`.
+- **Thumbnails (04b, after the long render):** `node pipeline/04b-thumbnails/extract.mjs <id>`
+  grabs **3 caption-free candidate stills** from the video's own timeline (HF scene clips are
+  caption-free by construction; Remotion scenes fall back to a caption-gap grab from final.mp4)
+  → `images/thumb_candidate_{1..3}.png` + `thumb_final_{1..3}.png` + `thumb_candidates.json`
+  (score + reasons per candidate). The **owner picks** — no AI ranking. The 2-image-prompt flow
+  (`visual-prompts`) is the **fallback** when no scene scores well. The orchestrator runs this
+  as the `thumbnails` node automatically.
 
 ## Engine notes (combo — V6 DONE)
 - In `combo` mode Remotion still owns the one continuous narration, the timeline/sync, captions, and

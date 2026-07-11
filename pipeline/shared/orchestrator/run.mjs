@@ -16,6 +16,7 @@ import { voiceArgs } from "../../02-voice/voice-dispatcher.mjs";
 import { buildMetadataFile } from "../../06-publish/build-metadata.mjs";
 import { reviewLoop } from "../review/loop.mjs";
 import { buildReviewers } from "../review/build.mjs";
+import { resolvePanelCfg } from "../review/panel.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
@@ -65,7 +66,8 @@ async function reviewStage(stage, artifact, { config, runner }) {
     target: stage,
     artifact,
     reviewers,
-    panelCfg: config.review.panel,
+    // resolve the stage's panel override (e.g. publish → SEO weights/gates); script/cut inherit global
+    panelCfg: resolvePanelCfg(config.review.panel, stage),
     maxIterations: config.review?.panel?.max_iterations,
   });
   if (out.deferred) {
@@ -111,7 +113,11 @@ export function defaultExecutors() {
     render_short: (ctx) => agentStep(ctx, "video-render", { target: `${ctx.id}/short` }, "render(short) via the video-render skill"),
     qa: (ctx) => agentStep(ctx, "qa-video", {}, "qa-video (agent) — run the qa-video skill"),
     review_cut: (ctx, results) => reviewStage("cut", { qa: results.qa, scriptId: ctx.id }, ctx),
+    // Mechanical: 3 caption-free thumbnail candidate stills from the video's own timeline (04b).
+    thumbnails: (ctx) => mechanical(ctx, "node", ["pipeline/04b-thumbnails/extract.mjs", ctx.id], "thumbnails"),
     metadata: ({ contentDir }) => buildMetadataFile(contentDir),
+    // Publish copy passes the review agent before the owner sees it (operating principle 3).
+    review_publish: (ctx, results) => reviewStage("publish", results.metadata, ctx),
     upload: () => pause("YouTube OAuth/token not configured — run auth.mjs once, then resume"),
     gate_owner: (_ctx, results) =>
       pause("Owner: review the private draft, set the thumbnail, click publish", {
@@ -140,8 +146,10 @@ export function videoNodes(ex) {
     // join
     node("qa", ["render_long", "render_short"]),
     node("review_cut", ["qa"]),
+    node("thumbnails", ["render_long"]), // candidates from the long cut's own timeline (04b)
     node("metadata", ["review_cut"]),
-    node("upload", ["metadata"]),
+    node("review_publish", ["metadata"]),
+    node("upload", ["review_publish", "thumbnails"]),
     node("gate_owner", ["upload"], { gate: true }),
   ];
 }
