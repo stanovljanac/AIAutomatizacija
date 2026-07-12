@@ -65,6 +65,24 @@ Every archetype: **hook in ≤ 10s** (the payoff/promise or a sharp question), n
 intro, end with **one subtle CTA (subscribe)** + a short branded outro. The original
 angle should surface early (in or right after the hook).
 
+**Open on the idea, not the anecdote (owner rule, 2026-07-12).** When the video carries a
+reframe, the **thesis/reversal is the hook** — lead with it so the curiosity gap opens on
+line one; the personal "my thing happened" is the *transition into* the story, not the
+opener. `"The most dangerous automation isn't the one that crashes… it's the one that keeps
+going. Mine crashed last month."` beats `"My thing crashed. Best thing it ever did."` (a
+predictable setup the viewer can finish for you). A bookend refrain is fine — transform the
+**question** by the end (e.g. "does it work?" → "will it tell me?"), don't just repeat the line.
+
+**Speak the viewer's language, not the engineer's (owner rule, 2026-07-12).** Say what the
+viewer *thinks*, not our internal names: "the wrong way vs the right way", "silent vs loud" —
+never "Pipeline A / Pipeline B", "the orchestrator", "the retry handler". The audience doesn't
+model our architecture; they model their own risk.
+
+**Symbol on screen, plain language in voice (owner rule, 2026-07-12).** Error codes and
+technical values belong **on screen, not in the narration** — the VO says "the model went
+down / it waited longer each time" while the frame shows `503` and the doubling bars. Viewers
+don't care about the code; the symbol does the specificity, the voice stays human.
+
 - **Ideas/Listicle (5–7m):** hook → quick framing → N items, each: idea → why it's
   worth money/time → tiny illustration → one-line takeaway → "scale it" close.
 - **Mini-demo (3–5m):** hook → the boring task stated → do the trivial example on
@@ -106,6 +124,10 @@ wall of narration as one scene.
 
 - **Titles:** English, clear benefit/curiosity, front-load the search keyword, avoid
   pure clickbait. ≤ ~60 chars where possible.
+- **Front the symbol, not the abstraction (owner rule, 2026-07-12).** When the video has a
+  concrete villain/symbol, name it in the title/thumbnail — people remember a symbol, not an
+  abstract principle. "Never Trust the Green Checkmark" beats "The Most Dangerous Automation
+  Isn't the One That Fails"; the green checkmark is the thing they'll recall and repeat.
 - **Descriptions:** first 1–2 lines carry the hook + main keyword; then a short
   paragraph; then chapters/timestamps and links. Natural keyword use, no stuffing.
 - **Thumbnail:** big readable phrase (≤ 3–4 words), high contrast, one focal idea;
@@ -123,6 +145,12 @@ wall of narration as one scene.
   (Exception: "Unsexy — that's the point." is the **kept series signature** of the
   `everyone-asks-ai` lane only — deliberate, owner-approved; don't use it outside that lane.)
 - Pretend authority: don't claim a concept is tested if it's just an idea (§2.3).
+- **Engineer jargon / spoken error codes (owner rule, 2026-07-12):** internal labels the
+  viewer doesn't share ("Pipeline A/B", "the orchestrator") and read-aloud codes/values
+  ("five-oh-three", "two, four, eight seconds"). Use viewer language; put the code on screen.
+- **Predictable hook setups:** a hook whose second beat the viewer can finish for you
+  ("My thing broke." → "…best thing that happened", everyone sees it coming). Open on the
+  reframe instead (§5).
 - Walls of text on screen; tiny unreadable screenshots.
 - Begging for engagement; multiple CTAs.
 - Any real client data; any claim a Comparison can't back from `sources.md`.

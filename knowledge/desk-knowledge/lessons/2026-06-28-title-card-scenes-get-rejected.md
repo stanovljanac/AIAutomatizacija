@@ -53,3 +53,4 @@ QA gate).
 - [Fill the stage; transitions must never reflow layout](2026-07-07-fill-the-stage-no-reflow-transitions.md)
 - [Reused scene components must be prop-driven — a matching default masks a hardcode](2026-07-07-reused-components-must-be-prop-driven.md)
 - [Frameworks drawn as three-icons-in-a-row get rejected — give concepts full-stage treatment](2026-07-09-no-flow-strip-framework-visuals.md)
+- [Content cards are never 3D-tilted — flat resting pose; 3D only as a transient reveal](2026-07-12-no-3d-tilt-on-content-cards.md)

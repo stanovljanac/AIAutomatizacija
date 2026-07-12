@@ -159,6 +159,19 @@ faster + **accelerate** `cubic-bezier(0.3,0,0.8,0.15)` (~200–250ms). List/pare
 40–120ms**. Standard ease `cubic-bezier(0.2,0,0,1)`. Honor `prefers-reduced-motion` with a fade-only
 fallback where feasible.
 
+**Card & panel angles (owner rule, 2026-07-12).** Content cards, panels, and terminals rest
+**flat and face-on** — never a persistent 3D tilt (`rotateX`/`rotateY` under perspective). On a
+phone the skewed card reads as a mistake and its raised corner climbs over neighboring text
+(the 013 s3 dutch-angle terminal that triggered this rule). 3D rotation is allowed only as a
+**transient reveal**, never a resting pose — two approved patterns:
+- **Flip-reveal:** the card Y-flips 180° to show its other face (013 demo-day card — approved).
+- **Stacked-deck reveal:** cards stacked with slight offsets; the top card slides/flicks away to
+  expose the one beneath (approved — use it for before/after and list beats).
+
+A subtle flat Z-rotation (≤3°, e.g. a stamp or sticker) is fine. Environmental planes (perspective
+grid floors, backdrop tunnels) are exempt — they are backdrop, not content. The §0 reserved-space
+rule still applies: a card's travel path must never cross existing on-screen text.
+
 ## 6. Visual variety — every scene is its own
 
 Signals of "same template" (banned): one card layout reused N× with only words swapped; one looping

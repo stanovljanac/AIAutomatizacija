@@ -19,6 +19,98 @@ Format:
 
 ---
 
+## 2026-07-12 (round 4) — 013 Short SEO/publish pack (owner: skip re-align)
+- who: agent (owner: "Preskoci re align i daj mi SEO/Publish pack za 013 short video")
+- did: Built the publish package on the QA-passed Short (`brief.status: qa_passed`) — re-align
+  skipped per owner (not needed: Shorts have no chapters, the only alignment consumer). Wrote
+  `publish.json` (3 title options led by **"Never Trust the Green Checkmark"**, ≤3-sentence
+  answer-first description with the `automation error handling` search term, 14 tags, Short
+  caption + `<LONG_URL>`→012 cross-link, community post w/ `<SHORT_URL>`, loud-stop pinned
+  comment, Medium title), `medium.md` (AI-citation format on the transcript), and `publish.md`
+  (Studio copy-paste, via `build-metadata.mjs --md-only`). **Publish-stage review panel** (single
+  Sonnet, D-053): iter 0 = 8.75 → 2 minor wording fixes (title 2 de-quoted; retry cadence hedged
+  as illustrative; "silent failure" keyword added) → **iter 1 = 9.0, all 3 hard gates pass**
+  (accuracy / no_overpromise / disclosure_set) → soft band, owner gate. Review saved to
+  `content/013-fail-loud/publish.review.json`. Per-video files are gitignored (by design).
+- next: **owner picks a title + uploads MANUALLY (D-055)**, sets Altered content = Yes. If title
+  option 2/3 is chosen, sync `short.title` + community post. Reminder: script was reworked after
+  render — a re-voice/re-align/re-render is still pending before the true final if VO must match.
+
+## 2026-07-12 — 013 verdict: story too small → idea-first doctrine + card-angle rule + script rework
+- who: human (verdict + endorsed a second-model review "95%") + agent (fixes, doctrine, rework)
+- did: **(1) Visual fix** — 013 s3 `incident-503` dutch-angle terminal (rotY −12°/rotX 3°) rejected:
+  card was skewed and climbing over the "503" headline. Removed ALL 3D tilt (cards now flat,
+  face-on, resting below the text), regenerated the render entry, verified with 3 extracted stills.
+  New canonical rule **MOTION_SPEC §5 "Card & panel angles"**: no persistent rotateX/rotateY on
+  content cards; 3D only as transient reveals — flip-reveal (approved) + **stacked-deck reveal**
+  (owner wants more); floors exempt. Lesson: `knowledge/.../2026-07-12-no-3d-tilt-on-content-cards.md`.
+  **(2) Idea-first doctrine** (the big one): a well-written script can't save a weak story — "my
+  pipeline retries and halts" is an implementation practice, not an idea. Added **`transformation`**
+  scored category (weight 0.20) to the idea-pass rubric + STRANGER TEST in the `takeaway_present`
+  gate (`rubric.mjs`, `review.schema.json`, `config.json`, tests — 564/564 green); added **Step 0.5
+  STORY TEST** (5 questions: transformation, symptom→philosophy, stranger, transferable framework,
+  conflict) to `script-writing`. Lesson: `2026-07-12-story-strength-scored-at-the-idea.md`.
+  **(3) 013 script reworked** (v1 backed up as `script.v1-failloud.json`): reframed from "fail loud"
+  feature-story to **"the dangerous automation isn't the one that fails — it's the one that keeps
+  going"** — new s2 `green-lie` (stacked-deck: ✓ on top, ✗ underneath, the viewer's OWN invoice
+  bot), s3 = Pipeline A vs B contrast (564-counter dropped), 503 demoted to the s4 receipt, s5 locks
+  "will it tell me?". Panel (Sonnet, 3 iterations): 8.0, ALL hard gates green ×3; loop cap →
+  owner gate. Review: `content/013-fail-loud/short/script.review.json`.
+- next: **owner reads the reworked script (Gate 2)**; on approval → re-voice → re-align → re-prop
+  scenes (new s2; silent-vs-loud without stat) → re-render → QA. Recommendation on the table:
+  insert one practical viewer-facing video before publishing 013 (no two studio-videos back to back).
+
+## 2026-07-12 (round 2) — owner endorses the reframe (80–90% fixed), gives 4 craft line-edits
+- who: human (line edits) + agent (applied + made them canon)
+- did: Owner approved the symptom→philosophy reframe and asked for 4 sharper moves, all applied to
+  013 + written into STYLE_GUIDE so they hold for every future script:
+  **(1) Thesis-first hook** — s1 now opens on the reversal ("The most dangerous automation isn't
+  the one that crashes. It's the one that keeps going.") THEN "Mine crashed last month" as the
+  transition; curiosity gap on line one, no predictable "my thing broke → best thing ever" setup
+  (STYLE_GUIDE §5). **(2) Viewer's language** — s3 drops "Pipeline A/B" for "silent vs loud / one
+  fails and keeps publishing" (§5 + §9 blacklist). **(3) Symbol on screen, plain voice** — s4 VO
+  says "the review model went down / waiting longer each time"; the 503 + doubling bars stay
+  on-screen only, never spoken as "five-oh-three" (§5 + §9). **(4) Symbol-forward title** —
+  "Never Trust the Green Checkmark" (the green check is the villain) replaces the abstract title;
+  `brief.title_options` carries 3 (§8). New auto-memory `hook-and-voice-craft`; KOS lesson extended.
+  Script + brief re-validate PASS.
+- next: **owner reads round-2 script (Gate 2)** → on approval, voice/align/prop/render/QA as above.
+
+## 2026-07-12 (round 3) — 013 Short rendered end to end (owner approved the script) → Gate 3
+- who: agent (owner: "Mnogo mnogo bolje. Nastavi i uradi render full shortsa")
+- did: Full Short pipeline on the round-2 script. **Voice** re-synth (edge-tts, 57.2s) + **alignment**
+  re-run — small.en whisper collapsed s3's dense middle (~15 words → one timestamp), re-ran with
+  **medium.en** (143/144 words) → clean sentence windows. **5 bespoke HF scenes** built/adapted:
+  **s1 hook-snap** restructured thesis-first (kinetic reversal up top → crash+shatter on 'Mine
+  crashed' → stamp); **s2 green-lie** (NEW scene) — invoice-bot stamps a green ✓ every morning,
+  ERROR swallowed, deck FANS AWAY to red ✗ underneath, day burns to 22 'still all green'; **s3
+  silent-vs-loud** — dropped the 564 counter + A/B, relabeled SILENT/LOUD, added RETRY chip + gold
+  'LOUD' punch; **s4 incident-503** — reused with the 2026-07-12 flat-terminal fix (no 3D tilt);
+  **s5 flip-question** — 'WILL IT TELL ME WHEN IT DOESN'T?' + monolith 'THE DANGEROUS ONE / KEEPS
+  GOING.' + 'follow for the next test'. Verified every scene via extracted stills, fixed s2 end-dim
+  (too dark → DAY 22 now legible). Assembled via Remotion combo (concurrency 1, timeout 120s after a
+  frame-734 OffthreadVideo stall) → **final.mp4 59.6s incl. intro/outro, 20.8 MB**. **QA: mechanical
+  10/10 + perceptual all-scenes pass**; digest in qa.report.json. brief.status=qa_passed. Tests 564/564.
+- next: **owner watches `content/013-fail-loud/short/video/final.mp4` (Gate 3, final)**. Two optional
+  tweaks flagged in the QA digest (s3 caption chunk; green-check monolith swap). On approval →
+  Azure final voice + re-align + re-render, then SEO/publish pack (manual upload).
+
+## 2026-07-11 — 013 "fail-loud" Short produced fully autonomously (idea → final render, zero owner input)
+- who: agent (owner directive: skip all gates except the final video; Short only, ≤58s)
+- did: Picked `automation-maintenance-story` (84) as 012's natural sequel; reframed as **fail loud >
+  fail silent** on our real 503 incident (D-053) — all claims own-system or sourced (`sources.md`),
+  research-first (retry/backoff/alerting best practice). Script 5 scenes/143 words → self-review →
+  edge-tts 54.78s → align → **5 NEW bespoke HF scenes**: `hook-snap` (glitch shatter, CSS-3D shards,
+  camera punch+shake+dolly, impact flash), `demo-day-lie` (3D camera SWING to the reverse face),
+  `incident-503` (dutch-angle terminal, **real Three.js warning beacon**, doubling retry bars,
+  smear-stop → gold HALT gate → notification), `silent-vs-loud` (contrast rails + 564 counter with
+  source chip), `flip-question` (3D Y-flip, FAIL LOUD > FAIL SILENT monolith ≥4s, brand row in
+  reserved space). Own frame-review caught + fixed 4 craft issues (dark shatter, D-054 notification
+  overlap, backface ghost text, rail spacing) before assembly. Final: **57.2s** 1080×1920@30,
+  QA 10/10 + digest. Files: `content/013-fail-loud/short/video/final.mp4`.
+- next: owner watches the Short (FINAL GATE) → verdict drives fixes + whether the long video happens.
+  SEO/publish pack after the verdict.
+
 ## 2026-07-11 — Thumbnail intelligence (04b) + publish.md + publish review stage (plan v2, Phases 1+2)
 - who: agent (owner-approved plan `serialized-plotting-sundae.md`)
 - did: Built plan v2's "build now" scope. **(1) `pipeline/04b-thumbnails/`** — `score-scenes.mjs`

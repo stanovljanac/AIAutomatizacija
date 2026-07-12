@@ -1,0 +1,110 @@
+/* hook-snap — black+gold hook hero. Portrait-first (1080x1920, --u=1); content
+   fills the 5–85% band; bottom ~19.5% stays clear for burned captions. */
+:root {
+  --bg: #070605; --text: #F2F5F8; --text2: #9AA7B2;
+  --gold: #FFB020; --gold-2: #ffd37a; --red: #ff5c5c; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 110% 70% at 50% 30%, #0f0a05 0%, #070605 75%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.aurora { position: absolute; width: 90%; height: 46%; left: 5%; top: -14%;
+  background: radial-gradient(ellipse at center, rgba(255,176,32,0.26) 0%, transparent 66%);
+  filter: blur(calc(34px * var(--u))); }
+/* impact flash — a bright gold burst the instant the card shatters */
+.flash { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
+  background: radial-gradient(ellipse 80% 55% at 50% 40%, rgba(255,220,140,0.85) 0%, rgba(255,176,32,0.35) 40%, transparent 72%); }
+/* perspective grid floor receding to the horizon — parallax depth for the dolly */
+.floor { position: absolute; left: -30%; right: -30%; bottom: 8%; height: 46%;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,176,32,0.17) 0, rgba(255,176,32,0.17) calc(2px * var(--u)), transparent calc(2px * var(--u)), transparent calc(56px * var(--u))),
+    repeating-linear-gradient(90deg, rgba(255,176,32,0.13) 0, rgba(255,176,32,0.13) calc(2px * var(--u)), transparent calc(2px * var(--u)), transparent calc(72px * var(--u)));
+  transform: perspective(calc(900px * var(--u))) rotateX(62deg);
+  transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.85), transparent 88%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.85), transparent 88%); }
+
+.camera { position: absolute; inset: 0; z-index: 2; will-change: transform; }
+.stage3d { position: absolute; inset: 0; perspective: calc(1500px * var(--u)); }
+
+/* stations: gold arches on the belt line (012 motif) — pushed to the mid-band so the
+   thesis-first kinetic type owns the top band (round-2 reframe). */
+.station { position: absolute; top: 41%; width: calc(150px * var(--u)); height: calc(210px * var(--u)); opacity: 0.9; }
+.station .arch { position: absolute; inset: 0; border: calc(4px * var(--u)) solid rgba(255,176,32,0.85);
+  border-bottom: none; border-radius: calc(78px * var(--u)) calc(78px * var(--u)) 0 0;
+  box-shadow: 0 0 calc(34px * var(--u)) rgba(255,176,32,0.3); }
+.st1 { left: 6%; } .st2 { left: 50%; margin-left: calc(-75px * var(--u)); } .st3 { right: 6%; }
+.beltline { position: absolute; top: calc(41% + 210px * var(--u)); left: 4%; right: 4%;
+  height: calc(4px * var(--u)); background: linear-gradient(90deg, transparent, rgba(255,176,32,0.6) 12%, rgba(255,176,32,0.6) 88%, transparent);
+  border-radius: calc(2px * var(--u)); }
+
+/* the pristine video card */
+.card { position: absolute; top: calc(41% + 34px * var(--u)); left: 50%;
+  width: calc(340px * var(--u)); height: calc(212px * var(--u)); margin-left: calc(-170px * var(--u));
+  border-radius: calc(16px * var(--u));
+  background: linear-gradient(155deg, #241b0d 0%, #171008 60%, #120d07 100%);
+  border: calc(2.5px * var(--u)) solid rgba(255,176,32,0.75);
+  box-shadow: 0 calc(22px * var(--u)) calc(60px * var(--u)) rgba(0,0,0,0.6), 0 0 calc(44px * var(--u)) rgba(255,176,32,0.22);
+  will-change: transform, opacity; }
+.c-bar { position: absolute; top: 9%; left: 7%; width: 42%; height: 9%;
+  border-radius: calc(6px * var(--u)); background: linear-gradient(90deg, var(--gold), var(--gold-2)); opacity: 0.95; }
+.c-strip { position: absolute; left: 7%; height: 8%; border-radius: calc(5px * var(--u)); background: rgba(255,211,122,0.34); }
+.c-strip.s-a { top: 30%; width: 74%; }
+.c-strip.s-b { top: 44%; width: 58%; }
+.c-wave { position: absolute; left: 7%; right: 7%; top: 62%; height: 22%;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,176,32,0.75) 0, rgba(255,176,32,0.75) calc(4px * var(--u)), transparent calc(4px * var(--u)), transparent calc(12px * var(--u)));
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
+  opacity: 0.8; }
+.c-glow { position: absolute; inset: calc(-14px * var(--u)); border-radius: calc(22px * var(--u));
+  box-shadow: inset 0 0 calc(40px * var(--u)) rgba(255,176,32,0.12); }
+
+/* glitch ghosts: pure color-shifted outlines of the card */
+.card.ghost { background: none; border-color: transparent; box-shadow: none; opacity: 0; pointer-events: none; }
+.card.gR { border: calc(2.5px * var(--u)) solid rgba(255,60,60,0.9); filter: drop-shadow(0 0 calc(10px * var(--u)) rgba(255,60,60,0.7)); }
+.card.gB { border: calc(2.5px * var(--u)) solid rgba(80,160,255,0.9); filter: drop-shadow(0 0 calc(10px * var(--u)) rgba(80,160,255,0.7)); }
+
+/* shards container — the js builds 12 clip-path pieces sharing the card's skin */
+.shards { position: absolute; top: calc(41% + 34px * var(--u)); left: 50%;
+  width: calc(340px * var(--u)); height: calc(212px * var(--u)); margin-left: calc(-170px * var(--u));
+  transform-style: preserve-3d; pointer-events: none; }
+.shard { position: absolute; inset: 0; border-radius: calc(16px * var(--u));
+  background: linear-gradient(155deg, #46351a 0%, #2b2010 55%, #1d1509 100%);
+  border: calc(2.5px * var(--u)) solid rgba(255,176,32,0.9);
+  box-shadow: 0 calc(10px * var(--u)) calc(26px * var(--u)) rgba(0,0,0,0.55), 0 0 calc(20px * var(--u)) rgba(255,176,32,0.3);
+  opacity: 0; will-change: transform, opacity; }
+
+.sparks { position: absolute; inset: 0; }
+.spark { position: absolute; width: calc(7px * var(--u)); height: calc(7px * var(--u)); border-radius: 50%;
+  background: var(--gold-2); box-shadow: 0 0 calc(14px * var(--u)) rgba(255,211,122,0.85); opacity: 0; }
+
+.redwash { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
+  background: radial-gradient(ellipse 120% 90% at 50% 40%, rgba(255,60,60,0.20) 0%, rgba(120,10,10,0.10) 55%, transparent 80%); }
+
+/* beat 3 — gold verdict stamp */
+.stamp { position: absolute; z-index: 4; left: 50%; top: 61%; transform: translateX(-50%) rotate(-7deg);
+  padding: calc(22px * var(--u)) calc(44px * var(--u)); border-radius: calc(16px * var(--u));
+  font-weight: 900; font-size: calc(78px * var(--u)); line-height: 1.06; text-align: center;
+  letter-spacing: calc(3px * var(--u)); color: var(--gold);
+  border: calc(6px * var(--u)) solid var(--gold); background: rgba(20,13,4,0.82);
+  text-shadow: 0 0 calc(38px * var(--u)) rgba(255,176,32,0.5);
+  box-shadow: 0 0 calc(60px * var(--u)) rgba(255,176,32,0.28), 0 calc(20px * var(--u)) calc(56px * var(--u)) rgba(0,0,0,0.6);
+  opacity: 0; will-change: transform, opacity; }
+
+/* beats 0–1 — thesis-first kinetic type, top band */
+.thesis { position: absolute; z-index: 4; left: 6%; right: 6%; top: 10%;
+  display: flex; flex-direction: column; align-items: center; gap: calc(14px * var(--u)); }
+.th1, .th2 { font-weight: 900; line-height: 1.06; text-align: center;
+  letter-spacing: calc(1px * var(--u)); text-shadow: 0 calc(6px * var(--u)) calc(30px * var(--u)) rgba(0,0,0,0.85);
+  opacity: 0; will-change: transform, opacity; }
+.th1 { font-size: calc(70px * var(--u)); color: var(--text2); }
+.th2 { font-size: calc(84px * var(--u)); color: var(--text); }
+.th2 .gold { color: var(--gold); }
+
+/* landscape tune-down (scene is portrait-first) */
+:not(.portrait) .th1 { font-size: calc(60px * var(--u)); }
+:not(.portrait) .th2 { font-size: calc(72px * var(--u)); }

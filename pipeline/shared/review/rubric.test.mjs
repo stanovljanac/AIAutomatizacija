@@ -39,7 +39,7 @@ test("extractJson pulls a JSON object out of fenced / prose replies", () => {
 
 test("scoredCategories/hardGates are stage-aware (idea vs script default)", () => {
   assert.deepEqual(hardGates("idea"), ["value_type_present", "takeaway_present", "on_brand"]);
-  assert.deepEqual(scoredCategories("idea"), ["audience_value", "reusable_takeaway", "packaging", "audience_fit"]);
+  assert.deepEqual(scoredCategories("idea"), ["audience_value", "reusable_takeaway", "transformation", "packaging", "audience_fit"]);
   // unknown / omitted stage falls back to the script set (back-compat)
   assert.deepEqual(hardGates(), HARD_GATES);
 });
@@ -49,6 +49,8 @@ test("buildReviewerPrompt(idea) names the idea gates, categories and contract", 
   assert.match(p, /video IDEA/);
   assert.match(p, /value_type_present/);
   assert.match(p, /reusable_takeaway/);
+  assert.match(p, /transformation/);
+  assert.match(p, /STRANGER TEST/);
   assert.match(p, /audience_fit/);
   assert.doesNotMatch(p, /retention_structure/, "idea prompt must NOT use script categories");
 });

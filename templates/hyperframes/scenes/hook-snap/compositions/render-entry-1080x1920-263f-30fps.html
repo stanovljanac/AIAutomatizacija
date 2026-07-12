@@ -1,0 +1,80 @@
+<!doctype html>
+<!--
+  hook-snap — 013 s1 HOOK HERO (black+gold). STRATEGIC PREMISE (round-2 reframe, thesis-first):
+  the curiosity gap opens on LINE ONE. The reversal is kinetic type up top — "THE DANGER ISN'T
+  THE CRASH" then the gold snap "IT'S THE ONE THAT KEEPS GOING" — while below it a pristine
+  012-style pipeline keeps gliding a video card (the machine that looks fine, "keeps going").
+  ONLY on "Mine crashed" does the frame GLITCH (RGB split, camera shake + punch-in) and the card
+  explode into 3D tumbling shards; the wreck freezes under a slammed gold stamp "BEST THING IT
+  EVER DID." then a slow dolly-in. Camera moves are real (one #camera rig); shards are CSS-3D.
+
+  Beats (revealsSeconds, scene-local): [0] "…isn't the one that crashes" → thesis line 1;
+  [1] "It's the one that keeps going." → gold reversal line; [2] "Mine crashed last month." →
+  glitch + shatter; [3] "Best thing it ever did." → gold stamp; tail → dolly-in.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ title? }
+  Silent + deterministic; one paused GSAP timeline; no Math.random/Date.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":245},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":8.17}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../gsap.min.js"></script>
+    <link rel="stylesheet" href="../hook-snap.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="hook-snap" data-start="0" data-duration="8.75" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore>
+        <div class="aurora"></div>
+        <div class="floor"></div>
+      </div>
+      <div class="camera" id="camera">
+        <div class="stage3d" id="stage3d">
+          <!-- gold stations (012 gate-arch callback) -->
+          <div class="station st1"><div class="arch"></div></div>
+          <div class="station st2"><div class="arch"></div></div>
+          <div class="station st3"><div class="arch"></div></div>
+          <div class="beltline" id="beltline"></div>
+          <!-- the pristine gliding video card -->
+          <div class="card" id="card">
+            <div class="c-bar"></div>
+            <div class="c-strip s-a"></div>
+            <div class="c-strip s-b"></div>
+            <div class="c-wave"></div>
+            <div class="c-glow"></div>
+          </div>
+          <!-- RGB-split glitch clones of the card (hidden until the crash) -->
+          <div class="card ghost gR" id="ghostR" data-layout-ignore></div>
+          <div class="card ghost gB" id="ghostB" data-layout-ignore></div>
+          <!-- 12 shards (clip-path pieces of the card) -->
+          <div class="shards" id="shards"></div>
+          <!-- ember sparks after the crash -->
+          <div class="sparks" id="sparks" data-layout-ignore></div>
+        </div>
+        <!-- impact flash + red emergency flicker wash -->
+        <div class="flash" id="flash" data-layout-ignore></div>
+        <div class="redwash" id="redwash" data-layout-ignore></div>
+        <!-- beats 0–1: thesis-first kinetic type (the reversal is the hook) -->
+        <div class="thesis" id="thesis">
+          <div class="th1" id="th1">THE DANGER ISN'T THE CRASH.</div>
+          <div class="th2" id="th2">IT'S THE ONE THAT <span class="gold">KEEPS GOING.</span></div>
+        </div>
+        <!-- beat 3: the gold verdict stamp -->
+        <div class="stamp" id="stamp">BEST THING<br />IT EVER DID</div>
+      </div>
+    </div>
+    <script src="../hook-snap.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["hook-snap"] = tl;
+    </script>
+  </body>
+</html>

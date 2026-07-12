@@ -31,6 +31,34 @@ feature the one we used, but **name alternatives/competitors on-screen** so any 
 with their own tool or a substitute. Tools sit to the side and are swappable; the lesson is the
 workflow. (Sourced tool/price/model facts still follow rule 9 — verified, not from memory.)
 
+## Step 0.5 — The STORY TEST (before the first sentence; 2026-07-12, the 013 lesson)
+A technically well-written script cannot save a weak story — grade the STORY first, and if it
+fails, **push back on the brief/angle instead of writing** (route it back to the idea-pass; the
+rubric's `transformation` category scores the same thing). The 013 draft passed every craft rule
+and still didn't justify a video: "my pipeline retries and halts" is an implementation practice,
+not an idea. Test the story on five questions:
+1. **Transformation.** Where does the viewer's head START and where does it END? If the hook line
+   and the closing line could swap places, nothing transformed — reject the framing. (013: opened
+   "fail loud", closed "fail loud". Inbox opened "everyone builds apps", closed "point it at the
+   inbox" — that transforms.)
+2. **Symptom → philosophy.** The incident/anecdote/feature is only the SYMPTOM. Find the belief
+   behind it and lead with that. (Not "a 503 crashed my run" but "the most dangerous automation
+   isn't the one that fails — it's the one that keeps going.")
+3. **Stranger test.** Why does someone who has never seen this channel and doesn't care about our
+   system keep watching? "My pipeline has retries/halt/notifications" is a feature showcase — a
+   stranger shrugs "…and?". The story must be about THEIR risk, THEIR workflow, THEIR belief.
+4. **Transferable framework.** The takeaway must apply beyond this video's subject — to the
+   viewer's invoices, email, agents, code ("Draft → Check → Gate" transfers; "retry on error"
+   doesn't). If the lesson only works in our studio, it's a scene inside a bigger video, not a
+   video.
+5. **Conflict / "wait, what?".** At least one beat must break expectation — a contrast (pipeline A
+   shrugs-and-ships vs pipeline B halts-and-tells), a refusal ("the AI could have continued — it
+   didn't"), a flipped question. If every beat goes exactly as expected, there is no video.
+
+When a story fails this test, the fix is usually to **climb one level up** (the philosophy above
+the incident) and to **build the contrast in** (show the bad world next to the good one), not to
+polish sentences.
+
 ## Inputs
 - `brief.json` — has `archetype`, `angle`, `task`, `tool`, `target_seconds`.
 - `sources.md` — facts (Comparisons/stats only; Ideas/Demo may have none).

@@ -1,0 +1,70 @@
+<!doctype html>
+<!--
+  green-lie — 013 s2 THE VILLAIN (round-2). STRATEGIC PREMISE: the dangerous automation is the
+  one that keeps going, so SHOW the lie in motion — a "daily report" app that stamps a fresh
+  green "✓ Sent" every morning while, one layer down, every report is a red ✗. Cards are FLAT
+  and face-on (no 3D tilt — MOTION_SPEC §5); the reveal is a STACKED-DECK slide: the green cards
+  fan away to expose the rotten stack beneath. This is the viewer's OWN invoice bot / weekly
+  report — no studio branding, plain-language, mobile-legible.
+
+  Beats: [0] "Your invoice bot, your weekly report." → establish the deck + app chrome
+         [1] "It hits an error and keeps going anyway." → ✓ cards slap on top, an ERROR blip is
+             swallowed, the day chip ticks MON→TUE→WED
+         [2] "A green checkmark every morning — garbage underneath." → the green deck fans away,
+             the red ✗ stack underneath brightens
+         [3] "You find out three weeks later. Or never." → the day counter burns +21, then dims
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
+  Silent + deterministic; one paused GSAP timeline; no Math.random/Date.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":340},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":11.33}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="green-lie.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="green-lie" data-start="0" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="haze"></div></div>
+      <div class="camera" id="camera">
+        <!-- app chrome: the "daily report" automation the viewer owns -->
+        <div class="appbar" id="appbar">
+          <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
+          <span class="app-title">invoice-bot · daily report</span>
+          <span class="daychip" id="daychip">MON</span>
+        </div>
+
+        <!-- the deck: rotten ✗ cards underneath, green ✓ cards slapped on top -->
+        <div class="deckwrap" id="deckwrap">
+          <div class="rotstack" id="rotstack">
+            <div class="rcard r4"><span class="rx">✗</span><span class="rlbl">wrong totals</span></div>
+            <div class="rcard r3"><span class="rx">✗</span><span class="rlbl">double-billed</span></div>
+            <div class="rcard r2"><span class="rx">✗</span><span class="rlbl">missing rows</span></div>
+            <div class="rcard r1"><span class="rx">✗</span><span class="rlbl">sent to the wrong client</span></div>
+          </div>
+          <div class="gcards" id="gcards"></div>
+          <div class="errblip" id="errblip">! ERROR</div>
+          <div class="underlabel" id="underlabel">every one, underneath</div>
+        </div>
+
+        <!-- the calendar that keeps ticking while nobody looks -->
+        <div class="datechip" id="datechip"><span class="d-num" id="dnum">DAY 1</span><span class="d-sub" id="dsub">all green</span></div>
+      </div>
+      <div class="redwash" id="redwash" data-layout-ignore></div>
+    </div>
+    <script src="green-lie.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["green-lie"] = tl;
+    </script>
+  </body>
+</html>

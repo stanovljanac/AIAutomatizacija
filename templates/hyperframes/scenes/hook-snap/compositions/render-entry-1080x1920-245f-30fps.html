@@ -1,0 +1,76 @@
+<!doctype html>
+<!--
+  hook-snap — 013 s1 HOOK HERO (black+gold). STRATEGIC PREMISE: the sales pitch is a machine
+  that never stops — so the single most disarming opener is watching that perfect gold machine
+  SHATTER mid-glide, and being told "good." A pristine 012-style pipeline glides a video card
+  between gold stations; on "crashed" the frame GLITCHES (RGB split, camera shake + punch-in)
+  and the card explodes into 3D tumbling shards; the wreck freezes under a slammed gold stamp
+  "BEST THING IT EVER DID."; then a slow dolly-in while the thesis line lands. Camera moves are
+  real (one #camera rig: punch, shake, dolly); shards are CSS-3D under perspective.
+
+  Beats (revealsSeconds, scene-local): [0] crash sentence → glide+glitch ~1.5s in;
+  [1] "Best thing it has ever done." → freeze + stamp; [2] thesis → dolly-in.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ title? }
+  Silent + deterministic; one paused GSAP timeline; no Math.random/Date.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":245},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":8.17}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../gsap.min.js"></script>
+    <link rel="stylesheet" href="../hook-snap.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="hook-snap" data-start="0" data-duration="8.15" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore>
+        <div class="aurora"></div>
+        <div class="floor"></div>
+      </div>
+      <div class="camera" id="camera">
+        <div class="stage3d" id="stage3d">
+          <!-- gold stations (012 gate-arch callback) -->
+          <div class="station st1"><div class="arch"></div></div>
+          <div class="station st2"><div class="arch"></div></div>
+          <div class="station st3"><div class="arch"></div></div>
+          <div class="beltline" id="beltline"></div>
+          <!-- the pristine gliding video card -->
+          <div class="card" id="card">
+            <div class="c-bar"></div>
+            <div class="c-strip s-a"></div>
+            <div class="c-strip s-b"></div>
+            <div class="c-wave"></div>
+            <div class="c-glow"></div>
+          </div>
+          <!-- RGB-split glitch clones of the card (hidden until the crash) -->
+          <div class="card ghost gR" id="ghostR" data-layout-ignore></div>
+          <div class="card ghost gB" id="ghostB" data-layout-ignore></div>
+          <!-- 12 shards (clip-path pieces of the card) -->
+          <div class="shards" id="shards"></div>
+          <!-- ember sparks after the crash -->
+          <div class="sparks" id="sparks" data-layout-ignore></div>
+        </div>
+        <!-- impact flash + red emergency flicker wash -->
+        <div class="flash" id="flash" data-layout-ignore></div>
+        <div class="redwash" id="redwash" data-layout-ignore></div>
+        <!-- beat 2: the gold verdict stamp -->
+        <div class="stamp" id="stamp">BEST THING<br />IT EVER DID</div>
+        <!-- beat 3: thesis title -->
+        <div class="titleline" id="titleline">IT CRASHED. <span class="gold">GOOD.</span></div>
+      </div>
+    </div>
+    <script src="../hook-snap.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["hook-snap"] = tl;
+    </script>
+  </body>
+</html>

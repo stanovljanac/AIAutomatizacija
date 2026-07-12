@@ -51,19 +51,22 @@ export const STAGE_RUBRICS = {
   },
   // The IDEA pass scores the TOPIC before a script exists — "is this worth a video?" It is tuned so
   // broad/zeitgeist reach plays still score well (variety is a feature), but a topic with no real
-  // value or no single reusable takeaway cannot pass.
+  // value or no single reusable takeaway cannot pass. A well-written script cannot save a weak
+  // story, so STORY STRENGTH is scored here, at the idea — not discovered at script review
+  // (2026-07-12, the 013 lesson: "retry and halt" was an implementation practice, not a big idea).
   idea: {
     blurb: "video IDEA (topic, pre-script)",
-    categories: ["audience_value", "reusable_takeaway", "packaging", "audience_fit"],
+    categories: ["audience_value", "reusable_takeaway", "transformation", "packaging", "audience_fit"],
     gates: ["value_type_present", "takeaway_present", "on_brand"],
     gateLines: [
       `- value_type_present: the idea clearly delivers >=1 value type — saves time, saves money, avoids a costly mistake, teaches a reusable system/mental model, reveals a surprising useful truth, or corrects a common misbelief.`,
-      `- takeaway_present: there is ONE concrete thing a viewer could apply or believe differently tomorrow (a prompt, pattern, rule of thumb, corrected belief) — not just "this happened".`,
+      `- takeaway_present: there is ONE concrete thing a viewer could apply or believe differently tomorrow (a prompt, pattern, rule of thumb, corrected belief) — not just "this happened". It must survive the STRANGER TEST: someone who has never seen this channel and does not care about our system still walks away with it. A feature list of our own pipeline ("it retries / halts / notifies") is NOT a takeaway.`,
       `- on_brand: it fits the channel's promise (practical AI you can actually use or understand). News/zeitgeist counts IF it carries a usable lesson.`,
     ],
     categoryLines: [
       `- audience_value: how strong + concrete is the payoff (real magnitude of time/money saved, mistake avoided, or how genuinely surprising/useful the truth is)? Vague or tiny payoff scores low.`,
-      `- reusable_takeaway: how clear and reusable is the single thing the viewer walks away with? A sharp, repeatable takeaway scores high; a one-off with nothing to reuse scores low.`,
+      `- reusable_takeaway: how clear and TRANSFERABLE is the single thing the viewer walks away with? A framework that applies across the viewer's own domains (invoices, email, agents, code — like "Draft -> Check -> Gate") scores high; a practice everyone already knows ("retry on error") or a one-off with nothing to reuse scores low.`,
+      `- transformation: does the viewer END the video thinking DIFFERENTLY than they started — a new mental map, a flipped belief, a "wait, what?" beat, a real conflict/contrast (A vs B)? If the hook line and the closing line could swap places, or every beat goes exactly as an average viewer expects, score low. An incident/anecdote is only the symptom — score the PHILOSOPHY behind it (not "an API failed and we retried" but "the dangerous automation is the one that keeps going").`,
       `- packaging: can we write a scroll-stopping title AND one concrete thumbnail concept with real CTR potential? An un-packageable topic scores low.`,
       `- audience_fit: real search/interest demand + reach potential for our audience (builders/freelancers + curious AI viewers). Broad or timely topics that pull new viewers score well.`,
     ],

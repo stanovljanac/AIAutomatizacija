@@ -124,7 +124,7 @@ test("[verifier] review.schema allOf: idea-stage doc missing an idea category is
   // 'audience_fit' is deliberately absent
   const doc = mkReviewDoc("idea", {
     hard_gates: { value_type_present: true, takeaway_present: true, on_brand: true },
-    category_scores: { audience_value: 9, reusable_takeaway: 9, packaging: 9 },
+    category_scores: { audience_value: 9, reusable_takeaway: 9, transformation: 9, packaging: 9 },
   });
   const { valid } = validate(doc, "review");
   assert.equal(valid, false, "idea-stage doc missing 'audience_fit' must be rejected by allOf");
@@ -134,7 +134,7 @@ test("[verifier] review.schema allOf: idea-stage doc missing a hard gate is REJE
   // 'on_brand' is deliberately absent from hard_gates
   const doc = mkReviewDoc("idea", {
     hard_gates: { value_type_present: true, takeaway_present: true },
-    category_scores: { audience_value: 9, reusable_takeaway: 9, packaging: 9, audience_fit: 9 },
+    category_scores: { audience_value: 9, reusable_takeaway: 9, transformation: 9, packaging: 9, audience_fit: 9 },
   });
   const { valid } = validate(doc, "review");
   assert.equal(valid, false, "idea-stage doc missing 'on_brand' must be rejected by allOf");
@@ -144,7 +144,7 @@ test("[verifier] review.schema allOf: valid idea doc (no script keys) is ACCEPTE
   // A complete idea doc must pass without requiring any script-stage keys
   const doc = mkReviewDoc("idea", {
     hard_gates: { value_type_present: true, takeaway_present: true, on_brand: true },
-    category_scores: { audience_value: 9, reusable_takeaway: 9, packaging: 9, audience_fit: 9 },
+    category_scores: { audience_value: 9, reusable_takeaway: 9, transformation: 9, packaging: 9, audience_fit: 9 },
   });
   const { valid, errors } = validate(doc, "review");
   assert.ok(valid, `valid idea doc rejected: ${JSON.stringify(errors)}`);
@@ -154,7 +154,7 @@ test("[verifier] review.schema: 'idea' is a valid stage value (added to enum)", 
   // Verify the 'idea' enum was actually added to the stage property
   const doc = mkReviewDoc("idea", {
     hard_gates: { value_type_present: true, takeaway_present: true, on_brand: true },
-    category_scores: { audience_value: 9, reusable_takeaway: 9, packaging: 9, audience_fit: 9 },
+    category_scores: { audience_value: 9, reusable_takeaway: 9, transformation: 9, packaging: 9, audience_fit: 9 },
   });
   const { valid } = validate(doc, "review");
   assert.ok(valid, "stage='idea' must be a valid enum value in review.schema");

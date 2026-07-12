@@ -98,7 +98,7 @@ test("runPanelOnce surfaces a deferral when a reviewer cannot run inline", async
 
 // ── IDEA STAGE (content-value gate, decisions #6/#7) — same panel, idea thresholds/gates/weights ──
 
-const IDEA_WEIGHTS = { audience_value: 0.35, reusable_takeaway: 0.3, packaging: 0.2, audience_fit: 0.15 };
+const IDEA_WEIGHTS = { audience_value: 0.3, reusable_takeaway: 0.25, transformation: 0.2, packaging: 0.15, audience_fit: 0.1 };
 // idea gate: >=9.0 auto (qualify), 7.5–9.0 soft (owner), <7.5 reject; gate fail → reject
 const IDEA_CFG = {
   score_threshold: 7.5,
@@ -111,7 +111,7 @@ const mkIdea = (val, ok = true) => ({
   reviewer: "x",
   model: "m",
   hard_gates: ideaGates(ok),
-  category_scores: { audience_value: val, reusable_takeaway: val, packaging: val, audience_fit: val },
+  category_scores: { audience_value: val, reusable_takeaway: val, transformation: val, packaging: val, audience_fit: val },
   fixes: [],
 });
 
@@ -240,7 +240,7 @@ test("[verifier] idea stage does not leak script keys into normalised result (an
   const { scored } = verdict([ideaResult], IDEA_CFG);
   for (const k of Object.keys(scored[0].category_scores)) {
     assert.ok(
-      ["audience_value", "reusable_takeaway", "packaging", "audience_fit"].includes(k),
+      ["audience_value", "reusable_takeaway", "transformation", "packaging", "audience_fit"].includes(k),
       `unexpected key in idea result: ${k}`,
     );
   }

@@ -1,0 +1,58 @@
+<!doctype html>
+<!--
+  flip-question — 013 s5 TAKEAWAY MONOLITH (black+gold outro). STRATEGIC PREMISE: the takeaway
+  is literally a FLIPPED question — so the type performs the idea: "DOES IT WORK?" assembles,
+  gets struck through, and the whole line 3D-flips (rotateY, real perspective) to reveal
+  "HOW DOES IT TELL ME WHEN IT DOESN'T?" Then the screenshotable monolith locks in huge —
+  FAIL LOUD > FAIL SILENT — held ≥4s with a slow gold pulse, and the brand row rises in its
+  own RESERVED space below (never over text, D-054). Slow push-in throughout.
+
+  Beats: [0] "so flip the question" [1] the flip [2] monolith [3] brand/CTA row.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
+  Silent + deterministic; one paused GSAP timeline; no Math.random/Date.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":346},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":11.53}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../gsap.min.js"></script>
+    <link rel="stylesheet" href="../flip-question.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="flip-question" data-start="0" data-duration="11.516666666666667" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="aurora"></div><div class="floor"></div></div>
+      <div class="camera" id="camera">
+        <div class="kicker" id="kicker">SO FLIP THE QUESTION</div>
+        <div class="flipzone">
+          <div class="fliprig" id="fliprig">
+            <div class="qface qA" id="qA">DOES IT<br />WORK?<div class="strike" id="strike"></div></div>
+            <div class="qface qB" id="qB">HOW DOES IT<br /><span class="gold">TELL ME</span><br />WHEN IT DOESN'T?</div>
+          </div>
+        </div>
+        <div class="monolith" id="monolith">
+          <div class="m-line m1" id="m1">FAIL LOUD</div>
+          <div class="m-gt" id="mgt">&gt;</div>
+          <div class="m-line m2" id="m2">FAIL SILENT</div>
+        </div>
+        <div class="brandrow" id="brandrow">
+          <div class="b-mark"></div>
+          <div class="b-copy"><div class="b-name">The Automation Desk</div><div class="b-cta">follow for the next breakdown</div></div>
+        </div>
+      </div>
+    </div>
+    <script src="../flip-question.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["flip-question"] = tl;
+    </script>
+  </body>
+</html>

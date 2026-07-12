@@ -1,0 +1,88 @@
+/* green-lie — 013 s2 villain (body world: deep blue-black + gold chrome, green ✓ lie vs red ✗ rot).
+   Portrait-first (1080x1920, --u=1); cards FLAT/face-on; bottom ~19.5% stays clear for captions. */
+:root {
+  --bg: #0B0F14; --text: #F2F5F8; --text2: #9AA7B2;
+  --blue: #4FC3F7; --gold: #FFB020; --gold-2: #ffd37a;
+  --green: #43d17a; --green-2: #7ef0a8; --red: #ff5c5c; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 110% 74% at 50% 30%, #0e141c 0%, #0B0F14 74%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.haze { position: absolute; inset: 0;
+  background: radial-gradient(ellipse 90% 44% at 50% 30%, rgba(67,209,122,0.10) 0%, transparent 70%); }
+
+.camera { position: absolute; inset: 0; z-index: 2; will-change: transform; }
+
+/* app chrome bar */
+.appbar { position: absolute; left: 8%; right: 8%; top: 10%; height: calc(78px * var(--u));
+  display: flex; align-items: center; gap: calc(12px * var(--u));
+  padding: 0 calc(24px * var(--u)); border-radius: calc(16px * var(--u)) calc(16px * var(--u)) 0 0;
+  background: rgba(79,195,247,0.08); border: calc(2px * var(--u)) solid rgba(79,195,247,0.28);
+  border-bottom: none; opacity: 0; will-change: transform, opacity; }
+.dot { width: calc(16px * var(--u)); height: calc(16px * var(--u)); border-radius: 50%; }
+.d1 { background: #ff5f57; } .d2 { background: #febc2e; } .d3 { background: #28c840; }
+.app-title { margin-left: calc(10px * var(--u)); font-weight: 700; font-size: calc(28px * var(--u)); color: var(--text2); }
+.daychip { margin-left: auto; font-weight: 900; font-size: calc(28px * var(--u)); letter-spacing: calc(2px * var(--u));
+  color: var(--gold-2); background: rgba(255,176,32,0.12); border: calc(2px * var(--u)) solid rgba(255,176,32,0.4);
+  border-radius: calc(999px * var(--u)); padding: calc(4px * var(--u)) calc(16px * var(--u)); }
+
+/* the deck sits under the app chrome; a fixed frame so the stack reads as one report feed */
+.deckwrap { position: absolute; left: 8%; right: 8%; top: calc(10% + 78px * var(--u));
+  height: calc(760px * var(--u));
+  border-radius: 0 0 calc(16px * var(--u)) calc(16px * var(--u));
+  background: linear-gradient(180deg, rgba(16,21,29,0.9), rgba(11,15,20,0.9));
+  border: calc(2px * var(--u)) solid rgba(79,195,247,0.22); border-top: none; overflow: hidden; }
+
+/* a report card shared skin (FLAT — only a tiny ≤2deg stack rotation allowed) */
+.gcard, .rcard { position: absolute; left: 50%; width: calc(680px * var(--u)); height: calc(300px * var(--u));
+  margin-left: calc(-340px * var(--u)); border-radius: calc(18px * var(--u));
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(14px * var(--u));
+  box-shadow: 0 calc(16px * var(--u)) calc(40px * var(--u)) rgba(0,0,0,0.55); }
+
+/* rotten ✗ cards, stacked underneath (revealed on beat 2) */
+.rotstack { position: absolute; inset: 0; }
+.rcard { top: calc(210px * var(--u));
+  background: linear-gradient(160deg, #2a1416 0%, #1c0d0f 100%);
+  border: calc(2.5px * var(--u)) solid rgba(255,92,92,0.55); }
+.rcard .rx { font-weight: 900; font-size: calc(96px * var(--u)); color: var(--red);
+  text-shadow: 0 0 calc(26px * var(--u)) rgba(255,92,92,0.5); line-height: 1; }
+.rcard .rlbl { font-weight: 800; font-size: calc(34px * var(--u)); color: #ffb4b4; text-align: center; }
+/* fan them out slightly so the pile reads (flat offsets + ≤2deg tilt only) */
+.rcard.r1 { transform: translateY(calc(0px * var(--u))) rotate(0deg); z-index: 4; }
+.rcard.r2 { transform: translateY(calc(-30px * var(--u))) translateX(calc(-26px * var(--u))) rotate(-2deg); z-index: 3; }
+.rcard.r3 { transform: translateY(calc(-58px * var(--u))) translateX(calc(24px * var(--u))) rotate(2deg); z-index: 2; }
+.rcard.r4 { transform: translateY(calc(-84px * var(--u))) translateX(calc(-10px * var(--u))) rotate(-1deg); z-index: 1; }
+
+/* green ✓ "Sent" cards slapped on top every morning (built + animated by js) */
+.gcards { position: absolute; inset: 0; z-index: 6; }
+.gcard { top: calc(210px * var(--u));
+  background: linear-gradient(160deg, #123021 0%, #0c2016 100%);
+  border: calc(2.5px * var(--u)) solid rgba(67,209,122,0.7); opacity: 0; will-change: transform, opacity; }
+.gcard .gv { font-weight: 900; font-size: calc(104px * var(--u)); color: var(--green-2);
+  text-shadow: 0 0 calc(28px * var(--u)) rgba(67,209,122,0.5); line-height: 1; }
+.gcard .glbl { font-weight: 900; font-size: calc(40px * var(--u)); letter-spacing: calc(3px * var(--u)); color: var(--green); }
+
+/* the error that gets swallowed on beat 1 */
+.errblip { position: absolute; z-index: 7; left: 50%; top: calc(150px * var(--u)); transform: translateX(-50%);
+  font-weight: 900; font-size: calc(46px * var(--u)); letter-spacing: calc(2px * var(--u)); color: #fff;
+  background: var(--red); border-radius: calc(12px * var(--u)); padding: calc(10px * var(--u)) calc(26px * var(--u));
+  box-shadow: 0 0 calc(34px * var(--u)) rgba(255,92,92,0.55); opacity: 0; will-change: transform, opacity; }
+
+/* label that brands the rot on beat 2 (in reserved space, never over the caption band) */
+.underlabel { position: absolute; z-index: 8; left: 0; right: 0; bottom: calc(14px * var(--u)); text-align: center;
+  font-weight: 900; font-size: calc(40px * var(--u)); letter-spacing: calc(2px * var(--u)); color: var(--red);
+  text-shadow: 0 calc(4px * var(--u)) calc(18px * var(--u)) rgba(0,0,0,0.8); opacity: 0; will-change: transform, opacity; }
+
+/* the calendar chip below the deck */
+.datechip { position: absolute; left: 50%; top: calc(10% + 78px * var(--u) + 780px * var(--u)); transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: calc(2px * var(--u));
+  opacity: 0; will-change: transform, opacity; }
+.d-num { font-weight: 900; font-size: calc(72px * var(--u)); color: var(--text); font-variant-numeric: tabular-nums; }
+.d-sub { font-weight: 700; font-size: calc(30px * var(--u)); color: var(--text2); letter-spacing: calc(1px * var(--u)); }
+
+.redwash { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
+  background: radial-gradient(ellipse 120% 90% at 50% 40%, rgba(255,60,60,0.14) 0%, rgba(120,10,10,0.06) 55%, transparent 82%); }

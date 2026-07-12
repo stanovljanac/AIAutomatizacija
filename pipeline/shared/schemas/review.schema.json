@@ -101,7 +101,7 @@
             "items": {
               "properties": {
                 "hard_gates": { "required": ["value_type_present", "takeaway_present", "on_brand"] },
-                "category_scores": { "required": ["audience_value", "reusable_takeaway", "packaging", "audience_fit"] }
+                "category_scores": { "required": ["audience_value", "reusable_takeaway", "transformation", "packaging", "audience_fit"] }
               }
             }
           }

@@ -1,0 +1,73 @@
+<!doctype html>
+<!--
+  demo-day-lie — 013 s2 (blue+gold body). STRATEGIC PREMISE: the demo and the outage are the
+  SAME product seen from two angles — so the camera literally swings around a 3D stage: face A
+  is the glossy "DEMO DAY" card (green checks, sheen sweep); the rig rotates ~100° and the
+  reverse face is "WEEK 3": the identical card gone dim, a token chip flipping to EXPIRED and
+  a free-tier meter melting into red 503s. The swing IS the beat ("nobody films week three").
+
+  Beats (scene-local): [0] "Every automation demo was filmed on its best day."
+                       [1] "Nobody films week three…" → the camera swing.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
+  Silent + deterministic; one paused GSAP timeline; no Math.random/Date.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":279},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":9.3}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="demo-day-lie.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="demo-day-lie" data-start="0" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore>
+        <div class="aurora"></div>
+        <div class="haze"></div>
+        <div class="floor"></div>
+      </div>
+      <div class="headline" id="headline">DEMO DAY <span class="vs">vs</span> WEEK THREE</div>
+      <div class="camera" id="camera">
+        <div class="stage3d">
+          <div class="rig" id="rig">
+            <!-- FACE A — demo day -->
+            <div class="face faceA" id="faceA">
+              <div class="panel glossy">
+                <div class="p-label">DEMO DAY</div>
+                <div class="p-row" id="rowA1"><span class="tick">✓</span> API connected</div>
+                <div class="p-row" id="rowA2"><span class="tick">✓</span> 200 OK</div>
+                <div class="p-row" id="rowA3"><span class="tick">✓</span> report delivered</div>
+                <div class="sheen" id="sheen" data-layout-ignore></div>
+                <div class="conf" id="conf" data-layout-ignore></div>
+              </div>
+            </div>
+            <!-- FACE B — week three (reverse angle) -->
+            <div class="face faceB" id="faceB">
+              <div class="panel dimmed">
+                <div class="p-label dim">WEEK 3</div>
+                <div class="tokenchip" id="tokenchip"><span class="t-front">token ● live</span><span class="t-back">TOKEN EXPIRED</span></div>
+                <div class="meter"><div class="m-label">free tier</div><div class="m-track"><div class="m-fill" id="mfill"></div></div><div class="m-read"><span class="m-ok" id="mreadOk">OK</span><span class="m-bad" id="mreadBad">503</span></div></div>
+                <div class="err e1">503 service unavailable</div>
+                <div class="err e2">503 service unavailable</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spike" id="spike" data-layout-ignore></div>
+    </div>
+    <script src="demo-day-lie.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["demo-day-lie"] = tl;
+    </script>
+  </body>
+</html>

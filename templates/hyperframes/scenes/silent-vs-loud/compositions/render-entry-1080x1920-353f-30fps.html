@@ -1,0 +1,70 @@
+<!doctype html>
+<!--
+  silent-vs-loud — 013 s4 CONTRAST RAILS. STRATEGIC PREMISE: the two failure modes must be
+  WATCHED side by side to land — so two conveyor rails run stacked: the FAIL SILENT rail keeps
+  shipping defective gray cards (✗ stamped mid-travel) and then just… fades mid-motion, a "?"
+  hanging where the machine used to be (stopped, nobody noticed). The FAIL LOUD rail stops
+  clean at a red flag, one card held back. On the third beat the loud rail turns gold and a
+  counter ticks to 564 with its on-screen source chip (D-026). Slow push-in; belt physics.
+
+  Beats: [0] "ships garbage with your name on it" [1] "most just stop, silently"
+         [2] "mine assumes failure — 564 tests…"
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],
+                      props{ stat{ value,label,source }? }
+  Silent + deterministic; one paused GSAP timeline; no Math.random/Date.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":353},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":11.77}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../gsap.min.js"></script>
+    <link rel="stylesheet" href="../silent-vs-loud.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="silent-vs-loud" data-start="0" data-duration="11.75" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="haze"></div><div class="floor"></div></div>
+      <div class="camera" id="camera">
+        <!-- RAIL A — fail silent -->
+        <div class="railwrap silent" id="railA">
+          <div class="r-head"><span class="r-name bad">FAIL SILENT</span><span class="r-sub" id="subA">ships garbage</span></div>
+          <div class="rail">
+            <div class="port"></div>
+            <div class="beltline"></div>
+            <div class="cards" id="cardsA"></div>
+          </div>
+          <div class="hangq" id="hangq">?<span class="hq-sub">stopped — nobody noticed</span></div>
+        </div>
+        <!-- RAIL B — fail loud -->
+        <div class="railwrap loud" id="railB">
+          <div class="r-head"><span class="r-name good" id="nameB">FAIL LOUD</span><span class="r-sub">one clean stop</span></div>
+          <div class="rail">
+            <div class="port gold"></div>
+            <div class="beltline gold" id="beltB"></div>
+            <div class="cards" id="cardsB"></div>
+            <div class="flagpost" id="flagpost"><div class="flag" id="flag">STOP</div></div>
+          </div>
+        </div>
+        <!-- beat 3: the proof counter -->
+        <div class="proof" id="proof">
+          <div class="p-count" id="pcount">0</div>
+          <div class="p-label" id="plabel">automated tests behind one loud stop</div>
+          <div class="p-source" id="psource">npm test · this repo · Jul 2026</div>
+        </div>
+      </div>
+    </div>
+    <script src="../silent-vs-loud.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["silent-vs-loud"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<!--
+  silent-vs-loud — 013 s3 CONTRAST RAILS (round-2: SILENT vs LOUD, no A/B, no proof counter).
+  STRATEGIC PREMISE: the two failure modes must be WATCHED side by side. Two conveyor rails run
+  stacked: the SILENT rail keeps shipping defective gray cards (✗ stamped mid-travel) and then
+  just… fades mid-motion, a "?" hanging where the machine used to be (stopped, nobody noticed).
+  The LOUD rail ships, a RETRY chip blips, then the line STOPS clean at a red flag, one card
+  held back; on "Loud." the loud rail turns gold and the flag pulses. Slow push-in; belt physics.
+
+  Beats: [0] "Same job, two automations." → establish both rails
+         [1] "One fails and keeps publishing — silent." → SILENT rail ships ✗ then fades
+         [2] "…retries, then stops the whole line and tells me." → LOUD rail retry → STOP at flag
+         [3] "Loud." → loud rail turns gold + flag pulse
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],
+                      props{ stat{ value,label,source }? }
+  Silent + deterministic; one paused GSAP timeline; no Math.random/Date.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":353},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":11.77}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../gsap.min.js"></script>
+    <link rel="stylesheet" href="../silent-vs-loud.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="silent-vs-loud" data-start="0" data-duration="11.316666666666666" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="haze"></div><div class="floor"></div></div>
+      <div class="camera" id="camera">
+        <!-- RAIL A — SILENT -->
+        <div class="railwrap silent" id="railA">
+          <div class="r-head"><span class="r-name bad">SILENT</span><span class="r-sub" id="subA">keeps publishing</span></div>
+          <div class="rail">
+            <div class="port"></div>
+            <div class="beltline"></div>
+            <div class="cards" id="cardsA"></div>
+          </div>
+          <div class="hangq" id="hangq">?<span class="hq-sub">stopped — nobody noticed</span></div>
+        </div>
+        <!-- RAIL B — LOUD -->
+        <div class="railwrap loud" id="railB">
+          <div class="r-head"><span class="r-name good" id="nameB">LOUD</span><span class="r-sub">stops and tells you</span></div>
+          <div class="rail">
+            <div class="port gold"></div>
+            <div class="beltline gold" id="beltB"></div>
+            <div class="cards" id="cardsB"></div>
+            <div class="retrychip" id="retrychip">RETRY ×3</div>
+            <div class="flagpost" id="flagpost"><div class="flag" id="flag">STOP</div></div>
+          </div>
+          <div class="loudpunch" id="loudpunch">LOUD</div>
+        </div>
+      </div>
+    </div>
+    <script src="../silent-vs-loud.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["silent-vs-loud"] = tl;
+    </script>
+  </body>
+</html>

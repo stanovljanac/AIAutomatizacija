@@ -16,4 +16,6 @@ lesson with no evidence stays `draft` forever.
 - [Reused scene components must be prop-driven — a matching default masks a hardcode](2026-07-07-reused-components-must-be-prop-driven.md) — lesson, draft
 - [A free-tier external reviewer becomes a single point of failure once review volume outgrows its quota](2026-07-09-free-tier-reviewer-outgrown.md) — lesson, stable
 - [Frameworks drawn as three-icons-in-a-row get rejected — give concepts full-stage treatment](2026-07-09-no-flow-strip-framework-visuals.md) — lesson, stable
+- [Content cards are never 3D-tilted — flat resting pose; 3D only as a transient reveal](2026-07-12-no-3d-tilt-on-content-cards.md) — lesson, stable
+- [A well-written script cannot save a weak story — score story strength at the idea](2026-07-12-story-strength-scored-at-the-idea.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

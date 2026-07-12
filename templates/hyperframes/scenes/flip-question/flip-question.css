@@ -1,0 +1,64 @@
+/* flip-question — black+gold outro takeaway. Portrait-first; caption band clear;
+   brand row lives in RESERVED space below the monolith (D-054). */
+:root {
+  --bg: #070605; --text: #F2F5F8; --text2: #9AA7B2;
+  --gold: #FFB020; --gold-2: #ffd37a; --red: #ff5c5c; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 110% 72% at 50% 30%, #0f0a05 0%, #070605 75%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.aurora { position: absolute; width: 92%; height: 44%; left: 4%; top: -12%;
+  background: radial-gradient(ellipse at center, rgba(255,176,32,0.15) 0%, transparent 66%);
+  filter: blur(calc(36px * var(--u))); }
+.floor { position: absolute; left: -30%; right: -30%; bottom: 7%; height: 40%;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,176,32,0.08) 0, rgba(255,176,32,0.08) calc(2px * var(--u)), transparent calc(2px * var(--u)), transparent calc(58px * var(--u))),
+    repeating-linear-gradient(90deg, rgba(255,176,32,0.06) 0, rgba(255,176,32,0.06) calc(2px * var(--u)), transparent calc(2px * var(--u)), transparent calc(74px * var(--u)));
+  transform: perspective(calc(900px * var(--u))) rotateX(62deg); transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent 86%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.8), transparent 86%); }
+
+.camera { position: absolute; inset: 0; z-index: 2; will-change: transform; }
+
+.kicker { position: absolute; left: 6%; right: 6%; top: 9%;
+  font-weight: 800; font-size: calc(44px * var(--u)); letter-spacing: calc(6px * var(--u));
+  color: var(--gold-2); text-align: center; opacity: 0; will-change: transform, opacity; }
+
+.flipzone { position: absolute; left: 4%; right: 4%; top: 15.5%; height: 30%;
+  perspective: calc(1300px * var(--u)); }
+.fliprig { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.qface { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-weight: 900; text-align: center; line-height: 1.08;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.qA { font-size: calc(120px * var(--u)); color: var(--text);
+  text-shadow: 0 calc(8px * var(--u)) calc(34px * var(--u)) rgba(0,0,0,0.8); opacity: 0; }
+.qA .strike { position: absolute; left: 8%; right: 8%; top: 48%; height: calc(12px * var(--u));
+  background: var(--red); border-radius: calc(6px * var(--u)); transform: scaleX(0) rotate(-3deg);
+  transform-origin: left center; box-shadow: 0 0 calc(24px * var(--u)) rgba(255,92,92,0.5); }
+.qB { font-size: calc(86px * var(--u)); color: var(--text);
+  transform: rotateY(180deg); text-shadow: 0 calc(8px * var(--u)) calc(34px * var(--u)) rgba(0,0,0,0.8); }
+.qB .gold { color: var(--gold); }
+
+.monolith { position: absolute; left: 4%; right: 4%; top: 48%;
+  display: flex; flex-direction: column; align-items: center; gap: calc(4px * var(--u));
+  opacity: 0; will-change: transform, opacity; }
+.m-line { font-weight: 900; line-height: 1.02; letter-spacing: calc(2px * var(--u)); will-change: transform, opacity; text-align: center; }
+.m-line.m1 { font-size: calc(90px * var(--u)); color: var(--text); }
+.m-line.m2 { font-size: calc(132px * var(--u)); color: var(--gold); text-shadow: 0 0 calc(56px * var(--u)) rgba(255,176,32,0.45); }
+
+/* brand row — RESERVED space below the monolith; never overlaps it (D-054) */
+.brandrow { position: absolute; left: 10%; right: 10%; top: 74%;
+  display: flex; align-items: center; justify-content: center; gap: calc(22px * var(--u));
+  opacity: 0; will-change: transform, opacity; }
+.b-mark { width: calc(64px * var(--u)); height: calc(64px * var(--u)); border-radius: calc(16px * var(--u));
+  background: linear-gradient(150deg, var(--gold) 0%, #b97708 100%);
+  box-shadow: 0 0 calc(30px * var(--u)) rgba(255,176,32,0.4); }
+.b-copy { display: flex; flex-direction: column; gap: calc(2px * var(--u)); }
+.b-name { font-weight: 900; font-size: calc(40px * var(--u)); color: var(--text); }
+.b-cta { font-weight: 700; font-size: calc(30px * var(--u)); color: var(--gold-2); }
+
+.portrait .qA { font-size: calc(132px * var(--u)); }

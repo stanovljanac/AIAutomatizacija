@@ -1,0 +1,74 @@
+<!doctype html>
+<!--
+  incident-503 — 013 s3 THE INCIDENT (centerpiece; proof-must-be-visible). STRATEGIC PREMISE:
+  don't narrate the outage — put the viewer at the desk while it happens. A flat, face-on
+  terminal (cards are NEVER 3D-tilted — mobile-first rule; it rests BELOW the headline stat)
+  scrolls healthy log lines; red "503 service unavailable" lines start slamming in
+  while a REAL Three.js warning beacon (emissive core + rotating light cone) rises and sweeps
+  red light across the frame. Three RETRY chips pop with visibly DOUBLING wait bars (2s→4s→8s).
+  Then everything smear-stops (the camera drift settles), a gold gate slams
+  "PIPELINE HALTED", and a phone notification pings in — the one message that is the point.
+
+  Beats (scene-local): [0] "Here's my week three." [1] 503 cascade [2] retries [3] halt+message.
+
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
+  Three.js layer renders ONLY on hf-seek (money-hero infra); no Math.random/Date anywhere.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":456},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":15.2}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="gsap.min.js"></script>
+    <link rel="stylesheet" href="incident-503.css" />
+    <script>
+      window.__THREE_URL = "./vendor/three.module.min.js";
+    </script>
+  </head>
+  <body>
+    <div id="root" data-composition-id="incident-503" data-start="0" data-width="1080" data-height="1920">
+      <canvas id="gl" data-layout-ignore></canvas>
+      <div class="bg" data-layout-ignore><div class="haze"></div></div>
+      <div class="camera" id="camera">
+        <div class="term" id="term">
+              <div class="t-bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="t-title">the-automation-desk · run 013</span></div>
+              <div class="t-body" id="tbody">
+                <div class="log ok">review: script pass · 9.2 ✓</div>
+                <div class="log ok">voice: aligned 142 words ✓</div>
+                <div class="log ok">scenes: 5 compiled ✓</div>
+                <div class="log err e1">ERROR 503 — service unavailable</div>
+                <div class="log err e2">ERROR 503 — service unavailable</div>
+                <div class="log err e3">ERROR 503 — service unavailable</div>
+                <div class="retry r1"><span class="r-tag">RETRY 1</span><div class="r-track"><div class="r-fill f1"></div></div><span class="r-wait">2s</span><span class="r-x x1">✗</span></div>
+                <div class="retry r2"><span class="r-tag">RETRY 2</span><div class="r-track"><div class="r-fill f2"></div></div><span class="r-wait">4s</span><span class="r-x x2">✗</span></div>
+                <div class="retry r3"><span class="r-tag">RETRY 3</span><div class="r-track"><div class="r-fill f3"></div></div><span class="r-wait">8s</span><span class="r-x x3">✗</span></div>
+              </div>
+        </div>
+        <div class="bigstat" id="bigstat"><span class="b-val">503</span><span class="b-label">service unavailable — again and again</span></div>
+        <!-- the halt gate -->
+        <div class="gatewrap" id="gatewrap">
+          <div class="gatebar" id="gatebar">PIPELINE&nbsp;HALTED</div>
+          <div class="gateposts" data-layout-ignore><div class="post pl"></div><div class="post pr"></div></div>
+        </div>
+        <!-- the one message -->
+        <div class="notify" id="notify">
+          <div class="n-icon">⚠</div>
+          <div class="n-copy"><div class="n-title">The Automation Desk</div><div class="n-text">013 halted at review — waiting for you.</div></div>
+        </div>
+      </div>
+      <div class="redwash" id="redwash" data-layout-ignore></div>
+    </div>
+    <script src="incident-503.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["incident-503"] = tl;
+    </script>
+  </body>
+</html>

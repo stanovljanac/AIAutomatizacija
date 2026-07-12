@@ -1,0 +1,83 @@
+/* silent-vs-loud — stacked contrast rails (blue+gold body, red/gray vs gold).
+   Portrait-first; caption band (bottom ~19.5%) clear. */
+:root {
+  --bg: #0B0F14; --text: #F2F5F8; --text2: #9AA7B2;
+  --blue: #4FC3F7; --gold: #FFB020; --gold-2: #ffd37a; --green: #4ade80; --red: #ff5c5c; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 110% 75% at 50% 26%, #0e141c 0%, #0B0F14 74%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif; }
+
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.haze { position: absolute; inset: 0;
+  background: radial-gradient(ellipse 90% 42% at 50% 96%, rgba(21,101,192,0.10) 0%, transparent 72%); }
+.floor { position: absolute; left: -30%; right: -30%; bottom: 6%; height: 38%;
+  background:
+    repeating-linear-gradient(0deg, rgba(79,195,247,0.07) 0, rgba(79,195,247,0.07) calc(2px * var(--u)), transparent calc(2px * var(--u)), transparent calc(60px * var(--u))),
+    repeating-linear-gradient(90deg, rgba(79,195,247,0.06) 0, rgba(79,195,247,0.06) calc(2px * var(--u)), transparent calc(2px * var(--u)), transparent calc(76px * var(--u)));
+  transform: perspective(calc(900px * var(--u))) rotateX(62deg); transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.75), transparent 85%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.75), transparent 85%); }
+
+.camera { position: absolute; inset: 0; z-index: 2; will-change: transform; }
+
+.railwrap { position: absolute; left: 5%; right: 5%; will-change: transform, opacity, filter; }
+.railwrap.silent { top: 15%; }
+.railwrap.loud { top: 45%; }
+.r-head { display: flex; align-items: baseline; gap: calc(20px * var(--u)); margin-bottom: calc(16px * var(--u)); }
+.r-name { font-weight: 900; font-size: calc(58px * var(--u)); letter-spacing: calc(4px * var(--u)); }
+.r-name.bad { color: var(--red); text-shadow: 0 0 calc(28px * var(--u)) rgba(255,92,92,0.35); }
+.r-name.good { color: var(--text); }
+.r-sub { font-weight: 700; font-size: calc(30px * var(--u)); color: var(--text2); }
+
+.rail { position: relative; height: calc(230px * var(--u)); }
+.port { position: absolute; left: 0; top: 0; bottom: calc(26px * var(--u)); width: calc(120px * var(--u));
+  border-radius: calc(16px * var(--u));
+  background: linear-gradient(160deg, #1a2029 0%, #10151d 100%);
+  border: calc(2px * var(--u)) solid rgba(154,167,178,0.35);
+  box-shadow: 0 calc(14px * var(--u)) calc(34px * var(--u)) rgba(0,0,0,0.5); z-index: 3; }
+.port.gold { border-color: rgba(255,176,32,0.55); }
+.beltline { position: absolute; left: 0; right: 0; bottom: calc(10px * var(--u)); height: calc(5px * var(--u));
+  background: linear-gradient(90deg, rgba(154,167,178,0.5), rgba(154,167,178,0.18));
+  border-radius: calc(3px * var(--u)); }
+.beltline.gold { background: linear-gradient(90deg, rgba(255,176,32,0.65), rgba(255,176,32,0.22)); }
+
+.cards { position: absolute; inset: 0; z-index: 2; }
+.gcard { position: absolute; left: 0; top: calc(22px * var(--u)); width: calc(200px * var(--u)); height: calc(128px * var(--u));
+  border-radius: calc(12px * var(--u));
+  background: linear-gradient(160deg, #262a31 0%, #171b21 100%);
+  border: calc(2px * var(--u)) solid rgba(154,167,178,0.4);
+  box-shadow: 0 calc(12px * var(--u)) calc(28px * var(--u)) rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  will-change: transform, opacity; opacity: 0; }
+.gcard .x { font-weight: 900; font-size: calc(64px * var(--u)); color: var(--red); opacity: 0; will-change: transform, opacity; }
+.gcard.goldcard { background: linear-gradient(160deg, #241b0d 0%, #171008 100%); border-color: rgba(255,176,32,0.7); }
+.gcard .held { font-weight: 900; font-size: calc(34px * var(--u)); color: var(--gold); letter-spacing: calc(2px * var(--u)); opacity: 0; }
+
+.hangq { position: absolute; right: 4%; top: calc(30px * var(--u)); z-index: 4;
+  font-weight: 900; font-size: calc(120px * var(--u)); color: var(--text2); text-align: center;
+  opacity: 0; will-change: transform, opacity; }
+.hangq .hq-sub { display: block; font-size: calc(28px * var(--u)); font-weight: 700; letter-spacing: calc(1px * var(--u)); margin-top: calc(4px * var(--u)); }
+
+.flagpost { position: absolute; right: 22%; top: calc(-34px * var(--u)); bottom: calc(6px * var(--u)); width: calc(7px * var(--u));
+  background: linear-gradient(180deg, var(--red), rgba(255,92,92,0.3)); border-radius: calc(3px * var(--u));
+  z-index: 4; opacity: 0; will-change: transform, opacity; }
+.flag { position: absolute; left: calc(6px * var(--u)); top: 0; padding: calc(10px * var(--u)) calc(22px * var(--u));
+  font-weight: 900; font-size: calc(34px * var(--u)); letter-spacing: calc(3px * var(--u)); color: #fff;
+  background: var(--red); border-radius: 0 calc(10px * var(--u)) calc(10px * var(--u)) 0;
+  box-shadow: 0 calc(10px * var(--u)) calc(30px * var(--u)) rgba(255,92,92,0.35); transform-origin: left center; }
+
+/* LOUD rail: the retry chip that blips before the stop, and the gold "LOUD" punch on beat 3 */
+.retrychip { position: absolute; right: 24%; top: calc(-30px * var(--u)); z-index: 4;
+  font-weight: 900; font-size: calc(30px * var(--u)); letter-spacing: calc(2px * var(--u));
+  color: var(--gold); border: calc(2px * var(--u)) solid rgba(255,176,32,0.6); border-radius: calc(10px * var(--u));
+  padding: calc(6px * var(--u)) calc(14px * var(--u)); background: rgba(255,176,32,0.08);
+  opacity: 0; will-change: transform, opacity; }
+.loudpunch { position: absolute; left: 0; right: 0; top: calc(300px * var(--u)); text-align: center; z-index: 5;
+  font-weight: 900; font-size: calc(190px * var(--u)); letter-spacing: calc(8px * var(--u)); color: var(--gold);
+  text-shadow: 0 0 calc(56px * var(--u)) rgba(255,176,32,0.5); opacity: 0; will-change: transform, opacity; }
+
+.portrait .railwrap.silent { top: 14%; }
+.portrait .railwrap.loud { top: 44%; }
