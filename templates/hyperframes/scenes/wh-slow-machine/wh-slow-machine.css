@@ -1,0 +1,102 @@
+/* wh-slow-machine — 014 s2 THE WORST HOUR (blue+gold body). A flat inbox with a red "40"
+   badge, one open order email, and a spreadsheet the cursor fills BY HAND — one field chip
+   at a time, mechanical. A clock crawls, the row counter ticks, then STICKS at 6/40 as the
+   color DRAINS to gray ("just a slow machine"). Flat, face-on, no 3D tilt. Sizes scale by --u. */
+:root {
+  --bg: #0a1119; --surface: #111c28; --surface-2: #16232f; --line: #21384c;
+  --text: #eaf1f8; --text2: #8ea6bc;
+  --gold: #ffb020; --gold-2: #ffd37a; --blue: #4aa3ff; --red: #ff5a4d; --green: #35d07f; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 120% 78% at 50% 30%, #0e1a26 0%, #0a1119 76%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.06;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #274056 calc(89px * var(--u)), #274056 calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #274056 calc(89px * var(--u)), #274056 calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 78% 74% at 50% 40%, #000 22%, transparent 84%);
+  mask-image: radial-gradient(ellipse 78% 74% at 50% 40%, #000 22%, transparent 84%);
+}
+
+/* desaturating layer used for the "slow machine" drain — a gray wash tween (seek-safe) */
+.drain { position: absolute; inset: 0; z-index: 8; background: #7c8794; mix-blend-mode: saturation; opacity: 0; pointer-events: none; }
+
+.stage { position: absolute; inset: 0; z-index: 2; }
+
+/* ── HUD: clock + row counter ── */
+.hud { position: absolute; left: 6%; right: 6%; top: 5%; display: flex; justify-content: space-between; align-items: center; }
+.chip {
+  display: inline-flex; align-items: center; gap: calc(12px * var(--u));
+  background: var(--surface-2); border: calc(1px * var(--u)) solid var(--line);
+  border-radius: calc(999px * var(--u)); padding: calc(12px * var(--u)) calc(22px * var(--u));
+  font-weight: 800; font-size: calc(32px * var(--u)); color: var(--text2); will-change: transform, opacity;
+}
+.chip .dot { width: calc(14px * var(--u)); height: calc(14px * var(--u)); border-radius: 50%; background: var(--gold); box-shadow: 0 0 calc(12px * var(--u)) rgba(255,176,32,0.6); }
+.chip b { color: var(--text); font-variant-numeric: tabular-nums; }
+.chip.warn { color: #ffd9d4; border-color: color-mix(in srgb, var(--red) 55%, transparent); }
+.chip.warn .dot { background: var(--red); box-shadow: 0 0 calc(12px * var(--u)) rgba(255,90,77,0.7); }
+
+/* ── inbox strip: fanned mini emails + the 40 badge ── */
+.inbox { position: absolute; left: 6%; right: 6%; top: 11.5%; height: calc(150px * var(--u)); }
+.inbox .lbl { position: absolute; left: 0; top: 0; font-weight: 800; font-size: calc(26px * var(--u)); letter-spacing: calc(2px * var(--u)); text-transform: uppercase; color: var(--text2); }
+.mini { position: absolute; top: calc(44px * var(--u)); width: calc(150px * var(--u)); height: calc(96px * var(--u));
+  background: linear-gradient(180deg, var(--surface-2), var(--surface)); border: calc(1px * var(--u)) solid var(--line);
+  border-radius: calc(12px * var(--u)); box-shadow: 0 calc(10px * var(--u)) calc(26px * var(--u)) rgba(0,0,0,0.45);
+  padding: calc(16px * var(--u)); display: flex; flex-direction: column; gap: calc(10px * var(--u)); opacity: 0; will-change: transform, opacity; }
+.mini i { display: block; height: calc(9px * var(--u)); border-radius: calc(3px * var(--u)); background: #38516a; }
+.mini i:nth-child(1) { width: 70%; background: #4a6a8a; }
+.mini i:nth-child(2) { width: 90%; }
+.mini i:nth-child(3) { width: 50%; }
+.badge {
+  position: absolute; right: calc(2px * var(--u)); top: calc(26px * var(--u));
+  display: inline-flex; align-items: center; gap: calc(10px * var(--u));
+  background: var(--red); color: #fff; font-weight: 900; font-size: calc(34px * var(--u));
+  padding: calc(10px * var(--u)) calc(20px * var(--u)); border-radius: calc(999px * var(--u));
+  box-shadow: 0 0 calc(26px * var(--u)) rgba(255,90,77,0.5); opacity: 0; will-change: transform, opacity;
+}
+.badge small { font-weight: 700; font-size: calc(24px * var(--u)); opacity: 0.9; }
+
+/* ── the open order email (source of the fields) — full-width, stacked above the sheet ── */
+.email { position: absolute; left: 6%; width: 88%; top: 22%; padding: calc(24px * var(--u)) calc(30px * var(--u));
+  background: linear-gradient(180deg, var(--surface-2), var(--surface)); border: calc(1px * var(--u)) solid var(--line);
+  border-radius: calc(20px * var(--u)); box-shadow: 0 calc(18px * var(--u)) calc(44px * var(--u)) rgba(0,0,0,0.5); opacity: 0; will-change: transform, opacity; }
+.email .subj { font-weight: 800; font-size: calc(34px * var(--u)); color: var(--gold-2); margin-bottom: calc(16px * var(--u)); }
+.efields { display: grid; grid-template-columns: 1fr 1fr 0.9fr; gap: calc(20px * var(--u)); }
+.field { display: flex; flex-direction: column; gap: calc(6px * var(--u)); }
+.field .k { font-weight: 700; font-size: calc(24px * var(--u)); letter-spacing: calc(1px * var(--u)); text-transform: uppercase; color: var(--text2); }
+.field .v { font-weight: 800; font-size: calc(30px * var(--u)); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.field.lit .v { color: var(--gold-2); }
+
+/* ── the spreadsheet the human fills by hand — full-width below the email ── */
+.sheet { position: absolute; left: 6%; width: 88%; top: 44%; background: color-mix(in srgb, var(--surface) 94%, #000);
+  border: calc(1px * var(--u)) solid var(--line); border-radius: calc(18px * var(--u)); overflow: hidden;
+  box-shadow: 0 calc(18px * var(--u)) calc(44px * var(--u)) rgba(0,0,0,0.5); opacity: 0; will-change: transform, opacity; }
+.sh-head, .sh-row { display: grid; grid-template-columns: 1.15fr 1.1fr 1fr calc(48px * var(--u)); align-items: center; }
+.sh-head { background: var(--surface-2); color: var(--gold-2); font-weight: 800; font-size: calc(24px * var(--u)); letter-spacing: calc(1px * var(--u)); text-transform: uppercase; }
+.sh-head span { padding: calc(18px * var(--u)) calc(20px * var(--u)); }
+.sh-row { border-top: calc(1px * var(--u)) solid #182838; position: relative; }
+.sh-row .cell { padding: calc(18px * var(--u)) calc(20px * var(--u)); font-weight: 700; font-size: calc(29px * var(--u)); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; will-change: opacity; }
+.sh-row .num { grid-column: auto; padding: 0; text-align: center; font-size: calc(22px * var(--u)); color: var(--text2); font-weight: 700; }
+.sh-row .check { justify-self: center; transform: scale(0.4); width: calc(30px * var(--u)); height: calc(30px * var(--u)); border-radius: 50%; background: var(--green); opacity: 0; box-shadow: 0 0 calc(14px * var(--u)) rgba(53,208,127,0.5); will-change: transform, opacity; }
+.sh-head .hnum { padding: calc(18px * var(--u)) 0; text-align: center; font-size: calc(20px * var(--u)); }
+
+/* the flying field chips (email value -> sheet cell) */
+.fly { position: absolute; z-index: 6; padding: calc(10px * var(--u)) calc(18px * var(--u)); border-radius: calc(10px * var(--u));
+  background: var(--gold); color: #1a1204; font-weight: 800; font-size: calc(27px * var(--u));
+  box-shadow: 0 calc(10px * var(--u)) calc(26px * var(--u)) rgba(0,0,0,0.5); opacity: 0; white-space: nowrap; will-change: transform, opacity; }
+
+/* the cursor pointer */
+.cursor { position: absolute; z-index: 7; width: calc(40px * var(--u)); height: calc(40px * var(--u)); opacity: 0; will-change: transform, opacity;
+  filter: drop-shadow(0 calc(4px * var(--u)) calc(8px * var(--u)) rgba(0,0,0,0.6)); }
+.cursor svg { width: 100%; height: 100%; display: block; }
+
+/* the "copy / paste" ghost ticks synced to the words */
+.beatlbl { position: absolute; left: 50%; top: 74%; transform: translate(-50%, 0); display: flex; gap: calc(14px * var(--u)); opacity: 0; will-change: opacity; }
+.beatlbl span { font-weight: 800; font-size: calc(28px * var(--u)); color: var(--text2); padding: calc(8px * var(--u)) calc(16px * var(--u)); border-radius: calc(999px * var(--u)); border: calc(1px * var(--u)) solid var(--line); }
+.beatlbl span.on { color: var(--gold-2); border-color: color-mix(in srgb, var(--gold) 55%, transparent); }

@@ -1,0 +1,70 @@
+/* wh-takes-keeps — 014 s4 THE REFRAME (black+gold). Owns the QUOTABLE citation line
+   ("Just the part of you that was a slow machine.") held gold-on-black. A clean split: the
+   left "AI TAKES · the typing" card crumbles to gray dust (callback to s2's slow machine); the
+   right "YOU KEEP · the judgment" node stays lit gold, an amber '?' resolving to a green check
+   (judgment stays human, visible). Flat, face-on, no 3D tilt. Sizes scale by --u. */
+:root {
+  --bg: #070605; --surface: #141009; --surface-2: #1c1610; --line: #2c2415;
+  --text: #f5f1e8; --text2: #b6ab93; --gray: #6b6a66;
+  --gold: #ffb020; --gold-2: #ffd37a; --green: #35d07f; --amber: #ffc23d; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 120% 78% at 50% 32%, #12100a 0%, #070605 74%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.floor { position: absolute; left: -30%; right: -30%; bottom: 4%; height: 40%;
+  background: repeating-linear-gradient(90deg, rgba(255,176,32,0.06) 0, rgba(255,176,32,0.06) calc(2px * var(--u)), transparent calc(2px * var(--u)), transparent calc(74px * var(--u)));
+  transform: perspective(calc(900px * var(--u))) rotateX(64deg); transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.7), transparent 84%); mask-image: linear-gradient(to top, rgba(0,0,0,0.7), transparent 84%); }
+
+.camera { position: absolute; inset: 0; z-index: 2; will-change: transform; }
+
+/* the faint answered echo up top */
+.echo { position: absolute; left: 6%; right: 6%; top: 7.5%; text-align: center;
+  font-weight: 800; font-size: calc(40px * var(--u)); letter-spacing: calc(1px * var(--u)); color: var(--text2); opacity: 0; will-change: opacity; }
+.echo .strike { display: inline-block; position: relative; color: var(--gold-2); }
+.echo .strbar { position: absolute; left: -4%; right: -4%; top: 52%; height: calc(6px * var(--u)); background: var(--gold);
+  border-radius: calc(3px * var(--u)); transform: scaleX(0); transform-origin: left center; box-shadow: 0 0 calc(16px * var(--u)) rgba(255,176,32,0.5); will-change: transform; }
+
+/* the QUOTE citation line — the held, screenshotable centerpiece */
+.quote { position: absolute; left: 6%; right: 6%; top: 20%;
+  padding: calc(30px * var(--u)) calc(30px * var(--u)); text-align: center;
+  border-left: calc(8px * var(--u)) solid var(--gold); border-radius: calc(6px * var(--u)) calc(18px * var(--u)) calc(18px * var(--u)) calc(6px * var(--u));
+  background: linear-gradient(90deg, rgba(255,176,32,0.10), rgba(20,16,9,0.35));
+  opacity: 0; will-change: transform, opacity; }
+.quote .mark { font-weight: 900; font-size: calc(90px * var(--u)); line-height: 0.4; color: var(--gold); opacity: 0.5; height: calc(40px * var(--u)); display: block; text-align: left; }
+.quote .qline { font-weight: 900; font-size: calc(58px * var(--u)); line-height: 1.14; color: var(--text); letter-spacing: calc(-0.5px * var(--u)); }
+.quote .qline b { color: var(--gold-2); }
+
+/* the split — left crumbles (typing), right stays (judgment) */
+.split { position: absolute; left: 6%; right: 6%; top: 50%; display: grid; grid-template-columns: 1fr 1fr; gap: calc(24px * var(--u)); }
+.col { position: relative; border-radius: calc(20px * var(--u)); padding: calc(26px * var(--u)) calc(24px * var(--u)); min-height: calc(300px * var(--u));
+  border: calc(1px * var(--u)) solid var(--line); opacity: 0; will-change: transform, opacity; }
+.col .tag { font-weight: 800; font-size: calc(26px * var(--u)); letter-spacing: calc(2px * var(--u)); text-transform: uppercase; margin-bottom: calc(10px * var(--u)); }
+.col .val { font-weight: 900; font-size: calc(46px * var(--u)); line-height: 1.05; }
+
+.col.takes { background: linear-gradient(180deg, var(--surface-2), var(--surface)); }
+.col.takes .tag { color: var(--gray); }
+.col.takes .val { color: var(--text2); }
+.col.takes .chips { display: flex; flex-wrap: wrap; gap: calc(10px * var(--u)); margin-top: calc(20px * var(--u)); }
+.col.takes .chip { padding: calc(8px * var(--u)) calc(15px * var(--u)); border-radius: calc(10px * var(--u)); background: #2a2519; border: calc(1px * var(--u)) solid #3a3320;
+  color: var(--text2); font-weight: 800; font-size: calc(24px * var(--u)); will-change: transform, opacity; }
+
+.col.keeps { background: linear-gradient(180deg, rgba(45,33,11,0.9), rgba(28,22,16,0.9)); border-color: color-mix(in srgb, var(--gold) 55%, transparent);
+  box-shadow: 0 0 calc(46px * var(--u)) rgba(255,176,32,0.28); }
+.col.keeps .tag { color: var(--gold-2); }
+.col.keeps .val { color: var(--gold); text-shadow: 0 0 calc(30px * var(--u)) rgba(255,176,32,0.4); }
+.col.keeps .flags { display: flex; flex-direction: column; gap: calc(12px * var(--u)); margin-top: calc(20px * var(--u)); }
+.col.keeps .flag { display: flex; align-items: center; gap: calc(12px * var(--u)); font-weight: 700; font-size: calc(26px * var(--u)); color: var(--text); }
+.col.keeps .q { position: relative; width: calc(38px * var(--u)); height: calc(38px * var(--u)); border-radius: 50%; font-weight: 900; font-size: calc(24px * var(--u)); flex: 0 0 auto; }
+.col.keeps .q.ask { background: color-mix(in srgb, var(--amber) 22%, transparent); border: calc(2px * var(--u)) solid var(--amber); color: var(--amber); }
+.col.keeps .q.ok { background: var(--green); border: calc(2px * var(--u)) solid var(--green); color: #08331d; display: flex; align-items: center; justify-content: center; }
+.col.keeps .q .g { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; will-change: opacity; }
+.col.keeps .q .g-ok { opacity: 0; color: #08331d; }
+
+/* crumble particles for the typing card */
+.dust { position: absolute; z-index: 4; width: calc(14px * var(--u)); height: calc(14px * var(--u)); border-radius: calc(3px * var(--u)); background: var(--gray); opacity: 0; will-change: transform, opacity; }

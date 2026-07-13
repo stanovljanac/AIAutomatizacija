@@ -1,0 +1,12 @@
+{
+  "hfScene": "wh-one-pass",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 302,
+  "durationSeconds": 10.066666666666666,
+  "revealsSeconds": [0.0, 1.38, 3.56, 6.9, 7.6],
+  "props": {
+    "note": "THE MONEY SHOT — 40 emails funnel to gold AI node, cascade fill, counter 0->40, clock 54->0, 40/40 stamp."
+  }
+}

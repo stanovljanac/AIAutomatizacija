@@ -1,0 +1,89 @@
+<!doctype html>
+<!--
+  wh-one-pass — HyperFrames body scene for video 014, s3 THE MONEY SHOT ("So this time, I didn't.").
+  VISIBLE PROOF (proof-must-be-visible): 40 order-email cards funnel into a gold AI node ("Running..."),
+  then the spreadsheet fills in a fast CASCADE — a green check per row, the counter RACES 0->40, the
+  crawling clock from s2 SNAPS 54 -> 0 (same clock, so the SPEED contrast is explicit). The cursor
+  pulls back and goes still ("I just watched"). A gold "40/40 — one pass" stamp locks over the clean
+  sheet. Flat, face-on. Same sheet/data as s2 (continuity). Synthetic data only.
+
+  Silent + deterministic: NO Math.random / Date.now; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":302},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10.08}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../gsap.min.js"></script>
+    <link rel="stylesheet" href="../wh-one-pass.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="wh-one-pass" data-start="0" data-duration="10.05" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <div class="stage" id="stage">
+        <!-- HUD -->
+        <div class="hud">
+          <div class="chip" id="clock"><span class="dot"></span>&#8776; <b id="clock-min">54</b>&nbsp;min</div>
+          <div class="chip" id="rows"><b id="rows-n">0</b>&nbsp;/&nbsp;40 rows</div>
+        </div>
+
+        <!-- the pile of 40 order emails -->
+        <div class="pile" id="pile">
+          <div class="pilecount" id="pilecount">40 order emails</div>
+          <div class="pcard" style="left:8%;  top:22%"><i></i><i></i></div>
+          <div class="pcard" style="left:22%; top:12%"><i></i><i></i></div>
+          <div class="pcard" style="left:37%; top:20%"><i></i><i></i></div>
+          <div class="pcard" style="left:52%; top:10%"><i></i><i></i></div>
+          <div class="pcard" style="left:66%; top:22%"><i></i><i></i></div>
+          <div class="pcard" style="left:79%; top:14%"><i></i><i></i></div>
+          <div class="pcard" style="left:4%;  top:48%"><i></i><i></i></div>
+          <div class="pcard" style="left:19%; top:54%"><i></i><i></i></div>
+          <div class="pcard" style="left:34%; top:46%"><i></i><i></i></div>
+          <div class="pcard" style="left:50%; top:56%"><i></i><i></i></div>
+          <div class="pcard" style="left:65%; top:48%"><i></i><i></i></div>
+          <div class="pcard" style="left:80%; top:54%"><i></i><i></i></div>
+          <div class="pcard" style="left:27%; top:78%"><i></i><i></i></div>
+          <div class="pcard" style="left:58%; top:80%"><i></i><i></i></div>
+        </div>
+
+        <!-- the gold AI node -->
+        <div class="pulse" id="pulse"></div>
+        <div class="ainode" id="ainode"><div class="core">AI</div></div>
+        <div class="running" id="running"><span class="spin" id="spin"></span>Running&hellip;</div>
+
+        <!-- the spreadsheet filled in one cascade -->
+        <div class="sheet" id="sheet">
+          <div class="sh-head"><span>Name</span><span>Item</span><span>Addr</span></div>
+          <div class="sh-row"><span class="cell">Dana Whitfield</span><span class="cell">Walnut Desk Lamp</span><span class="cell">42 Rowan St</span><span class="check"></span><span class="sweep"></span></div>
+          <div class="sh-row"><span class="cell">Marco Reyes</span><span class="cell">Linen Throw</span><span class="cell">7 Alder Way</span><span class="check"></span><span class="sweep"></span></div>
+          <div class="sh-row"><span class="cell">Priya Nair</span><span class="cell">Ceramic Mug Set</span><span class="cell">19 Birch Ln</span><span class="check"></span><span class="sweep"></span></div>
+          <div class="sh-row"><span class="cell">Tom Okafor</span><span class="cell">Desk Organizer</span><span class="cell">88 Cedar Rd</span><span class="check"></span><span class="sweep"></span></div>
+          <div class="sh-row"><span class="cell">Ana Sokolova</span><span class="cell">Wall Clock</span><span class="cell">5 Elm Ct</span><span class="check"></span><span class="sweep"></span></div>
+          <div class="sh-row"><span class="cell">Liam Chen</span><span class="cell">Table Runner</span><span class="cell">33 Fir St</span><span class="check"></span><span class="sweep"></span></div>
+        </div>
+
+        <!-- cursor + "just watching" -->
+        <div class="cursor" id="cursor"><svg viewBox="0 0 24 24"><path d="M4 2 L4 20 L9 15 L12.5 22 L15.5 20.5 L12 14 L19 14 Z" fill="#eaf1f8" stroke="#0a1119" stroke-width="1.2"/></svg></div>
+        <div class="watching" id="watching">&#128064; I just watched</div>
+
+        <!-- completion stamp -->
+        <div class="stamp" id="stamp"><div class="big">40 / 40</div><div class="sub">one pass</div></div>
+      </div>
+    </div>
+    <script src="../wh-one-pass.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["wh-one-pass"] = tl;
+    </script>
+  </body>
+</html>

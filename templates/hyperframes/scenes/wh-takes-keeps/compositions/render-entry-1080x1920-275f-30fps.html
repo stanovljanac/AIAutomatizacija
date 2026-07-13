@@ -1,0 +1,68 @@
+<!doctype html>
+<!--
+  wh-takes-keeps — HyperFrames scene for video 014, s4 THE REFRAME (black+gold). The "wait, what"
+  distinction beat. Owns the QUOTABLE citation line — "Just the part of you that was a slow machine."
+  — held gold-on-black, screenshotable. A clean split: the left "AI TAKES · the typing" card crumbles
+  to gray dust (callback to s2's slow machine); the right "YOU KEEP · the judgment" node stays lit
+  gold, an amber '?' resolving to a green check (judgment stays human, visible). Flat, face-on.
+
+  Silent + deterministic: NO Math.random / Date.now; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":275},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":9.16}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../gsap.min.js"></script>
+    <link rel="stylesheet" href="../wh-takes-keeps.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="wh-takes-keeps" data-start="0" data-duration="9.15" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="floor"></div></div>
+
+      <div class="camera" id="camera">
+        <!-- answered echo -->
+        <div class="echo" id="echo">The real answer to <span class="strike" id="strike">&ldquo;will AI take your job?&rdquo;<span class="strbar" id="strbar"></span></span></div>
+
+        <!-- the QUOTE citation line (held, screenshotable) -->
+        <div class="quote" id="quote">
+          <span class="mark">&ldquo;</span>
+          <div class="qline">Just the part of you<br />that was a <b>slow machine.</b></div>
+        </div>
+
+        <!-- the split: typing crumbles / judgment stays -->
+        <div class="split">
+          <div class="col takes" id="takes">
+            <div class="tag">AI takes</div>
+            <div class="val">the typing</div>
+            <div class="chips" id="chips">
+              <span class="chip">Copy</span><span class="chip">Paste</span><span class="chip">Retype</span>
+            </div>
+          </div>
+          <div class="col keeps" id="keeps">
+            <div class="tag">You keep</div>
+            <div class="val">the judgment</div>
+            <div class="flags">
+              <div class="flag"><span class="q ask" id="q1"><span class="g g-ask" id="g-ask">?</span><span class="g g-ok" id="g-ok">&#10003;</span></span>check the odd ones</div>
+              <div class="flag"><span class="q ok" id="q2">&#10003;</span>decide what ships</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../wh-takes-keeps.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["wh-takes-keeps"] = tl;
+    </script>
+  </body>
+</html>

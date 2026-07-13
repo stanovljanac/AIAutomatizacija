@@ -1,0 +1,12 @@
+{
+  "hfScene": "wh-hour-flip",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 406,
+  "durationSeconds": 13.533333333333333,
+  "revealsSeconds": [0.0, 2.72, 5.12, 7.56],
+  "props": {
+    "note": "OUTRO MONOLITH — WILL AI TAKE YOUR JOB? struck -> Y-flip -> WHICH HOUR WOULD YOU HAND OVER FIRST? + brand row."
+  }
+}

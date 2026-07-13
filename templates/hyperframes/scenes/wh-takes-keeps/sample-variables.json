@@ -1,0 +1,12 @@
+{
+  "hfScene": "wh-takes-keeps",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 275,
+  "durationSeconds": 9.166666666666666,
+  "revealsSeconds": [0.0, 3.54, 6.86],
+  "props": {
+    "note": "THE REFRAME — quote citation line + typing crumbles (gray) vs judgment stays (gold), ?->check."
+  }
+}

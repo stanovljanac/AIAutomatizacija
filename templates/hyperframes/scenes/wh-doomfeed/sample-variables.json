@@ -1,0 +1,13 @@
+{
+  "hfScene": "wh-doomfeed",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 290,
+  "durationSeconds": 9.666666666666666,
+  "revealsSeconds": [0.0, 3.96, 5.7, 7.18],
+  "props": {
+    "anchor": "Not the job.",
+    "note": "HOOK HERO — doomscroll feed → freeze/Enter press → 3D shatter → gold reframe stamp."
+  }
+}
