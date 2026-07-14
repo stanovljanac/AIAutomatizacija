@@ -14,15 +14,43 @@ export function estimateSeconds(scenes, wpm = 160) {
   return (words / wpm) * 60;
 }
 
+// Marker id for the SYNTHETIC Short-hook scene (script.short_hook). It never collides with a long
+// scene id, so both makeShort and makeShortPlan can detect it before the `s1..sN` re-numbering.
+export const SHORT_HOOK_ID = "__short_hook__";
+
 /**
- * Choose which LONG scenes make up the Short (hook + the strongest points that fit + a CTA),
+ * The Short's PURPOSE-BUILT opener, derived from script.short_hook (or null when none authored).
+ * A Short has different psychology than the long-form ("Everyone thinks AI takes jobs. It doesn't."),
+ * so it gets its own first ~3s instead of inheriting the long hook. Shape matches a script scene so
+ * it drops straight into the Short's scenes[] (and is voiced in the Short's own continuous TTS pass —
+ * never spliced from the long track).
+ */
+export function shortHookScene(longScript) {
+  const sh = longScript?.short_hook;
+  if (!sh) return null;
+  const sentences = sh.sentences?.length ? sh.sentences : [sh.narration];
+  return {
+    id: SHORT_HOOK_ID,
+    role: "hook",
+    template: sh.component ? "custom" : "hook-card",
+    narration: sh.narration,
+    sentences,
+    on_screen_text: sh.on_screen_text ?? null,
+  };
+}
+
+/**
+ * Choose which LONG scenes make up the Short body (the strongest points that fit + a CTA),
  * preserving their original ids. The single source of selection truth — both the Short SCRIPT
  * (makeShort) and the Short SCENE-PLAN (makeShortPlan) derive from this same picked list so their
- * renumbered `s1..sN` ids always line up.
+ * renumbered `s1..sN` ids always line up. When the long script authors a `short_hook`, the long
+ * hook scene is DROPPED from the body (the purpose-built opener replaces it); otherwise the long
+ * hook still leads the Short (legacy behavior, unchanged).
  */
 export function pickShortScenes(longScript, { targetSeconds = 55, wpm = 160 } = {}) {
   const scenes = longScript.scenes || [];
-  const hook = scenes.find((s) => s.role === "hook") || scenes[0];
+  const useAuthoredHook = Boolean(longScript.short_hook);
+  const hook = useAuthoredHook ? null : scenes.find((s) => s.role === "hook") || scenes[0];
   const points = scenes.filter((s) => ["point", "demo"].includes(s.role));
   const cta = scenes.find((s) => s.role === "cta" || s.role === "outro");
 
@@ -45,9 +73,13 @@ export function pickShortScenes(longScript, { targetSeconds = 55, wpm = 160 } = 
   return picked;
 }
 
-/** Build a Short script object from a long script. Does not write to disk. */
+/** Build a Short script object from a long script. Does not write to disk. When the long script
+ *  authors a `short_hook`, it becomes the Short's first scene (purpose-built opener); otherwise the
+ *  long hook leads (legacy). Both hook + body flow into one renumbered, continuously-voiced Short. */
 export function makeShort(longScript, { targetSeconds = 55, wpm = 160 } = {}) {
-  const picked = pickShortScenes(longScript, { targetSeconds, wpm });
+  const hook = shortHookScene(longScript);
+  const body = pickShortScenes(longScript, { targetSeconds, wpm });
+  const all = hook ? [hook, ...body] : body;
   return {
     id: longScript.id,
     language: longScript.language,
@@ -55,7 +87,7 @@ export function makeShort(longScript, { targetSeconds = 55, wpm = 160 } = {}) {
     angle: longScript.angle,
     title_working: `${longScript.title_working} (Short)`,
     target_seconds: targetSeconds,
-    scenes: picked.map((s, i) => ({ ...s, id: `s${i + 1}` })),
+    scenes: all.map((s, i) => ({ ...s, id: `s${i + 1}` })),
   };
 }
 
@@ -97,16 +129,29 @@ function leanForShort(planEntry) {
   return props ? { ...rest, props } : { ...rest };
 }
 
+/** Plan entry for the synthetic Short-hook scene (script.short_hook) — a hook-card (or a bespoke
+ *  hook-* custom hero when `component` is set) so the Short opens on a hook-class beat that clears
+ *  the first-~3s QA gate. Pure. */
+function shortHookPlanEntry(shortHook, scene_id) {
+  const title = shortHook.on_screen_text || shortHook.sentences?.[0] || shortHook.narration;
+  if (shortHook.component) return { scene_id, template: "custom", props: { component: shortHook.component, title } };
+  return { scene_id, template: "hook-card", props: { title } };
+}
+
 /**
- * Derive the Short scene-plan from the long scene-plan. For each picked long scene, reuse its plan
- * entry under the Short's renumbered `scene_id` (falling back to a minimal entry if the long plan
- * has no match). Pure; uses the SAME pickShortScenes selection as makeShort so ids align.
+ * Derive the Short scene-plan from the long scene-plan. The purpose-built opener (script.short_hook,
+ * when present) leads with its own hook-card/custom entry; each remaining picked long scene reuses
+ * its plan entry under the Short's renumbered `scene_id` (falling back to a minimal entry if the long
+ * plan has no match). Pure; uses the SAME hook + pickShortScenes selection as makeShort so ids align.
  */
 export function makeShortPlan(longScript, longPlan, { targetSeconds = 55, wpm = 160 } = {}) {
-  const picked = pickShortScenes(longScript, { targetSeconds, wpm });
+  const hook = shortHookScene(longScript);
+  const body = pickShortScenes(longScript, { targetSeconds, wpm });
+  const all = hook ? [hook, ...body] : body;
   const byId = new Map((longPlan?.scenes || []).map((e) => [e.scene_id, e]));
-  const scenes = picked.map((scene, i) => {
+  const scenes = all.map((scene, i) => {
     const scene_id = `s${i + 1}`;
+    if (scene.id === SHORT_HOOK_ID) return shortHookPlanEntry(longScript.short_hook, scene_id);
     const src = byId.get(scene.id);
     if (src) {
       const { scene_id: _drop, ...rest } = leanForShort(src); // eslint-disable-line no-unused-vars

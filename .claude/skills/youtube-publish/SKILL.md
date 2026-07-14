@@ -56,6 +56,20 @@ SEO/claims rubric in `pipeline/shared/review/rubric.mjs` (`publish` entry; weigh
   `publish.json.short.caption` (the real URL is filled at upload); the owner reuses it across
   other socials (X, IG, TikTok, LinkedIn).
 
+## Short → Long bridge (every video — Phase 1.2, feeds long-form discovery)
+Shorts carry most of our reach but long-form discovery is under-fed, so **formalize the chain**
+Short → Long → pin → template → cross-post as one deliberate package, not five afterthoughts.
+`build-metadata.buildBridge` assembles `publish.json.bridge` from `brief.bridge`:
+- `related_long_id` — the long video the Short drives discovery to (a nested Short's parent long,
+  or a topically-aligned long for a STANDALONE Short — e.g. an inbox Short → the n8n inbox-triage long).
+- `long_url` — the `<LONG_URL>` placeholder the owner fills at upload; used in caption, pin, end screen.
+- `short_caption`, `pinned_comment`, `template_link`, `end_screen_target`.
+- `manual_checklist` — the one-line steps the owner does by hand, rendered as checkboxes in
+  **publish.md** ("in the Shorts editor, link the related video …", "add the end screen …", "pin the
+  comment", "paste the template link"). **We upload MANUALLY (D-055) and never touch YouTube's native
+  link/end-screen UI** — the system builds the package + checklist; the owner clicks. Fill
+  `brief.bridge` at script approval so the bridge is ready when the video renders.
+
 ## Community post / YT Posts (every video — owner rule 2026-06-13)
 Generate a short **Community-tab announcement** for EVERY video, stored in
 `publish.json.community_post`. Format: a "just published" opener + a **1–2 sentence** teaser of

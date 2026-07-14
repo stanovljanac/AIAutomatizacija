@@ -54,6 +54,37 @@ test("FAILS closed when no hook-class scene opens the video", () => {
   assert.equal(byName(checks, "hook_opening").severity, "high");
 });
 
+test("Short hook gate uses the TIGHTER window: a hook-class opener within ~3s passes", () => {
+  // vertical Short, intro 36f (1.2s), hook opens at frame 36 (~0s into the body) → within 3s.
+  const short = cleanProps({
+    introFrames: 36,
+    outroFrames: 36,
+    totalFrames: 1000,
+    scenes: [
+      { sceneId: "s1", template: "hook-card", props: {}, fromFrame: 36, durFrames: 300 },
+      { sceneId: "s2", template: "bullet-steps", props: { reveals: [0, 30] }, fromFrame: 336, durFrames: 628 },
+    ],
+  });
+  const { checks } = check(short, { vertical: true, durationSeconds: 33 });
+  assert.equal(byName(checks, "hook_opening").pass, true);
+});
+
+test("Short hook gate FAILS when the hook lands after the ~3s window (would pass the loose 30s long gate)", () => {
+  // Hook starts at frame 180 = 4.8s > 3s (Short window) but < 30s (long window). Short must fail;
+  // long must pass — proving the window is Short-aware.
+  const late = cleanProps({
+    introFrames: 36,
+    outroFrames: 36,
+    totalFrames: 1200,
+    scenes: [
+      { sceneId: "s1", template: "bullet-steps", props: { reveals: [0, 30] }, fromFrame: 36, durFrames: 144 },
+      { sceneId: "s2", template: "hook-card", props: {}, fromFrame: 180, durFrames: 984 },
+    ],
+  });
+  assert.equal(byName(check(late, { vertical: true, durationSeconds: 38 }).checks, "hook_opening").pass, false);
+  assert.equal(byName(check(late, { vertical: false, durationSeconds: 38 }).checks, "hook_opening").pass, true);
+});
+
 test("FAILS closed when a caption cue exceeds the format's max words", () => {
   const props = cleanProps({
     captions: [{ fromFrame: 45, durFrames: 90, words: Array.from({ length: 9 }, (_, i) => ({ w: `w${i}` })) }],

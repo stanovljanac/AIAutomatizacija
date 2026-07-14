@@ -90,7 +90,7 @@ for (const s of props.scenes) {
 // strong-hook: a hook-class opener (hook-card or a custom hook-* scene) must start within the window.
 const hookVD = fmt.hook?.visual_detail ?? {};
 if (hookVD.require_hook_class_scene) {
-  const openSec = hookVD.first_seconds ?? 30;
+  const openSec = vertical ? (hookVD.short_first_seconds ?? 3) : (hookVD.first_seconds ?? 30);
   const openingEnd = timings.introFrames + Math.round(openSec * fps);
   if (!openingHasHook(props.scenes, openingEnd)) {
     console.warn(`HOOK RULE (format.hook.visual_detail): no hook-class scene opens ${id} within the first ${openSec}s — start with a hook-card or a custom hook-* scene (strong first impression).`);

@@ -3,7 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { makeShort, estimateSeconds, pickShortScenes, makeShortPlan, deriveShortPlanFile } from "./make-short.mjs";
+import { makeShort, estimateSeconds, pickShortScenes, makeShortPlan, deriveShortPlanFile, shortHookScene, SHORT_HOOK_ID } from "./make-short.mjs";
 import { readFixture, assertValid, withTempDir } from "../shared/testkit/index.mjs";
 
 test("estimateSeconds scales with words and wpm", () => {
@@ -56,6 +56,85 @@ test("makeShort with only a hook returns exactly one scene", () => {
   };
   const short = makeShort(long);
   assert.equal(short.scenes.length, 1);
+});
+
+// ── Purpose-built Short hook (script.short_hook) ──────────────────────────────
+
+// A long script that authors a dedicated Short opener via short_hook.
+const longWithShortHook = (over = {}) => ({
+  id: "030-x",
+  language: "en",
+  archetype: "ideas",
+  angle: "a",
+  title_working: "T",
+  target_seconds: 60,
+  short_hook: {
+    narration: "Everyone asks AI to write their emails. I asked it to find the ones I should ignore.",
+    on_screen_text: "The emails you should ignore",
+    ...over,
+  },
+  scenes: [
+    { id: "h", role: "hook", template: "hook-card", narration: "Long-form intro that meanders for a while.", sentences: ["Long intro."], on_screen_text: "Long hook" },
+    { id: "p1", role: "point", template: "bullet-steps", narration: "First it scores each thread by urgency.", sentences: ["First it scores each thread."], on_screen_text: "Score" },
+    { id: "c", role: "cta", template: "cta-card", narration: "Which inbox chore would you hand over first?", sentences: ["Which inbox chore would you hand over first?"], on_screen_text: "Your turn" },
+  ],
+});
+
+test("shortHookScene returns null when no short_hook is authored", () => {
+  assert.equal(shortHookScene(readFixture("script.json")), null);
+});
+
+test("makeShort PREPENDS the purpose-built short_hook and DROPS the long hook", () => {
+  const short = makeShort(longWithShortHook());
+  assertValid(short, "script");
+  const s1 = short.scenes[0];
+  assert.equal(s1.id, "s1");
+  assert.equal(s1.role, "hook");
+  assert.equal(s1.template, "hook-card");
+  assert.match(s1.narration, /^Everyone asks AI/);
+  assert.equal(s1.on_screen_text, "The emails you should ignore");
+  // the long hook narration must NOT survive into the Short (it was replaced)
+  assert.ok(!short.scenes.some((s) => /meanders/.test(s.narration)), "long hook must be dropped");
+  // the body (point + cta) still carries over
+  assert.ok(short.scenes.some((s) => s.template === "cta-card"));
+});
+
+test("makeShort derives sentences from narration when short_hook omits them", () => {
+  const short = makeShort(longWithShortHook());
+  assert.deepEqual(short.scenes[0].sentences, [
+    "Everyone asks AI to write their emails. I asked it to find the ones I should ignore.",
+  ]);
+});
+
+test("makeShortPlan opens with a hook-card entry from short_hook, ids line up with makeShort", () => {
+  const long = longWithShortHook();
+  const longPlan = { id: long.id, scenes: [
+    { scene_id: "h", template: "hook-card", props: { title: "Long hook" } },
+    { scene_id: "p1", template: "bullet-steps", props: { title: "Score", items: ["a"] } },
+    { scene_id: "c", template: "cta-card", props: { title: "Your turn" } },
+  ]};
+  const short = makeShort(long);
+  const plan = makeShortPlan(long, longPlan);
+  assertValid(plan, "scene-plan");
+  assert.deepEqual(plan.scenes.map((s) => s.scene_id), short.scenes.map((s) => s.id));
+  assert.equal(plan.scenes[0].template, "hook-card");
+  assert.equal(plan.scenes[0].props.title, "The emails you should ignore");
+});
+
+test("short_hook.component renders the opener as a bespoke hook-* custom hero", () => {
+  const long = longWithShortHook({ component: "hookInboxSweep" });
+  const short = makeShort(long);
+  assert.equal(short.scenes[0].template, "custom");
+  const plan = makeShortPlan(long, { id: long.id, scenes: [] });
+  assert.equal(plan.scenes[0].template, "custom");
+  assert.equal(plan.scenes[0].props.component, "hookInboxSweep");
+});
+
+test("[verifier] the synthetic hook id never leaks into the final Short (re-numbered to s1)", () => {
+  const short = makeShort(longWithShortHook());
+  assert.ok(!short.scenes.some((s) => s.id === SHORT_HOOK_ID));
+  const plan = makeShortPlan(longWithShortHook(), { id: "030-x", scenes: [] });
+  assert.ok(!plan.scenes.some((s) => s.scene_id === SHORT_HOOK_ID));
 });
 
 // ── Short scene-plan derivation (T5.2 follow-up — the storyboard wire-up) ──────

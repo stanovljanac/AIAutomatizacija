@@ -88,6 +88,13 @@ polish sentences.
    **synthetic data**; pure-conceptual claims are framed as ideas, not tested fact.
 4. **One idea per sentence** (sentences are timing units).
 5. Hook lands in ≤ 10s; one subtle CTA (subscribe); short branded outro.
+5b. **End on ONE topical closing question (Phase 1.3).** Set top-level `closing_question` — a single
+   specific question tied to the video's topic ("Which hour would you hand over first?"), voiced in
+   the final beat. Optionally author `pinned_comment` (the answer + re-ask: "Mine was copy-paste.
+   What's yours?"); else build-metadata derives a reply-invite from the question. This is a genuine
+   conversation starter, explicitly allowed by STYLE_GUIDE §9 — **not** engagement-begging: one
+   question, one topic, and the subscribe CTA stays singular and separate (never "like, comment,
+   subscribe"). script-review must NOT flag a single topical closing question as begging.
 6. **Prefer concrete proof, by judgment (not a hard rule).** A real mini-example or a
    specific before→after gives the viewer something tangible instead of pure theory, and
    usually helps — so consider one reasonably early. BUT some topics are carried perfectly
@@ -135,6 +142,21 @@ polish sentences.
 - **diagram:** hook → build the diagram step by step → walk the flow → caveats → close.
 - **comparison:** hook → contenders + criteria → comparison table → honest verdict
   (with the angle) → close.
+
+## The Short's own hook (`short_hook`) — author it, never inherit the long one
+A Short has different psychology than the long-form: a viewer is swiping and decides in ~2–3s.
+The old behavior blindly reused/shortened the long hook — that's a reject. **Always author a
+top-level `short_hook`** in the long `script.json` so `make-short` prepends a purpose-built opener
+as the Short's first scene (the long hook is dropped from the Short).
+- Fields: `narration` (required — the Short's own cold-open line, e.g. *"Everyone asks AI to write
+  emails. I asked it to find the ones I should ignore."*), optional `on_screen_text` (the visual/
+  caption punch, **distinct** from the VO — preferred mechanism), optional `sentences`, and optional
+  `component` (a bespoke `hook-*` hero name — must start with `hook`).
+- One-continuous-audio: the `short_hook.narration` is voiced inside the Short's **own** TTS pass —
+  it is never spliced from the long track. Prefer a strong on-screen line over the first spoken line;
+  only write a brand-new spoken cold-open when the twist genuinely needs it.
+- The hook must land in the Short's first **~3s** (`format.hook.visual_detail.short_first_seconds`,
+  default 3) — qa-video enforces this on the vertical cut (tighter than the long-form 30s gate).
 
 ## Per-scene fields (script.schema.json)
 `id`, `role` (hook|intro|point|demo|transition|cta|outro), **`template`** (pick from

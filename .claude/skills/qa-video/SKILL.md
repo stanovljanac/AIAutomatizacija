@@ -51,6 +51,10 @@ You catch problems **before** the owner watches (PRD R13–R14), and you produce
   `hook-stat-reveal`) opens the video within `format.hook.visual_detail.first_seconds` (default 30s),
   or if that opening is a static hold with no real motion. `build-props.mjs` warns; QA enforces. The
   first ~30s carry the most retention weight — open on a concrete, sourced hook with visible motion.
+  - **Short cut = TIGHTER window (HARD).** On the vertical Short the gate uses
+    `format.hook.visual_detail.short_first_seconds` (default **3s**), not the 30s long-form window —
+    Short psychology means the purpose-built hook (`script.short_hook`, prepended by `make-short`)
+    must land in the first ~3s. Same hook-class rule, tighter clock.
 
 - **No paid-SaaS product names (HARD — owner rule 2026-06-24):** never name a paid SaaS product
   (Expensify, QuickBooks, …) on screen or in narration unless it's in `brief.approved_tools` (a paid

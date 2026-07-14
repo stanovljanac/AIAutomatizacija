@@ -19,6 +19,31 @@ Format:
 
 ---
 
+## 2026-07-14 — Phase 1 system upgrades: Short hook + Short→Long bridge + unified CTA-question (D-058)
+- who: agent (owner: "Pocni da implementiras insights-actionable-steps plan")
+- did: Shipped the three Tier-S reusable upgrades from the analytics plan (each improves every future
+  video), build-sprint cycle, `npm test` **582 green** (+10).
+  **(1) Separate Short hook generator** — new `script.short_hook` (own cold-open narration +
+  `on_screen_text` punch, optional `hook-*` `component`); `make-short.mjs` now PREPENDS it as the
+  Short's s1 and DROPS the inherited long hook (id-parity with the derived scene-plan preserved). QA
+  hook gate is Short-aware: the vertical cut must land a hook-class beat in the first
+  `hook.visual_detail.short_first_seconds` (default **3s**) vs the long-form 30s
+  (`check-lib.mjs` + `build-props.mjs` warn). One-continuous-audio respected (voiced in the Short's own
+  TTS pass, never spliced).
+  **(2) Short→Long bridge** — `build-metadata.buildBridge` assembles `publish.bridge` (related_long_id,
+  `<LONG_URL>`, short_caption, pinned_comment, template_link, end_screen_target) + a **manual_checklist**
+  rendered as checkboxes in `publish.md` (D-055: we build the package; the owner clicks the native
+  link/end-screen UI). Inputs from `brief.bridge`; distributor cross-post now prefers the bridge caption.
+  **(3) Unified CTA-question → pinned comment** — `script.closing_question` (one topical question) seeds
+  `build-metadata.buildPinnedComment` → `publish.pinned_comment` (authored `script.pinned_comment` wins),
+  mirrored into the bridge. STYLE_GUIDE §9 reconciled: one topical question is allowed, not begging;
+  subscribe stays singular. script-review told not to flag it.
+  Gate-1 threshold (`gate1.min_score`) was already config-driven (`config.review.panel` idea override,
+  9.0/7.5) — no literal to factor out; documented, no code change.
+- next: Phase 2 content — Short #4 (everyone-asks-ai: "emails I shouldn't answer") + Long #5 (n8n inbox
+  triage), both on the new system, through the owner gates.
+- blockers: none.
+
 ## 2026-07-12 (round 4) — 013 Short SEO/publish pack (owner: skip re-align)
 - who: agent (owner: "Preskoci re align i daj mi SEO/Publish pack za 013 short video")
 - did: Built the publish package on the QA-passed Short (`brief.status: qa_passed`) — re-align

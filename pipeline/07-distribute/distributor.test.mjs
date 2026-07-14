@@ -52,6 +52,20 @@ test("buildCrossPost derives the link from youtube_video_id when no videoUrl is 
   assert.equal("link" in buildCrossPost(notUploaded, {}), false, "no link key when nothing to link to");
 });
 
+test("buildCrossPost prefers the bridge caption + falls back to the bridge long_url placeholder", () => {
+  // The Short→Long bridge (Phase 1.2) is the formalized chain — its caption/link win so cross-post,
+  // pin, and end screen stay in sync.
+  const withBridge = {
+    title_options: ["T"],
+    short: { caption: "old short caption" },
+    youtube_video_id: null,
+    bridge: { short_caption: "Full breakdown → <LONG_URL>", long_url: "<LONG_URL>" },
+  };
+  const p = buildCrossPost(withBridge, {});
+  assert.equal(p.caption, "Full breakdown → <LONG_URL>");
+  assert.equal(p.link, "<LONG_URL>", "falls back to the bridge placeholder when not uploaded yet");
+});
+
 test("buildDistributionPlan is schema-valid and carries the source id + url", () => {
   const plan = buildDistributionPlan(samplePublish(), {
     config: { distribute: { enabled: true, provider: "postiz", channels: { short_crosspost: ["youtube", "tiktok"] } } },

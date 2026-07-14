@@ -8,6 +8,7 @@ import path from "node:path";
 import {
   buildMetadata, buildChapters, buildDescription, buildTags, fmtTime,
   publishMarkdown, writeMarkdownExport, recordThumbnailChoice,
+  buildBridge, buildPinnedComment, LONG_URL_PLACEHOLDER,
 } from "./build-metadata.mjs";
 import { readFixture, assertValid, validate, withTempDir } from "../shared/testkit/index.mjs";
 
@@ -45,6 +46,77 @@ test("description is answer-first and at most 3 sentences", () => {
   assert.ok(pub.description.length > 0);
   const sentences = pub.description.split(/[.!?]+/).map((s) => s.trim()).filter(Boolean);
   assert.ok(sentences.length <= 3, `got ${sentences.length} sentences`);
+});
+
+// --- Unified CTA-question → pinned-comment (Phase 1.3) ---
+
+test("buildPinnedComment derives a reply-invite from the closing question", () => {
+  const pin = buildPinnedComment({ closing_question: "Which hour would you hand over first?" });
+  assert.match(pin, /Which hour would you hand over first\?/);
+  assert.match(pin, /replies/);
+});
+
+test("buildPinnedComment prefers an authored pinned_comment verbatim", () => {
+  const pin = buildPinnedComment({ closing_question: "Which hour?", pinned_comment: "Mine was copy-paste. What's yours?" });
+  assert.equal(pin, "Mine was copy-paste. What's yours?");
+});
+
+test("buildPinnedComment returns empty when there is no closing question", () => {
+  assert.equal(buildPinnedComment({}), "");
+});
+
+test("buildMetadata emits pinned_comment from the script closing question, and the bridge mirrors it", () => {
+  const s = { ...script(), closing_question: "Which inbox chore would you hand over first?" };
+  const pub = buildMetadata({ brief: brief(), script: s, alignment: alignment() });
+  assertValid(pub, "publish");
+  assert.match(pub.pinned_comment, /Which inbox chore/);
+  assert.equal(pub.bridge.pinned_comment, pub.pinned_comment, "the bridge mirrors the pin (in sync)");
+});
+
+test("buildMetadata omits pinned_comment when the script has no closing question (no empty field)", () => {
+  const pub = buildMetadata({ brief: brief(), script: script(), alignment: alignment() });
+  assert.equal("pinned_comment" in pub, false);
+});
+
+// --- Short → Long bridge (Phase 1.2 — the deliberate ecosystem chain) ---
+
+test("buildMetadata attaches a schema-valid bridge with a <LONG_URL> placeholder", () => {
+  const pub = buildMetadata({ brief: brief(), script: script(), alignment: alignment() });
+  assertValid(pub, "publish");
+  assert.ok(pub.bridge, "bridge is attached");
+  assert.equal(pub.bridge.long_url, LONG_URL_PLACEHOLDER);
+  assert.ok(pub.bridge.short_caption.includes(LONG_URL_PLACEHOLDER), "caption carries the long link placeholder");
+});
+
+test("buildBridge builds the manual checklist from brief.bridge inputs (related long + template)", () => {
+  const b = { ...brief(), bridge: { related_long_id: "015-n8n-inbox-triage", related_long_title: "The n8n inbox that triages itself", template_link: "https://example.com/workflow.json" } };
+  const bridge = buildBridge({ publish: { short: { caption: "" }, pinned_comment: "Mine was copy-paste. What's yours?" }, brief: b });
+  assert.equal(bridge.related_long_id, "015-n8n-inbox-triage");
+  assert.equal(bridge.end_screen_target, "015-n8n-inbox-triage");
+  assert.equal(bridge.template_link, "https://example.com/workflow.json");
+  assert.equal(bridge.pinned_comment, "Mine was copy-paste. What's yours?");
+  // checklist: link related video + end screen + pin + template link = 4 steps
+  assert.equal(bridge.manual_checklist.length, 4);
+  assert.ok(bridge.manual_checklist.some((s) => s.includes("Shorts editor")));
+  assert.ok(bridge.manual_checklist.some((s) => s.includes("template link")));
+  assert.ok(bridge.short_caption.includes("The n8n inbox that triages itself"));
+});
+
+test("buildBridge with no related long / template yields an empty-ish checklist (no bogus steps)", () => {
+  const bridge = buildBridge({ publish: { short: { caption: "" } }, brief: brief() });
+  assert.equal(bridge.related_long_id, null);
+  assert.equal(bridge.template_link, null);
+  assert.equal(bridge.manual_checklist.length, 0);
+});
+
+test("publishMarkdown renders the bridge section + manual checkboxes when a related long exists", () => {
+  const b = { ...brief(), bridge: { related_long_id: "015-n8n-inbox-triage", template_link: "https://example.com/w.json" } };
+  const pub = buildMetadata({ brief: b, script: script(), alignment: alignment() });
+  const md = publishMarkdown(pub);
+  assert.match(md, /## Short → Long bridge/);
+  assert.match(md, /Related long video: \*\*015-n8n-inbox-triage\*\*/);
+  assert.match(md, /- \[ \] /); // at least one manual checkbox
+  assert.match(md, /D-055/); // the manual-upload caveat is surfaced
 });
 
 // --- VERIFIER TESTS (Wave 1 Batch 1A scrutiny) ---

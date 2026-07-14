@@ -152,7 +152,12 @@ wall of narration as one scene.
   ("My thing broke." → "…best thing that happened", everyone sees it coming). Open on the
   reframe instead (§5).
 - Walls of text on screen; tiny unreadable screenshots.
-- Begging for engagement; multiple CTAs.
+- Begging for engagement; **multiple** CTAs; like-begging ("smash that like").
+  - **Allowed (Phase 1.3):** ONE specific **topical closing question** the video ends on
+    ("Which hour would you hand over first?"), paired with a **pinned comment** that answers it
+    and invites replies ("Mine was copy-paste. What's yours?"). One question, one topic — that is
+    a genuine conversation starter, **not** begging. The subscribe CTA stays singular and separate;
+    never stack "like, comment, subscribe."
 - Any real client data; any claim a Comparison can't back from `sources.md`.
 
 ## 10. Self-check the review agent runs (mirror in script-review skill)

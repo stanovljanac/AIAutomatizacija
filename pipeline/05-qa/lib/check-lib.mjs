@@ -96,10 +96,11 @@ export function runChecks(props, fmt, { vertical, durationSeconds, approvedTools
     }
   }
 
-  // 2. Strong hook in the opening window (HARD).
+  // 2. Strong hook in the opening window (HARD). The Short uses a TIGHTER window than the long-form
+  //    (Short psychology — the purpose-built hook must land in the first ~3s, not 30s).
   const vd = fmt.hook?.visual_detail ?? {};
   if (vd.require_hook_class_scene) {
-    const openSec = vd.first_seconds ?? 30;
+    const openSec = vertical ? (vd.short_first_seconds ?? 3) : (vd.first_seconds ?? 30);
     const openingEnd = (props?.introFrames ?? 0) + Math.round(openSec * fps);
     const pass = openingHasHook(scenes, openingEnd);
     const why = scenes.length

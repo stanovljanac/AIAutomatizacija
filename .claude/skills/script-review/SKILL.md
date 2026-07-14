@@ -46,7 +46,9 @@ write `script.review.json` with `pass: true|false` + a list of issues.
 - [ ] Sentences are clean timing units; no over-long scenes (≤ ~4 sentences).
 - [ ] Every scene has a **valid `template`** tag (script.schema.json) and sensible role order.
 - [ ] Tone = sharp practical engineer + warm teacher; no hype, no filler (blacklist §9).
-- [ ] One subtle CTA (subscribe); short branded outro.
+- [ ] One subtle CTA (subscribe); short branded outro. A single topical `closing_question`
+      ("Which hour would you hand over first?") is ALLOWED (Phase 1.3) — do **not** flag it as
+      engagement-begging; only flag stacked CTAs / like-begging (STYLE_GUIDE §9).
 - [ ] Term usage consistent (TERMBANK note); reads fluently aloud for an AI voice.
 
 ## Output

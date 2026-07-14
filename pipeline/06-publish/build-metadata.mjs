@@ -62,9 +62,64 @@ export function buildDescription(script, brief) {
   return [answer, kw].filter(Boolean).join(" ").trim();
 }
 
+// The owner fills the real long-video URL at upload; until then every link that needs it carries
+// this placeholder (mirrors the community_post convention, D-042).
+export const LONG_URL_PLACEHOLDER = "<LONG_URL>";
+
+/**
+ * The unified CTA-question → pinned-comment (Phase 1.3): the video ends on ONE specific topical
+ * question (script.closing_question); the pin ANSWERS it and invites replies — a single system, not
+ * "like and subscribe" (reconciled with STYLE_GUIDE §9: one topical question is allowed, not begging).
+ * Prefers an authored script.pinned_comment; otherwise derives a reply-invite from the question.
+ * Returns "" when there is no closing question (nothing to seed). Pure.
+ */
+export function buildPinnedComment(script = {}) {
+  if (script.pinned_comment) return script.pinned_comment;
+  const q = (script.closing_question || "").trim();
+  if (!q) return "";
+  return `${q} Drop yours in the replies 👇`;
+}
+
+/**
+ * Assemble the deliberate Short → Long → pin → template → cross-post chain (the "bridge"), so Shorts
+ * feed the under-fed long-form discovery. We upload MANUALLY (D-055) and never touch YouTube's native
+ * link/end-screen UI, so this returns a PACKAGE + a one-line manual_checklist the owner follows in the
+ * Shorts/long editor. Pure — driven by brief.bridge inputs + whatever the publish object already holds.
+ */
+export function buildBridge({ publish = {}, brief = {} }) {
+  const b = brief.bridge || {};
+  const relatedLongId = b.related_long_id || null;
+  const relatedLongTitle = b.related_long_title || null;
+  const templateLink = b.template_link || null;
+  const pinned = publish.pinned_comment || "";
+  const shortCaption =
+    publish.short?.caption ||
+    (relatedLongTitle
+      ? `Full breakdown of "${relatedLongTitle}" → ${LONG_URL_PLACEHOLDER}`
+      : `Full breakdown → ${LONG_URL_PLACEHOLDER}`);
+
+  const checklist = [];
+  if (relatedLongId) {
+    checklist.push(`In the Shorts editor, link the related video (${relatedLongTitle || relatedLongId}) — paste ${LONG_URL_PLACEHOLDER}.`);
+    checklist.push(`On the long video, add an end screen pointing to the related/next video.`);
+  }
+  if (pinned) checklist.push("Post the pinned comment below as the first comment, then pin it.");
+  if (templateLink) checklist.push(`Put the template link in the description AND the pinned comment: ${templateLink}`);
+
+  return {
+    related_long_id: relatedLongId,
+    long_url: LONG_URL_PLACEHOLDER,
+    short_caption: shortCaption,
+    pinned_comment: pinned,
+    template_link: templateLink,
+    end_screen_target: relatedLongId,
+    manual_checklist: checklist,
+  };
+}
+
 export function buildMetadata({ brief, script, alignment, introOffset = 0 }) {
   const tags = buildTags(brief);
-  return {
+  const publish = {
     id: brief.id,
     title_options: buildTitleOptions(brief),
     chosen_title: null,
@@ -76,6 +131,11 @@ export function buildMetadata({ brief, script, alignment, introOffset = 0 }) {
     youtube_video_id: null,
     status: "draft_pending",
   };
+  // 1.3 → the closing-question-seeded pin FIRST, so 1.2's bridge mirrors it into the ecosystem chain.
+  const pinned = buildPinnedComment(script);
+  if (pinned) publish.pinned_comment = pinned;
+  publish.bridge = buildBridge({ publish, brief });
+  return publish;
 }
 
 /** Reads brief/script/alignment from contentDir, writes publish.json + publish.md, returns it. */
@@ -124,6 +184,17 @@ export function publishMarkdown(publish, { candidates = null } = {}) {
   if (publish.community_post) lines.push("", "## Community post", fence(publish.community_post));
   if (publish.short) {
     lines.push("", "## Short", `- Title: ${publish.short.title ?? ""}`, `- Caption: ${publish.short.caption ?? ""}`, `- Tags: ${(publish.short.tags ?? []).join(", ")}`);
+  }
+  const bridge = publish.bridge;
+  if (bridge && (bridge.manual_checklist?.length || bridge.related_long_id || bridge.template_link)) {
+    lines.push("", "## Short → Long bridge");
+    if (bridge.related_long_id) lines.push(`- Related long video: **${bridge.related_long_id}** (link ${bridge.long_url} once uploaded)`);
+    if (bridge.template_link) lines.push(`- Template link: ${bridge.template_link}`);
+    if (bridge.end_screen_target) lines.push(`- End-screen target: ${bridge.end_screen_target}`);
+    lines.push(`- Short cross-post caption: ${bridge.short_caption}`);
+    if (bridge.manual_checklist?.length) {
+      lines.push("", "**Manual steps (YouTube can't be scripted here — D-055):**", ...bridge.manual_checklist.map((s) => `- [ ] ${s}`));
+    }
   }
   if (candidates?.length) {
     lines.push(

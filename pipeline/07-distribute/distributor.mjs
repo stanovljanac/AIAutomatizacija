@@ -20,16 +20,20 @@ export function watchUrl(videoId) {
 
 /**
  * Build the Short cross-post derivative (D-038): the one-line caption + a link back to the long
- * video. Pure. Falls back to the chosen/first title when no short caption was authored.
+ * video. Pure. Prefers the Short→Long BRIDGE caption (publish.bridge.short_caption — the formalized
+ * ecosystem chain) so cross-post and pin stay in sync, then short.caption, then the chosen/first
+ * title. The link falls back to the bridge's long_url placeholder when no real URL exists yet.
  */
 export function buildCrossPost(publish = {}, { videoUrl, channels = [] } = {}) {
   const short = publish.short || {};
+  const bridge = publish.bridge || {};
   const caption =
+    bridge.short_caption ||
     short.caption ||
     publish.chosen_title ||
     (Array.isArray(publish.title_options) ? publish.title_options[0] : "") ||
     "";
-  const link = videoUrl || watchUrl(publish.youtube_video_id) || "";
+  const link = videoUrl || watchUrl(publish.youtube_video_id) || bridge.long_url || "";
   const post = { kind: "short_crosspost", caption, channels, status: "pending" };
   if (link) post.link = link;
   return post;

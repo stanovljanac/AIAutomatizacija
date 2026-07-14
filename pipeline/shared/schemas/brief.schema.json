@@ -39,6 +39,16 @@
       "items": { "type": "string" },
       "description": "Paid SaaS product names the OWNER pre-approved to name on screen for this video (paid promo or personal endorsement). Anything not listed is blocked by the QA denylist."
     },
+    "bridge": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Short → Long ecosystem inputs: which long video a Short drives discovery to + the copy-paste resource surfaced in the pin/description. Consumed by build-metadata.buildBridge (the deliberate Short→Long→pin→template→cross-post chain).",
+      "properties": {
+        "related_long_id": { "type": "string", "description": "content id of the long video this video bridges to (the parent long for a nested Short; a topically-aligned long for a STANDALONE Short — e.g. an inbox Short → the n8n inbox-triage long)." },
+        "related_long_title": { "type": "string", "description": "Human title of the related long (used in the caption/checklist while its real URL is still <LONG_URL>)." },
+        "template_link": { "type": "string", "description": "Copy-paste template / resource URL (e.g. an n8n workflow) surfaced in the description AND the pinned comment." }
+      }
+    },
     "value_score": { "type": "number", "minimum": 0, "maximum": 10, "description": "Idea-pass content-value score (0-10). >=9 auto-qualify, 7.5-9 owner decides, <7.5 reject." },
     "value_band": { "type": "string", "enum": ["qualify", "owner", "reject"], "description": "Idea-pass gate decision derived from value_score + hard gates." },
     "sources": {

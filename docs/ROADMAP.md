@@ -293,8 +293,35 @@ The detailed per-wave build handoffs and verifier-verdict log were removed once 
   tune `score-scenes.mjs` WEIGHTS from pick/CTR history and emit draft KOS lessons for clear
   over/under-performers. No AI thumbnail reviewer until then (owner decision, D-056).
 
+## Next big systems (from the 014-analytics plan, D-058) — ordered
+
+Phase 1 (three Tier-S reusable upgrades: Short hook, Short→Long bridge, unified CTA-question) **shipped
+2026-07-14** (D-058). What follows, in order:
+
+1. **Pattern Library (topic engine) — next sprint, BEFORE the teardown format.** Rationale (owner): it
+   *produces ideas*, so it compounds; a teardown produces one video. Treat recurring concepts (Worst
+   Hour / Fail Loud / Inbox / AI Employee) as **frameworks** and walk each across sectors (accountant →
+   marketing → HR → sales → legal → ops); topic-hunting becomes "apply a known pattern to a new domain,"
+   feeding the topical-authority goal in `style/CHANNEL.md`. Build **on top of** the existing `lane` /
+   `ideas.json` / `pickNextIdea` system — add a `pattern` field + a sector×pattern matrix that seeds idea
+   candidates; never a parallel structure. Own build-sprint.
+2. **n8n template teardown as a reusable format.** The treatment that Long #5 (n8n inbox triage)
+   establishes — Problem → thinking → workflow → failure modes → template — applied to other tasks
+   (invoices, reminders). Ships **after** the Pattern Library.
+3. **Learning Loop — YouTube analytics closed loop (KOS). The next big system after the Pattern Library.**
+   Close the pipeline: Idea → Script → Render → Publish → **Analytics → Lesson → Idea-bank update → Next
+   idea**. ~7 days after publish, pull real analytics (YouTube OAuth already live) and auto-distill a short
+   lesson (hook worked / CTA weak / retention dip after the explanation / most-quoted line) → update
+   `ideas.json` metrics + status → bias `pickNextIdea`. Build **on** what exists — `style/CHANNEL.md` §10
+   growth loop, per-idea `metrics`, the knowledge `lessons/` format — not greenfield. **Small-channel
+   caution:** gate auto-lessons on a minimum sample and keep a human check before they rewrite the idea
+   bank, so we don't over-fit to noise. (Extends the existing "CTR→weights / analytics→KOS lessons"
+   follow-up above into a first-class system.)
+
 ## What we deliberately deferred
 
+- **"Make vs Zapier vs n8n" comparison (D-058).** Heavy competition (Liam Ottley / AI Foundations / the
+  n8n channel); no authority yet. "Here's ONE boring thing" beats "here's every platform." Revisit later.
 - Products/affiliate/courses — until payout rails exist (D-017).
 - AI-video (per-scene generative) and standard AI-image use — local-first (D-015).
 - Avatar — dropped permanently; faceless forever (supersedes D-008).

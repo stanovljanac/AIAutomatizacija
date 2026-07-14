@@ -6,6 +6,7 @@
     "answer_first_seconds": 45,
     "visual_detail": {
       "first_seconds": 30,
+      "short_first_seconds": 3,
       "require_hook_class_scene": true,
       "min_motion": "standard"
     }

@@ -19,7 +19,8 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "first_seconds": { "type": "number", "minimum": 1, "description": "Opening window that must carry strong visual detail." },
+            "first_seconds": { "type": "number", "minimum": 1, "description": "Opening window (long-form) that must carry strong visual detail + a hook-class scene." },
+            "short_first_seconds": { "type": "number", "minimum": 1, "description": "Opening window for the Short — tighter than the long-form (Short psychology: the hook must land in the first ~3s). Used by the hook QA gate when vertical." },
             "require_hook_class_scene": { "type": "boolean", "description": "The opening window must use a hook-class scene, not a static card." },
             "min_motion": { "type": "string", "enum": ["calm", "standard", "lively"] }
           }

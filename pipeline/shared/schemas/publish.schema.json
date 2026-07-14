@@ -37,8 +37,22 @@
         "caption": { "type": "string", "description": "One-sentence cross-post caption + link to the long video (D-038)." }
       }
     },
-    "pinned_comment": { "type": "string", "description": "Long utility text (e.g. the copy-pasteable master prompt) — not in the 3-sentence description." },
+    "pinned_comment": { "type": "string", "description": "The pinned comment. Phase 1.3: leads with the answer to the video's closing_question + an invite to reply ('Mine was copy-paste. What's yours?') — a single topical conversation starter, not engagement-begging (STYLE_GUIDE §9). May also carry utility text (the copy-pasteable master prompt / template link) — never in the 3-sentence description." },
     "community_post": { "type": "string", "description": "YouTube Community/Posts announcement (D-042): a 'just published' line + a 1-2 sentence teaser + the long-video link. Generated for EVERY video; the owner posts it manually (the Data API can't create Community posts). <LONG_URL> is filled at upload." },
+    "bridge": {
+      "type": "object",
+      "description": "The deliberate Short → Long → pin → template → cross-post chain, so Shorts feed the under-fed long-form discovery. We upload MANUALLY (D-055) and never touch YouTube's native link/end-screen UI, so this is a PACKAGE + a one-line manual_checklist the owner follows in the Shorts/long editor — the system can't click the native link itself.",
+      "additionalProperties": false,
+      "properties": {
+        "related_long_id": { "type": ["string", "null"], "description": "content id of the long video this video drives discovery to (null when there is none)." },
+        "long_url": { "type": "string", "description": "Placeholder <LONG_URL> until upload; the owner fills the real long-video URL (used in the caption, pin, and end screen)." },
+        "short_caption": { "type": "string", "description": "The Short's cross-post caption ending in the long-video link (mirrors short.caption; consumed by the distributor)." },
+        "pinned_comment": { "type": "string", "description": "The pinned comment that answers the closing question + links the long/template (mirrors publish.pinned_comment)." },
+        "template_link": { "type": ["string", "null"], "description": "Copy-paste template/resource link surfaced in the description + pin (null when none)." },
+        "end_screen_target": { "type": ["string", "null"], "description": "Which video the end screen points to (the related long)." },
+        "manual_checklist": { "type": "array", "items": { "type": "string" }, "description": "One-line manual steps for the owner (link the related video in the Shorts editor; add the end screen; pin the comment; paste the template link)." }
+      }
+    },
     "medium": {
       "type": "object",
       "description": "Medium cross-post (D-038): keyword-rich title + cover reuse.",
