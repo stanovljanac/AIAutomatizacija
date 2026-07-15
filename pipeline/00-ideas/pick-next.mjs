@@ -21,6 +21,7 @@ import { scaffoldVideo } from "./new-video.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const IDEAS_PATH = path.join(__dirname, "ideas.json");
+export const SUBJECTS_PATH = path.join(__dirname, "produced_subjects.json");
 
 /** Effective rank: the analytics-adjusted score (T5.2) if present, else the prediction. */
 export function effectiveScore(idea) {
@@ -70,6 +71,19 @@ export function pickNextIdea(ideas, { statuses = ["backlog"], recent = [], runCa
     .slice()
     .sort((a, b) => effectiveScore(b) - effectiveScore(a) || String(a.id).localeCompare(String(b.id)));
   return sorted.find((i) => !extendsRun(i, recent, runCap)) ?? sorted[0];
+}
+
+/**
+ * Does the chosen idea's `subject` coordinate collide with one already claimed by a prior video?
+ * Returns { subject, videos } when the idea carries a subject that already appears in the registry
+ * (produced_subjects.json shape: { subjects: { "branch/leaf": [videoId, ...] } }), else null.
+ * A WARNING only — the caller surfaces it; it never blocks a pick (D-059: no auto-rejection). Pure.
+ */
+export function subjectCollision(idea, registry) {
+  const subject = idea?.subject;
+  if (!subject) return null;
+  const videos = registry?.subjects?.[subject];
+  return Array.isArray(videos) && videos.length ? { subject, videos } : null;
 }
 
 /** The idea already in production (status in-progress), if any — used to avoid double-starting. */
@@ -134,9 +148,30 @@ function readJson(p) {
   return JSON.parse(fs.readFileSync(p, "utf8"));
 }
 
+/** Load the subject registry; tolerant of an absent/broken file (the guard is best-effort). */
+function loadSubjectRegistry() {
+  try {
+    return readJson(SUBJECTS_PATH);
+  } catch {
+    return { subjects: {} };
+  }
+}
+
+/** Print the subject-collision warning for a chosen idea, if any (D-059). */
+function warnSubjectCollision(idea, registry) {
+  const hit = subjectCollision(idea, registry);
+  if (hit) {
+    console.warn(
+      `⚠ subject collision: "${idea.id}" is subject "${hit.subject}", already covered by ${hit.videos.join(", ")}. ` +
+        `Make sure it's a deliberately distinct angle, not a near-duplicate (D-059). Not blocking.`
+    );
+  }
+}
+
 function main() {
   const dryRun = process.argv.slice(2).includes("--dry-run");
   const ideas = readJson(IDEAS_PATH);
+  const registry = loadSubjectRegistry();
 
   // dry-run never scaffolds: just report what WOULD be picked.
   if (dryRun) {
@@ -144,7 +179,8 @@ function main() {
     if (busy) return console.log(`busy: "${busy.id}" is in-progress (${busy.produced_video_id ?? "no folder yet"}).`);
     const idea = pickNextIdea(ideas, { recent: recentFromBank(ideas) });
     if (!idea) return console.log("empty: no backlog idea to pick.");
-    return console.log(`would pick [${effectiveScore(idea)}] ${idea.id} — "${idea.title}" (${idea.archetype}${idea.lane ? ", " + idea.lane : ""}).`);
+    console.log(`would pick [${effectiveScore(idea)}] ${idea.id} — "${idea.title}" (${idea.archetype}${idea.lane ? ", " + idea.lane : ""}).`);
+    return warnSubjectCollision(idea, registry);
   }
 
   const res = planNextVideo(ideas, { scaffold: scaffoldVideo });
@@ -152,6 +188,7 @@ function main() {
   if (res.empty) return console.log("empty: no backlog idea to pick.");
   fs.writeFileSync(IDEAS_PATH, JSON.stringify(res.ideas, null, 2) + "\n");
   console.log(`picked "${res.ideaId}" → scaffolded content/${res.id}/ (brief seeded). Idea marked in-progress.`);
+  warnSubjectCollision(ideas.ideas.find((i) => i.id === res.ideaId), registry);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

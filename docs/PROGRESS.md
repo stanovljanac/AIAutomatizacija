@@ -19,6 +19,84 @@ Format:
 
 ---
 
+## 2026-07-15 — 017 Short produced end-to-end: voice → 5 bespoke HF scenes → render → QA PASS → at Gate ③
+- who: agent (owner: "Start producing 017 shorts video")
+- did: Took the Gate-②-approved **017 fine-print-watch Short** through the full production chain.
+  **Voice** — draft edge-tts (Andrew, −2%) + faster-whisper alignment: 21 sentences, 244 words,
+  **90.6s** (the approved words read ~90s, not the 55s target — surfaced as an owner flag, not trimmed).
+  **Storyboard** — hand-authored `short/scene-plan.json` (014 shorts-only pattern) + **5 NEW bespoke
+  HF scenes** (`fp-ping-flip`, `fp-noise-pile`, `fp-decision-card`, `fp-kept-judgment`, `fp-flip-close`)
+  built to the script's approved notes (MOTION_SPEC craft: seek-safe proxy counters, flat/face-on cards,
+  transient-only 3D, reserved-space brand/CTA). **Render** — compile-hyperframes (5 clips) → build-props
+  ×2 → Remotion → `short/video/final.mp4` (93.0s, 1080×1920, 25.2 MB). **Perceptual check on 26 stills**
+  caught one reserved-space violation (s4 handover card crossed dimmed actions-row text) — fixed in
+  scene JS, s4 re-rendered. **QA** — `check.mjs` 10/10 green + digest in `qa.report.json`; `npm test`
+  594 green. **Publish pack** — publish.json/md + medium.md + inline publish review PASS 9.0
+  (016 bridge kept as `<LONG_URL>` placeholder). `brief.status: qa_passed`.
+- next: **GATE ③ — owner watches `content/017-fine-print-watch/short/video/final.mp4`.** Owner calls:
+  (1) ship at 90.6s or trim+re-voice; (2) Azure final voice vs ship edge-tts (012 precedent);
+  (3) thumbnail frame pick from final.mp4. Then manual upload (D-055). 016 render still blocked on
+  the owner's n8n-canvas screenshot.
+- blockers: none for 017 (waiting on the owner gate).
+
+## 2026-07-15 — D-059 Phases 3–5: owner approved 016 → shipped the idea-guard (subject map + seed-gate), retired 015
+- who: agent (owner: "Rework 016 approved. Kreni dalje sa implementacijom" → the plan's code/docs, not render)
+- did: Owner **approved the reworked 016 script** (Gate ②). Then built the plan's remaining implementation
+  (Phases 3–5 of the AI-agent-series tracker), the "smallest thing that stops the next 015":
+  **Phase 3 (map)** — `docs/CHANNEL_MAP.md`: subject taxonomy (root *AI Decision Automation*; 4 branches
+  attention/change-detection/failure-detection/execution) with 011 & 016 → attention/inbox, 017 →
+  change-detection/policy, 015 struck through; cross-linked from `style/CHANNEL.md` §3.
+  **Phase 4 (guard)** — optional `subject` (+`series`) in `ideas.schema.json`;
+  `pipeline/00-ideas/produced_subjects.json` (machine mirror); **subject-collision warning** in
+  `pick-next.mjs` (`subjectCollision`, surfaced in `--dry-run` + the real pick, never blocks); **seed-gate**
+  `pipeline/00-ideas/seed-gate.mjs` (`seedGate` + CLI) — a brief can't be scripted without an idea-pass
+  `value_band` (and not `rejected`), wired as script-writing **Step 0.0**. **Retired 015** —
+  `everyone-asks-ai-series` reverted backlog + inbox seed dropped; `content/015-*/brief.json` →
+  `status: rejected` (brief.schema gained `rejected`) + retired_note/subject; folder left on disk (principle 6).
+  **Phase 5 (cleanup)** — 8 new unit tests (subjectCollision null-safety, seedGate absent/reject/retired),
+  KOS lesson `2026-07-15-subject-map-stops-near-duplicates`, `knowledge-lint --fix` clean, docs cross-links.
+  Verified: `npm test` **594 green**; schema PASS on ideas.json + 015 brief; collision guard fires on
+  attention/inbox against the real registry.
+- next: **content production** (separate from plan code): 017 (unblocked) & 016 → voice → storyboard →
+  render → QA → Gate ③. 016 s3 still needs the owner's real n8n-canvas screenshot.
+- blockers: 016 render blocked on the n8n-canvas screenshot; 017 fully unblocked.
+
+## 2026-07-15 — D-059 Phase 2: reworked 016 (n8n inbox) as "The AI Agent" Ep.2, at the script gate
+- who: agent (owner approved 017 → "Nastavi sa implementacijom" the AI-agent-series launch)
+- did: Owner **approved the 017 Short** (Gate ②) — unblocked Phase 2. Reworked **016** per D-059 point 5 into
+  the series' **human-approval / failure-handling installment** (touched `content/016/{brief.json, script.json,
+  script.review.json}` only). Removed the 015 dependency (brief.angle + old s2 rewritten; no 015 ref remains).
+  **Restructured** to failure → why plain automation fails → how the agent thinks → safe design: opens on the
+  fear (a bot silently trashes the email that mattered), reframes to "automate the DECIDING, not the DOING,"
+  keeps the real-template teardown but **collapsed the node-by-node middle 5 scenes → 2** (one reasoning beat +
+  one visible dry-run); **13 scenes → 10**. Foregrounded the guardrails: fragile classifier (recoverable because
+  label-only), the auto-trash "line you don't cross" + an explicit human gate, two smaller guardrail catches.
+  Kept the copy-paste template CTA + on-screen sources (4876/14852, CE-free). Tagged `subject: "attention/inbox"`,
+  moved `series` Desk Loops → **"The AI Agent"** with the shared series signature in the outro to match 017.
+  Facts unchanged from the prior verified pass (sources.md still valid). Validator PASS; **script-review PASS**
+  (asset deps s3 real-canvas / s7 14852 chip; minor pacing; series-change flagged for owner).
+  **Owner notes round 1 (same day):** (a) s4/s5 reframed off the node-tour into a universal safe-agent pipeline
+  Input→Context→Decision→Output, punch = what's MISSING ("no delete node, no reply node"); (b) s7 now attacks the
+  evergreen PATTERN (AI guess wired to an irreversible action), not a specific public template (14852 = one example).
+- next: **owner Gate ②** on the reworked 016 script → approve or send notes. On approval: voice → storyboard
+  (grab the real n8n canvas for s3) → render → QA → Gate ③. Then D-059 Phase 3 (Channel Map) + Phase 4 (idea guard).
+- blockers: 016 s3 needs the real n8n-canvas screenshot at the asset step; series-tag change is revertible.
+
+## 2026-07-14 (round 2) — Phase 2 content: 015 Short + 016 n8n long, both at the script gate
+- who: agent (Phase 2 of the 014-analytics plan; owner: "both #4 and #5 to their gates")
+- did: Two scripts produced on the new Phase-1 system, each stopping at **Gate ② (script approval)**.
+  **015** — standalone everyone-asks-ai Short ("write emails → find the ones I shouldn't answer"):
+  5 bespoke scenes, purpose-built 3s hook, visible-proof sort beat, `closing_question`, bridge → 016.
+  **016** — n8n inbox-triage teardown (diagram/long+short): built on a REAL citable template
+  (n8n workflow 4876, node names verified via the template API; free/self-host verified), label-only
+  safety spine, one synthetic email dry-run through the graph, fragile-classifier + auto-trash failure
+  modes, copy-paste template in desc/pin. Dogfoods Phase 1: 015 hook gate, 016 `short_hook`-derived
+  Short, both bridges + closing questions. Idea-bank: `everyone-asks-ai-series` → in-progress + new
+  `n8n-inbox-triage-teardown` → 016. Per-video detail in each `content/<id>/log.md`.
+- next: **owner Gate ②** on both scripts. On approval: voice → storyboard (grab the real n8n canvas
+  asset for 016 s3) → render → QA → Gate ③.
+- blockers: 016 s3/s10 need real n8n-canvas screenshots at the asset step.
+
 ## 2026-07-14 — Phase 1 system upgrades: Short hook + Short→Long bridge + unified CTA-question (D-058)
 - who: agent (owner: "Pocni da implementiras insights-actionable-steps plan")
 - did: Shipped the three Tier-S reusable upgrades from the analytics plan (each improves every future

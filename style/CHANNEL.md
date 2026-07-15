@@ -53,6 +53,12 @@ automations*, then *email automations*, then *scheduling*, etc. The idea-bank
 (`pipeline/00-ideas/ideas.json`) is tagged by task/sector/tool; produce cluster by cluster so
 YouTube/Google read us as the authority on each.
 
+> **Subject map (the territory).** Beyond task/sector/tool, every idea also gets a `subject`
+> coordinate (`branch/leaf` under *AI Decision Automation*: attention · change-detection ·
+> failure-detection · execution). The full taxonomy — with videos slotted and the guard that stops
+> same-subject near-duplicates (D-059, born from 015≈011) — lives in [`docs/CHANNEL_MAP.md`](../docs/CHANNEL_MAP.md),
+> mirrored by `pipeline/00-ideas/produced_subjects.json`.
+
 ## 4. Audience
 
 Builders / freelancers / no-code & automation agencies who make automations for others (and

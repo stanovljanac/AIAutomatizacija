@@ -10,6 +10,17 @@ tagged JSON (`script.json`, schema `pipeline/shared/schemas/script.schema.json`)
 Read `style/STYLE_GUIDE.md` first — it is the writing law. This skill produces; it
 does not self-approve (that's `script-review`, then the human gate).
 
+## Step 0.0 — Seed gate (HARD STOP; D-059, born from 015≈011)
+Before writing a single sentence, prove this brief earned a script:
+1. **Idea-pass verdict must exist.** Run `node pipeline/00-ideas/seed-gate.mjs <id>` — it STOPs
+   (exit 1) unless `brief.value_band` is `qualify`/`owner` (and not `rejected`). A free-text seed
+   that never went through the idea-pass (`pipeline/shared/review/`) **may not be scripted**; route
+   it back to the idea-pass first. (015 slipped through exactly this hole.)
+2. **Subject check.** Confirm the brief/idea has a `subject` coordinate and it is a **deliberately
+   distinct angle**, not a near-duplicate of an already-claimed subject in
+   `pipeline/00-ideas/produced_subjects.json` (see `docs/CHANNEL_MAP.md`). `pick-next.mjs --dry-run`
+   prints a ⚠ warning on a collision — a cluster-mate is fine, a re-tread is not.
+
 ## Step 0 — Real-world workflow research (NON-NEGOTIABLE; all archetypes except news & comparison)
 Before you script a how-to / ideas / mini-demo / diagram video, research how the process is
 **actually done in the real world right now** — do NOT design an automation from imagination.

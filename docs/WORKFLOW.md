@@ -40,6 +40,9 @@ a single takeaway + on-brand). The score bands the gate:
 - **7.5–9.0 (75–90%) → ASK the owner** — the only band where Gate ① pauses.
 - **<7.5 (<75%) → auto-reject** — park the idea; `pickNextIdea` skips `value_band:"reject"`.
 A variety soft-cap nudges off >2 of the same lane/archetype/tool in a row (never hard-blocks).
+At pick time a **subject-collision warning** (D-059) fires when the idea's `subject` coordinate is
+already claimed in `pipeline/00-ideas/produced_subjects.json` (taxonomy: `docs/CHANNEL_MAP.md`) —
+warn-only, never blocks; it forces the "is this a *distinct* angle?" check.
 
 **Output:** `brief.json`, optional `sources.md`.
 
@@ -49,6 +52,11 @@ A variety soft-cap nudges off >2 of the same lane/archetype/tool in a row (never
 
 **Goal:** a scene-segmented, template-tagged English script with the angle baked in,
 that passes the review agent.
+
+> **Seed gate first (HARD STOP — D-059):** `node pipeline/00-ideas/seed-gate.mjs <id>` must pass
+> before a single sentence is written — the brief needs an idea-pass `value_band`
+> (`qualify`/`owner`, not `rejected`). A free-text seed that skipped Gate ① may **not** be
+> scripted; route it back to the idea-pass (script-writing skill, Step 0.0).
 
 1. **Write.** Use `.claude/skills/script-writing/SKILL.md`. Structure by the brief's
    **archetype** (STYLE_GUIDE §5), each scene with `role`, **`template`**, `narration`,

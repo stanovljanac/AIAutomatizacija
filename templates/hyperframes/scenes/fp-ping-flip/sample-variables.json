@@ -1,0 +1,13 @@
+{
+  "hfScene": "fp-ping-flip",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 302,
+  "durationSeconds": 10.066666666666666,
+  "revealsSeconds": [0.0, 4.7, 7.18],
+  "props": {
+    "anchor": "Scraper ≠ agent",
+    "note": "HOOK HERO — radar sweep + ping swarm → freeze/gray wall → funnel into the gold AGENT node, keep exactly ONE."
+  }
+}

@@ -21,6 +21,8 @@
             "enum": ["data-entry", "documents", "scheduling", "outbound-comms", "lookups-reports", "other"]
           },
           "sector": { "type": "string", "description": "Optional sector flavor." },
+          "subject": { "type": "string", "description": "Optional channel-map coordinate 'branch/leaf' under AI Decision Automation (attention/* · change-detection/* · failure-detection/* · execution/*). Mirrors docs/CHANNEL_MAP.md; pick-next.mjs warns (never blocks) on a same-subject collision with an already-claimed subject in produced_subjects.json (D-059)." },
+          "series": { "type": "string", "description": "Optional named series this idea belongs to (e.g. \"The AI Agent\"), orthogonal to `lane`." },
           "tool": { "type": "string", "description": "Primary tool likely shown." },
           "archetype": {
             "type": "string",

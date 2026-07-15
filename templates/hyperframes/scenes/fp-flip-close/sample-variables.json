@@ -1,0 +1,18 @@
+{
+  "hfScene": "fp-flip-close",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 579,
+  "durationSeconds": 19.3,
+  "revealsSeconds": [0.07, 6.73, 14.63, 16.9],
+  "props": {
+    "faceA": "SCRAPER: everything changed",
+    "faceB": "AGENT: here's what to do",
+    "question": "What would you watch first?",
+    "brand": "The Automation Desk",
+    "tagline": "AI doesn't replace judgment. It removes the things that steal it.",
+    "bridge": "BUILD IT →",
+    "note": "TAKEAWAY MONOLITH — SCRAPER face Y-flips to AGENT face (held, gold pulse); question + caret; n8n bridge + BUILD IT chip; brand row + series tagline in reserved space."
+  }
+}

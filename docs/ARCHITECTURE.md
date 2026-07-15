@@ -234,6 +234,9 @@ Runner / Reviewer / Publisher ports.
 **Autonomous driver (the hands-off pass).**
 - `pipeline/00-ideas/pick-next.mjs` — auto-pick the top backlog idea by effective score → `scaffoldVideo`
   + seed brief → mark in-progress (persisted **before** the run so a crash can't orphan the pick).
+  Warns (never blocks) on a **subject collision** against `produced_subjects.json` (D-059;
+  taxonomy in `docs/CHANNEL_MAP.md`); its sibling `seed-gate.mjs` hard-stops scripting any brief
+  without an idea-pass `value_band` (script-writing Step 0.0).
 - `pipeline/shared/orchestrator/auto-run.mjs` — one pass: idle → pick; busy → resume the in-progress
   video; then run the DAG and `classifyPause` the result into **done / ownerGate / agentTask**. Gate-aware
   `notifiesOwner` in `run.mjs` pings the owner ONLY at the two real gates / a failed review / OAuth /

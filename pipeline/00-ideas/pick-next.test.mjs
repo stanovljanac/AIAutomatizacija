@@ -10,6 +10,7 @@ import {
   planNextVideo,
   recentFromBank,
   extendsRun,
+  subjectCollision,
 } from "./pick-next.mjs";
 import { validate } from "../shared/lib/validate-lib.mjs";
 import { suggestArchetype } from "./fetch-news.mjs";
@@ -173,6 +174,35 @@ test("briefFromIdea carries the idea-pass content-value fields and stays schema-
   const brief = { id: "010-x", target_seconds: 360, format: "long+short", audience: "x", ...seed };
   const { valid, errors } = validate(brief, "brief");
   assert.ok(valid, JSON.stringify(errors));
+});
+
+// ── subject-collision warning (D-059 idea-guard) ─────────────────────────────────
+
+const registry = () => ({
+  subjects: {
+    "attention/inbox": ["011-read-my-inbox", "016-n8n-inbox-triage"],
+    "change-detection/policy": ["017-fine-print-watch"],
+  },
+});
+
+test("subjectCollision flags an idea whose subject is already claimed by prior videos", () => {
+  const hit = subjectCollision({ id: "inbox-week", subject: "attention/inbox" }, registry());
+  assert.deepEqual(hit, { subject: "attention/inbox", videos: ["011-read-my-inbox", "016-n8n-inbox-triage"] });
+});
+
+test("subjectCollision returns null for a fresh, uncollided subject", () => {
+  assert.equal(subjectCollision({ id: "x", subject: "failure-detection/stopped-jobs" }, registry()), null);
+});
+
+test("subjectCollision returns null when the idea has no subject (opt-in field)", () => {
+  assert.equal(subjectCollision({ id: "x" }, registry()), null);
+  assert.equal(subjectCollision({ id: "x", subject: "" }, registry()), null);
+});
+
+test("subjectCollision is null-safe on a missing/empty registry (best-effort guard)", () => {
+  assert.equal(subjectCollision({ id: "x", subject: "attention/inbox" }, {}), null);
+  assert.equal(subjectCollision({ id: "x", subject: "attention/inbox" }, { subjects: {} }), null);
+  assert.equal(subjectCollision({ id: "x", subject: "attention/inbox" }, { subjects: { "attention/inbox": [] } }), null);
 });
 
 // ── [verifier] regression tests ───────────────────────────────────────────────

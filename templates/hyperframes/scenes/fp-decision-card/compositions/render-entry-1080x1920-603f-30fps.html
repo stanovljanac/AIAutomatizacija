@@ -1,0 +1,95 @@
+<!doctype html>
+<!--
+  fp-decision-card — HyperFrames MONEY SHOT for video 017, s3 ("So I gave the agent one job:
+  don't list the changes — judge them."). VISIBLE PROOF, never a scanning animation for its own
+  sake: the gold AGENT node (carried from s1) pulls the SAME ToS page in; ONE gold scan line
+  passes and the page dims; then the hero DECISION CARD assembles FLAT, face-on, big and centered,
+  built top→bottom in this exact order:
+    (1) chip  "TERMS UPDATED · Acme Pay"                       (synthetic vendor)
+    (2) OLD row, gray + strike-through:  "Refund available within 30 days"
+    (3) NEW row, white→gold, slides in:  "Refund available within 14 days"
+    (4) a gold DIFF underline links 30 → 14 and a "−53%" delta tag snaps in
+    (5) the VERDICT bar illuminates LAST: "AI · CHANGE DETECTED · Impact: HIGH ·
+        Reason: refund period cut by more than half"  (HIGH pulses gold-red)
+  The COMPLETE card holds ≥4s (pause-and-screenshot). VO says "more than half"; the screen
+  carries the exact symbol "−53%" (symbol on-screen, not spoken).
+
+  PALETTE: blue + gold (body) with the gold hero card. Everything SYNTHETIC (Acme Pay is a
+  fabricated vendor; the clause is a fabricated illustration). Flat, face-on, no 3D tilt.
+  Silent + deterministic: NO Math.random / Date.now; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":588},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":19.6}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../gsap.min.js"></script>
+    <link rel="stylesheet" href="../fp-decision-card.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="fp-decision-card" data-start="0" data-duration="20.083333333333332" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <div class="camera" id="camera">
+        <!-- the AGENT node (carried from s1) -->
+        <div class="agent" id="agent">
+          <svg viewBox="0 0 96 96" class="aglyph">
+            <circle cx="48" cy="48" r="42" class="a-ring" />
+            <path d="M18 48 C30 30, 66 30, 78 48 C66 66, 30 66, 18 48 Z" class="a-eye" />
+            <circle cx="48" cy="48" r="11" class="a-iris" />
+          </svg>
+          <div class="ajob" id="ajob">one job: <b>judge the changes</b></div>
+        </div>
+
+        <!-- the SAME ToS page, pulled in for judgment -->
+        <div class="doc" id="doc">
+          <div class="dochead"><div class="doctitle">TERMS OF SERVICE</div><div class="docsub">vendor.example — v2.4 → v2.5</div></div>
+          <div class="docbody">
+            <div class="pline w90"></div>
+            <div class="pline w84"></div>
+            <div class="pline w95"></div>
+            <div class="pline w76 clause" id="clause"></div>
+            <div class="pline w88"></div>
+            <div class="pline w70"></div>
+          </div>
+          <div class="scanline" id="scanline"></div>
+        </div>
+
+        <!-- THE DECISION CARD (hero, flat, face-on, centered) -->
+        <div class="dcard" id="dcard">
+          <div class="chip" id="chip"><span class="chipdot"></span>TERMS UPDATED · <b>Acme Pay</b></div>
+          <div class="row old" id="oldrow">
+            <span class="rowtag">OLD</span>
+            <span class="rowtext">Refund available within <b class="oldnum" id="oldnum">30 days</b><span class="strike" id="strike"></span></span>
+          </div>
+          <div class="row new" id="newrow">
+            <span class="rowtag gold">NEW</span>
+            <span class="rowtext">Refund available within <b class="newnum" id="newnum">14 days</b></span>
+          </div>
+          <div class="diffline" id="diffline">
+            <svg class="diffsvg" viewBox="0 0 560 60" preserveAspectRatio="none"><path id="diffpath" d="M70 6 C 70 46, 490 6, 490 52" /></svg>
+            <div class="delta" id="delta">−53%</div>
+          </div>
+          <div class="verdict" id="verdict">
+            <div class="vhead"><span class="vai">AI</span><span class="vsep">·</span>CHANGE DETECTED<span class="vsep">·</span>Impact: <b class="vhigh" id="vhigh">HIGH</b></div>
+            <div class="vreason">Reason: refund period cut by <b>more than half</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../fp-decision-card.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["fp-decision-card"] = tl;
+    </script>
+  </body>
+</html>

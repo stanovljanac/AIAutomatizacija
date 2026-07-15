@@ -1,0 +1,134 @@
+/* fp-noise-pile — 017 s2 THE OVERLOAD (blue+gold body). A flat ToS doc with a watcher badge;
+   toast alerts pile into a corner stack under a racing counter; trivial diffs highlight on the
+   doc; the pile grays under a gold NOISE wash; a MUTED stamp drops while ONE gold card slides
+   off unread. Flat, face-on, no 3D tilt. Sizes scale by --u. */
+:root {
+  --bg: #0a1119; --surface: #111c28; --surface-2: #16232f; --line: #21384c;
+  --text: #eaf1f8; --text2: #8ea6bc;
+  --gold: #ffb020; --gold-2: #ffd37a; --blue: #4aa3ff; --red: #ff5a4d; --gray: #5d6b78; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 120% 78% at 50% 30%, #0e1a26 0%, #0a1119 76%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.06;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #1c3350 calc(89px * var(--u)), #1c3350 calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #1c3350 calc(89px * var(--u)), #1c3350 calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 36%, #000 20%, transparent 82%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 36%, #000 20%, transparent 82%);
+}
+.glow {
+  position: absolute; left: 42%; top: 34%; width: 100%; height: 60%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(74,163,255,0.10) 0%, transparent 62%);
+  filter: blur(calc(30px * var(--u))); opacity: 0.8; will-change: opacity, transform;
+}
+
+.camera { position: absolute; inset: 0; z-index: 2; will-change: transform; }
+
+/* ── the ToS doc ── */
+.doc {
+  position: absolute; left: 6%; top: 8%; width: 55%;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: calc(1px * var(--u)) solid var(--line); border-radius: calc(20px * var(--u));
+  box-shadow: 0 calc(18px * var(--u)) calc(50px * var(--u)) rgba(0,0,0,0.5);
+  will-change: transform, opacity, filter; z-index: 3;
+}
+.dochead { padding: calc(28px * var(--u)) calc(30px * var(--u)) calc(16px * var(--u)); border-bottom: calc(1px * var(--u)) solid var(--line); }
+.doctitle { font-weight: 900; font-size: calc(40px * var(--u)); color: var(--text); letter-spacing: calc(2px * var(--u)); }
+.docsub { margin-top: calc(6px * var(--u)); font-weight: 700; font-size: calc(24px * var(--u)); color: var(--text2); }
+.docbody { padding: calc(26px * var(--u)) calc(30px * var(--u)) calc(34px * var(--u)); }
+.pline {
+  position: relative; height: calc(16px * var(--u)); border-radius: calc(8px * var(--u));
+  background: #223447; margin-bottom: calc(22px * var(--u));
+}
+.w60 { width: 60%; } .w70 { width: 70%; } .w76 { width: 76%; } .w84 { width: 84%; }
+.w86 { width: 86%; } .w88 { width: 88%; } .w90 { width: 90%; } .w92 { width: 92%; } .w95 { width: 95%; }
+/* a cosmetic diff: the line brightens amber (tweened) + a tiny tag pops above it */
+.difftag {
+  position: absolute; right: calc(-14px * var(--u)); top: calc(-34px * var(--u));
+  padding: calc(4px * var(--u)) calc(14px * var(--u));
+  background: var(--surface-2); border: calc(1px * var(--u)) solid rgba(255,176,32,0.5);
+  border-radius: calc(999px * var(--u)); color: var(--gold-2);
+  font-weight: 700; font-size: calc(22px * var(--u)); white-space: nowrap; opacity: 0;
+}
+/* the watcher (eye) badge pinned to the doc */
+.watcher {
+  position: absolute; right: calc(-30px * var(--u)); top: calc(-30px * var(--u));
+  width: calc(96px * var(--u)); height: calc(96px * var(--u)); border-radius: 50%;
+  background: var(--surface-2); border: calc(3px * var(--u)) solid var(--blue);
+  box-shadow: 0 0 calc(28px * var(--u)) rgba(74,163,255,0.45);
+  display: flex; align-items: center; justify-content: center; will-change: transform, opacity;
+}
+.watcher svg { width: 62%; height: 62%; }
+.w-eye { fill: none; stroke: var(--blue); stroke-width: 3; }
+.w-iris { fill: var(--blue); }
+
+/* ── the alert pile + counter ── */
+.pilewrap { position: absolute; right: 4%; top: 9%; width: 34%; z-index: 4; }
+.counter {
+  display: flex; align-items: baseline; gap: calc(12px * var(--u));
+  padding: calc(14px * var(--u)) calc(22px * var(--u)); margin-bottom: calc(18px * var(--u));
+  background: var(--surface-2); border: calc(2px * var(--u)) solid rgba(255,176,32,0.55);
+  border-radius: calc(16px * var(--u)); opacity: 0; will-change: transform, opacity;
+}
+.cnum { font-weight: 900; font-size: calc(64px * var(--u)); color: var(--gold); line-height: 1; }
+.clabel { font-weight: 700; font-size: calc(24px * var(--u)); color: var(--text2); }
+.pile { position: relative; }
+.toast {
+  padding: calc(14px * var(--u)) calc(20px * var(--u)); margin-bottom: calc(14px * var(--u));
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: calc(1px * var(--u)) solid var(--line); border-left: calc(6px * var(--u)) solid var(--blue);
+  border-radius: calc(12px * var(--u)); color: var(--text); font-weight: 700; font-size: calc(26px * var(--u));
+  box-shadow: 0 calc(8px * var(--u)) calc(22px * var(--u)) rgba(0,0,0,0.45);
+  will-change: transform, opacity, filter; white-space: nowrap;
+}
+.toast b { color: var(--text2); font-weight: 700; }
+
+/* the gold NOISE wash over the grayed pile */
+.noisewash {
+  position: absolute; left: calc(-16px * var(--u)); right: calc(-16px * var(--u));
+  top: calc(88px * var(--u)); bottom: calc(-6px * var(--u));
+  border: calc(4px * var(--u)) solid var(--gold); border-radius: calc(18px * var(--u));
+  background: rgba(255,176,32,0.10);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: calc(2px * var(--u)); opacity: 0; will-change: transform, opacity; z-index: 5;
+}
+.noisetally { font-weight: 900; font-size: calc(56px * var(--u)); color: var(--gold-2); }
+.noiseword {
+  font-weight: 900; font-size: calc(84px * var(--u)); color: var(--gold); letter-spacing: calc(8px * var(--u));
+  text-shadow: 0 0 calc(36px * var(--u)) rgba(255,176,32,0.5);
+}
+
+/* the MUTED stamp */
+.muted {
+  position: absolute; left: 50%; top: 42%;
+  display: inline-flex; align-items: center; gap: calc(14px * var(--u));
+  padding: calc(16px * var(--u)) calc(30px * var(--u));
+  background: rgba(10,17,25,0.85); border: calc(4px * var(--u)) solid var(--red);
+  border-radius: calc(16px * var(--u)); color: var(--red);
+  font-weight: 900; font-size: calc(52px * var(--u)); letter-spacing: calc(4px * var(--u));
+  opacity: 0; will-change: transform, opacity; z-index: 6; white-space: nowrap;
+}
+.muted svg { width: calc(52px * var(--u)); height: calc(52px * var(--u)); }
+.m-bell { fill: none; stroke: var(--red); stroke-width: 3; }
+.m-slash { stroke: var(--red); stroke-width: 4; stroke-linecap: round; }
+
+/* the ONE card that mattered, sliding off unread */
+.missed {
+  position: absolute; left: 14%; top: 66%;
+  padding: calc(18px * var(--u)) calc(28px * var(--u));
+  background: linear-gradient(180deg, #241c0c, #1b1408);
+  border: calc(2px * var(--u)) solid var(--gold); border-radius: calc(14px * var(--u));
+  color: var(--gold-2); font-weight: 800; font-size: calc(30px * var(--u));
+  box-shadow: 0 0 calc(30px * var(--u)) rgba(255,176,32,0.35);
+  opacity: 0; will-change: transform, opacity; z-index: 3; white-space: nowrap;
+}
+.missed b { color: var(--text2); font-weight: 700; }

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08",
+  "updated": "2026-07-14",
   "ideas": [
     {
       "id": "bulk-personalized-emails",
@@ -747,7 +747,7 @@
       "sector": "general",
       "tool": "AI (model-agnostic) + a spreadsheet",
       "archetype": "ideas",
-      "angle_hint": "OWNER-ENDORSED REPEATABLE SHORT FORMAT (not a single idea): 'Everyone asks AI to [hyped thing]. I asked it to [boring back-office opposite]. Here's what happened.' Each entry rides a hyped search term, delivers our boring-automation angle, keeps the VISIBLE-PROOF beat (see proof-must-be-visible) + promise discipline (saves/keeps, never earns). 009 = make-money -> chase-invoices. Owner's other seeds: replace jobs -> replace copy-paste; write code -> clean spreadsheets. NEW SEED (2026-07-08, from the external review): write emails -> find the emails I shouldn't answer. Pick the next one from these.",
+      "angle_hint": "OWNER-ENDORSED REPEATABLE SHORT FORMAT (not a single idea): 'Everyone asks AI to [hyped thing]. I asked it to [boring back-office opposite]. Here's what happened.' Each entry rides a hyped search term, delivers our boring-automation angle, keeps the VISIBLE-PROOF beat (see proof-must-be-visible) + promise discipline (saves/keeps, never earns). 009 = make-money -> chase-invoices. Owner's other seeds: replace jobs -> replace copy-paste; write code -> clean spreadsheets. Pick the next one from these — but the picker must give it a fresh SUBJECT coordinate (subject-guard, D-059). RETIRED SEED (D-059, 2026-07-15): 'write emails -> find the emails I shouldn't answer' (015) was dropped as a near-duplicate of 011 (subject attention/inbox, already covered by 011 + 016); do NOT re-seed inbox triage here.",
       "score": 88,
       "status": "backlog",
       "lane": "desk-notes",
@@ -786,6 +786,7 @@
       "tool": "AI (model-agnostic) + Gmail filters & labels",
       "archetype": "mini-demo",
       "lane": "ai-how-to",
+      "subject": "attention/inbox",
       "angle_hint": "LONG follow-up to 011 (read-my-inbox). HARD CONDITION before scripting: actually run the system on the real inbox for 7 days first — the real logs, saves AND misses are the material (build first, film after). Trust-design beats: where it was wrong, what stayed behind a human gate. Title candidates (pick at the SEO step): 'I Let AI Run My Inbox for 7 Days', 'AI Ran My Inbox for a Week. Here's What It Got Wrong.', '7 Days of AI Email Triage — the Honest Log'.",
       "score": 87,
       "status": "backlog",
@@ -936,6 +937,58 @@
       "source": {
         "origin": "manual",
         "added": "2026-07-08"
+      }
+    },
+    {
+      "id": "n8n-inbox-triage-teardown",
+      "title": "The n8n Inbox That Triages Itself (and the One Node That Keeps It Safe)",
+      "search_term": "n8n email triage workflow",
+      "task": "documents",
+      "sector": "general",
+      "tool": "n8n (free, self-host) + Gmail + a modular classifier model",
+      "archetype": "diagram",
+      "lane": "ai-how-to",
+      "angle_hint": "Teardown of a REAL public n8n template (workflow 4876) - understand WHY it works + the failure modes; label-only safety spine (a wrong guess = a wrong label, never a lost email). Bridges from the 015 Short. Establishes the reusable teardown FORMAT (ROADMAP Phase 3 #7).",
+      "score": 87,
+      "status": "in-progress",
+      "value_type": [
+        "teaches-system",
+        "saves-time",
+        "avoids-mistake"
+      ],
+      "takeaway": "Automate the DECIDING (which emails need you), not the DOING; build it label-only so a misclassification is recoverable; the classifier is the fragile node - keep a human gate.",
+      "produced_video_id": "016-n8n-inbox-triage",
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-14"
+      }
+    },
+    {
+      "id": "agent-fine-print-watch",
+      "title": "I Gave an AI Agent One Job: Watch the Fine Print",
+      "search_term": "ai monitor terms of service changes",
+      "task": "lookups-reports",
+      "sector": "general",
+      "tool": "AI agent (model-agnostic) + any change-watch source (a saved page / a doc / an RSS or diff feed); kept modular",
+      "archetype": "ideas",
+      "lane": "desk-notes",
+      "series": "The AI Agent",
+      "angle_hint": "Ep. 1 of 'The AI Agent'. An agent is a DECISION layer, not a scraper. A dumb diff-watcher spams you on every character change; the agent reads the change, decides whether it MATTERS, and hands you only the ones that do — with a reason. Money shot = a DECISION CARD (old vs new clause + AI verdict: impact + reason), not a scanning animation. Human-approval posture: it flags, you decide. subject = change-detection/policy; bridges to 016 (automate the deciding).",
+      "score": 85,
+      "status": "backlog",
+      "subject": "change-detection/policy",
+      "value_type": [
+        "teaches-system",
+        "avoids-mistake",
+        "corrects-misbelief"
+      ],
+      "takeaway": "An AI agent isn't a scraper that flags every change — it's a decision layer that reads a change, judges whether it matters, and hands you the call. Automate the deciding, keep the approval.",
+      "value_score": 9,
+      "value_band": "qualify",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-15"
       }
     }
   ]
