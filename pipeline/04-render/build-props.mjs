@@ -87,6 +87,14 @@ for (const s of props.scenes) {
     console.warn(`EMPTY/STATIC SCENE: ${s.sceneId} (${s.template}) ${secs.toFixed(1)}s — sparse template held >${maxHold}s; split or use a fuller/animated scene (no-empty-scene rule).`);
   }
 }
+// last-scene transition: the final scene always cross-blends with the OUTRO bumper (Main.tsx), so its
+// authored transition_out can never reach the compositor. Say so rather than dropping the direction
+// silently — the author asked for something this boundary cannot give them (D-060).
+const lastScene = timeline.scenes.at(-1);
+if (lastScene?.transition_out && lastScene.transition_out !== "cut") {
+  console.warn(`TRANSITION IGNORED: ${lastScene.scene_id} authored transition_out:"${lastScene.transition_out}", but it is the LAST scene — it cross-blends with the outro bumper instead. Move the transition to an earlier boundary or drop it (D-060).`);
+}
+
 // strong-hook: a hook-class opener (hook-card or a custom hook-* scene) must start within the window.
 const hookVD = fmt.hook?.visual_detail ?? {};
 if (hookVD.require_hook_class_scene) {

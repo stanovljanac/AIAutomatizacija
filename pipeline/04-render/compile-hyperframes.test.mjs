@@ -7,19 +7,25 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { assertValid, withTempDir } from "../shared/testkit/index.mjs";
+import { hfClipLocalSeconds } from "../04b-thumbnails/extract.mjs";
 import { compileTimeline } from "./compile-remotion.mjs";
 import {
   buildHyperframesJobs,
   buildEntryCommand,
   buildRenderCommand,
   copyHyperframesClips,
+  detectDeadRender,
   jobVariables,
   renderHyperframesScenes,
 } from "./compile-hyperframes.mjs";
 
 const fps = 30;
 
-/** A synthetic 3-scene timeline WITH crossfade; the middle scene is a hyperframes hero with reveals. */
+/**
+ * A synthetic 3-scene timeline; the middle scene is a hyperframes hero with reveals.
+ * s1 authors a DISSOLVE so the pull-back path stays exercised (D-060 made the hard cut the default,
+ * so an unauthored timeline overlaps nowhere and the parity assertions would be trivially true).
+ */
 function syntheticTimeline() {
   return {
     version: 1,
@@ -32,7 +38,7 @@ function syntheticTimeline() {
     crossfade_seconds: 9 / fps,
     motion: { intensity: "standard" },
     scenes: [
-      { scene_id: "s1.0", engine: "remotion", template: "hook-card", start_seconds: 1.5, end_seconds: 4, props: { title: "Hook" } },
+      { scene_id: "s1.0", engine: "remotion", template: "hook-card", start_seconds: 1.5, end_seconds: 4, transition_out: "dissolve", props: { title: "Hook" } },
       {
         scene_id: "s2.0", engine: "hyperframes", template: "custom",
         start_seconds: 4, end_seconds: 8.5,
@@ -394,6 +400,8 @@ test("[REGRESSION] renderHyperframesScenes childEnv is a fresh object (never ali
 test("[REGRESSION-PARITY] HF scene at index 2 of 4 gets the correct crossfade pull-back and parity", () => {
   // Existing suite only has HF at index 1 of 3. This pins the case where HF is at index 2
   // (i.e. k=2, full crossfade pull-back), which is the most common real-world scenario.
+  // D-060: now also a MIXED-transition timeline — cut, then dissolve, then an authorial `match`
+  // (which composites as a cut). The HF window must track the boundary policy exactly.
   const timeline = {
     version: 1,
     format: { width: 1920, height: 1080, fps },
@@ -404,11 +412,13 @@ test("[REGRESSION-PARITY] HF scene at index 2 of 4 gets the correct crossfade pu
     crossfade_seconds: 9 / fps,
     motion: { intensity: "standard" },
     scenes: [
-      { scene_id: "sa", engine: "remotion", template: "hook-card", start_seconds: 1.5, end_seconds: 5, props: { title: "A" } },
-      { scene_id: "sb", engine: "remotion", template: "section-header", start_seconds: 5, end_seconds: 9, props: { title: "B" } },
+      { scene_id: "sa", engine: "remotion", template: "hook-card", start_seconds: 1.5, end_seconds: 5, transition_out: "cut", props: { title: "A" } },
+      // sb dissolves INTO the HF hero — so the hero is the pulled-back scene (the case this pins)
+      { scene_id: "sb", engine: "remotion", template: "section-header", start_seconds: 5, end_seconds: 9, transition_out: "dissolve", props: { title: "B" } },
       {
         scene_id: "sc", engine: "hyperframes", template: "custom",
         start_seconds: 9, end_seconds: 14,
+        transition_out: "match",
         props: { hf_scene: "kinetic", title: "C" },
         reveals: [{ at_seconds: 10.5 }, { at_seconds: 12 }],
       },
@@ -473,6 +483,46 @@ test("[REGRESSION-PARITY] HF scene as the LAST scene of the timeline (no followi
   );
 });
 
+// ── THE THIRD PARITY LEG (D-060) ─────────────────────────────────────────────────────────────────
+// The window math had THREE consumers, and only two were ever compared: 04b-thumbnails' hfClipLocalSeconds
+// was a hand-mirrored copy in another phase dir with no parity test, and it fails SILENTLY (a drifted
+// copy grabs the wrong frame out of every HF clip and nothing errors). All three now call sceneWindow;
+// this test is what keeps them honest.
+
+test("[PARITY] 04b hfClipLocalSeconds agrees with compileTimeline's window on a MIXED-transition timeline", () => {
+  const timeline = {
+    version: 1,
+    format: { width: 1920, height: 1080, fps },
+    duration_seconds: 22,
+    audio: { src: "x/narration.mp3", start_seconds: 1.5 },
+    intro: { duration_seconds: 1.5, wordmark: "W", tagline: "T" },
+    outro: { duration_seconds: 2.5, cta: "C", brand: "" },
+    crossfade_seconds: 9 / fps,
+    motion: {},
+    scenes: [
+      { scene_id: "s1.0", engine: "hyperframes", template: "custom", start_seconds: 1.5, end_seconds: 5, transition_out: "dissolve", props: { hf_scene: "a" } },
+      { scene_id: "s2.0", engine: "hyperframes", template: "custom", start_seconds: 5, end_seconds: 9, transition_out: "cut", props: { hf_scene: "b" } },
+      { scene_id: "s3.0", engine: "hyperframes", template: "custom", start_seconds: 9, end_seconds: 14, transition_out: "carry", props: { hf_scene: "c" } },
+      { scene_id: "s4.0", engine: "hyperframes", template: "custom", start_seconds: 14, end_seconds: 19, transition_out: "push", props: { hf_scene: "d" } },
+    ],
+    captions: [],
+  };
+  const props = compileTimeline(timeline);
+
+  timeline.scenes.forEach((sc, k) => {
+    const rsc = props.scenes[k];
+    // grab in the middle of the scene: the clip-local time must map back to the same ABSOLUTE frame
+    const abs = (sc.start_seconds + sc.end_seconds) / 2;
+    const local = hfClipLocalSeconds(timeline, k, abs);
+    assert.equal(
+      Math.round(local * fps) + rsc.fromFrame,
+      Math.round(abs * fps),
+      `${sc.scene_id}: a thumbnail grabbed at clip-local ${local}s must be the frame the composite shows at ${abs}s`
+    );
+    assert.ok(local >= 0 && local <= (rsc.durFrames - 1) / fps, `${sc.scene_id}: the grab stays inside the clip`);
+  });
+});
+
 // ── ATTACK 3: q() quoting robustness ─────────────────────────────────────────────────────────────
 // The fakeSpawn in these tests must tolerate q()'d paths (args are already quoted on win32 before
 // being handed to spawn). Test that the fakeSpawn helper strips cmd.exe shell-quoting so the output
@@ -517,5 +567,74 @@ test("[REGRESSION] renderHyperframesScenes skip logic works when output path con
     const r2 = renderHyperframesScenes({ root: dir, cdir, jobs, spawn: quoteTolerantFakeSpawn(calls) });
     assert.deepEqual(r2.skipped, ["s2.0"], "skip works when fakeSpawn strips q() shell-quoting before writing");
     assert.equal(calls.length, 1, "no new spawn on second run");
+  });
+});
+
+// ── detectDeadRender: the silent-death guard (D-060 Phase 3) ─────────────────────────────────────
+
+/**
+ * The real log of a scene whose gsap 404'd (captured from an actual `hyperframes render`,
+ * 2026-07-17). Every line here came out of a run that exited 0 and wrote a VALID, static mp4 —
+ * which is exactly why exit status is not a truth signal.
+ */
+const DEAD_LOG = `
+[hyperframes] browserGpuMode auto → hardware (WebGL probe succeeded)
+[FileServer] 404 Not Found: /_lib/gsap.min.js
+[non-blocking] Failed to load resource: the server responded with a status of 404 (Not Found)
+[Browser:PAGEERROR] gsap is not defined
+[FrameCapture] Sub-composition timelines not registered after 45000ms: probe.
+  █████████████████████████  100%  Render complete
+`;
+
+const LIVE_LOG = `
+[Compiler] Found 1 asset(s) outside project directory — will copy to render output
+[INFO] [Render] No HDR sources detected — rendering SDR
+  █████████████████████████  100%  Render complete
+`;
+
+test("detectDeadRender flags a 404'd asset, the page error, and the missing timeline", () => {
+  const reasons = detectDeadRender(DEAD_LOG);
+  assert.equal(reasons.length, 3);
+  assert.match(reasons.join(" "), /\/_lib\/gsap\.min\.js/);
+  assert.match(reasons.join(" "), /gsap is not defined/);
+  assert.match(reasons.join(" "), /no timeline registered/);
+});
+
+test("detectDeadRender stays quiet on a healthy render (incl. the _lib external-asset copy)", () => {
+  assert.deepEqual(detectDeadRender(LIVE_LOG), []);
+  assert.deepEqual(detectDeadRender(""), []);
+  assert.deepEqual(detectDeadRender(undefined), []);
+});
+
+test("detectDeadRender does not trip on ordinary scene text that merely resembles the signals", () => {
+  // anchored to the CLI's own prefixes — a scene may legitimately render these words
+  const log = 'rendering card "404 Not Found" · headline: the term is not defined · Render complete\n';
+  assert.deepEqual(detectDeadRender(log), []);
+});
+
+test("[ACCEPTANCE] a render that exits 0 but is DEAD throws AND discards the mp4 (never cached as good)", async () => {
+  await withTempDir(async (dir) => {
+    const cdir = path.join(dir, "content", "004-x");
+    fs.mkdirSync(cdir, { recursive: true });
+    const { jobs } = buildHyperframesJobs(syntheticTimeline(), { leadFrames: 7 });
+
+    // exits 0, writes a real file, but the log says the scene never came alive
+    const deadSpawn = (cmd, args) => {
+      if (cmd === "node" && /make-entry\.mjs$/.test(args[0])) return { status: 0, stdout: "compositions/e.html\n" };
+      const out = args[args.indexOf("--output") + 1];
+      fs.writeFileSync(out, "fake-mp4");
+      return { status: 0, stdout: DEAD_LOG, stderr: "" };
+    };
+
+    assert.throws(
+      () => renderHyperframesScenes({ root: dir, cdir, jobs, spawn: deadSpawn }),
+      /DEAD clip.*gsap is not defined|gsap is not defined.*DEAD clip/s,
+      "a silently dead render must fail the build, not pass",
+    );
+    assert.equal(
+      fs.existsSync(path.join(cdir, "video", "hf", "s2.0.mp4")),
+      false,
+      "the dead mp4 must be deleted, or the next run skips it as cached-and-fine",
+    );
   });
 });

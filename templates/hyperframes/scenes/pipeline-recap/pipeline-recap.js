@@ -2,38 +2,14 @@
  * serpentine end to end, HALTING at both gates → the tally lands. Silent, deterministic.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1920;
-var H = Number(V.height) > 0 ? Number(V.height) : 1080;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 450;
-var D = FRAMES / fps;
-var props = V.props && typeof V.props === "object" ? V.props : {};
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "pipeline-recap", width: 1920, height: 1080, frames: 450, beatLo: 0.1, beatHi: 0.4 });
+var fps = S.fps, W = S.W, H = S.H, U = S.U, props = S.props, beats = S.beats, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.1, D - 0.4); }
 // 3 sentence beats
 var tBuild = beatAt(0, 0.03);
 var tFlow = Math.max(beatAt(1, 0.28), tBuild + 1.2);
 var tTally = Math.max(beatAt(2, 0.72), tFlow + 2.6);
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // beat 0 — territory fields breathe in, nodes pop on in flow order
@@ -78,4 +54,4 @@ tl.to("#n5, #n10", { boxShadow: "0 0 " + 40 * U + "px rgba(255,176,32,0.65)", du
 tl.to("#n3, #n4, #n9", { boxShadow: "0 0 " + 34 * U + "px rgba(34,211,167,0.55)", duration: 0.35, ease: "power2.out" }, tTally + 0.45);
 tl.to("#token", { opacity: 0, duration: 0.3 }, tTally + 0.3);
 
-window.__timelines["pipeline-recap"] = tl;
+HF.register("pipeline-recap", tl);

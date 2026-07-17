@@ -75,9 +75,29 @@ You assemble the final video deterministically from `script.json` + `alignment.j
      unchanged). Needs `templates/hyperframes/.bin` ffmpeg (vendored; auto-added to PATH).
   3. `node pipeline/04-render/build-props.mjs <id>` again → now copies the clip into
      `templates/remotion/public/<outId>/hf/` and sets `props.hfSrc` so Remotion composites it.
-- The HF clip is rendered to be **exactly** the scene's `durFrames` long (same crossfade pull-back as
-  Remotion), so it covers the window 1:1 with no black gap. Keep HF scenes **deterministic + silent**;
-  the clips are cached per scene by the variables-file hash.
+- The HF clip is rendered to be **exactly** the scene's `durFrames` long — both compilers call the same
+  `lib/transitions.mjs` `sceneWindow`, so it covers the window 1:1 with no black gap **by construction**
+  (it used to be two hand-mirrored formulas). Keep HF scenes **deterministic + silent**; the clips are
+  cached per scene by the variables-file hash.
+- **Cache boundary (D-060):** the cache key is the whole variables JSON, so a field is either a render
+  input or it isn't. `transition_out` and `direction` both sit **outside** `jobVariables` — editing a
+  scene's `direction.premise` re-renders **nothing**. The cache still invalidates *correctly*: changing
+  s2's `transition_out` changes **s3's** `durationFrames`, so s3 re-renders and s2 is correctly reused.
+- **`templates/hyperframes/_lib/` — the shared scene substrate (D-060 Phase 3).** One vendored
+  `gsap.min.js` (was 60 identical copies) + `hf-scene.js`, which owns the whole variables contract:
+  `readVars`, the fps/W/H/FRAMES/D derivation, `props`/`beats` normalisation, the `data-duration`
+  write, the `portrait` class, the `--u` unit, `cl`/`beatAt`, and `HF.register`. A scene declares its
+  contract in two lines (see `_lib/hf-scene.js` header) and spends the rest on art direction.
+- **Reference `_lib` as `../../_lib/…` — never `../_lib/…`, and never let `make-entry.mjs` rewrite it.**
+  The render entry is disposable and lives in `<scene>/compositions/`, and the HF file server roots at
+  the **scene** dir, so a browser-relative `../_lib` escapes the root and 404s. What makes it work is the
+  CLI compiler resolving `src`/`href` against the **project** dir, finding an outside-the-project asset
+  and copying it into the render output (`[Compiler] Found N asset(s) outside project directory`).
+- **A broken HF scene does NOT fail the render — the guard does.** Measured: a 404'd gsap yields
+  `gsap is not defined`, no timeline registers, and `hyperframes render` still exits 0 with a valid but
+  **frozen** mp4. `detectDeadRender` scans the render log for the 404 / `[Browser:PAGEERROR]` /
+  "timelines not registered" signals, **deletes** the clip (else the next run skips it as cached-and-fine)
+  and throws. If you ever see that error, fix the scene's asset paths — do not delete the guard.
 
 ## Dynamic scenes (D-022)
 - **Visual density follows the narration.** A short line can be one calm template; a beat
@@ -92,7 +112,13 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   bespoke illustration scenes (`src/custom/*`, `template:"custom"`) over plain text cards.
   Every video should mix in at least one custom/illustrated scene.
 - **Continuity:** one persistent `BackgroundFX` lives in `Main`; templates render
-  **transparent**; `SceneWrapper` crossfades (~9 frames). Don't paint per-scene backgrounds.
+  **transparent**. Don't paint per-scene backgrounds.
+- **Scene boundaries (D-060):** `SceneWrapper` no longer crossfades everything. The compiler resolves
+  each scene's `fadeIn`/`fadeOut` from the authored `transitionOut` (**default: a hard cut**, landing on
+  the narration beat); only `dissolve`/`push` overlap two windows, and the intro/outro **bumpers** keep
+  their fixed ~9-frame blend. **A fade of 0 must bypass `interpolate`** — `interpolate(0,[0,0],[0,1])`
+  is 0, so the naive path would flash the background for one frame at *every* cut. `fadeIn`/`fadeOut`
+  are optional in `MainProps` (`?? xf`), so a pre-D-060 props file still renders as it did.
 
 Render locally (default). If a scene is too heavy, simplify its template before
 reaching for cloud.

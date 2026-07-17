@@ -6,39 +6,16 @@
  * Determinism: DOM = one paused GSAP timeline; WebGL renders ONLY on hf-seek and every
  * value is a pure function of the seeked time (closed-form spin-down after the halt).
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 456;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "incident-503", width: 1080, height: 1920, frames: 456, beatLo: 0.05, beatHi: 0.5 });
+var fps = S.fps, W = S.W, H = S.H, U = S.U, props = S.props, cl = S.cl, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
 function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
 function smoothstep(e0, e1, x) { var t = clamp01((x - e0) / (e1 - e0)); return t * t * (3 - 2 * t); }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.05, D - 0.5); }
 var tIntro = beatAt(0, 0.01);
 var tCascade = Math.max(beatAt(1, 0.1), tIntro + 0.8);
 var tRetry = Math.max(beatAt(2, 0.45), tCascade + 2.2);
 var tHalt = Math.max(beatAt(3, 0.7), tRetry + 3.2);
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // beat 0 — establish: the desk view of a healthy run (terminal flat and face-on)
@@ -82,7 +59,7 @@ tl.to("#gatebar", { y: -10 * U, duration: 0.22, ease: "back.out(3)" }, tHalt + 0
 tl.fromTo("#notify", { opacity: 0, y: -140 * U, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, tHalt + 1.15);
 tl.to("#notify", { boxShadow: "0 24px 70px rgba(0,0,0,0.7), 0 0 70px rgba(255,176,32,0.4)", duration: 0.6, yoyo: true, repeat: 2, ease: "sine.inOut" }, tHalt + 1.7);
 
-window.__timelines["incident-503"] = tl;
+HF.register("incident-503", tl);
 
 /* ── the Three.js WARNING BEACON (renders only on hf-seek; pure fn of time) ───────── */
 var THREE_URL = window.__THREE_URL || "./vendor/three.module.min.js";

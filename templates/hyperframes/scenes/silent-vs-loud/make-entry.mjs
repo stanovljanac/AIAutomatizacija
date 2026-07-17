@@ -15,7 +15,6 @@ let html = readFileSync(join(here, "index.html"), "utf8");
 html = html
   .replace('data-width="1080"', `data-duration="${dur}" data-width="${W}"`)
   .replace('data-height="1920"', `data-height="${H}"`)
-  .replace('src="gsap.min.js"', 'src="../gsap.min.js"')
   .replace('href="silent-vs-loud.css"', 'href="../silent-vs-loud.css"')
   .replace('src="silent-vs-loud.js"', 'src="../silent-vs-loud.js"');
 const name = `render-entry-${W}x${H}-${FRAMES}f-${fps}fps.html`;

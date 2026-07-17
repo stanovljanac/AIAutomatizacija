@@ -29,7 +29,6 @@ let html = readFileSync(join(here, "index.html"), "utf8");
 html = html
   .replace('data-width="1080"', `data-duration="${dur}" data-width="${W}"`)
   .replace('data-height="1920"', `data-height="${H}"`)
-  .replace('src="gsap.min.js"', 'src="../gsap.min.js"')
   .replace('href="fp-decision-card.css"', 'href="../fp-decision-card.css"')
   .replace('src="fp-decision-card.js"', 'src="../fp-decision-card.js"');
 

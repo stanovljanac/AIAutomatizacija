@@ -53,9 +53,13 @@ export function buildTimeline({ script, plan, alignment, fmt, timings, fps, cros
   for (const sc of script.scenes) {
     const sents = sentByScene[sc.id] ?? [];
     const ps = planBy[sc.id] ?? { template: "section-header", props: { title: sc.id } };
+    // D-060: a scene's `transitionOut` describes how the SCENE exits, so on a beat fan-out it governs
+    // the LAST beat only; inner beat boundaries default to `cut` unless the beat authored its own.
+    // `direction` is art-direction prose for the author and is deliberately NOT copied — keeping it out
+    // of the timeline keeps it out of jobVariables, and therefore out of the HF render cache key.
     const defs = ps.beats?.length
-      ? ps.beats.map((b) => ({ template: b.template, engine: b.engine ?? ps.engine, props: { ...b.props }, sentences: b.sentences, revealOn: b.revealOn ?? ps.revealOn, cueWords: b.cueWords ?? ps.cueWords }))
-      : [{ template: ps.template, engine: ps.engine, props: { ...ps.props }, revealOn: ps.revealOn, cueWords: ps.cueWords }];
+      ? ps.beats.map((b, bi) => ({ template: b.template, engine: b.engine ?? ps.engine, props: { ...b.props }, sentences: b.sentences, revealOn: b.revealOn ?? ps.revealOn, cueWords: b.cueWords ?? ps.cueWords, transitionOut: b.transitionOut ?? (bi === ps.beats.length - 1 ? ps.transitionOut : undefined) }))
+      : [{ template: ps.template, engine: ps.engine, props: { ...ps.props }, revealOn: ps.revealOn, cueWords: ps.cueWords, transitionOut: ps.transitionOut }];
 
     const n = defs.length;
     defs.forEach((d, bi) => {
@@ -67,7 +71,7 @@ export function buildTimeline({ script, plan, alignment, fmt, timings, fps, cros
         slice = sents.slice(a, Math.max(b, a + 1));
       }
       if (!slice.length) slice = [sents[Math.min(bi, sents.length - 1)] ?? { start: 0, end: 0.5 }];
-      beats.push({ sceneId: `${sc.id}.${bi}`, sid: sc.id, template: d.template, engine: d.engine, props: d.props, sents: slice, revealOn: d.revealOn, cueWords: d.cueWords });
+      beats.push({ sceneId: `${sc.id}.${bi}`, sid: sc.id, template: d.template, engine: d.engine, props: d.props, sents: slice, revealOn: d.revealOn, cueWords: d.cueWords, transitionOut: d.transitionOut });
     });
   }
 
@@ -121,6 +125,9 @@ export function buildTimeline({ script, plan, alignment, fmt, timings, fps, cros
       template: bt.template,
       start_seconds: startSeconds,
       end_seconds: endSeconds,
+      // conditional spread (same idiom as `engine` in the compilers): an unauthored boundary emits no
+      // key at all, so a plan that never mentions transitions produces the pre-D-060 timeline shape.
+      ...(bt.transitionOut ? { transition_out: bt.transitionOut } : {}),
       props,
     };
     if (reveals) scene.reveals = reveals;

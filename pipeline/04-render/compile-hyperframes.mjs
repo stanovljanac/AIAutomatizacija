@@ -14,24 +14,27 @@
  *
  * The one continuous narration.mp3 lives ONLY in Remotion — HyperFrames scenes are silent visuals.
  *
- * SCENE-WINDOW MATH — mirrors compile-remotion.mjs compileTimeline EXACTLY (crossfade pull-back on
- * every non-first scene of the WHOLE timeline, reveal lead subtraction, >=1 frame), so the HF clip
- * covers the Remotion scene window frame-for-frame:
- *   F = (s) => Math.round(s * fps)
- *   fromFrame = F(start_seconds) - (k > 0 ? crossfadeFrames : 0)    // k = index in timeline.scenes
- *   durFrames = Math.max(F(end_seconds) - fromFrame, 1)
+ * SCENE-WINDOW MATH — shared with compile-remotion.mjs via lib/transitions.mjs `sceneWindow` (D-060),
+ * so the HF clip covers the Remotion scene window frame-for-frame BY CONSTRUCTION rather than by two
+ * hand-mirrored formulas. The pull-back now comes from the PREVIOUS scene's authored `transition_out`
+ * (default `cut` → no pull-back), not from an unconditional crossfade. Reveals still subtract the lead:
  *   revealRel = Math.max(F(at_seconds) - fromFrame - leadFrames, 0)
+ *
+ * CACHE BOUNDARY: `transition_out` sits beside `props`, so it never enters jobVariables — and the cache
+ * still invalidates CORRECTLY: changing scene k's transition_out changes scene k+1's durationFrames, so
+ * k+1 re-renders and k is correctly reused.
  *
  * Standalone CLI (rendering NEVER happens inside build-props — only here):
  *   node pipeline/04-render/compile-hyperframes.mjs 004-foo [--force]
  *   node pipeline/04-render/compile-hyperframes.mjs 004-foo/short [--force]
  */
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { delimiter, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveFormat } from "../shared/lib/format.mjs";
 import { deriveRenderTimings } from "./lib/timings.mjs";
+import { sceneWindow } from "./lib/transitions.mjs";
 
 /**
  * PURE: timeline (seconds) → HyperFrames render jobs. No fs. Each job carries the fixed VARIABLES
@@ -46,15 +49,13 @@ import { deriveRenderTimings } from "./lib/timings.mjs";
 export function buildHyperframesJobs(timeline, { leadFrames = 0 } = {}) {
   const fps = timeline.format.fps;
   const F = (s) => Math.round(s * fps);
-  const crossfadeFrames = F(timeline.crossfade_seconds ?? 0);
   const jobs = [];
   const warnings = [];
 
   timeline.scenes.forEach((sc, k) => {
     if (sc.engine !== "hyperframes") return;
-    // window math — MUST mirror compile-remotion.mjs compileTimeline (k indexes the FULL scene list)
-    const fromFrame = F(sc.start_seconds) - (k > 0 ? crossfadeFrames : 0);
-    const durationFrames = Math.max(F(sc.end_seconds) - fromFrame, 1);
+    // window math — the SAME function compile-remotion.mjs calls (k indexes the FULL scene list)
+    const { fromFrame, durFrames: durationFrames } = sceneWindow(timeline, k);
     const { hf_scene: hfScene, ...props } = sc.props ?? {};
     if (!hfScene) {
       warnings.push(`hyperframes scene ${sc.scene_id} has no props.hf_scene (the templates/hyperframes/scenes/<name> to render) — skipped`);
@@ -129,9 +130,35 @@ export function buildRenderCommand(job, { varsFile, outFile, entry }) {
 }
 
 /**
+ * PURE: scan a `hyperframes render` log for the signals of a SILENTLY DEAD render.
+ *
+ * A HyperFrames render does NOT fail when the scene's JS never runs. Measured 2026-07-17: point a
+ * scene at a gsap path that 404s and the CLI still exits 0 and still writes a VALID mp4 — it is
+ * simply static, because `gsap is not defined` killed the script and no timeline ever registered.
+ * Exit status + file existence (all this compiler used to check) are therefore NOT enough: a broken
+ * scene would composite a frozen clip into a published video with no error anywhere.
+ *
+ * Anchored to the CLI's own prefixes, so a scene's ordinary text can never trip them.
+ *
+ * @param {string} log  combined stdout+stderr of one render
+ * @returns {string[]}  human reasons; empty means the render looks alive
+ */
+export function detectDeadRender(log) {
+  const s = String(log ?? "");
+  const reasons = [];
+  const missing = [...s.matchAll(/\[FileServer\] 404 Not Found: (\S+)/g)].map((m) => m[1]);
+  if (missing.length) reasons.push(`asset(s) 404'd: ${[...new Set(missing)].join(", ")}`);
+  const pageErr = [...s.matchAll(/\[Browser:PAGEERROR\] (.+)/g)].map((m) => m[1].trim());
+  if (pageErr.length) reasons.push(`page error(s): ${[...new Set(pageErr)].join("; ")}`);
+  if (/timelines not registered/i.test(s)) reasons.push("no timeline registered (the scene's GSAP timeline never reached window.__timelines)");
+  return reasons;
+}
+
+/**
  * Side-effecting: render each job to content/<id>/video/hf/<sceneId>.mp4 (SILENT clip), writing
  * <sceneId>.variables.json next to it. Idempotent/resumable: a job is SKIPPED when its mp4 already
- * exists AND the variables file content is unchanged AND !force. Throws on a non-zero exit.
+ * exists AND the variables file content is unchanged AND !force. Throws on a non-zero exit, and on a
+ * render that "succeeded" but is dead (see detectDeadRender).
  *
  * @param {object} args
  * @param {string} args.root    repo root
@@ -183,10 +210,25 @@ export function renderHyperframesScenes({ root, cdir, jobs, force = false, spawn
 
     const { cmd, args } = buildRenderCommand(job, { varsFile, outFile, entry });
     console.log(`RENDER ${job.sceneId} → ${job.outFile}  (${job.durationFrames}f @ ${job.fps}fps, ${job.width}x${job.height}, scene ${job.hfScene})`);
-    const res = spawn(cmd, q(args), { cwd: hfRoot, env: childEnv, stdio: "inherit", shell: winShell });
+    // captured (not inherited) so detectDeadRender can read it — the log is echoed straight after
+    const res = spawn(cmd, q(args), { cwd: hfRoot, env: childEnv, encoding: "utf8", shell: winShell, maxBuffer: 64 * 1024 * 1024 });
+    const log = `${res.stdout ?? ""}${res.stderr ?? ""}`;
+    if (log.trim()) console.log(log.trimEnd());
     if (res.error) throw res.error;
     if (res.status !== 0) throw new Error(`hyperframes render failed for ${job.sceneId} (exit ${res.status})`);
     if (!existsSync(outFile)) throw new Error(`hyperframes render reported success but ${outFile} was not produced (${job.sceneId})`);
+
+    // A dead render still exits 0 and still writes a playable mp4. Delete it: leaving it on disk
+    // would make the NEXT run skip it as cached-and-fine (variables unchanged), silently publishing
+    // a frozen clip. Failing loudly here is the whole point.
+    const dead = detectDeadRender(log);
+    if (dead.length) {
+      rmSync(outFile, { force: true });
+      throw new Error(
+        `hyperframes render for ${job.sceneId} (scene ${job.hfScene}) exited 0 but produced a DEAD clip — ${dead.join(" | ")}. ` +
+          `The mp4 was discarded. Check templates/hyperframes/scenes/${job.hfScene} (asset paths must resolve; _lib is referenced as ../../_lib/…).`,
+      );
+    }
     rendered.push(job.sceneId);
   }
 

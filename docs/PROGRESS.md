@@ -19,6 +19,87 @@ Format:
 
 ---
 
+## 2026-07-17 — HF `_lib/` extraction — Phase 3 of the D-060 plan
+- who: agent (owner: "implement phase 3 from <D-060 plan>")
+- did: Shipped `templates/hyperframes/_lib/` and migrated all 60 scenes onto it. **(1)** One vendored
+  `gsap.min.js` replaces 60 byte-identical copies (4.3 MB → 72 KB). **(2)** `hf-scene.js` owns the whole
+  variables contract (`readVars`, fps/W/H/FRAMES/D, `props`/`beats`, `data-duration` write, portrait class,
+  `--u`, `cl`/`beatAt`, `HF.register`); each scene's ~21-line preamble → `var S = HF.scene({…})` + aliases
+  (net **−1519 lines**). A codemod did the migration line-by-line, keeping bespoke code (e.g. `orb-risefall`'s
+  `sortBeats:false`, the 12 scenes with custom `beatAt` clamps). **(3)** Render guard `detectDeadRender` in
+  `compile-hyperframes.mjs`: a scene whose JS dies (404'd asset → `gsap is not defined` → no timeline) still
+  exits 0 with a valid frozen mp4 — the guard scans the render log, deletes the poisoned clip, and throws.
+- verified: `../../_lib/…` is the load-bearing path (HF file server roots at the scene dir; the CLI compiler
+  copies the outside-project asset in — `../_lib` 404s silently). Built a decoded-pixel equivalence harness
+  (software rasterizer `--no-browser-gpu -w 1` is bit-stable; GPU + mp4 container are not). All 60 scenes:
+  **bit-identical to git original or within their own GPU-noise floor**; the lone outlier (`killswitch`, ~60 dB)
+  is a sub-visual rasterization artifact with the timeline math proven byte-identical. **Zero real defects.**
+  `npm test` green (618). Note: HF renders are NOT reproducible under CPU contention — parallel renders can't
+  be hash-compared (this cost several false positives before I isolated it).
+- next: nothing for Phase 3. New scenes (018+) author against `_lib` (see storyboard + video-render skills).
+- blockers: none.
+
+## 2026-07-16 — Concept KB (`concepts/`) — Phase 2 of the D-060 plan
+- who: agent (owner: "implement phase 2 from <D-060 plan>")
+- did: Shipped `knowledge/desk-knowledge/concepts/` — the **visual vocabulary**: 7 concept notes +
+  an index, built **bottom-up from the 60 authored scenes** in `templates/hyperframes/scenes/` (the
+  plan's instruction: trust the scenes, not the docs — the docs lag). Source of truth was each scene's
+  own header comment, which records its premise, video/scene, palette and — crucially — its **owner
+  rejections**. Notes: [human-gate](../knowledge/desk-knowledge/concepts/human-gate.md) (10 scenes),
+  [verdict-stamp](../knowledge/desk-knowledge/concepts/verdict-stamp.md) (11),
+  [agent](../knowledge/desk-knowledge/concepts/agent.md) (8),
+  [overload-pile](../knowledge/desk-knowledge/concepts/overload-pile.md) (8),
+  [spreadsheet](../knowledge/desk-knowledge/concepts/spreadsheet.md) (7),
+  [source-document](../knowledge/desk-knowledge/concepts/source-document.md) (11),
+  [failure](../knowledge/desk-knowledge/concepts/failure.md) (8). Each = metaphors used (per scene +
+  video) · what landed · what the **owner** rejected (dated) · recurring elements · colors ·
+  proportions · what to avoid.
+  **Bottom-up corrected 3 of the 7 planned names:** `approval` → **`verdict-stamp`** (the stamp is the
+  reused element; approval is one of its verdicts), `inbox` → **`overload-pile`** (the subject is
+  volume-as-a-problem; inbox is one skin), `invoice` → **`source-document`** (the object is the flat
+  page — receipt/email/ToS/filing). `agent`/`human-gate`/`spreadsheet`/`failure` kept as planned.
+  **Verified substrate** rather than asserting it: gold `#FFB020` in **59/60** scenes, `--u` in
+  **60/60**, `--blue: #4F8CFF` in 23, red `#ff5c5c` in 32, green `#22D3A7` in 15, the 19.5% caption
+  band in 40 — catalogued **once** in the index so no note repeats it.
+  **Wired in:** MOTION_SPEC §0 now sends the author to the relevant concept note first, explicitly as
+  a **vocabulary INPUT, never a selector** (reaching for a note as a template is the exact §0 failure);
+  global `index.md` + `PROJECT.md` updated (`concepts/` now live alongside `lessons/`/`research/`).
+  Also fixed MOTION_SPEC's **6 dangling `[[wikilinks]]`** → relative links (KOS rule 5); the plan said
+  5. Remaining wikilinks in PROGRESS/CHANNEL/superpowers-plans are out of this scope.
+  Phase 2b (make the KB live: `render → owner Gate-2 verdict → KB update`) and Phase 3 (HF `_lib/`)
+  stay parked in ROADMAP.
+- next: Owner review. Phase 2b is what makes this pay off — today the KB is a one-time write and only
+  the owner's reject is signal (never the agent's self-review).
+- blockers: none. `knowledge-lint` clean (0 errors/0 warnings, 26 files); `npm test` 614/614 green.
+
+## 2026-07-16 — D-060: the scene boundary honors the authored transition (default: hard cut)
+- who: agent (owner: "implement phase 1 from <D-060 plan>")
+- did: Shipped the D-060 plan (its "Phase 1"; Phases 2/3 were explicitly deferred → parked in ROADMAP).
+  **The problem:** the agent already wrote real art direction per scene and the renderer destroyed the
+  part that crossed a boundary — 017's `props.note` carried "Match-cut the doc into s3" / "Push into s4" /
+  "Carry the gold YOU node into s5", **no renderer reads `props.note`**, and `Main.tsx` wrapped every
+  scene in an unconditional 9-frame crossfade that also *pre-rolled* it, ghosting the previous scene into
+  every line of narration. MOTION_SPEC §3 already said "default to a hard cut".
+  **Built:** new pure `pipeline/04-render/lib/transitions.mjs` (`TRANSITION_STYLES`, `BLENDED`,
+  `overlapFrames`, `sceneWindow`) — now the **ONE** copy of the window math, which had three consumers and
+  only two ever compared (`04b-thumbnails`' `hfClipLocalSeconds` was an untested hand-mirror that fails
+  *silently*; the third parity leg is now tested). Schemas gained `transitionOut` (scene + beat, default
+  `cut`; `match`/`morph`/`carry` are authorial and compile to a cut) and `direction` (`{premise*, palette,
+  carry}`), deliberately kept off the render side of the cache boundary. `SceneWrapper` takes
+  `fadeIn`/`fadeOut` and **bypasses `interpolate` on a 0-fade** (the black-flash trap). `build-props` warns
+  when the last scene's `transitionOut` is ignored (it blends with the outro bumper).
+  **Verified:** `npm test` **614 green** (+ new `transitions.test.mjs`; acceptance = every window starts
+  AND ends on its alignment mark; a cache-boundary test that fails loudly if `direction` ever moves to the
+  render side); `tsc --noEmit` clean; **real render** of a scratch copy of the 017 Short — all 5 windows
+  abut exactly on their marks, and a `fadeIn:9` probe frame proved the cut path renders at full opacity
+  (no black flash). Golden regenerated and audited to exactly the predicted diff (s2/s3 `from +9`/`dur −9`,
+  reveals `[2,77,167]→[0,68,158]`, ends `210/450/645` and all captions/motion/audio byte-identical).
+- next: **owner review.** Nothing retroactive — this serves 018 onward; 001–017 keep `props.note` as an
+  ignored prop (it stays a **live rendered string** on 008 s06, so it was not touched). Two owner calls:
+  (1) delete dead `motion.transition` config? (2) 017's HF scenes were authored against a crossfade and
+  open on an empty frame — under a cut that is now visible; the fix is authorial (compose the opening
+  frame to already show the first element), taught in the `storyboard` skill.
+
 ## 2026-07-15 — 017 Short produced end-to-end: voice → 5 bespoke HF scenes → render → QA PASS → at Gate ③
 - who: agent (owner: "Start producing 017 shorts video")
 - did: Took the Gate-②-approved **017 fine-print-watch Short** through the full production chain.

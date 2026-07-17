@@ -15,7 +15,6 @@ let html = readFileSync(join(here, "index.html"), "utf8");
 html = html
   .replace('data-width="1080"', `data-duration="${dur}" data-width="${W}"`)
   .replace('data-height="1920"', `data-height="${H}"`)
-  .replace('src="gsap.min.js"', 'src="../gsap.min.js"')
   .replace('href="magnifier-notfound.css"', 'href="../magnifier-notfound.css"')
   .replace('src="magnifier-notfound.js"', 'src="../magnifier-notfound.js"');
 const name = `render-entry-${W}x${H}-${FRAMES}f-${fps}fps.html`;

@@ -1,15 +1,16 @@
 <!doctype html>
 <!--
-  hook-snap — 013 s1 HOOK HERO (black+gold). STRATEGIC PREMISE: the sales pitch is a machine
-  that never stops — so the single most disarming opener is watching that perfect gold machine
-  SHATTER mid-glide, and being told "good." A pristine 012-style pipeline glides a video card
-  between gold stations; on "crashed" the frame GLITCHES (RGB split, camera shake + punch-in)
-  and the card explodes into 3D tumbling shards; the wreck freezes under a slammed gold stamp
-  "BEST THING IT EVER DID."; then a slow dolly-in while the thesis line lands. Camera moves are
-  real (one #camera rig: punch, shake, dolly); shards are CSS-3D under perspective.
+  hook-snap — 013 s1 HOOK HERO (black+gold). STRATEGIC PREMISE (round-2 reframe, thesis-first):
+  the curiosity gap opens on LINE ONE. The reversal is kinetic type up top — "THE DANGER ISN'T
+  THE CRASH" then the gold snap "IT'S THE ONE THAT KEEPS GOING" — while below it a pristine
+  012-style pipeline keeps gliding a video card (the machine that looks fine, "keeps going").
+  ONLY on "Mine crashed" does the frame GLITCH (RGB split, camera shake + punch-in) and the card
+  explode into 3D tumbling shards; the wreck freezes under a slammed gold stamp "BEST THING IT
+  EVER DID." then a slow dolly-in. Camera moves are real (one #camera rig); shards are CSS-3D.
 
-  Beats (revealsSeconds, scene-local): [0] crash sentence → glide+glitch ~1.5s in;
-  [1] "Best thing it has ever done." → freeze + stamp; [2] thesis → dolly-in.
+  Beats (revealsSeconds, scene-local): [0] "…isn't the one that crashes" → thesis line 1;
+  [1] "It's the one that keeps going." → gold reversal line; [2] "Mine crashed last month." →
+  glitch + shatter; [3] "Best thing it ever did." → gold stamp; tail → dolly-in.
 
   VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ title? }
   Silent + deterministic; one paused GSAP timeline; no Math.random/Date.
@@ -26,7 +27,8 @@
 >
   <head>
     <meta charset="UTF-8" />
-    <script src="../gsap.min.js"></script>
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
     <link rel="stylesheet" href="../hook-snap.css" />
   </head>
   <body>
@@ -61,10 +63,13 @@
         <!-- impact flash + red emergency flicker wash -->
         <div class="flash" id="flash" data-layout-ignore></div>
         <div class="redwash" id="redwash" data-layout-ignore></div>
-        <!-- beat 2: the gold verdict stamp -->
+        <!-- beats 0–1: thesis-first kinetic type (the reversal is the hook) -->
+        <div class="thesis" id="thesis">
+          <div class="th1" id="th1">THE DANGER ISN'T THE CRASH.</div>
+          <div class="th2" id="th2">IT'S THE ONE THAT <span class="gold">KEEPS GOING.</span></div>
+        </div>
+        <!-- beat 3: the gold verdict stamp -->
         <div class="stamp" id="stamp">BEST THING<br />IT EVER DID</div>
-        <!-- beat 3: thesis title -->
-        <div class="titleline" id="titleline">IT CRASHED. <span class="gold">GOOD.</span></div>
       </div>
     </div>
     <script src="../hook-snap.js"></script>

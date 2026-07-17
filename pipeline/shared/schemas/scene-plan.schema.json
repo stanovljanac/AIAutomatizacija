@@ -26,6 +26,8 @@
             ]
           },
           "props": { "type": "object", "description": "Component props. Optional MOTIVATED-MOTION (opt-in, surgical — never global): `focalZoom`: { target:{x,y} (0..1), scale (<=~1.6), in/out (narration cue words) } punches into a target on cue and releases; `pip`: { anchor:'top-right'|'top-left', content, in/out } shows a corner inset. build-props resolves cue words to scene-local frames. Use ONLY for single-focus content (capture-segment, code-block, stat-callout, prompt cards) — NOT tables/lists/body text." },
+          "transitionOut": { "$ref": "#/$defs/transitionOut" },
+          "direction": { "$ref": "#/$defs/direction" },
           "revealOn": { "type": "string", "enum": ["sentences"], "description": "Reveal sub-elements at each of this scene's sentence starts." },
           "cueWords": { "type": "array", "items": { "type": "string" }, "description": "Reveal sub-element i when this word is spoken." },
           "beats": {
@@ -38,12 +40,31 @@
                 "template": { "type": "string" },
                 "props": { "type": "object", "description": "Component props. Optional MOTIVATED-MOTION (opt-in, surgical — never global): `focalZoom`: { target:{x,y} (0..1), scale (<=~1.6), in/out (narration cue words) } punches into a target on cue and releases; `pip`: { anchor:'top-right'|'top-left', content, in/out } shows a corner inset. build-props resolves cue words to scene-local frames. Use ONLY for single-focus content (capture-segment, code-block, stat-callout, prompt cards) — NOT tables/lists/body text." },
                 "sentences": { "type": "array", "items": { "type": "integer" }, "description": "[from,to] sentence indices within this scene (inclusive)." },
+                "transitionOut": { "$ref": "#/$defs/transitionOut" },
                 "revealOn": { "type": "string" },
                 "cueWords": { "type": "array", "items": { "type": "string" } }
               }
             }
           }
         }
+      }
+    }
+  },
+  "$defs": {
+    "transitionOut": {
+      "type": "string",
+      "enum": ["cut", "dissolve", "push", "match", "morph", "carry"],
+      "default": "cut",
+      "description": "How this scene EXITS into the next one (D-060). Default `cut` — the cut lands exactly on the narration beat. MECHANIZED: `cut` (windows abut), `dissolve` (opacity cross-blend over the crossfade), `push` (the incoming scene slides in as this one slides out). AUTHORIAL — recorded and reviewable, but compiled as a hard CUT because the compositor cannot align two independently pre-rendered scenes: `match`, `morph`, `carry`. Those three are a CONTRACT WITH THE AUTHOR: compose the two adjacent scenes so their frames rhyme, then let the cut do the work. On a scene with `beats`, the scene-level value governs the LAST beat's exit; inner beat boundaries default to `cut` unless the beat sets its own. The LAST scene's value is ignored (it cross-blends with the outro bumper) — build-props warns."
+    },
+    "direction": {
+      "type": "object",
+      "required": ["premise"],
+      "description": "The art-direction brief for this scene: prose FOR THE AUTHOR of the visual, never for the renderer. INERT BY CONTRACT — `direction` is deliberately kept out of timeline.json, so it never reaches the HyperFrames jobVariables and therefore cannot enter the HF render cache key. That is what makes a typo fix in `premise` free instead of a full re-render of the clip. Anything the RENDERER must obey is a new field next to `transitionOut` (the executable side), never a field in here.",
+      "properties": {
+        "premise": { "type": "string", "description": "What this scene is DOING for the viewer, and how it looks/moves — the idea a bespoke HyperFrames scene is written from." },
+        "palette": { "type": "string", "description": "Colour intent for this scene (e.g. 'black + gold hero', 'blue + gold body')." },
+        "carry": { "type": "string", "description": "The element that must survive the boundary into the next scene — the author's half of a `match`/`morph`/`carry` transitionOut." }
       }
     }
   }

@@ -5,31 +5,9 @@
  * tween onUpdate (fires on seek), never via .call()/callbacks.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 340;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "green-lie", width: 1080, height: 1920, frames: 340, beatLo: 0.05, beatHi: 0.4 });
+var fps = S.fps, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.05, D - 0.4); }
 // beats: [0] establish, [1] error swallowed + ✓ keeps landing, [2] "every morning" → fan → ✗, [3] burn +3wk
 var tEstablish = beatAt(0, 0.0);
 var tError = Math.max(beatAt(1, 0.24), tEstablish + 1.0);
@@ -47,7 +25,6 @@ for (var gi = 0; gi < GCARDS; gi++) {
 }
 var gEls = gcards.children;
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 gsap.set("#rotstack", { opacity: 0 });
@@ -106,4 +83,4 @@ tl.to("#datechip", { scale: 1.12, duration: burnDur * 0.5, yoyo: true, repeat: 1
 tl.to("#camera", { filter: "brightness(0.62)", duration: 0.7, ease: "power2.in" }, tDate + burnDur + 0.45);
 tl.to("#redwash", { opacity: 0.16, duration: 0.7, ease: "power2.out" }, tDate + burnDur + 0.45);
 
-window.__timelines["green-lie"] = tl;
+HF.register("green-lie", tl);

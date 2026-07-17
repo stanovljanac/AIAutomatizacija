@@ -23,8 +23,17 @@ on screen at a time, beat-synced reveals. Emulate the *technique*, keep our clea
 single prop is placed — and each new scene should meet this standard or beat it.** Do not reach
 for a template and swap the words. Ask, in order: *what does this beat need to make the viewer
 feel or realize, and what is the single most disarming way to show it?* Then author the scene to
-that answer. A scene that merely "displays the line" is a reject ([[no-title-card-scenes]]); a
+that answer. A scene that merely "displays the line" is a reject
+([lesson](../knowledge/desk-knowledge/lessons/2026-06-28-title-card-scenes-get-rejected.md)); a
 scene that **lands the idea** is the floor.
+
+**Know what we've already drawn — then conceive fresh.** Before authoring, read the relevant
+[concept note](../knowledge/desk-knowledge/concepts/index.md) for the subject (the gate, the
+verdict stamp, the agent, the overload pile, the spreadsheet, the source document, failure): what
+metaphors we've used, what landed, what the owner rejected, and the recurring elements/colors/
+proportions. It is a **vocabulary as input to this section — never a selector.** Do not open a
+note and pick a metaphor off it; that is the template failure §0 exists to ban. Read it so your
+fresh answer is informed, and so a rejected metaphor isn't re-invented a fourth time.
 
 **The whole-video floor (owner, 2026-07-10): video 012 `studio-reveal` is the MINIMUM benchmark
 for visuals, animation, and transitions — every future video meets or beats it, never below.**
@@ -54,7 +63,9 @@ What made it good — the checklist every scene is now held to:
 - **Frame-pure & deterministic.** `useCurrentFrame`/anim helpers only — no `Date`/`Math.random`
   in the timeline — so it seeks and renders identically every time.
 - **Caption-safe & on-palette.** Viewport clipped/faded clear of the caption band; hook family
-  black+gold, body blue+gold ([[bespoke-first-video-system]], [[video-dynamism-and-length]]).
+  black+gold, body blue+gold ([VISUAL_IDENTITY](VISUAL_IDENTITY.md) §2; the shared substrate —
+  gold `#FFB020` in 59/60 scenes, `--u` scaling, the semantic colors — is catalogued in
+  [concepts/](../knowledge/desk-knowledge/concepts/index.md)).
 - **Fill the stage (owner rule, 2026-07-07).** Scene content spans the **top 5% → 85% band**
   (bottom ~15% is the caption band): big type, big icons — never a small cluster floating in
   the middle of the frame. On portrait especially, scale content up until the band is used.
@@ -64,7 +75,8 @@ What made it good — the checklist every scene is now held to:
 
 This is the meta-rule the rest of this file (pacing, hook, transitions, variety) operationalizes.
 When a scene clears §1–§6 but still feels *templated*, it has failed §0. Push every scene to
-out-think 009 S1 ([[proof-must-be-visible]]).
+out-think 009 S1
+([lesson](../knowledge/desk-knowledge/lessons/2026-06-27-proof-must-be-visible.md)).
 
 ---
 
@@ -123,8 +135,23 @@ Banned (amateur tells): star/heart wipes, page curls, cube spins, cross-zoom fla
 everywhere, and — worst — *relying on transitions instead of cuts*.
 
 Durations: graphic-to-graphic push/slide/wipe/morph **200–500ms** (default **~300ms**); whip/smear
-**150–300ms**; dissolves **rarely**, soft mood beats only (**0.5–1s**). Our base crossfade stays the
-small 9-frame (~300ms) blend; bespoke transitions are authored per beat on top of cuts.
+**150–300ms**; dissolves **rarely**, soft mood beats only (**0.5–1s**).
+
+**The default is mechanized (D-060).** Every scene boundary obeys the outgoing scene's `transitionOut`
+in `scene-plan.json`, and an unauthored boundary is a **hard cut** that lands *on* the narration beat.
+The **9 frames (~300ms) is the DISSOLVE/PUSH blend duration and the intro/outro bumper** — it is **not**
+a per-scene default. (Until D-060 it was: every scene was wrapped in an unconditional 9-frame crossfade
+that also *pre-rolled* the scene, ghosting the previous one into every line of narration — the spec said
+"default to a hard cut" and the renderer did the opposite.)
+
+`match`/`morph`/`carry` compile to a **cut**: the compositor cannot align two independently pre-rendered
+clips, and a match cut *is* a hard cut whose two frames were **composed to rhyme**. The enum records the
+intent; the author draws the shared element into both frames (`direction.carry`). Bespoke transitions are
+authored per beat **on top of** cuts.
+
+**Consequence for authoring:** under a cut a scene has no runway to animate its first element in — the
+scene's **opening state IS the first reveal**. Compose the opening frame to already show the thing, then
+move it. A scene that fades up from nothing reads as an empty frame on the beat.
 
 ## 4. Kinetic typography & text motion
 
@@ -134,7 +161,7 @@ small 9-frame (~300ms) blend; bespoke transitions are authored per beat on top o
 - **Emphasis:** scale-pop or color/highlight + a marker/underline sweep — landed **on the narration's
   stressed syllable** (the beat). That timing is the multiplier.
 - **Counters:** tick numbers up to the final value; for any stated stat, fade the **on-screen source
-  label** in next to the number as it lands (D-026 / [[on-screen-source-for-stats]]).
+  label** in next to the number as it lands (D-026, [DECISIONS](../docs/DECISIONS.md)).
 - **Eases:** `back.out(1.7)` for a playful snap, `power3.out` / `expo.out` for a clean decelerate.
 
 ## 5. Motion-design principles (Disney → UI/mograph) with numbers
@@ -189,7 +216,7 @@ Rules:
 - **Make dry facts move** — bars, flows, counters; don't narrate over a still.
 - **1–2 graphics per scene** (staging). Mixed media within a video, not one mode on repeat.
 - **B-roll:** only when a clip genuinely fits; never loop to fill; `OffthreadVideo`; prefer
-  code-drawn over irrelevant footage ([[broll-must-fit-never-loop]]).
+  code-drawn over irrelevant footage (D-027; [VISUAL_IDENTITY](VISUAL_IDENTITY.md) §5.2).
 - **Bespoke-first:** most visual scenes are authored fresh as HyperFrames compositions; the Remotion
   template gallery is a fallback, not the default. Reuse *techniques*, never a fixed deck.
 
@@ -216,6 +243,7 @@ the `lottie` HF adapter. No mandatory in-video attribution for any of these.
 | Hook-class scene w/ motion in first 30s (§2) | `lib/policy.mjs` + `qa-video` (HARD) |
 | No long static hold (§1) | `build-props` warn + `qa-video` (HARD), `format.pacing.max_static_hold_seconds` |
 | Sequential reveals in order (§1/§4) | `lib/timeline.mjs` monotonic clamp |
+| Hard cut is the default; the boundary honors `transitionOut` (§3) | `lib/transitions.mjs` `sceneWindow` — the ONE copy of the window math (both engine compilers + 04b-thumbnails call it); `SceneWrapper` obeys `fadeIn`/`fadeOut`; a bogus style is rejected by `scene-plan.schema.json`; the last scene's ignored `transitionOut` warns in `build-props` |
 | Capture clips silent (§ screen-capture) | `compile-remotion.mjs` strip-at-ingest + `qa-video` silence assert |
 | No paid-SaaS product names (§7) | `qa-video` denylist vs `brief.approvedTools` |
 | Bespoke ratio / no repeated template (§6) | `qa-video` custom-ratio + no-repeat checks |

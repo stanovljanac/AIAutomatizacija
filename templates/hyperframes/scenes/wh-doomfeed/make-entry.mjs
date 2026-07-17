@@ -29,7 +29,6 @@ let html = readFileSync(join(here, "index.html"), "utf8");
 html = html
   .replace('data-width="1080"', `data-duration="${dur}" data-width="${W}"`)
   .replace('data-height="1920"', `data-height="${H}"`)
-  .replace('src="gsap.min.js"', 'src="../gsap.min.js"')
   .replace('href="wh-doomfeed.css"', 'href="../wh-doomfeed.css"')
   .replace('src="wh-doomfeed.js"', 'src="../wh-doomfeed.js"');
 

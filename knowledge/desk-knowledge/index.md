@@ -11,11 +11,16 @@ and for where new knowledge comes from. Authoring rules: follow
 ## Map
 
 - [PROJECT.md](PROJECT.md) — profile: goal, canonical map, knowledge sources, local rules
+- [concepts/](concepts/index.md) — the **visual vocabulary**: the subjects we've drawn 3+ times
+  (the gate, the stamp, the agent, the pile, the sheet, the document, failure) — metaphors used,
+  what landed, what the owner rejected, recurring elements, colors, proportions. Built bottom-up
+  from `templates/hyperframes/scenes/`. **Input to [MOTION_SPEC §0](../../style/MOTION_SPEC.md),
+  never a selector** — read before authoring a scene, then still conceive it fresh.
 - [lessons/](lessons/index.md) — insights distilled from our own experience (owner
   rejections, incidents, analytics), each with Finding / Evidence / Decision
 - [research/](research/index.md) — what external sources say (platform policies, tool
   landscapes, genre scans), every claim sourced with a retrieved-date
 
-Other categories (`concepts/`, `patterns/`, `experiments/`, `glossary/`, `archive/`)
-don't exist yet — they are created the first time a note of that type exists
-(create-on-demand; `decisions/` is permanently unused here, see PROJECT.md).
+Other categories (`patterns/`, `experiments/`, `glossary/`, `archive/`) don't exist yet — they
+are created the first time a note of that type exists (create-on-demand; `decisions/` is
+permanently unused here, see PROJECT.md).

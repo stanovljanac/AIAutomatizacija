@@ -41,7 +41,7 @@
         "brand": { "type": "string" }
       }
     },
-    "crossfade_seconds": { "type": "number", "minimum": 0, "description": "Scene blend overlap; consecutive scene windows overlap by this much." },
+    "crossfade_seconds": { "type": "number", "minimum": 0, "description": "The BLEND DURATION, in seconds. Consecutive scene windows overlap by this much ONLY across a boundary whose outgoing scene authored a blended `transition_out` (dissolve/push); the default `cut` overlaps by 0 (D-060). Also the fixed intro/outro bumper blend." },
     "motion": { "type": "object", "description": "Motion budget from the resolved format recipe (intensity/ambient/emphasis…); passed through to the engine." },
     "scenes": {
       "type": "array",
@@ -54,6 +54,12 @@
           "template": { "type": "string", "description": "Render component tag." },
           "start_seconds": { "type": "number", "minimum": 0 },
           "end_seconds": { "type": "number", "minimum": 0 },
+          "transition_out": {
+            "type": "string",
+            "enum": ["cut", "dissolve", "push", "match", "morph", "carry"],
+            "default": "cut",
+            "description": "How this scene EXITS into the next (D-060; scene-plan `transitionOut`, snake-cased like start_seconds). Governs the NEXT scene's window pull-back: `dissolve`/`push` overlap by crossfade_seconds, everything else abuts (a hard cut on the alignment mark). `match`/`morph`/`carry` are authorial — recorded for review, compiled as a cut. Absent = cut. Sits BESIDE `props` so it never enters the HyperFrames jobVariables cache key; the cache still invalidates correctly because changing scene k's value changes scene k+1's durationFrames."
+          },
           "props": { "type": "object", "description": "Template-specific props (engine-agnostic). MOTIVATED-MOTION windows here carry ABSOLUTE video-second timing: focalZoom/pip expose inAtSeconds / outAtSeconds (null = scene start / hold to scene end); engine compilers convert these to their own frame/offset representation." },
           "reveals": {
             "type": "array",

@@ -2,33 +2,11 @@
  * Silent, deterministic, seek-driven. No exit tweens (master timeline owns the cut).
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ gapLabel? }
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1920;
-var H = Number(V.height) > 0 ? Number(V.height) : 1080;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 300;
-var D = FRAMES / fps;
-var props = V.props && typeof V.props === "object" ? V.props : {};
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "trust-gap", width: 1920, height: 1080, frames: 300, beatLo: 0.12, beatHi: 0.3 });
+var fps = S.fps, U = S.U, props = S.props, beats = S.beats, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
 if (props.gapLabel && document.getElementById("gap-pill")) document.getElementById("gap-pill").textContent = String(props.gapLabel).trim();
 
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.12, D - 0.3); }
 // 9 sentence beats — a dim flow skeleton establishes at the FIRST sentence (never blank), then each
 // node activates on its cue.
 var U2 = U;
@@ -38,7 +16,6 @@ var tN2 = Math.max(beatAt(4, 0.42), tN1 + 0.6);          // "a confident answer 
 var tN3 = Math.max(beatAt(5, 0.54), tN2 + 0.6);          // "gets shipped ... no one checking"
 var tPoint = Math.max(beatAt(8, 0.80), tN3 + 0.9);       // "the point of trust"
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 gsap.set(["#flag2", "#flag3"], { opacity: 0 });
@@ -68,4 +45,4 @@ tl.to("#gap-line", { opacity: 1, duration: 0.4, ease: "power2.out" }, tN3 + 0.2)
 tl.fromTo("#gap-pill", { opacity: 0, y: 14 * U2, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, tPoint);
 tl.to("#gap-line", { boxShadow: "0 0 " + (40 * U2) + "px rgba(255,176,32,0.85)", duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 1 }, tPoint + 0.2);
 
-window.__timelines["trust-gap"] = tl;
+HF.register("trust-gap", tl);

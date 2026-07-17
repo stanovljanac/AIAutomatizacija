@@ -77,6 +77,73 @@ motion ONLY to **single-focus** scenes; keep tables / multi-row lists / body tex
   step (see the `video-render` skill); if the clip is missing the scene gracefully falls back to its
   Remotion `template`.
 
+## The scene boundary: `transitionOut` (D-060)
+
+**The default is a hard cut, and the default is usually right** (`style/MOTION_SPEC.md` §3). A cut lands
+**on** the narration beat. Before D-060 every boundary was an unconditional 9-frame dissolve that
+*pre-rolled* the scene, so 300ms of the previous scene ghosted into every line — authored direction like
+*"match-cut the doc into s3"* rendered as the same mush as everything else.
+
+Set `transitionOut` on a scene (or a beat) **only when the boundary is doing work**:
+
+| value | what the compositor does | when |
+|---|---|---|
+| `cut` (default) | windows abut; the cut lands on the beat | almost always — omit the field |
+| `dissolve` | opacity cross-blend over the crossfade | a deliberate time/place jump, a soft settle |
+| `push` | B slides in as A slides out | a lateral "next item" move |
+| `match` · `morph` · `carry` | **a hard cut** | see below |
+
+**`match`/`morph`/`carry` are a contract with YOU, not an instruction to the renderer.** The two scenes
+are independently pre-rendered clips — the compositor has no idea what shape to align, and faking it
+would be a lie. A match cut *is* a hard cut whose two frames were **composed to rhyme**. So the enum
+value records the intent and makes it reviewable; **you** deliver it by drawing the shared element at the
+same size and position in the last frame of scene *k* and the first frame of scene *k+1*. Say which
+element that is in `direction.carry`.
+
+On a scene with `beats`, the scene-level value governs the **last** beat's exit; inner boundaries default
+to `cut`. The **last scene's** value is ignored (it cross-blends with the outro bumper) — build-props warns.
+
+### Compose the OPENING FRAME (the one thing a cut changes)
+
+Under a dissolve, a scene's first element had a ~7-frame runway to animate in *before* its window. Under a
+cut there is no "before" — you cannot animate an element in before its scene exists, so `reveals[0]` clamps
+to frame 0. **This is physics, not a bug.**
+
+So: **compose the opening frame to ALREADY SHOW the first element.** A scene that fades up from nothing
+now reads as an empty frame on the beat. Open on the thing, then move it.
+
+## `direction`: where the art direction goes
+
+`direction` is the schema'd home for the per-scene art-direction brief — **prose for the AUTHOR of the
+visual, never for the renderer**:
+
+```json
+"direction": {
+  "premise": "The terms doc scrolls; §9 REFUNDS quietly rewrites itself while nobody watches.",
+  "palette": "black + gold hero",
+  "carry": "the gold §9 chip — same size/position as s3's opening frame"
+}
+```
+
+- **`premise`** (required) — what the scene is DOING for the viewer, and how it looks/moves. This is what
+  a bespoke HyperFrames scene gets written from. When you author that scene under
+  `templates/hyperframes/scenes/<dir>/`, build it against the shared contract in `templates/hyperframes/_lib/`
+  (`var S = HF.scene({ id, width, height, frames, … })` + `HF.register(id, tl)`; load gsap + `hf-scene.js` as
+  `../../_lib/…`) — that is the whole variables/`--u`/beat plumbing, so the scene file is just art direction.
+  See the `video-render` skill's engine notes for the contract and the `../../_lib` path rule.
+- **`palette`** — colour intent (heroes + intro/outro: black+gold; body: blue+gold).
+- **`carry`** — the element that must survive the boundary: your half of a `match`/`morph`/`carry`.
+
+**Do NOT put art direction in `props.note`.** `note` is an ordinary prop — on `008-receipt-to-spreadsheet`
+s06 it is a **live rendered string**. Art direction had no documented home, which is exactly why briefs
+drifted into an unschema'd field where no renderer or reviewer would ever read them.
+
+**`direction` is inert by contract, and that is a cache rule, not a philosophy.** It never enters
+`timeline.json`, so it never reaches the HyperFrames `jobVariables` — which is the whole render cache key.
+A prose blob on the render side would re-render the clip on every typo fix. Anything the **renderer** must
+obey becomes a new field next to `transitionOut` (the executable side); it is never "`direction` becoming
+executable".
+
 ## Output & status
 - Write `scene-plan.json`; validate:
   `node pipeline/shared/validate.js content/<id>/scene-plan.json`.

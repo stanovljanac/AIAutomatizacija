@@ -5,31 +5,9 @@
  * flat, face-on, no 3D tilt.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 588;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "fp-decision-card", width: 1080, height: 1920, frames: 588, beatLo: 0.02, beatHi: 0.4 });
+var fps = S.fps, H = S.H, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.02, D - 0.4); }
 // sentence beats: [0] "I gave the agent one job: judge them" (agent + page pulled in)
 // [1] "reads what changed and asks: does this matter?" (the single gold scan; page dims)
 // [2] "one clause lit up" (the clause ignites → card chip) [3] "refund window: 30 — now 14"
@@ -53,7 +31,6 @@ gsap.set("#strike", { scaleX: 0 });
 gsap.set("#delta", { opacity: 0, scale: 1.7 });
 gsap.set("#verdict", { opacity: 0, y: 20 * U });
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // ambient glow breathe
@@ -103,4 +80,4 @@ tl.to("#dcard", { boxShadow: "0 0 " + (100 * U) + "px rgba(255,176,32,0.32), 0 "
 // a slow push-in while it holds
 tl.to("#camera", { scale: 1.045, duration: cl(D - tVerdict, 2.5, 5), ease: "power1.inOut", transformOrigin: "50% 45%" }, tVerdict);
 
-window.__timelines["fp-decision-card"] = tl;
+HF.register("fp-decision-card", tl);

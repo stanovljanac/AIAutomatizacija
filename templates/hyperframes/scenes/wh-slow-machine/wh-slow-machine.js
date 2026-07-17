@@ -5,31 +5,9 @@
  * counter STICKS at 6/40 ("54 min left"). Counters use proxy + onUpdate (seek-safe, cf benchmark-bars).
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 407;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "wh-slow-machine", width: 1080, height: 1920, frames: 407, beatLo: 0.02, beatHi: 0.4 });
+var fps = S.fps, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.02, D - 0.4); }
 // sentence beats: [0] "Here's the hour." [1] "forty emails... retype by hand" [2] "Name, item, address. Copy, paste, next." [3] "by row six, slow machine"
 var tSetup = beatAt(0, 0.0);
 var tHand = Math.max(beatAt(1, 0.09), tSetup + 0.8);
@@ -64,7 +42,6 @@ gsap.set("#stage", { filter: "grayscale(0)" });
 var clockProxy = { v: 60 }, rowProxy = { v: 0 };
 var clockEl = document.getElementById("clock-min"), rowsEl = document.getElementById("rows-n");
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // ── beat 0 — the hour appears ──
@@ -117,4 +94,4 @@ tl.to("#cursor", { x: "+=" + 12 * U, duration: 0.5, yoyo: true, repeat: Math.max
 // a faint slow push-in throughout
 tl.fromTo("#stage", { scale: 1.0 }, { scale: 1.03, duration: cl(D - tSetup, 4, 14), ease: "power1.inOut", transformOrigin: "50% 44%" }, tSetup);
 
-window.__timelines["wh-slow-machine"] = tl;
+HF.register("wh-slow-machine", tl);

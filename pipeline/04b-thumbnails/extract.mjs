@@ -28,6 +28,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from
 import { delimiter, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { validate, formatErrors } from "../shared/lib/validate-lib.mjs";
+import { sceneWindow } from "../04-render/lib/transitions.mjs";
 import { scoreScenes } from "./score-scenes.mjs";
 
 export const CANDIDATE_COUNT = 3;
@@ -53,17 +54,15 @@ export function settledSeconds(scene, { crossfadeSeconds = 0 } = {}) {
 }
 
 /**
- * Clip-LOCAL seconds for a frame grab from a pre-rendered HyperFrames scene clip. Mirrors the
- * compile-hyperframes window math EXACTLY (crossfade pull-back on every non-first scene), so the
- * grabbed frame is the same one the final composite shows at `absSeconds`. Pure.
+ * Clip-LOCAL seconds for a frame grab from a pre-rendered HyperFrames scene clip. Calls the SAME
+ * `sceneWindow` the two engine compilers use (D-060), so the grabbed frame is the one the final
+ * composite shows at `absSeconds`. It used to be a third hand-mirrored copy of the window math with
+ * no parity test — when it drifted it grabbed the wrong frame out of every HF clip, silently. Pure.
  */
 export function hfClipLocalSeconds(timeline, sceneIndex, absSeconds) {
   const fps = timeline.format.fps ?? 30;
   const F = (s) => Math.round(s * fps);
-  const crossfadeFrames = F(timeline.crossfade_seconds ?? 0);
-  const sc = timeline.scenes[sceneIndex];
-  const fromFrame = F(sc.start_seconds) - (sceneIndex > 0 ? crossfadeFrames : 0);
-  const durFrames = Math.max(F(sc.end_seconds) - fromFrame, 1);
+  const { fromFrame, durFrames } = sceneWindow({ ...timeline, format: { ...timeline.format, fps } }, sceneIndex);
   const local = Math.min(Math.max(F(absSeconds) - fromFrame, 0), durFrames - 1);
   return local / fps;
 }

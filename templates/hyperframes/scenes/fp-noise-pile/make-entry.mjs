@@ -29,7 +29,6 @@ let html = readFileSync(join(here, "index.html"), "utf8");
 html = html
   .replace('data-width="1080"', `data-duration="${dur}" data-width="${W}"`)
   .replace('data-height="1920"', `data-height="${H}"`)
-  .replace('src="gsap.min.js"', 'src="../gsap.min.js"')
   .replace('href="fp-noise-pile.css"', 'href="../fp-noise-pile.css"')
   .replace('src="fp-noise-pile.js"', 'src="../fp-noise-pile.js"');
 

@@ -16,44 +16,18 @@
 
 // ── 1. Resolve variables. getVariables() merges declared defaults +
 //      --variables-file; plain-browser fallback reads the declared defaults. ──
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") {
-    return window.__hyperframes.getVariables();
-  }
-  var out = {};
-  try {
-    var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
-    for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default;
-  } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1920;
-var H = Number(V.height) > 0 ? Number(V.height) : 1080;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 189;
+var S = HF.scene({ id: "hook-kinetic", width: 1920, height: 1080, frames: 189 });
+var fps = S.fps, FRAMES = S.FRAMES, D = S.D, props = S.props, beats = S.beats, root = S.root;
 // The visual clock: exactly FRAMES frames of content.
-var D = FRAMES / fps;
-var props = V.props && typeof V.props === "object" ? V.props : {};
 var title = typeof props.title === "string" && props.title.trim() ? props.title.trim() : "Stop typing invoices by hand";
 var kicker = typeof props.kicker === "string" && props.kicker.trim() ? props.kicker.trim() : "The Automation Desk";
-var beats = Array.isArray(V.revealsSeconds)
-  ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; })
-  : [];
 
 // ── 2. Apply EXACT duration (and geometry) to the DOM before the capture
 //      engine reads it. NOTE: the OUTPUT canvas size is fixed per entry file
 //      (static data-width/height); these assignments keep the runtime layout
 //      consistent with the variables, they cannot re-size the render. ──
-var root = document.getElementById("root");
 // ceil(dataDuration * fps) === FRAMES exactly, for any integer FRAMES (see header).
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
 // fluid unit: 1.0 at 1920x1080 / 1080x1920; scales typography to any canvas
-document.documentElement.style.setProperty("--u", String(Math.min(W, H) / 1080));
 if (typeof props.accent === "string" && /^#[0-9a-fA-F]{3,8}$/.test(props.accent)) {
   document.documentElement.style.setProperty("--accent", props.accent);
 }
@@ -115,7 +89,6 @@ for (var g = 0; g < nGroups; g++) {
 var lastLand = wordStart[words.length - 1] + WORD_DUR;
 
 // ── 5. Timeline (paused; the player/renderer seeks it) ──
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // cinematic micro-settle: the whole content block eases from 1.03 -> 1.00
@@ -172,4 +145,4 @@ for (var b = 0; b < beats.length; b++) {
 // NO exit animation: this is a hook scene — the master timeline's
 // transition owns the cut, so the last frame stays fully composed.
 
-window.__timelines["hook-kinetic"] = tl;
+HF.register("hook-kinetic", tl);

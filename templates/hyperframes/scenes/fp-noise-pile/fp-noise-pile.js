@@ -5,31 +5,9 @@
  * Counters use proxy + onUpdate (seek-safe). Deterministic; flat, face-on, no 3D tilt.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 558;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "fp-noise-pile", width: 1080, height: 1920, frames: 558, beatLo: 0.02, beatHi: 0.4 });
+var fps = S.fps, W = S.W, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.02, D - 0.4); }
 // sentence beats: [0] "point a change-watcher at a vendor's ToS — it works, too well" (doc + first toasts)
 // [1] "every reworded sentence, every shuffled paragraph: another alert" (cosmetic diffs → more toasts)
 // [2] "imagine forty pings a week, thirty-nine are noise" (counter→40, gray + NOISE wash)
@@ -58,7 +36,6 @@ gsap.set("#noisewash", { opacity: 0, scale: 0.92 });
 gsap.set("#muted", { opacity: 0, scale: 2.0, rotation: -3, xPercent: -50 });
 gsap.set("#missed", { opacity: 0, x: 0, y: 0 });
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // ambient glow breathe (motivated: the "always-on watcher" hum)
@@ -111,4 +88,4 @@ tl.to("#missed", { x: 0.62 * W, opacity: 0, duration: cl(D - tMute - 1.4, 1.2, 2
 // a whisper of push-in
 tl.to("#camera", { scale: 1.04, duration: cl(D - tDoc, 4, 16), ease: "power1.inOut" }, tDoc);
 
-window.__timelines["fp-noise-pile"] = tl;
+HF.register("fp-noise-pile", tl);

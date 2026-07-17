@@ -3,31 +3,9 @@
  * → slow dolly-in under the thesis line. Silent, deterministic, seek-driven.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 245;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "hook-snap", width: 1080, height: 1920, frames: 245, beatLo: 0.05, beatHi: 0.4 });
+var fps = S.fps, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.05, D - 0.4); }
 // sentence beats (round-2, thesis-first): [0] "…isn't the one that crashes", [1] "keeps going",
 // [2] "Mine crashed" → the crash, [3] "Best thing it ever did" → stamp.
 var tTh1 = beatAt(0, 0.0);
@@ -70,7 +48,6 @@ for (var pi = 0; pi < SPARKS.length; pi++) {
   sparksBox.appendChild(s);
 }
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // phase 0 — pristine glide: the card slides in from the right toward center; stations pass
@@ -147,4 +124,4 @@ for (var j = 0; j < shardEls.length; j++) {
   tl.to(shardEls[j], { y: "+=" + (6 + (j % 4) * 3) * U, rotationZ: "+=" + ((j % 2 ? 1 : -1) * 2.5), duration: cl(D - tStamp, 1, 4.4), ease: "none" }, tStamp);
 }
 
-window.__timelines["hook-snap"] = tl;
+HF.register("hook-snap", tl);

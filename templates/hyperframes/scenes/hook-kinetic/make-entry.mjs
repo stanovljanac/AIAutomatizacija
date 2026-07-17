@@ -44,7 +44,6 @@ html = html
   .replace('data-width="1920"', `data-duration="${dur}" data-width="${W}"`)
   .replace('data-height="1080"', `data-height="${H}"`)
   // the generated entry lives one level down, in compositions/
-  .replace('src="gsap.min.js"', 'src="../gsap.min.js"')
   .replace('href="hook-kinetic.css"', 'href="../hook-kinetic.css"')
   .replace('src="hook-kinetic.js"', 'src="../hook-kinetic.js"');
 

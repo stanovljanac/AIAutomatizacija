@@ -4,31 +4,9 @@
  * Deterministic, seek-driven; no Math.random / Date. Adapts the flip-question rig (013 s5).
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 406;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "wh-hour-flip", width: 1080, height: 1920, frames: 406, beatLo: 0.05, beatHi: 0.5 });
+var fps = S.fps, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.05, D - 0.5); }
 // sentence beats: [0] "so stop asking if AI will take your job" [1] "ask which hour you'd hand over first" [2] "mine was the copy-paste. yours?" [3] "follow while I hand AI the worst hour of every job"
 var tKick = beatAt(0, 0.0);
 var tFlip = Math.max(beatAt(1, 0.2), tKick + 1.3);
@@ -43,7 +21,6 @@ gsap.set("#bait", { opacity: 0, y: 20 * U });
 gsap.set("#brandrow", { opacity: 0, y: 40 * U });
 gsap.set("#aurora", { opacity: 0.7, scale: 0.94 });
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // ambient aurora breathe
@@ -73,4 +50,4 @@ tl.fromTo(".b-mark", { rotation: -8, scale: 0.9 }, { rotation: 0, scale: 1, dura
 // slow push-in the whole scene (after the flip)
 tl.fromTo("#camera", { scale: 1.03 }, { scale: 1.08, duration: cl(D - tFlip, 2, 10), ease: "power1.inOut" }, tFlip + 0.9);
 
-window.__timelines["wh-hour-flip"] = tl;
+HF.register("wh-hour-flip", tl);

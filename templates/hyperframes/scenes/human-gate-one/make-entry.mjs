@@ -15,7 +15,6 @@ let html = readFileSync(join(here, "index.html"), "utf8");
 html = html
   .replace('data-width="1920"', `data-duration="${dur}" data-width="${W}"`)
   .replace('data-height="1080"', `data-height="${H}"`)
-  .replace('src="gsap.min.js"', 'src="../gsap.min.js"')
   .replace('href="human-gate-one.css"', 'href="../human-gate-one.css"')
   .replace('src="human-gate-one.js"', 'src="../human-gate-one.js"');
 const name = `render-entry-${W}x${H}-${FRAMES}f-${fps}fps.html`;

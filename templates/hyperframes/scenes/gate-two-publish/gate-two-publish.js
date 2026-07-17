@@ -2,44 +2,20 @@
  * disclosure toggle YES → human cursor presses PUBLISH → PRIVATE flips PUBLIC. Deterministic.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ disclosureLabel? }
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1920;
-var H = Number(V.height) > 0 ? Number(V.height) : 1080;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 750;
-var D = FRAMES / fps;
-var props = V.props && typeof V.props === "object" ? V.props : {};
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
-
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
+var S = HF.scene({ id: "gate-two-publish", width: 1920, height: 1080, frames: 750, beatLo: 0.1, beatHi: 0.4 });
+var fps = S.fps, W = S.W, H = S.H, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl, beatAt = S.beatAt;
 
 if (props.disclosureLabel) {
   var lbl = String(props.disclosureLabel).split(":")[0];
   document.getElementById("disclabel").textContent = lbl;
 }
 
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.1, D - 0.4); }
 // 4 sentence beats
 var tWatch = beatAt(0, 0.03);
 var tDraft = Math.max(beatAt(1, 0.28), tWatch + 1.6);
 var tDisc = Math.max(beatAt(2, 0.55), tDraft + 1.4);
 var tClick = Math.max(beatAt(3, 0.8), tDisc + 1.8);
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // beat 0 — watching, start to end: the scrub runs the full bar; gate 2 glyph rises
@@ -76,4 +52,4 @@ tl.to("#bpriv", { opacity: 0, y: -14 * U, duration: 0.3, ease: "power2.in" }, tC
 tl.fromTo("#bpub", { opacity: 0, y: 14 * U, scale: 1.3 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(2)" }, tClick + 1.45);
 tl.to("#finger", { opacity: 1, duration: 0.4, ease: "power2.out" }, cl(tClick + 1.6, tClick, D - 0.3));
 
-window.__timelines["gate-two-publish"] = tl;
+HF.register("gate-two-publish", tl);

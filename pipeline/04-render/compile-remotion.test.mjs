@@ -1,6 +1,10 @@
-// V5 — the Remotion engine compiler: timeline.json (seconds) → render props (frames). The headline
-// guarantee is BYTE-IDENTICAL output vs the pre-refactor build-props (content/_FIXTURE/golden-props.json),
-// proving the seconds→frames seam changed nothing the renderer sees.
+// The Remotion engine compiler: timeline.json (seconds) → render props (frames).
+//
+// content/_FIXTURE/golden-props.json is asserted byte-identical. Its JOB CHANGED at D-060: it was
+// "prove the V5 seconds→frames seam changed nothing the renderer sees"; the boundary policy
+// deliberately DOES change what the renderer sees (default hard cut), so the golden was regenerated
+// and is now a renderer-visible REGRESSION SNAPSHOT — any future diff to it must be intended and
+// audited, not explained away.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -30,7 +34,7 @@ test("[ACCEPTANCE] compiled fixture props are BYTE-IDENTICAL to golden-props.jso
   const { props } = fixtureCompile();
   const serialized = JSON.stringify(props, null, 2) + "\n";
   const golden = fs.readFileSync(fixturePath("golden-props.json"), "utf8");
-  assert.equal(serialized, golden, "props/<id>.json must equal the pre-V5 golden exactly");
+  assert.equal(serialized, golden, "props/<id>.json must equal the golden snapshot exactly");
 });
 
 test("compileTimeline is deterministic/idempotent — same timeline → identical props twice", () => {
@@ -49,19 +53,55 @@ test("compileTimeline reconstructs whole-frame timing exactly (intro/outro/total
   assert.equal(props.audioFromFrame, 45);
 });
 
-test("compileTimeline pulls non-first scenes back by the crossfade; the first scene is not pulled", () => {
+// D-060 replaces "pulls non-first scenes back by the crossfade" — the fixture authors no transitions,
+// so every boundary is now the default hard CUT and no scene is pulled back at all.
+test("[ACCEPTANCE] default cut: every window starts AND ends on its alignment mark", () => {
   const { timeline, props } = fixtureCompile();
   const F = (s) => Math.round(s * fps);
-  assert.equal(props.scenes[0].fromFrame, F(timeline.scenes[0].start_seconds), "scene 0 not pulled back");
-  for (let i = 1; i < props.scenes.length; i++) {
-    assert.equal(props.scenes[i].fromFrame, F(timeline.scenes[i].start_seconds) - props.crossfadeFrames, "later scenes pulled back by xf");
-  }
+  props.scenes.forEach((s, k) => {
+    assert.equal(s.fromFrame, F(timeline.scenes[k].start_seconds), `${s.sceneId} starts ON the beat (no 300ms pre-roll ghost)`);
+    assert.equal(s.fromFrame + s.durFrames, F(timeline.scenes[k].end_seconds), `${s.sceneId} ends ON the beat`);
+  });
+});
+
+test("[CACHE BOUNDARY] mutating only `direction` leaves buildTimeline output byte-identical", () => {
+  // `direction` is art-direction prose FOR THE AUTHOR. It must never reach timeline.json — because the
+  // HF idempotency key is the whole jobVariables JSON, a field on the render side re-renders the clip
+  // on every typo fix. This test is the executable form of that rule: it must fail LOUDLY if anyone
+  // moves `direction` to the render side. (transitionOut is deliberately OUTSIDE it — it IS executable.)
+  const base = () => {
+    const script = readFixture("script.json");
+    const plan = readFixture("scene-plan.json");
+    const alignment = readFixture("alignment.json");
+    const brief = readFixture("brief.json");
+    const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
+    const timings = deriveRenderTimings(fmt, { fps, vertical: false });
+    return { script, plan, alignment, fmt, timings };
+  };
+  const build = (mutate) => {
+    const { script, plan, alignment, fmt, timings } = base();
+    mutate(plan);
+    return JSON.stringify(buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: timings.crossfadeFrames, dims: { width: 1920, height: 1080 }, outId: "_FIXTURE" }));
+  };
+
+  const plain = build(() => {});
+  const directed = build((plan) => {
+    plan.scenes[0].direction = { premise: "A desk buried in invoices; the pile breathes.", palette: "black + gold", carry: "the gold YOU node" };
+  });
+  assert.equal(directed, plain, "`direction` must not enter timeline.json → cannot enter jobVariables → cannot re-render a clip");
+
+  // …and the control: transitionOut IS executable, so it MUST change the timeline.
+  const cut = build((plan) => { plan.scenes[0].transitionOut = "dissolve"; });
+  assert.notEqual(cut, plain, "`transitionOut` is on the executable side — it must reach the timeline");
 });
 
 test("compileTimeline moves reveals into props.reveals as scene-local frame offsets (lead applied)", () => {
   const { props } = fixtureCompile();
   const bullets = props.scenes.find((s) => s.template === "bullet-steps");
-  assert.deepEqual(bullets.props.reveals, [2, 77, 167], "matches golden reveal offsets");
+  // D-060: the fixture's boundaries are now cuts, so this scene is no longer pulled back by xf=9 —
+  // every offset shifts down by 9, and reveals[0] additionally clamps to 0 (its 7-frame lead has no
+  // runway before the scene exists; under a cut the scene's OPENING STATE is the first reveal).
+  assert.deepEqual(bullets.props.reveals, [0, 68, 158], "matches golden reveal offsets");
   // offsets are relative to the (pulled-back) scene start and clamped >= 0
   assert.ok(bullets.props.reveals.every((n) => Number.isInteger(n) && n >= 0));
 });
@@ -195,10 +235,13 @@ function adversarialPipeline({ s1Start, s2Start, revealStarts, duration }) {
       { id: "s2", sentences: revealStarts.map((_, i) => `item ${i}`) },
     ],
   };
+  // s1 authors a DISSOLVE so these FP-parity tests keep exercising the pull-back path (D-060 made the
+  // cut the default; the float boundary these tests guard is in the pull-back arithmetic, not in the
+  // boundary policy). transitions.test.mjs owns the cut/dissolve overlap semantics.
   const plan = {
     id: "adv",
     scenes: [
-      { scene_id: "s1", template: "hook-card", props: { title: "Hook" } },
+      { scene_id: "s1", template: "hook-card", props: { title: "Hook" }, transitionOut: "dissolve" },
       { scene_id: "s2", template: "bullet-steps", props: { title: "Steps", items: revealStarts.map((_, i) => `i${i}`) }, revealOn: "sentences" },
     ],
   };

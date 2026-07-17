@@ -19,6 +19,7 @@ import { fileURLToPath } from "node:url";
 import { resolveFormat } from "../shared/lib/format.mjs";
 import { deriveRenderTimings } from "./lib/timings.mjs";
 import { localizeCueWindow } from "./lib/focal.mjs";
+import { sceneWindow } from "./lib/transitions.mjs";
 
 /**
  * PURE: timeline (seconds) → Remotion render props (frames). No fs. Frame-accurate by construction
@@ -39,8 +40,9 @@ export function compileTimeline(timeline, { leadFrames = 0, tailSeconds = 0 } = 
   const narrationEndFrame = totalFrames - outroFrames; // == introFrames + audioFrames
 
   const scenes = timeline.scenes.map((sc, k) => {
-    const fromFrame = F(sc.start_seconds) - (k > 0 ? crossfadeFrames : 0);
-    const durFrames = Math.max(F(sc.end_seconds) - fromFrame, 1);
+    // D-060: the boundary — not a global crossfade — decides the pull-back. lib/transitions.mjs is the
+    // ONE copy of this math (compile-hyperframes and 04b-thumbnails call the same function).
+    const { fromFrame, durFrames, fadeIn, fadeOut, styleIn, styleOut } = sceneWindow(timeline, k);
     const props = { ...sc.props };
     if (props.focalZoom) props.focalZoom = localizeCueWindow(props.focalZoom, { fps, sceneFromFrame: fromFrame });
     if (props.pip) props.pip = localizeCueWindow(props.pip, { fps, sceneFromFrame: fromFrame });
@@ -48,8 +50,9 @@ export function compileTimeline(timeline, { leadFrames = 0, tailSeconds = 0 } = 
       props.reveals = sc.reveals.map((r) => Math.max(F(r.at_seconds) - fromFrame - leadFrames, 0));
     }
     // Pass `engine` through ONLY for hyperframes scenes (conditional spread) so remotion-only
-    // timelines — including the golden fixture — stay BYTE-IDENTICAL to the pre-V6 props.
-    return { sceneId: sc.scene_id, template: sc.template, props, fromFrame, durFrames, ...(sc.engine === "hyperframes" ? { engine: "hyperframes" } : {}) };
+    // timelines stay minimal. fadeIn/fadeOut are what SceneWrapper actually obeys; styleIn/styleOut
+    // are carried for debugging + QA (the renderer treats match/morph/carry exactly as a cut).
+    return { sceneId: sc.scene_id, template: sc.template, props, fromFrame, durFrames, fadeIn, fadeOut, styleIn, styleOut, ...(sc.engine === "hyperframes" ? { engine: "hyperframes" } : {}) };
   });
 
   const n = timeline.captions.length;

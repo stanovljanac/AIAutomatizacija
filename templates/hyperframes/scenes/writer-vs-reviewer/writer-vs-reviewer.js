@@ -2,36 +2,13 @@
  * re-submit → REJECT → edit → PASS on the third try. Silent, deterministic, seek-driven.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{ rejectStamps?[], versionBadges?[] }
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1920;
-var H = Number(V.height) > 0 ? Number(V.height) : 1080;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 720;
-var D = FRAMES / fps;
-var props = V.props && typeof V.props === "object" ? V.props : {};
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
-
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
+var S = HF.scene({ id: "writer-vs-reviewer", width: 1920, height: 1080, frames: 720, beatLo: 0.1, beatHi: 0.4 });
+var fps = S.fps, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl, beatAt = S.beatAt;
 
 var stamps = Array.isArray(props.rejectStamps) && props.rejectStamps.length >= 2 ? props.rejectStamps : ["WEAK HOOK", "UNSOURCED"];
 document.getElementById("stamp1").textContent = String(stamps[0]);
 document.getElementById("stamp2").textContent = String(stamps[1]);
 
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.1, D - 0.4); }
 // 4 sentence beats
 var tAgents = beatAt(0, 0.03);
 var tFirst = Math.max(beatAt(1, 0.2), tAgents + 1.0);
@@ -41,7 +18,6 @@ var tPass = Math.max(beatAt(3, 0.78), tVolley + 2.4);
 var courtW = 760 * U;
 var docTravel = courtW - 280 * U; // left edge → right edge
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // beat 0 — the two agents rise; the draft appears at the writer
@@ -84,4 +60,4 @@ tl.to("#doc", { borderColor: "rgba(34,211,167,0.8)", boxShadow: "0 " + 18 * U + 
 tl.to("#botR .a-body", { color: "#22D3A7", borderColor: "rgba(34,211,167,0.7)", duration: 0.35, ease: "power2.out" }, tPass + 0.5);
 tl.fromTo("#passchip", { opacity: 0, y: 26 * U }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.8)" }, cl(tPass + 0.7, tPass, D - 0.3));
 
-window.__timelines["writer-vs-reviewer"] = tl;
+HF.register("writer-vs-reviewer", tl);

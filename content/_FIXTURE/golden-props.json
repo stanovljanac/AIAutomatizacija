@@ -36,7 +36,11 @@
         "subtitle": "Three tiny invoice automations"
       },
       "fromFrame": 45,
-      "durFrames": 165
+      "durFrames": 165,
+      "fadeIn": 9,
+      "fadeOut": 0,
+      "styleIn": "cut",
+      "styleOut": "cut"
     },
     {
       "sceneId": "s2.0",
@@ -49,13 +53,17 @@
           "Flag overdue for reply"
         ],
         "reveals": [
-          2,
-          77,
-          167
+          0,
+          68,
+          158
         ]
       },
-      "fromFrame": 201,
-      "durFrames": 249
+      "fromFrame": 210,
+      "durFrames": 240,
+      "fadeIn": 0,
+      "fadeOut": 0,
+      "styleIn": "cut",
+      "styleOut": "cut"
     },
     {
       "sceneId": "s3.0",
@@ -64,8 +72,12 @@
         "title": "Scale it to your own inbox",
         "subtitle": "Subscribe for more boring automations"
       },
-      "fromFrame": 441,
-      "durFrames": 204
+      "fromFrame": 450,
+      "durFrames": 195,
+      "fadeIn": 0,
+      "fadeOut": 9,
+      "styleIn": "cut",
+      "styleOut": "cut"
     }
   ],
   "captions": [

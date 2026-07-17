@@ -73,6 +73,11 @@ export type Scene = {
   props: any & { hfSrc?: string };
   fromFrame: number;
   durFrames: number;
+  /** D-060 boundary policy, resolved by the compiler. Absent (old props files) → the legacy crossfade. */
+  fadeIn?: number;
+  fadeOut?: number;
+  styleIn?: string;
+  styleOut?: string;
 };
 
 export type MainProps = {
@@ -123,16 +128,19 @@ export const Main: React.FC<MainProps> = (p) => {
         <Audio src={staticFile(p.audioSrc)} />
       </Sequence>
 
+      {/* brand bumpers, not scene cuts — they always cross-blend with the body by xf (D-060) */}
       <Sequence from={0} durationInFrames={p.introFrames + xf} name="Intro">
-        <SceneWrapper durFrames={p.introFrames + xf} overlap={xf}>
+        <SceneWrapper durFrames={p.introFrames + xf} fadeIn={xf} fadeOut={xf}>
           <Intro wordmark={p.intro.wordmark} tagline={p.intro.tagline} />
         </SceneWrapper>
       </Sequence>
 
-      {/* scenes/beats placed in time from the alignment, crossfading */}
+      {/* scenes/beats placed in time from the alignment; each boundary obeys its authored
+          transitionOut (default: a hard cut landing ON the narration beat) — D-060. The `?? xf`
+          fallback keeps a pre-D-060 props file rendering exactly as it did. */}
       {p.scenes.map((s) => (
         <Sequence key={s.sceneId} from={s.fromFrame} durationInFrames={s.durFrames} name={s.sceneId}>
-          <SceneWrapper durFrames={s.durFrames} overlap={xf} broll={s.props?.brollSrc}>
+          <SceneWrapper durFrames={s.durFrames} fadeIn={s.fadeIn ?? xf} fadeOut={s.fadeOut ?? xf} styleIn={s.styleIn} styleOut={s.styleOut} broll={s.props?.brollSrc}>
             {/* V6 combo: a hyperframes scene plays its pre-rendered silent clip INSTEAD of the
                 template, inside the same crossfade wrapper (captions overlay as usual). If the
                 clip is missing (no hfSrc), fall back to the scene's normal template. */}
@@ -149,7 +157,7 @@ export const Main: React.FC<MainProps> = (p) => {
       <CaptionsTrack cues={p.captions} />
 
       <Sequence from={p.totalFrames - p.outroFrames - xf} durationInFrames={p.outroFrames + xf} name="Outro">
-        <SceneWrapper durFrames={p.outroFrames + xf} overlap={xf}>
+        <SceneWrapper durFrames={p.outroFrames + xf} fadeIn={xf} fadeOut={xf}>
           <Outro cta={p.outro.cta} brand={p.outro.brand} />
         </SceneWrapper>
       </Sequence>

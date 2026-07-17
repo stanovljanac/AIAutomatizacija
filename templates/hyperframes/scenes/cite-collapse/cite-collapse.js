@@ -7,42 +7,13 @@
  * No exit tweens — the master Remotion timeline owns the cut.
  */
 
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") {
-    return window.__hyperframes.getVariables();
-  }
-  var out = {};
-  try {
-    var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
-    for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default;
-  } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1920;
-var H = Number(V.height) > 0 ? Number(V.height) : 1080;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 300;
-var D = FRAMES / fps;
-var props = V.props && typeof V.props === "object" ? V.props : {};
-var beats = Array.isArray(V.revealsSeconds)
-  ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; })
-  : [];
-
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-var IS_PORTRAIT = H > W;
-if (IS_PORTRAIT) root.classList.add("portrait");
-document.documentElement.style.setProperty("--u", String(Math.min(W, H) / 1080));
+var S = HF.scene({ id: "cite-collapse", width: 1920, height: 1080, frames: 300 });
+var fps = S.fps, W = S.W, H = S.H, D = S.D, props = S.props, beats = S.beats, cl = S.cl;
 
 if (props.kicker && document.querySelector("#kicker .kicker-text")) document.querySelector("#kicker .kicker-text").textContent = String(props.kicker).trim();
 function setText(id, val) { var el = document.getElementById(id); if (el && typeof val === "string" && val.trim()) el.textContent = val.trim(); }
 setText("verdict-text", props.suspendedLabel);
 
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
 function beatAt(i, frac) {
   var fallback = D * frac;
   var t = beats.length > i ? beats[i] : fallback;
@@ -55,7 +26,6 @@ var t1 = Math.max(beatAt(2, 0.44), t0 + 0.22);
 var t2 = Math.max(beatAt(3, 0.58), t1 + 0.22);
 var tV = Math.max(beatAt(4, 0.74), t2 + 0.5);
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // resting state
@@ -84,4 +54,4 @@ tl.to("#flash", { opacity: 0, duration: 0.5, ease: "power2.in" }, tV + 0.12);
 tl.to("#verdict", { opacity: 1, scale: 1, rotate: -11, duration: 0.4, ease: "back.out(2.1)" }, tV + 0.04);
 
 // NO exit — the master timeline owns the cut.
-window.__timelines["cite-collapse"] = tl;
+HF.register("cite-collapse", tl);

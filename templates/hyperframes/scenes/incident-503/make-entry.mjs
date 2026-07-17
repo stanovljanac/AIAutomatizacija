@@ -15,7 +15,6 @@ let html = readFileSync(join(here, "index.html"), "utf8");
 html = html
   .replace('data-width="1080"', `data-duration="${dur}" data-width="${W}"`)
   .replace('data-height="1920"', `data-height="${H}"`)
-  .replace('src="gsap.min.js"', 'src="../gsap.min.js"')
   .replace('href="incident-503.css"', 'href="../incident-503.css"')
   .replace('src="incident-503.js"', 'src="../incident-503.js"')
   .replace('window.__THREE_URL = "./vendor/three.module.min.js"', 'window.__THREE_URL = "../vendor/three.module.min.js"');

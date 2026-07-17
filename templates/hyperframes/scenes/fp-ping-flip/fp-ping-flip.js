@@ -4,31 +4,9 @@
  * deterministic, seek-driven. Flat, face-on, no 3D tilt (MOTION_SPEC §5).
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 302;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "fp-ping-flip", width: 1080, height: 1920, frames: 302, beatLo: 0.02, beatHi: 0.4 });
+var fps = S.fps, W = S.W, H = S.H, D = S.D, U = S.U, props = S.props, beats = S.beats, root = S.root, cl = S.cl, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.02, D - 0.4); }
 // sentence beats: [0] "everyone thinks an AI agent just watches a page" (sweep + ping swarm)
 // [1] "that's a scraper — not an agent" (FREEZE + gray wall) [2] "an agent decides which change matters" (funnel + the ONE)
 var tSwarm = beatAt(0, 0.0);
@@ -65,7 +43,6 @@ gsap.set("#flash", { opacity: 0 });
 gsap.set("#anchor", { opacity: 0, y: 18 * U });
 gsap.set("#sweep", { x: 0, opacity: 0 });
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // ── beat 0 — the scraper POV: page in, radar sweeps, pings hammer out ──
@@ -114,4 +91,4 @@ tl.to(".page", { opacity: 0.35, y: -20 * U, duration: 0.5, ease: "power2.inOut" 
 tl.to("#anchor", { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, K + 0.7);
 tl.to("#camera", { scale: 1.05, duration: cl(D - K, 1.0, 3.0), ease: "power1.inOut" }, K);
 
-window.__timelines["fp-ping-flip"] = tl;
+HF.register("fp-ping-flip", tl);

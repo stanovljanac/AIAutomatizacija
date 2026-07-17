@@ -3,32 +3,9 @@
  * Silent, deterministic, seek-driven.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1920;
-var H = Number(V.height) > 0 ? Number(V.height) : 1080;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 750;
-var D = FRAMES / fps;
-var props = V.props && typeof V.props === "object" ? V.props : {};
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "steal-the-shape", width: 1920, height: 1080, frames: 750, beatLo: 0.1, beatHi: 0.4 });
+var fps = S.fps, W = S.W, H = S.H, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.1, D - 0.4); }
 // 4 sentence beats
 var tOpen = beatAt(0, 0.03);
 var tActs = Math.max(beatAt(1, 0.2), tOpen + 1.4);   // "Draft with a model, and review with a second one."
@@ -36,7 +13,6 @@ var tGateB = Math.max(beatAt(2, 0.48), tActs + 3.2);  // "Verify the facts, retr
 var tLoop = Math.max(beatAt(3, 0.74), tGateB + 2.4);  // "Any capable agent can run that loop…"
 var actSpan = Math.max(2.8, tGateB - tActs);
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // beat 0 — the promise pays off: STEAL THE SHAPE
@@ -91,4 +67,4 @@ tl.fromTo(".f-chip.f-gate", { opacity: 0, y: 22 * U }, { opacity: 1, y: 0, durat
 tl.to("#formula", { scale: 1.04, duration: 0.3, ease: "back.out(2)" }, tF + 1.2);
 tl.to("#formula", { scale: 1, duration: 0.3, ease: "power2.inOut" }, tF + 1.5);
 
-window.__timelines["steal-the-shape"] = tl;
+HF.register("steal-the-shape", tl);

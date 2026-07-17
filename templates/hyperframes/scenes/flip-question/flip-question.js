@@ -3,37 +3,14 @@
  * locks (held ≥4s, slow gold pulse) → brand row rises in reserved space. Deterministic, seek-driven.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 346;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "flip-question", width: 1080, height: 1920, frames: 346, beatLo: 0.05, beatHi: 0.5 });
+var fps = S.fps, D = S.D, U = S.U, props = S.props, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.05, D - 0.5); }
 var tKick = beatAt(0, 0.01);
 var tFlip = Math.max(beatAt(1, 0.14), tKick + 0.7);
 var tMono = Math.max(beatAt(2, 0.4), tFlip + 2.0);
 var tBrand = Math.max(beatAt(3, 0.63), tMono + 1.2);
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // beat 0 — kicker
@@ -64,4 +41,4 @@ tl.fromTo(".b-mark", { rotation: -8 }, { rotation: 0, duration: 0.5, ease: "back
 // slow push-in the whole scene
 tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.06, duration: D - tMono, ease: "power1.inOut" }, tMono);
 
-window.__timelines["flip-question"] = tl;
+HF.register("flip-question", tl);

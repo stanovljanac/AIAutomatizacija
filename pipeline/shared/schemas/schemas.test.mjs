@@ -71,6 +71,59 @@ test("timeline.schema accepts a seconds-based timeline", () => {
   assert.ok(valid, JSON.stringify(errors));
 });
 
+// ── D-060: the boundary policy (transitionOut) + the art-direction brief (direction) ─────────────
+
+test("scene-plan.schema accepts `direction` + `transitionOut` on a scene and a beat", () => {
+  const doc = {
+    id: "018-x",
+    scenes: [
+      {
+        scene_id: "s1",
+        template: "custom",
+        props: { component: "hook-feed-hype" },
+        transitionOut: "match",
+        direction: { premise: "The feed scrolls past; one boring row stays.", palette: "black + gold", carry: "the gold row" },
+      },
+      {
+        scene_id: "s2",
+        beats: [
+          { template: "flow", props: {}, transitionOut: "dissolve" },
+          { template: "cta-card", props: {} },
+        ],
+      },
+    ],
+  };
+  const { valid, errors } = validate(doc, "scene-plan");
+  assert.ok(valid, JSON.stringify(errors));
+});
+
+test("scene-plan.schema: `direction` requires a premise, and a bogus transitionOut is REJECTED", () => {
+  const withScene = (extra) => ({ id: "x", scenes: [{ scene_id: "s1", template: "hook-card", props: {}, ...extra }] });
+  assert.equal(validate(withScene({ transitionOut: "swoosh" }), "scene-plan").valid, false, "the enum is closed — an unmechanized style must fail loud, not silently do nothing");
+  assert.equal(validate(withScene({ direction: { palette: "gold" } }), "scene-plan").valid, false, "direction without a premise is not a brief");
+  for (const style of ["cut", "dissolve", "push", "match", "morph", "carry"]) {
+    assert.ok(validate(withScene({ transitionOut: style }), "scene-plan").valid, `${style} must validate`);
+  }
+});
+
+test("scene-plan.schema: a beat's transitionOut enum is closed too", () => {
+  const doc = { id: "x", scenes: [{ scene_id: "s1", beats: [{ template: "flow", props: {}, transitionOut: "wipe" }] }] };
+  assert.equal(validate(doc, "scene-plan").valid, false);
+});
+
+test("timeline.schema accepts `transition_out` beside props and rejects a bogus style", () => {
+  const doc = (transition_out) => ({
+    version: 1,
+    format: { width: 1920, height: 1080, fps: 30 },
+    duration_seconds: 60,
+    audio: { src: "narration.mp3", start_seconds: 1.5 },
+    scenes: [{ scene_id: "s1", template: "hook-card", start_seconds: 0, end_seconds: 6, transition_out, props: {} }],
+    captions: [],
+  });
+  assert.ok(validate(doc("carry"), "timeline").valid);
+  assert.equal(validate(doc("crossfade"), "timeline").valid, false, "'crossfade' is not a style — the blend is `dissolve`");
+});
+
 test("ideas.schema accepts the new news provenance source", () => {
   const doc = {
     updated: "2026-06-08",

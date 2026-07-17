@@ -4,31 +4,9 @@
  * Silent, deterministic, seek-driven.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 353;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "silent-vs-loud", width: 1080, height: 1920, frames: 353, beatLo: 0.05, beatHi: 0.4 });
+var fps = S.fps, W = S.W, D = S.D, U = S.U, props = S.props, beats = S.beats, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.05, D - 0.4); }
 // beats: [0] establish, [1] SILENT ships+fades, [2] LOUD retry→stop, [3] "Loud." gold punch
 var tEstablish = beatAt(0, 0.0);
 var tSilent = Math.max(beatAt(1, 0.2), tEstablish + 0.8);
@@ -50,7 +28,6 @@ for (var b = 0; b < 3; b++) {
   cardsB.appendChild(cb);
 }
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 var railW = W * 0.9; // travel distance across the rail
@@ -99,4 +76,4 @@ tl.to("#flag", { boxShadow: "0 0 40px rgba(255,176,32,0.6)", duration: 0.3, yoyo
 tl.fromTo("#loudpunch", { opacity: 0, scale: 1.7, y: 24 * U }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: "back.out(1.7)" }, tGold);
 tl.to("#loudpunch", { scale: 1.05, duration: 0.5, yoyo: true, repeat: 2, ease: "sine.inOut" }, tGold + 0.45);
 
-window.__timelines["silent-vs-loud"] = tl;
+HF.register("silent-vs-loud", tl);

@@ -50,5 +50,11 @@ lessons store, no research/experiments store, no glossary before KOS.
 - **Language:** English, like all repo output.
 - **Cadence:** write/update lessons after each video cycle (analytics, QA, owner
   feedback); monthly judgment sweep per `../bootstrap/specs/maintenance.md` §5.
-- **Categories live lazily:** only `lessons/` exists as of 2026-07-04; create others
-  on first note, per `../bootstrap/specs/architecture.md` §2.
+- **Categories live lazily:** `lessons/`, `research/`, and `concepts/` exist as of
+  2026-07-16; create others on first note, per `../bootstrap/specs/architecture.md` §2.
+- **`concepts/` is the visual vocabulary** — built bottom-up from
+  `templates/hyperframes/scenes/`, it is an **input to
+  [MOTION_SPEC](../../style/MOTION_SPEC.md) §0, never a selector**. Its "rejected" lines
+  record the **owner's** verdicts only, never the agent's review of its own output (a
+  self-graded KB is an echo chamber). See the Phase 2b feedback loop in
+  [ROADMAP](../../docs/ROADMAP.md).

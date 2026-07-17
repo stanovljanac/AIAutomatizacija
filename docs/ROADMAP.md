@@ -280,6 +280,46 @@ The detailed per-wave build handoffs and verifier-verdict log were removed once 
   deterministic `WEIGHTS` scorer over scene metadata + 3 caption-free candidate stills from the video's own
   timeline; the owner picks (recorded `chosen:true`); prompts flow is the fallback. Publish metadata now also
   passes the panel's `publish` stage and exports `publish.md` (D-057).
+- ~~**Concept KB (`concepts/`) — Phase 2 of the D-060 plan**~~ **DONE 2026-07-16.** Shipped as
+  `knowledge/desk-knowledge/concepts/` — 7 notes + an index, built bottom-up from the 60 scenes in
+  `templates/hyperframes/scenes/`. Each note = metaphors used (per scene + video) · what landed ·
+  what the **owner** rejected (dated) · recurring elements · colors · proportions · what to avoid.
+  Wired into MOTION_SPEC §0 as a **vocabulary INPUT, never a selector**, and the shared substrate
+  (gold `#FFB020` in 59/60 scenes, `--u` in 60/60, the semantic colors) is catalogued once in the
+  index instead of repeated per note. MOTION_SPEC's 6 dangling `[[wikilinks]]` are now relative links.
+  **Bottom-up corrected three of the planned names** (the plan said to trust the scenes over the
+  docs): `approval` → **`verdict-stamp`** (the stamp is the reused element, 11 scenes — approval is
+  one of its verdicts); `inbox` → **`overload-pile`** (the subject is volume-as-a-problem: feeds,
+  swarms, piles — inbox is one skin); `invoice` → **`source-document`** (the recurring object is the
+  flat page — receipt/email/ToS/filing; invoice is one skin). `agent`, `human-gate`, `spreadsheet`,
+  `failure` kept as planned.
+- **Phase 2b — make the KB live (the feedback loop; the reason Phase 2 is worth more than a one-time
+  write).** `render → visual review → concept KB update`. Both inputs already exist and today evaporate:
+  `qa-video`'s perceptual pass and the owner's Gate-2 verdict. (009's rejection became a lesson only
+  because a human wrote it down by hand; `knowledge/bootstrap/SYSTEM.md` already defines
+  `draft → stable → canonical` and the *rejection → lesson → spec rule → QA gate* maturation — the KB was
+  designed to be alive; the visual layer never wrote to it.) **Design constraint, decided now:** the loop
+  is fed by the **owner's reject / Gate-2 verdict, never by the agent's review of its own output** —
+  otherwise it is a self-grading echo chamber. (Illustration: the proposal that prompted this suggested
+  recording *"avoid: 012-s5, empty composition"* — but **012 is the owner's locked visual floor**. The
+  agent's opinion can contradict the owner's; only the owner's is signal.)
+- ~~**Phase 3 — HF `_lib/` extraction**~~ **DONE 2026-07-17.** Shipped `templates/hyperframes/_lib/`:
+  one vendored `gsap.min.js` (was **60 identical copies**, 4.3 MB → 72 KB) + `hf-scene.js`, which owns the
+  whole variables contract (`readVars`, fps/W/H/FRAMES/D derivation, `props`/`beats`, the `data-duration`
+  write, portrait class, `--u`, `cl`/`beatAt`, `HF.register`). All 60 scenes migrated by codemod: the ~21-line
+  boilerplate preamble collapses to 2 lines (`var S = HF.scene({…})` + aliases). Net **−1519 lines**. Pro-bespoke:
+  removes the authoring tax that made a fixed deck look attractive. **Equivalence proven by render:** a scene
+  is referenced as `../../_lib/…` (the HF file server roots at the scene dir, so the CLI's compiler copies the
+  outside-project asset in); every migrated scene renders bit-identical to its git original or within its own
+  GPU-noise floor (killswitch: a sub-visual ~60 dB rasterization artifact, timeline math proven identical),
+  **zero real defects**. Also shipped a render guard (`detectDeadRender`) that fails loudly on a 404'd asset /
+  page error / unregistered timeline — a dead scene otherwise exits 0 with a valid-but-frozen mp4.
+- **`motion.transition` is dead config (D-060, owner call).** Read by **zero** code, and its enum
+  (`crossfade|shared-element|wipe`) cannot express `cut` — a global transition style is the exact thing
+  MOTION_SPEC §3 bans, and a field whose description says "this does nothing" is a worse trap than no
+  field. Deleting it touches `formats/default.json`, `format.schema.json` (+`additionalProperties:false`
+  means the pair moves together) and `format.test.mjs:259` — and shifts the golden's `motion` block, which
+  is why it was left out of the D-060 commit.
 - **Official-source RSS endpoints.** Some changelogs (anthropic/openai/google/microsoft/meta) currently
   point at HTML pages → `fetch-news.mjs` fails soft to 0 items; wire verified RSS endpoints when found.
 - **Re-register the weekly autonomous run.** The CronCreate routine is session-local and auto-expires after

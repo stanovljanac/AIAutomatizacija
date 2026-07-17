@@ -15,7 +15,6 @@ let html = readFileSync(join(here, "index.html"), "utf8");
 html = html
   .replace('data-width="1920"', `data-duration="${dur}" data-width="${W}"`)
   .replace('data-height="1080"', `data-height="${H}"`)
-  .replace('src="gsap.min.js"', 'src="../gsap.min.js"')
   .replace('href="trust-gap.css"', 'href="../trust-gap.css"')
   .replace('src="trust-gap.js"', 'src="../trust-gap.js"');
 const name = `render-entry-${W}x${H}-${FRAMES}f-${fps}fps.html`;

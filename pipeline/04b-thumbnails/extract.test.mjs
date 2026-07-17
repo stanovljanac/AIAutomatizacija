@@ -58,18 +58,27 @@ test("settledSeconds: clamped inside the scene even when reveals crowd the end",
   assert.ok(t > 10 && t < 12, `stays inside the scene (got ${t})`);
 });
 
-test("hfClipLocalSeconds mirrors the compile-hyperframes window math (crossfade pull-back)", () => {
+test("hfClipLocalSeconds uses the shared sceneWindow: default cut → NO pull-back", () => {
+  const tl = timelineFixture();
+  // scene 0: no pull-back (k=0) → fromFrame = F(1.5) = 45; abs 9.5s = frame 285 → local (285-45)/30 = 8s
+  assert.equal(hfClipLocalSeconds(tl, 0, 9.5), 8);
+  // scene 3: the fixture authors no transitions, so D-060 makes s3's entry a CUT — fromFrame = F(40)
+  // = 1200 (was 1191 under the old unconditional crossfade); abs 49s = frame 1470 → local 9s.
+  assert.equal(hfClipLocalSeconds(tl, 3, 49), 9);
+  assert.equal(hfClipLocalSeconds(tl, 0, 0), 0, "never negative");
+});
+
+test("hfClipLocalSeconds still tracks the pull-back when the PREVIOUS scene authors a dissolve", () => {
   const tl = timelineFixture();
   const fps = 30;
-  // scene 0: no pull-back → fromFrame = F(1.5) = 45; abs 9.5s = frame 285 → local (285-45)/30 = 8s
-  assert.equal(hfClipLocalSeconds(tl, 0, 9.5), 8);
-  // scene 3: fromFrame = F(40) - 9 = 1191; abs 49s = frame 1470 → local (1470-1191)/30 = 9.3s
+  tl.scenes[2].transition_out = "dissolve"; // s3 (index 3) is now pulled back into s3.0's predecessor
+  const xf = Math.round(tl.crossfade_seconds * fps); // 9
+  // fromFrame = F(40) - 9 = 1191; abs 49s = frame 1470 → local (1470-1191)/30 = 9.3s
   assert.equal(hfClipLocalSeconds(tl, 3, 49), 9.3);
   // clamped into the clip: an abs past the scene end stays ≤ (durFrames-1)/fps
   const sc = tl.scenes[3];
-  const durFrames = Math.round(sc.end_seconds * fps) - (Math.round(sc.start_seconds * fps) - 9);
+  const durFrames = Math.round(sc.end_seconds * fps) - (Math.round(sc.start_seconds * fps) - xf);
   assert.ok(hfClipLocalSeconds(tl, 3, 99) <= (durFrames - 1) / fps);
-  assert.equal(hfClipLocalSeconds(tl, 0, 0), 0, "never negative");
 });
 
 test("captionFreeSeconds: clear preferred passes through; covered preferred moves to the nearest gap", () => {

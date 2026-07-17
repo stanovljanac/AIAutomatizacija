@@ -27,7 +27,6 @@ let html = readFileSync(join(here, "index.html"), "utf8");
 html = html
   .replace('data-width="1920"', `data-duration="${dur}" data-width="${W}"`)
   .replace('data-height="1080"', `data-height="${H}"`)
-  .replace('src="gsap.min.js"', 'src="../gsap.min.js"')
   .replace('href="swappable-engine.css"', 'href="../swappable-engine.css"')
   .replace('src="swappable-engine.js"', 'src="../swappable-engine.js"');
 

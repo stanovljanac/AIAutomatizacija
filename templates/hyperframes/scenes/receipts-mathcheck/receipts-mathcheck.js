@@ -12,38 +12,10 @@
  *   3 flagged strip (Marlow ??.?? → REVIEW, gold)  4 the two "automated" badges
  */
 
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") {
-    return window.__hyperframes.getVariables();
-  }
-  var out = {};
-  try {
-    var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
-    for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default;
-  } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1920;
-var H = Number(V.height) > 0 ? Number(V.height) : 1080;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 540;
-var D = FRAMES / fps;
-var U = Math.min(W, H) / 1080;
-var props = V.props && typeof V.props === "object" ? V.props : {};
-var beats = Array.isArray(V.revealsSeconds)
-  ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; })
-  : [];
+var S = HF.scene({ id: "receipts-mathcheck", width: 1920, height: 1080, frames: 540 });
+var fps = S.fps, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl;
 
 // exact duration + geometry before the capture engine reads it
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-var IS_PORTRAIT = H > W;
-if (IS_PORTRAIT) root.classList.add("portrait");
-document.documentElement.style.setProperty("--u", String(U));
 
 // fill text from props (optional)
 function setText(id, val) { var el = document.getElementById(id); if (el && typeof val === "string" && val.trim()) el.textContent = val.trim(); }
@@ -67,7 +39,6 @@ if (typeof props.title === "string" && props.title.trim()) {
 }
 
 // ── beat timing ──
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
 function beatAt(i, frac) {
   var fallback = D * frac;
   var t = beats.length > i ? beats[i] : fallback;
@@ -99,7 +70,6 @@ gsap.set("#pill-review", { opacity: 0, scale: 0.6, rotate: -5 });
 gsap.set(["#badge-type", "#badge-check"], { opacity: 0, y: 14 * U });
 
 // ── timeline (paused; the renderer seeks it) ──
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // ambient: slow glow breathe across the whole clip (deterministic)
@@ -140,4 +110,4 @@ tl.to("#pill-review", { opacity: 1, scale: 1, rotate: -2, duration: 0.45, ease: 
 tl.to(["#badge-type", "#badge-check"], { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: 0.12 }, tBadge);
 
 // NO exit animation — the master timeline owns the cut; last frame stays composed.
-window.__timelines["receipts-mathcheck"] = tl;
+HF.register("receipts-mathcheck", tl);

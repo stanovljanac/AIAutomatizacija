@@ -7,37 +7,8 @@
  *   0 title    1 note A (the limit — scrawl ✗)    2 note B (keep the image + source)    3 note C (run local — green lock)
  */
 
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") {
-    return window.__hyperframes.getVariables();
-  }
-  var out = {};
-  try {
-    var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
-    for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default;
-  } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1920;
-var H = Number(V.height) > 0 ? Number(V.height) : 1080;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 510;
-var D = FRAMES / fps;
-var U = Math.min(W, H) / 1080;
-var props = V.props && typeof V.props === "object" ? V.props : {};
-var beats = Array.isArray(V.revealsSeconds)
-  ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; })
-  : [];
-
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-var IS_PORTRAIT = H > W;
-if (IS_PORTRAIT) root.classList.add("portrait");
-document.documentElement.style.setProperty("--u", String(U));
+var S = HF.scene({ id: "limits-privacy", width: 1920, height: 1080, frames: 510 });
+var fps = S.fps, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl;
 
 function setText(id, val) { var el = document.getElementById(id); if (el && typeof val === "string" && val.trim()) el.textContent = val.trim(); }
 setText("kicker-text", props.kicker);
@@ -57,7 +28,6 @@ if (typeof props.title === "string" && props.title.trim()) {
   }
 }
 
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
 function beatAt(i, frac) {
   var fallback = D * frac;
   var t = beats.length > i ? beats[i] : fallback;
@@ -83,7 +53,6 @@ gsap.set(".rcpt.keep .ribbon", { scale: 0, rotation: 45, transformOrigin: "50% 5
 gsap.set("#src-chip", { opacity: 0, y: 8 * U });
 
 // ── timeline (paused; the renderer seeks it) ──
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 tl.to("#glow", { scale: 1.06, opacity: 0.9, duration: D, ease: "sine.inOut" }, 0);
@@ -114,4 +83,4 @@ tl.fromTo(".lock .body",
   tC + 0.25);
 
 // NO exit animation — the master timeline owns the cut.
-window.__timelines["limits-privacy"] = tl;
+HF.register("limits-privacy", tl);

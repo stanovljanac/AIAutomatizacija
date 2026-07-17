@@ -4,31 +4,9 @@
  * pass" stamp locks over the clean sheet. Counters use proxy + onUpdate (seek-safe). Deterministic.
  * VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}
  */
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") return window.__hyperframes.getVariables();
-  var out = {};
-  try { var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]"); for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default; } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1080;
-var H = Number(V.height) > 0 ? Number(V.height) : 1920;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 302;
-var D = FRAMES / fps;
-var beats = Array.isArray(V.revealsSeconds) ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; }) : [];
+var S = HF.scene({ id: "wh-one-pass", width: 1080, height: 1920, frames: 302, beatLo: 0.02, beatHi: 0.4 });
+var fps = S.fps, W = S.W, H = S.H, D = S.D, U = S.U, props = S.props, beats = S.beats, cl = S.cl, beatAt = S.beatAt;
 
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-if (H > W) root.classList.add("portrait");
-var U = Math.min(W, H) / 1080;
-document.documentElement.style.setProperty("--u", String(U));
-
-function cl(t, lo, hi) { return t < lo ? lo : t > hi ? hi : t; }
-function beatAt(idx, frac) { var t = beats.length > idx ? beats[idx] : D * frac; return cl(t, 0.02, D - 0.4); }
 // sentence beats: [0] "So this time, I didn't." [1] "handed it the pile — you do it" [2] "read every email, filled every row" [3] "I just watched" [4] "one pass, the hour was gone"
 var tReset = beatAt(0, 0.0);
 var tHandoff = Math.max(beatAt(1, 0.14), tReset + 0.7);
@@ -60,7 +38,6 @@ gsap.set("#stamp", { opacity: 0 });
 var clockProxy = { v: 54 }, rowProxy = { v: 0 };
 var clockEl = document.getElementById("clock-min"), rowsEl = document.getElementById("rows-n");
 
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // ── beat 0 — "So this time, I didn't.": the pile + HUD + faint sheet appear ──
@@ -121,4 +98,4 @@ tl.to("#stamp .big", { textShadow: "0 0 " + (64 * U) + "px rgba(255,176,32,0.7)"
 // gentle push-in on the finished sheet
 tl.fromTo("#stage", { scale: 1.0 }, { scale: 1.03, duration: cl(D - tFill, 2, 8), ease: "power1.inOut", transformOrigin: "50% 52%" }, tFill);
 
-window.__timelines["wh-one-pass"] = tl;
+HF.register("wh-one-pass", tl);

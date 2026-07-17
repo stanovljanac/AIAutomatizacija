@@ -19,45 +19,18 @@
 
 // ── 1. Resolve variables (same as hook-kinetic). getVariables() merges declared
 //      defaults + --variables-file; plain-browser fallback reads declared defaults. ──
-function readVars() {
-  if (window.__hyperframes && typeof window.__hyperframes.getVariables === "function") {
-    return window.__hyperframes.getVariables();
-  }
-  var out = {};
-  try {
-    var decls = JSON.parse(document.documentElement.getAttribute("data-composition-variables") || "[]");
-    for (var i = 0; i < decls.length; i++) out[decls[i].id] = decls[i].default;
-  } catch (e) {}
-  if (window.__hfVariables && typeof window.__hfVariables === "object") Object.assign(out, window.__hfVariables);
-  return out;
-}
-var V = readVars();
-var fps = Number(V.fps) > 0 ? Number(V.fps) : 30;
-var W = Number(V.width) > 0 ? Number(V.width) : 1920;
-var H = Number(V.height) > 0 ? Number(V.height) : 1080;
-var FRAMES = Number(V.durationFrames) > 0 ? Math.round(Number(V.durationFrames)) : 189;
+var S = HF.scene({ id: "hook-prism", width: 1920, height: 1080, frames: 189 });
+var fps = S.fps, W = S.W, H = S.H, FRAMES = S.FRAMES, D = S.D, props = S.props, beats = S.beats, root = S.root, IS_PORTRAIT = S.portrait;
 // The visual clock: exactly FRAMES frames of content.
-var D = FRAMES / fps;
-var props = V.props && typeof V.props === "object" ? V.props : {};
 var title = typeof props.title === "string" && props.title.trim() ? props.title.trim() : "Stop typing invoices by hand";
 var kicker = typeof props.kicker === "string" && props.kicker.trim() ? props.kicker.trim() : "The Automation Desk";
 var accentHex =
   typeof props.accent === "string" && /^#[0-9a-fA-F]{3,8}$/.test(props.accent) ? props.accent : "#ffb020";
-var beats = Array.isArray(V.revealsSeconds)
-  ? V.revealsSeconds.filter(function (t) { return typeof t === "number" && isFinite(t); }).slice().sort(function (a, b) { return a - b; })
-  : [];
 
 // ── 2. Apply EXACT duration (and geometry) to the DOM before the capture engine
 //      reads it (identical math to hook-kinetic). The OUTPUT canvas size is fixed
 //      per entry file (static data-width/height); these keep runtime layout in sync. ──
-var root = document.getElementById("root");
-root.setAttribute("data-duration", String((FRAMES - 0.5) / fps));
-root.setAttribute("data-width", String(W));
-root.setAttribute("data-height", String(H));
-var IS_PORTRAIT = H > W;
-if (IS_PORTRAIT) root.classList.add("portrait");
 // fluid unit: 1.0 at 1920x1080 / 1080x1920; scales typography to any canvas
-document.documentElement.style.setProperty("--u", String(Math.min(W, H) / 1080));
 document.documentElement.style.setProperty("--accent", accentHex);
 
 // ── 3. Fill content: kicker + one span per title word ──
@@ -116,7 +89,6 @@ var lastLand = wordStart[words.length - 1] + WORD_DUR;
 var CONVERGE = Math.min(Math.max(lastLand, INTRO + 0.6), D - 0.5);
 
 // ── 5. GSAP timeline for the HTML (paused; the player/renderer seeks it) ──
-window.__timelines = window.__timelines || {};
 var tl = gsap.timeline({ paused: true });
 
 // a touch of parallax: the whole content block eases from 1.04 -> 1.00 (subtle,
@@ -163,7 +135,7 @@ for (var b = 0; b < beats.length; b++) {
 }
 
 // NO exit animation — the master timeline owns the cut; last frame stays composed.
-window.__timelines["hook-prism"] = tl;
+HF.register("hook-prism", tl);
 
 /* ─────────────────────────────────────────────────────────────────────────────
    6. THE 3D LAYER (Three.js / WebGL) — the bold, cinematic background.
