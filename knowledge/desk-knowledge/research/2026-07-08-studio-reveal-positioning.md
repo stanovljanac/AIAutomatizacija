@@ -2,7 +2,7 @@
 type: research
 status: stable
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-07-19
 related: [../lessons/2026-06-14-research-real-workflow-first.md]
 depends_on: []
 ---
@@ -35,6 +35,25 @@ creating a new one.
    content** to better catch mass-produced, low-effort automated channels.
    *Source: YouTube Help, "YouTube channel monetization policies"
    (support.google.com/youtube/answer/1311392), July 2025 update; retrieved 2026-07-08.*
+
+## Re-verified 2026-07-19 (+ new clarification)
+
+Finding 3 still holds, and YouTube **clarified** the inauthentic-content policy on
+**2026-07-13**, naming **three demonetization buckets**: (a) *generic or repetitive*
+content (template with minimal variation, mass-reproducible, little author input);
+(b) *unsatisfying or off-putting* content; (c) **AI personas presenting as experts on
+sensitive topics** (health, legal, finance, politics). The reused-content review
+(commentary/clips/compilations/reactions) is unchanged.
+
+**What this means for us:** our own guardrails already answer all three — the **mandatory
+original human angle** + materially-varied substance per video counters (a); the quality
+gates counter (b); and we must **never let the AI voice pose as an expert on a sensitive
+YMYL topic** (c) — our lane is boring back-office automation, not health/legal/finance
+advice, and altered-content is always disclosed (D-025). Keep (c) in mind if a topic ever
+drifts toward finance/legal how-to.
+*Sources: [YouTube Help — channel monetization policies](https://support.google.com/youtube/answer/1311392?hl=en);
+[Tubefilter, "YouTube clarifies…" (2026-07-13)](https://www.tubefilter.com/2026/07/13/youtube-inauthentic-content-monetization-policy-update/);
+retrieved 2026-07-19.*
 
 ## What this changed here
 

@@ -33,7 +33,11 @@ because the destination is **unattended autonomy** — no human will catch a red
 4. **FIX.** Apply anything the self-test surfaced; re-run until tests are green.
 5. **DOCUMENT.** Update the docs the change touched so they are never stale — `docs/PROGRESS.md`
    (log), `docs/DECISIONS.md` (if a decision was made), `docs/ROADMAP.md` (status), the relevant
-   skill/`style/` file. Stale docs are a defect.
+   skill/`style/` file. Stale docs are a defect. **If the change encoded a durable insight** —
+   an owner rejection, a resolved bug pattern worth not repeating, a design rule now enforced in
+   code — also write/update a KOS note (`knowledge/desk-knowledge/`, per its SYSTEM.md) and run
+   `node scripts/knowledge-lint.mjs --fix`. The Stop hook guards KB *structure*; capturing the
+   *insight* is on you (WORKFLOW.md Step 7).
 6. **COMMIT — only when the owner explicitly says so.** Finishing a task or a "continue" is **not**
    commit permission (see [[commit-workflow]]). Leave changes in the working tree; offer push separately.
 

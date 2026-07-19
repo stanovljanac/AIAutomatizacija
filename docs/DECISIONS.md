@@ -497,6 +497,37 @@ old one (don't delete history).
 - **Phase 2 shipped 2026-07-16** (`knowledge/desk-knowledge/concepts/`), **Phase 3 shipped 2026-07-17** (`templates/hyperframes/_lib/` — one vendored gsap + `hf-scene.js` contract helper; all 60 scenes migrated by codemod, ~21-line preamble → 2 lines, net −1519 lines; a render guard `detectDeadRender` fails loudly on a silently-dead scene). Equivalence proven by render (decoded-pixel hashes under the bit-stable software rasterizer): every migrated scene is bit-identical to its git original or within its own GPU-noise floor — **zero real defects**. Load-bearing detail: `_lib` is referenced `../../_lib/…` because the HF file server roots at the scene dir and the CLI's compiler copies the outside-project asset in (`../_lib` 404s **silently** — the render still exits 0 with a frozen mp4, which is exactly what the guard now catches). See ROADMAP Phase 3 + the `video-render`/`storyboard` skills.
 - **Not bundled (noted):** `motion.transition` in `formats/default.json` is read by **zero** code and its enum (`crossfade|shared-element|wipe`) cannot even express `cut` — flagged for deletion, left in place because removing it changes the golden's `motion` block, which the plan's golden-diff audit pins as byte-identical. Owner call.
 
+## D-061 — Two forcing functions so the knowledge base can't silently drift (owner ask, 2026-07-19)
+- **Context:** a health check of the KOS instance found the *structure* sound (knowledge-lint: 0/0)
+  but the *learning loop* running on memory, not mechanism. `knowledge-lint` was wired into **no**
+  hook (only `test-gate.mjs` gated Stop); `docs/WORKFLOW.md` had **zero** mentions of knowledge/
+  lesson capture; five 2026-07-07 lessons had sat at `draft` since creation, never promoted; the
+  research category was untouched for 11 days; and video 018 shipped with no lesson. Write-back was
+  left to the agent *remembering* — so it happened when the focus was the KB (concepts, 07-17) and
+  was skipped when the focus was shipping a video (018). The real auto-update (analytics → lessons)
+  is a separate, deferred project (ROADMAP "Learning Loop"), explicitly **not** in scope here.
+- **Decision (two forcing functions, cheap + policy):**
+  1. **Mechanical (structure).** New Stop hook `.claude/hooks/knowledge-lint.mjs`, added alongside
+     `test-gate.mjs`. When any `knowledge/desk-knowledge/**.md` changed, it runs `knowledge-lint
+     --fix` (self-healing Backlinks footers + AUTO-INDEX blocks) and **blocks finishing on residual
+     structural ERRORS**. Mirrors test-gate's safety design exactly: fail-open, plan-mode skip,
+     change-scoped, bounded re-blocks (max 2), `[skip-kos]` escape. It guards *structure only* — it
+     cannot invent an insight.
+  2. **Policy (insight).** `docs/WORKFLOW.md` gains **Step 7 — Capture what we learned (KOS
+     write-back)**: after publish, ask "what did we learn?" and owe a note whenever an owner
+     rejection/change at a gate, an incident/bug pattern, external research, or a 3rd concept-drawing
+     happened — "nothing durable? nothing owed." The build-sprint **DOCUMENT** step carries the same
+     obligation for code changes.
+- **Also done in the same sweep:** promoted the 5 `draft` lessons → `stable` (evidence confirmed per
+  lifecycle §2; two are codified in MOTION_SPEC §0 / STYLE_GUIDE §9, verified present); re-verified
+  the studio-reveal research and added YouTube's **2026-07-13** inauthentic-content clarification
+  (three demonetization buckets — the "AI personas as experts on sensitive topics" bucket is the one
+  to watch for our AI-voice format); wrote the 018 lesson (owner-authored visuals **invert the sync** —
+  fit narration to the recorded animation, kept `draft`: one application, one open overrun).
+- **Consequences:** structural KB drift is now mechanically impossible to finish a turn on; insight
+  capture is a written step in both the video workflow and the engineering cycle instead of relying on
+  recall. The bigger analytics→KOS auto-lesson loop (#4) stays deferred to ROADMAP.
+
 > Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
 > **D-012** (name) → see D-023. **D-014** (TTS) → see D-024. The old "no AI-disclosure" note → see D-025.
 > Still in force: **D-002** (no YouTube transcripts; clean sources only).

@@ -19,6 +19,21 @@ Format:
 
 ---
 
+## 2026-07-19 — KOS forcing functions + knowledge sweep (D-061)
+- who: agent (owner: "the knowledge base is drifting — fix the loop, do the sweep, leave analytics for later")
+- did: Diagnosed the drift — KB *structure* healthy (lint 0/0) but write-back ran on memory, not
+  mechanism (knowledge-lint in no hook; WORKFLOW silent on lessons; 5 lessons stuck at `draft`).
+  **Two forcing functions:** (1) new Stop hook `.claude/hooks/knowledge-lint.mjs` — on any KOS note
+  change runs `knowledge-lint --fix` and blocks finishing on structural errors (mirrors test-gate:
+  fail-open, plan-skip, change-scoped, bounded, `[skip-kos]` escape); verified end-to-end (block on a
+  broken note, allow on clean, self-heals index/backlinks). (2) WORKFLOW **Step 7 — KOS write-back** +
+  a KOS bullet in the build-sprint DOCUMENT step. **Sweep:** promoted the 5 draft lessons → `stable`
+  (verification recorded in each); re-verified studio-reveal research + added YouTube's 2026-07-13
+  inauthentic-content 3-buckets clarification; wrote the 018 lesson (owner-authored visuals invert the
+  sync). Lint 0/0 across 27 files; `npm test` 618/618 green.
+- next: **owner review.** Deferred (#4): the analytics → KOS auto-lesson loop (ROADMAP "Learning Loop").
+  Optional follow-ups noted in lessons: harden "no invented anecdotes" into an explicit script-review check.
+
 ## 2026-07-17 — HF `_lib/` extraction — Phase 3 of the D-060 plan
 - who: agent (owner: "implement phase 3 from <D-060 plan>")
 - did: Shipped `templates/hyperframes/_lib/` and migrated all 60 scenes onto it. **(1)** One vendored

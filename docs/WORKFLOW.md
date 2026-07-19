@@ -186,6 +186,32 @@ You watch `video/final.mp4` (with the digest). Last gate. Approve → `status: "
 
 ---
 
+## Step 7 — Capture what we learned  → KOS write-back
+
+**Goal:** close the learning loop so the knowledge base grows every cycle instead of only
+when someone remembers. This is the **forcing function** the KB was missing (D-061).
+
+Ask, out loud, **"what did we learn this cycle?"** — then write it down. A note is owed
+whenever any of these happened:
+- **An owner rejection or change request at a gate** (Gate ② script, Gate ③ video) — the
+  single richest source of lessons. What was rejected, the evidence, the decision.
+- **An incident or a bug pattern** caught in QA or render that could recur.
+- **External research** gathered for the topic worth keeping (policies, tool landscapes).
+- **A concept drawn a 3rd time** → update `knowledge/desk-knowledge/concepts/`.
+
+How:
+1. Read `knowledge/desk-knowledge/index.md`; **extend an existing note** before creating one.
+2. Author per [the KOS standard](../knowledge/bootstrap/SYSTEM.md) — a `lesson` carries
+   **Finding / Evidence / Decision**; every claim in `research` is sourced + dated.
+3. Run `node scripts/knowledge-lint.mjs --fix` (the **Stop hook enforces structural
+   health**, but only you can write the insight — the hook can't invent it).
+
+**Nothing learned that's durable?** Then nothing is owed — don't manufacture a lesson.
+But an owner rejection almost always is one. Output: a new/updated note under
+`knowledge/desk-knowledge/`.
+
+---
+
 ## Starting a video
 
 - **Slash command:** `/novi-video` scaffolds a new `content/<NNN>-<slug>/` from
