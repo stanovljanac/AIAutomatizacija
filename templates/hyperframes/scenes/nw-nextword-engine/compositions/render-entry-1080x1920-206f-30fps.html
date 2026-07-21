@@ -1,0 +1,73 @@
+<!doctype html>
+<!--
+  nw-nextword-engine — HyperFrames CORRECTION BEAT + MECHANISM for 019 Short, s2
+  ("Here's what's really happening. A base model isn't looking anything up. It's just guessing
+   the next word, one at a time.").  Blue + gold body. Flat, face-on, no 3D tilt.
+
+  BEAT 0  the rotating Desk Lessons correction motif "Here's what's really happening." lands as a
+          small gold TAG (not a full title card).
+  BEAT 1  "isn't looking anything up" — a database/lookup chip (the WRONG model) gets a gray ✕.
+  BEAT 2  "guessing the next word, one at a time" — the REAL machine: a partial sentence "Water▮"
+          with a caret and a fan of candidate next-words on DEMO probability bars
+          (boils 62% / freezes 21% / flows 11%); the top bar snaps "boils" into the sentence.
+
+  The partial sentence + top bar are drawn at the size/position s3 opens with (match-cut). DEMO
+  values, clearly illustrative. Silent + deterministic. VARIABLES CONTRACT: fps,width,height,
+  durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":206},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":6.87}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="../nw-nextword-engine.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="nw-nextword-engine" data-start="0" data-duration="6.85" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <div class="camera" id="camera">
+        <!-- the correction motif tag -->
+        <div class="motif" id="motif"><span class="mdot"></span>Here's what's really happening.</div>
+
+        <!-- the WRONG model: a lookup that isn't happening -->
+        <div class="wrong" id="wrong">
+          <div class="wchip">
+            <svg viewBox="0 0 64 64" class="wicon"><ellipse cx="32" cy="16" rx="22" ry="9"/><path d="M10 16 V48 a22 9 0 0 0 44 0 V16" fill="none"/><path d="M10 32 a22 9 0 0 0 44 0" fill="none"/></svg>
+            <span class="wtext">looks it up in a fact store</span>
+          </div>
+          <div class="wx" id="wx">✕</div>
+        </div>
+
+        <!-- the REAL machine: next-word prediction -->
+        <div class="engine" id="engine">
+          <div class="sentence">
+            <span class="stxt">Water</span>
+            <span class="slot" id="slot"><span class="slotword" id="slotword">boils</span><span class="caret2" id="caret2"></span></span>
+          </div>
+          <div class="bars" id="bars">
+            <div class="bar top" id="bar0"><span class="bword">boils</span><span class="btrack"><i style="width:62%"></i></span><span class="bpct">62%</span></div>
+            <div class="bar" id="bar1"><span class="bword">freezes</span><span class="btrack"><i style="width:21%"></i></span><span class="bpct">21%</span></div>
+            <div class="bar" id="bar2"><span class="bword">flows</span><span class="btrack"><i style="width:11%"></i></span><span class="bpct">11%</span></div>
+          </div>
+          <div class="onelabel" id="onelabel">one word at a time →</div>
+        </div>
+      </div>
+    </div>
+    <script src="../nw-nextword-engine.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["nw-nextword-engine"] = tl;
+    </script>
+  </body>
+</html>

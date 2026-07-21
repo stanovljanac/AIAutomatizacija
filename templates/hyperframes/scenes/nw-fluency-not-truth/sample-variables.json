@@ -1,0 +1,15 @@
+{
+  "hfScene": "nw-fluency-not-truth",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 399,
+  "durationSeconds": 13.3,
+  "revealsSeconds": [0.3, 1.57, 6.43, 9.03, 10.53],
+  "props": {
+    "term": "Confidence measures fluency — not truth.",
+    "wrongRule": "sounds sure = it's right",
+    "workingRule": "treat it as a guess → verify",
+    "note": "REFRAME — quote holds, meter relabels confidence→fluency, gauge at zero, working rule locks gold."
+  }
+}

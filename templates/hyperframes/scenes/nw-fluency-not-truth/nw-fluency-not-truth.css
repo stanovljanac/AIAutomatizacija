@@ -1,0 +1,82 @@
+/* nw-fluency-not-truth — 019 s4 REFRAME / TAKEAWAY (blue → black + gold; screenshotable). A small
+   meter relabels confidence → fluency; the quote "Confidence measures fluency — not truth." holds;
+   a gray fact-check gauge sits at zero; the wrong rule fades and the working rule "treat it as a
+   guess → verify" locks in gold. Flat, face-on. --u sizes. Bottom ~22% = caption safe-zone. */
+:root {
+  --bg: #06090e; --surface: #101a24; --surface-2: #16232f; --line: #24384c;
+  --text: #eaf1f8; --text2: #90a6bc;
+  --gold: #ffb020; --gold-2: #ffd37a; --blue: #4aa3ff; --green: #35d07f; --red: #ff5a4d; --gray: #5d6b78; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 120% 76% at 50% 26%, #0c141d 0%, #06090e 74%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #24384c calc(89px * var(--u)), #24384c calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #24384c calc(89px * var(--u)), #24384c calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 82% 70% at 50% 30%, #000 20%, transparent 82%);
+  mask-image: radial-gradient(ellipse 82% 70% at 50% 30%, #000 20%, transparent 82%);
+}
+.glow {
+  position: absolute; left: 50%; top: 26%; width: 120%; height: 46%; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(255,176,32,0.09) 0%, transparent 62%);
+  filter: blur(calc(34px * var(--u))); opacity: 0.85; will-change: opacity, transform;
+}
+.camera { position: absolute; inset: 0; z-index: 2; will-change: transform; }
+
+/* ── the small relabel meter ── */
+.relabel {
+  position: absolute; left: 50%; top: 8%; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: calc(16px * var(--u));
+  padding: calc(12px * var(--u)) calc(24px * var(--u)); background: rgba(8,12,17,0.72);
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.4); border-radius: calc(999px * var(--u));
+  opacity: 0; will-change: transform, opacity; z-index: 6;
+}
+.rlabel { position: relative; display: inline-block; min-width: calc(230px * var(--u)); height: calc(44px * var(--u)); }
+.rold, .rnew { position: absolute; left: 0; top: 0; font-weight: 900; font-size: calc(34px * var(--u)); letter-spacing: calc(1px * var(--u)); white-space: nowrap; }
+.rold { color: var(--text2); }
+.rnew { color: var(--gold); opacity: 0; }
+.rbar { width: calc(120px * var(--u)); height: calc(18px * var(--u)); border-radius: calc(999px * var(--u)); background: #1a2836; overflow: hidden; }
+.rbar i { display: block; width: 100%; height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-2)); }
+.rval { color: var(--gold); font-weight: 900; font-size: calc(34px * var(--u)); }
+
+/* ── the quote stamp ── */
+.quote { position: absolute; left: 6%; width: 88%; top: 19%; text-align: center; opacity: 0; will-change: transform, opacity; z-index: 5; }
+.quote span { display: block; font-weight: 900; line-height: 1.08; letter-spacing: calc(0.5px * var(--u)); }
+.quote .q1 { color: var(--text); font-size: calc(78px * var(--u)); }
+.quote .q2 { color: var(--gold); font-size: calc(120px * var(--u)); text-shadow: 0 0 calc(40px * var(--u)) rgba(255,176,32,0.5); margin: calc(4px * var(--u)) 0; }
+.quote .q3 { color: var(--text); font-size: calc(78px * var(--u)); }
+
+/* ── the machine + fact-check gauge at zero ── */
+.machine {
+  position: absolute; left: 50%; top: 46%; transform: translateX(-50%);
+  padding: calc(20px * var(--u)) calc(34px * var(--u)) calc(24px * var(--u)); text-align: center;
+  background: rgba(16,26,36,0.7); border: calc(2px * var(--u)) dashed var(--line); border-radius: calc(20px * var(--u));
+  opacity: 0; will-change: transform, opacity; z-index: 4;
+}
+.mhead { color: var(--text2); font-weight: 800; font-size: calc(28px * var(--u)); letter-spacing: calc(2px * var(--u)); margin-bottom: calc(8px * var(--u)); }
+.gsvg { width: calc(300px * var(--u)); height: calc(178px * var(--u)); }
+.garc { fill: none; stroke: #2a3c4e; stroke-width: 10; stroke-linecap: round; }
+.gneedle { stroke: var(--gray); stroke-width: 7; stroke-linecap: round; }
+.ghub { fill: var(--gray); }
+.glabel { color: var(--text2); font-weight: 800; font-size: calc(32px * var(--u)); margin-top: calc(2px * var(--u)); }
+.glabel b { color: var(--gray); }
+
+/* ── the model swap: wrong → working ── */
+.rules { position: absolute; left: 8%; width: 84%; top: 62%; display: flex; flex-direction: column; gap: calc(18px * var(--u)); z-index: 6; }
+.rule {
+  position: relative; display: flex; align-items: center; gap: calc(16px * var(--u));
+  padding: calc(20px * var(--u)) calc(26px * var(--u)); border-radius: calc(16px * var(--u));
+  font-weight: 800; font-size: calc(44px * var(--u)); opacity: 0; will-change: transform, opacity;
+}
+.rule.wrong { background: rgba(93,107,120,0.12); border: calc(2px * var(--u)) solid #2a3c4e; color: var(--text2); }
+.rule.wrong .rx { color: var(--red); font-weight: 900; }
+.rule.work { background: rgba(255,176,32,0.12); border: calc(3px * var(--u)) solid var(--gold); color: var(--gold-2); box-shadow: 0 0 calc(34px * var(--u)) rgba(255,176,32,0.2); }
+.rule.work .rc { color: var(--green); font-weight: 900; }
+.wstrike { position: absolute; left: calc(20px * var(--u)); right: calc(20px * var(--u)); top: 52%; height: calc(5px * var(--u)); background: var(--gray); border-radius: calc(3px * var(--u)); transform: scaleX(0); transform-origin: left center; will-change: transform; }

@@ -1,0 +1,81 @@
+/* nw-nextword-engine — 019 s2 CORRECTION BEAT + MECHANISM (blue + gold body). Motif tag →
+   the WRONG "look it up" model gets a gray ✕ → the REAL machine: partial sentence + caret and a
+   fan of DEMO probability bars, the top bar snapping into the sentence. Flat, face-on. --u sizes.
+   Content held in the upper ~78% (bottom band is the caption safe-zone). */
+:root {
+  --bg: #0a1119; --surface: #111c28; --surface-2: #16232f; --line: #21384c;
+  --text: #eaf1f8; --text2: #8ea6bc;
+  --gold: #ffb020; --gold-2: #ffd37a; --blue: #4aa3ff; --red: #ff5a4d; --gray: #5d6b78; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 120% 78% at 50% 32%, #0e1a26 0%, #0a1119 76%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.06;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #1c3350 calc(89px * var(--u)), #1c3350 calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #1c3350 calc(89px * var(--u)), #1c3350 calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 38%, #000 20%, transparent 82%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 38%, #000 20%, transparent 82%);
+}
+.glow {
+  position: absolute; left: 50%; top: 44%; width: 110%; height: 60%; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(74,163,255,0.10) 0%, transparent 60%);
+  filter: blur(calc(32px * var(--u))); opacity: 0.8; will-change: opacity, transform;
+}
+.camera { position: absolute; inset: 0; z-index: 2; will-change: transform; }
+
+/* ── the correction motif tag ── */
+.motif {
+  position: absolute; left: 50%; top: 9%; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: calc(14px * var(--u));
+  padding: calc(14px * var(--u)) calc(30px * var(--u));
+  background: rgba(255,176,32,0.10); border: calc(2px * var(--u)) solid rgba(255,176,32,0.55);
+  border-radius: calc(999px * var(--u)); color: var(--gold-2); font-weight: 800; font-size: calc(34px * var(--u));
+  white-space: nowrap; opacity: 0; will-change: transform, opacity; z-index: 6;
+}
+.mdot { width: calc(16px * var(--u)); height: calc(16px * var(--u)); border-radius: 50%; background: var(--gold); box-shadow: 0 0 calc(14px * var(--u)) rgba(255,176,32,0.8); }
+
+/* ── the WRONG model chip ── */
+.wrong { position: absolute; left: 50%; top: 20%; transform: translateX(-50%); text-align: center; opacity: 0; will-change: transform, opacity; z-index: 5; }
+.wchip {
+  display: inline-flex; align-items: center; gap: calc(18px * var(--u));
+  padding: calc(20px * var(--u)) calc(30px * var(--u));
+  background: var(--surface-2); border: calc(2px * var(--u)) solid var(--line); border-radius: calc(18px * var(--u));
+  color: var(--text2); font-weight: 700; font-size: calc(38px * var(--u)); white-space: nowrap;
+}
+.wicon { width: calc(56px * var(--u)); height: calc(56px * var(--u)); }
+.wicon ellipse, .wicon path { fill: none; stroke: var(--gray); stroke-width: 3; }
+.wicon ellipse:first-child { fill: rgba(93,107,120,0.18); }
+.wx { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) scale(1.8); color: var(--gray); font-weight: 900; font-size: calc(150px * var(--u)); opacity: 0; will-change: transform, opacity; text-shadow: 0 0 calc(20px * var(--u)) rgba(0,0,0,0.6); }
+
+/* ── the REAL machine ── */
+.engine { position: absolute; left: 7%; width: 86%; top: 37%; opacity: 0; will-change: transform, opacity; z-index: 4; }
+.sentence {
+  display: flex; align-items: baseline; gap: calc(18px * var(--u)); justify-content: center;
+  font-weight: 900; font-size: calc(66px * var(--u)); color: var(--text); margin-bottom: calc(40px * var(--u));
+}
+.slot { position: relative; display: inline-flex; align-items: center; min-width: calc(210px * var(--u)); border-bottom: calc(5px * var(--u)) dashed rgba(255,176,32,0.5); padding: 0 calc(6px * var(--u)) calc(6px * var(--u)); }
+.slotword { color: var(--gold); opacity: 0; will-change: transform, opacity; }
+.caret2 { width: calc(5px * var(--u)); height: calc(64px * var(--u)); background: var(--gold); margin-left: calc(6px * var(--u)); opacity: 0; will-change: opacity; box-shadow: 0 0 calc(12px * var(--u)) rgba(255,176,32,0.7); }
+
+.bars { display: flex; flex-direction: column; gap: calc(20px * var(--u)); }
+.bar {
+  display: grid; grid-template-columns: calc(230px * var(--u)) 1fr calc(110px * var(--u)); align-items: center; gap: calc(20px * var(--u));
+  padding: calc(16px * var(--u)) calc(22px * var(--u)); background: var(--surface); border: calc(1px * var(--u)) solid var(--line);
+  border-radius: calc(14px * var(--u)); opacity: 0; will-change: transform, opacity;
+}
+.bar.top { border-color: rgba(255,176,32,0.6); background: rgba(255,176,32,0.08); }
+.bword { font-weight: 800; font-size: calc(40px * var(--u)); color: var(--text); text-align: left; }
+.bar.top .bword { color: var(--gold-2); }
+.btrack { height: calc(24px * var(--u)); border-radius: calc(999px * var(--u)); background: #1a2836; overflow: hidden; }
+.btrack i { display: block; height: 100%; border-radius: calc(999px * var(--u)); background: linear-gradient(90deg, var(--blue), #7cc0ff); }
+.bar.top .btrack i { background: linear-gradient(90deg, var(--gold), var(--gold-2)); }
+.bpct { font-weight: 900; font-size: calc(38px * var(--u)); color: var(--text2); text-align: right; }
+.bar.top .bpct { color: var(--gold); }
+.onelabel { margin-top: calc(30px * var(--u)); text-align: center; color: var(--text2); font-weight: 800; font-size: calc(34px * var(--u)); letter-spacing: calc(1px * var(--u)); opacity: 0; will-change: opacity; }

@@ -1,0 +1,78 @@
+<!doctype html>
+<!--
+  nw-confident-wrong — HyperFrames PROBLEM HOOK HERO for 019 Short, s1
+  ("ChatGPT gets things wrong — and never sounds unsure. We read that confidence as proof it
+   knows. It doesn't.").  Thesis-first flip lands by the end of beat 2 (~3s of screen time).
+  Black + gold hero. Flat, face-on, no 3D tilt (the slash/slam are approved transient reveals).
+
+  BEAT 0  a single chat answer types itself out — plainly, specifically WRONG (synthetic):
+          "The Eiffel Tower was completed in 1912." — a gold "1889" correction stamp punches in.
+          A big gold CONFIDENCE meter beside it fills and PINS hard to 100% and never flinches.
+  BEAT 1  "We read that confidence as proof it knows." — a gold thought-bubble myth-label rises:
+          "sounds sure = it checked".  The meter stays glued at 100%.
+  BEAT 2  "It doesn't." — the myth-label is STRUCK THROUGH with a hard gold slash and the anchor
+          stamp SLAMS in: "100% SURE. 100% WRONG."
+
+  Everything SYNTHETIC. Silent + deterministic (no Math.random / Date.now); one paused,
+  seek-driven GSAP timeline. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds
+  + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":242},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":8.07}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="../nw-confident-wrong.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="nw-confident-wrong" data-start="0" data-duration="8.05" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <div class="camera" id="camera">
+        <!-- the chat answer (synthetic, plainly wrong) -->
+        <div class="chat" id="chat">
+          <div class="who"><span class="dot"></span>Assistant</div>
+          <div class="answer">
+            <div class="reveal" id="reveal">
+              The Eiffel Tower was completed in <b class="year">1912</b>.
+            </div>
+            <span class="caret" id="caret"></span>
+          </div>
+          <div class="correction" id="correction"><span class="cx">✕</span> 1889</div>
+        </div>
+
+        <!-- the CONFIDENCE meter, pinned to 100% -->
+        <div class="meter" id="meter">
+          <div class="mtop"><span class="mlabel">CONFIDENCE</span><span class="mval" id="mval">100%</span></div>
+          <div class="mtrack"><div class="mfill" id="mfill"></div></div>
+        </div>
+
+        <!-- the myth we read into it -->
+        <div class="myth" id="myth">
+          <div class="bubble">“sounds sure = it checked”<span class="mstrike" id="mstrike"></span></div>
+          <div class="tail"></div>
+        </div>
+
+        <!-- the anchor stamp — slams last -->
+        <div class="anchor" id="anchor">
+          <span class="a1">100% SURE.</span><span class="a2">100% WRONG.</span>
+        </div>
+      </div>
+    </div>
+    <script src="../nw-confident-wrong.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["nw-confident-wrong"] = tl;
+    </script>
+  </body>
+</html>

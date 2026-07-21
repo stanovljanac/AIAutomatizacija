@@ -1,0 +1,17 @@
+{
+  "hfScene": "nw-token-teaser",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 238,
+  "durationSeconds": 7.93,
+  "revealsSeconds": [0.0, 2.43, 4.23, 6.6],
+  "props": {
+    "title": "Next: what's a token?",
+    "word": "understanding",
+    "label": "TOKEN",
+    "brand": "The Automation Desk",
+    "series": "Desk Lessons",
+    "note": "CTA — carried guess→verify, phrase, word fractures into sub-word chunks, TOKEN label, next-lesson plate."
+  }
+}

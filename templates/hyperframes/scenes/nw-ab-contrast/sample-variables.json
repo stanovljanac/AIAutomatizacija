@@ -1,0 +1,16 @@
+{
+  "hfScene": "nw-ab-contrast",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 546,
+  "durationSeconds": 18.2,
+  "revealsSeconds": [0.0, 2.73, 6.3, 11.27, 13.67],
+  "props": {
+    "meter": "100%",
+    "meterLabel": "measures fluency, not truth",
+    "leftAnswer": "Water boils at 100°C.",
+    "rightAnswer": "The Zephyr Prize began in 1938.",
+    "note": "MONEY SHOT — one meter pinned 100%, left true (✓), right invented (✗), bracket ties both to the meter."
+  }
+}

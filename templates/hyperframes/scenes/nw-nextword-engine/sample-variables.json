@@ -1,0 +1,14 @@
+{
+  "hfScene": "nw-nextword-engine",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 206,
+  "durationSeconds": 6.87,
+  "revealsSeconds": [0.3, 1.8, 4.27],
+  "props": {
+    "motif": "Here's what's really happening.",
+    "term": "It's not looking anything up.",
+    "note": "CORRECTION + MECHANISM — motif tag → database ✕ → partial sentence + candidate bars, top snaps in."
+  }
+}

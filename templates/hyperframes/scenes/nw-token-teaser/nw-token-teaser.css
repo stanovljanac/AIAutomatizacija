@@ -1,0 +1,75 @@
+/* nw-token-teaser — 019 s5 CAUSAL SIGN-OFF = CTA (black + gold outro). The carried guess→verify
+   node sits at top; "one word at a time" with "word" highlighted; a demo word "understanding"
+   fractures into sub-word chunks; a gold TOKEN label locks on; a chevron points to the next-lesson
+   plate; the channel mark sits small in reserved space. Flat, face-on. --u sizes. */
+:root {
+  --bg: #05080c; --surface: #101a24; --surface-2: #16232f; --line: #24384c;
+  --text: #eaf1f8; --text2: #90a6bc;
+  --gold: #ffb020; --gold-2: #ffd37a; --green: #35d07f; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 120% 76% at 50% 34%, #0c141d 0%, #05080c 74%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #24384c calc(89px * var(--u)), #24384c calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #24384c calc(89px * var(--u)), #24384c calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 80% 66% at 50% 38%, #000 20%, transparent 82%);
+  mask-image: radial-gradient(ellipse 80% 66% at 50% 38%, #000 20%, transparent 82%);
+}
+.glow {
+  position: absolute; left: 50%; top: 40%; width: 120%; height: 52%; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(255,176,32,0.10) 0%, transparent 62%);
+  filter: blur(calc(34px * var(--u))); opacity: 0.85; will-change: opacity, transform;
+}
+.camera { position: absolute; inset: 0; z-index: 2; will-change: transform; }
+
+/* ── the carried guess → verify node ── */
+.carry {
+  position: absolute; left: 50%; top: 11%; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: calc(14px * var(--u));
+  padding: calc(12px * var(--u)) calc(26px * var(--u)); background: rgba(255,176,32,0.10);
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.5); border-radius: calc(999px * var(--u));
+  color: var(--gold-2); font-weight: 800; font-size: calc(34px * var(--u)); white-space: nowrap;
+  opacity: 0; will-change: transform, opacity; z-index: 6;
+}
+.carry .cc { color: var(--green); font-weight: 900; }
+
+/* ── the phrase ── */
+.phrase { position: absolute; left: 6%; width: 88%; top: 24%; text-align: center; font-weight: 900; font-size: calc(60px * var(--u)); color: var(--text2); opacity: 0; will-change: transform, opacity; z-index: 5; }
+.phrase .hi { color: var(--gold); position: relative; }
+
+/* ── the fracturing demo word ── */
+.demo { position: absolute; left: 0; width: 100%; top: 38%; text-align: center; white-space: nowrap; opacity: 0; will-change: transform, opacity; z-index: 5; }
+.chunk { display: inline-block; font-weight: 900; font-size: calc(128px * var(--u)); color: var(--text); letter-spacing: calc(-1px * var(--u)); will-change: transform, color; }
+#ch2 { will-change: transform, color; }
+.split { display: inline-block; width: 0; height: calc(120px * var(--u)); vertical-align: middle; background: var(--gold); border-radius: calc(4px * var(--u)); opacity: 0; box-shadow: 0 0 calc(20px * var(--u)) rgba(255,176,32,0.7); will-change: width, opacity; }
+.tokenlabel {
+  position: absolute; left: 62%; top: calc(-10px * var(--u)); transform: translateX(-50%) scale(0.6);
+  padding: calc(8px * var(--u)) calc(22px * var(--u)); background: var(--gold); color: #1a1204;
+  border-radius: calc(10px * var(--u)); font-weight: 900; font-size: calc(40px * var(--u)); letter-spacing: calc(2px * var(--u));
+  box-shadow: 0 0 calc(34px * var(--u)) rgba(255,176,32,0.6); opacity: 0; will-change: transform, opacity;
+}
+
+/* ── the causal sign-off plate ── */
+.next { position: absolute; left: 8%; width: 84%; top: 58%; display: flex; align-items: center; gap: calc(24px * var(--u)); opacity: 0; will-change: transform, opacity; z-index: 6; }
+.chev { flex: 0 0 auto; }
+.chev svg { width: calc(90px * var(--u)); height: calc(60px * var(--u)); }
+.chev path { fill: none; stroke: var(--gold); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 calc(8px * var(--u)) rgba(255,176,32,0.5)); }
+.plate {
+  flex: 1 1 auto; padding: calc(22px * var(--u)) calc(30px * var(--u));
+  background: rgba(16,26,36,0.7); border: calc(2px * var(--u)) solid rgba(255,176,32,0.4); border-radius: calc(18px * var(--u));
+}
+.pk { color: var(--gold); font-weight: 900; font-size: calc(26px * var(--u)); letter-spacing: calc(3px * var(--u)); margin-bottom: calc(8px * var(--u)); }
+.pt { color: var(--text); font-weight: 800; font-size: calc(46px * var(--u)); }
+
+/* ── the channel mark, reserved space ── */
+.brand { position: absolute; left: 50%; top: 72%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: calc(12px * var(--u)); color: var(--text2); font-weight: 700; font-size: calc(30px * var(--u)); white-space: nowrap; opacity: 0; will-change: opacity; z-index: 6; }
+.brand .bmark { color: var(--gold); font-size: calc(34px * var(--u)); }
+.brand b { color: var(--gold-2); }

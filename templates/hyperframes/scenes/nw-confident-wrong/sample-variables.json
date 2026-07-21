@@ -1,0 +1,17 @@
+{
+  "hfScene": "nw-confident-wrong",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 242,
+  "durationSeconds": 8.07,
+  "revealsSeconds": [0.0, 4.17, 7.1],
+  "props": {
+    "title": "100% sure. 100% wrong.",
+    "wrongAnswer": "The Eiffel Tower was completed in 1912.",
+    "correction": "1889",
+    "myth": "sounds sure = it checked",
+    "meter": "100%",
+    "note": "PROBLEM HOOK — answer types out WRONG + meter pins 100% → myth rises → strike + anchor slam."
+  }
+}
