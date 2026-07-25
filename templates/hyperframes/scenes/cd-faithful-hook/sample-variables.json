@@ -1,0 +1,19 @@
+{
+  "hfScene": "cd-faithful-hook",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 347,
+  "durationSeconds": 11.57,
+  "revealsSeconds": [0.0, 2.01, 3.35, 6.95, 9.25],
+  "props": {
+    "title": "The AI didn't make the mistake.",
+    "title2": "My spreadsheet did.",
+    "hype": ["SHIP AN APP BY LUNCH", "BUILD A STARTUP THIS WEEKEND", "AI WRITES THE CODE NOW"],
+    "total": "$41,000",
+    "totalLabel": "TOTAL SALES",
+    "check": "✓",
+    "verdict": "WRONG",
+    "note": "HOOK HERO — hype feed freezes → gold stamp slams → cracks → messy row falls → dashboard snaps → $41,000 + green ✓ → red pulse under the check."
+  }
+}

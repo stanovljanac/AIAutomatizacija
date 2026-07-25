@@ -1,0 +1,20 @@
+{
+  "hfScene": "cd-flag-not-guess",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 501,
+  "durationSeconds": 16.7,
+  "revealsSeconds": [0.0, 1.85, 5.95, 11.28, 12.15],
+  "props": {
+    "component": "prompt-focus",
+    "prompt": "Clean this data. Fix what's certain, flag anything ambiguous — don't guess.",
+    "heading": "Fix what's certain. Flag the rest.",
+    "merged": "Los Angeles",
+    "flags": 2,
+    "totalFrom": "$41,000",
+    "totalTo": "$47,300",
+    "chips": ["OpenRefine", "AI sheet add-in", "Make + AI transform"],
+    "note": "FIX + KEPT JUDGMENT — data-first → prompt card (screenshot) → merge cities + repair dates + FLAG 2 rows (not guess) → human resolves → total rolls 41k→47.3k, earned check."
+  }
+}

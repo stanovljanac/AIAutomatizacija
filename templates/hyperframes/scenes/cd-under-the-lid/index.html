@@ -1,0 +1,107 @@
+<!doctype html>
+<!--
+  cd-under-the-lid — HyperFrames CAUSE beat for 020 Short, s2
+  ("Then I looked underneath. One city, three spellings, counted as three. Some dates weren't
+    even dates — those sales never made the total. Nothing errored.")
+  Blue + gold body. Flat, face-on — the only 3D is the transient lid peel (MOTION_SPEC §5).
+
+  MATCH CUT IN: the opening frame is the SAME dashboard card as s1's last frame (left 5% /
+  width 90% / top 12%, $41,000 + green check). Compose-to-rhyme is the author's half of the cut.
+
+  BEAT 0  "Then I looked underneath." — the dashboard PEELS AWAY like a lid from a top hinge,
+          revealing the raw rows that fed it.
+  BEAT 1  "One city, three spellings, counted as three." — LA / L.A. / Los Angeles highlight, a
+          gold bracket ties them ("= same place"), and a ghost mini-chart above still draws them
+          as THREE separate bars. The bug, made visible.
+  BEAT 2  "Some dates weren't even dates…" — two date cells flash an amber "text, not a date" tag
+          and DROP out of the sheet with a NOT COUNTED chip. The total does not move.
+  BEAT 3  "Nothing errored." — the green check flickers and goes HOLLOW; the three highlighted
+          rows compress into ONE glowing bad row (the carry into s3).
+
+  The literal spellings are NEVER read aloud (an AI voice garbles "L dot A dot") — on-screen only.
+  Everything SYNTHETIC. Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":307},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10.23}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="cd-under-the-lid.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cd-under-the-lid" data-start="0" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <!-- the ghost mini-chart: the same city, drawn as THREE separate bars (the bug made visible) -->
+      <div class="ghost" id="ghost">
+        <div class="gnote" id="gnote">the chart counts it as 3 cities</div>
+        <div class="gbars">
+          <div class="gcol"><div class="gbar" id="g1" style="height: 58%"></div><span>LA</span></div>
+          <div class="gcol"><div class="gbar" id="g2" style="height: 74%"></div><span>L.A.</span></div>
+          <div class="gcol"><div class="gbar" id="g3" style="height: 100%"></div><span>Los Angeles</span></div>
+        </div>
+      </div>
+
+      <!-- the raw sheet under the dashboard -->
+      <div class="sheet" id="sheet">
+        <div class="shead"><span>CITY</span><span>DATE</span><span class="r">AMOUNT</span></div>
+        <div class="row" id="r1"><span class="city">Los Angeles</span><span class="date">2026-03-14</span><span class="amt r">1,240</span></div>
+        <div class="row" id="r2"><span class="city">LA</span><span class="date bad">03/14/26</span><span class="amt r">980</span></div>
+        <div class="row" id="r3"><span class="city">Denver</span><span class="date">2026-03-15</span><span class="amt r">1,540</span></div>
+        <div class="row" id="r4"><span class="city">L.A.</span><span class="date bad">Mar 14</span><span class="amt r">1,180</span></div>
+        <div class="row" id="r5"><span class="city">Austin</span><span class="date">2026-03-16</span><span class="amt r">860</span></div>
+        <!-- the gold bracket that ties the three spellings together -->
+        <div class="bracket" id="bracket"></div>
+      </div>
+
+      <!-- the bracket's verdict, in its own line under the sheet (never over a row) -->
+      <div class="blabel" id="blabel"><b>LA · L.A. · Los Angeles</b><span>= same place</span></div>
+
+      <!-- the amber "not a date" tags -->
+      <div class="dtag" id="dtag2">text, not a date</div>
+      <div class="dtag" id="dtag4">text, not a date</div>
+
+      <!-- the total widget carried from s1 — it never moves -->
+      <div class="total" id="total">
+        <span class="tlabel">TOTAL SALES</span>
+        <span class="tval">$41,000</span>
+        <span class="check" id="check"><span class="tick" id="tick">✓</span></span>
+      </div>
+
+      <!-- the one glowing bad row the three collapse into (the carry into s3) -->
+      <div class="onerow" id="onerow">
+        <span class="c1">L.A.</span><span class="c2">03/14/26</span><span class="c3">1,240</span>
+      </div>
+
+      <!-- the dashboard lid — the match-cut frame; it peels away first -->
+      <div class="lidwrap" data-layout-ignore>
+        <div class="lid" id="lid">
+          <div class="dhead"><span class="dtitle">Q1 SALES</span><span class="dpill">live</span></div>
+          <div class="chart">
+            <div class="bar" style="height: 42%"></div><div class="bar" style="height: 61%"></div>
+            <div class="bar" style="height: 50%"></div><div class="bar" style="height: 78%"></div>
+            <div class="bar" style="height: 66%"></div><div class="bar" style="height: 92%"></div>
+          </div>
+          <div class="totalrow"><span class="tlabel">TOTAL SALES</span><span class="tval2">$41,000</span></div>
+          <div class="lidcheck"><span class="tick">✓</span></div>
+        </div>
+      </div>
+    </div>
+    <script src="cd-under-the-lid.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["cd-under-the-lid"] = tl;
+    </script>
+  </body>
+</html>

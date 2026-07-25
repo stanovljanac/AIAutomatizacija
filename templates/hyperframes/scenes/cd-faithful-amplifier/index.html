@@ -1,0 +1,81 @@
+<!doctype html>
+<!--
+  cd-faithful-amplifier — HyperFrames REFRAME beat for 020 Short, s3 (the money shot).
+  ("The AI wasn't wrong. It was faithful. It did exactly what I asked, on data that lied to it.
+    Bad input doesn't stop the AI. It scales it — and stamps it approved.")
+  Black + gold hero. Flat, face-on. Show FAITHFULNESS as motion, not a title card.
+
+  CARRY IN: opens on the SAME single glowing bad row s2 ended on (left 12% / width 76% / top 42%).
+
+  BEAT 0  "The AI wasn't wrong." — the bad row sits alone; a clean gold MACHINE glyph fades in below it.
+  BEAT 1  "It was faithful." — the machine gives one small obedient NOD-pulse (it does its job perfectly).
+  BEAT 2  "It did exactly what I asked, on data that lied to it." — the bad row drops INTO the machine.
+  BEAT 3  "Bad input doesn't stop the AI." — it comes out the other side SCALED UP: one bad cell fans
+          into ten, then a hundred identical bad cells, filling the frame. No red error anywhere.
+  BEAT 4  "It scales it — and stamps it approved." — a calm green "✓ APPROVED" stamps the whole stack;
+          then it collapses and the reframe lands: "Faithful ≠ correct" (held, screenshotable).
+
+  Everything SYNTHETIC. Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":332},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":11.07}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="cd-faithful-amplifier.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cd-faithful-amplifier" data-start="0" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <!-- the single bad row carried from s2 -->
+      <div class="badrow" id="badrow">
+        <span class="c1">L.A.</span><span class="c2">03/14/26</span><span class="c3">1,240</span>
+      </div>
+
+      <!-- the machine: a faithful amplifier. IN at top, OUT (×N) at bottom -->
+      <div class="machine" id="machine">
+        <div class="mbody">
+          <div class="mgear" id="mgear">
+            <svg viewBox="0 0 100 100" width="100%" height="100%">
+              <path fill="#ffb020" d="M50 12l6 2 5-4 4 4-2 6 4 5 6 1v6l-6 1-2 6 4 5-4 4-5-4-6 2-1 6h-6l-1-6-6-2-5 4-4-4 4-5-2-6-6-1v-6l6-1 2-6-4-5 4-4 5 4 6-2z"/>
+              <circle cx="50" cy="50" r="12" fill="#0a1017"/>
+            </svg>
+          </div>
+          <div class="mlabel">DO EXACTLY AS ASKED</div>
+        </div>
+        <div class="mport min" id="mportIn"></div>
+        <div class="mport mout" id="mportOut"></div>
+      </div>
+
+      <!-- the amplified output: a grid of identical bad cells (1 → 10 → 100) -->
+      <div class="stack" id="stack"></div>
+
+      <!-- the calm APPROVED stamp over the bad stack -->
+      <div class="approved" id="approved"><span class="atick">✓</span> APPROVED</div>
+
+      <!-- the reframe payoff -->
+      <div class="reframe" id="reframe">
+        <span class="word wgold" id="wFaithful">Faithful</span>
+        <span class="neq" id="neq">≠</span>
+        <span class="word wgray" id="wCorrect">correct</span>
+      </div>
+    </div>
+    <script src="cd-faithful-amplifier.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["cd-faithful-amplifier"] = tl;
+    </script>
+  </body>
+</html>

@@ -19,6 +19,20 @@ Format:
 
 ---
 
+## 2026-07-23 — 020 Short rendered ("The AI didn't make the mistake. My spreadsheet did.")
+- who: agent (owner: "020 shorts script approved. Continue")
+- did: Took the Gate-2-approved 020 Short through voice→plan→bespoke scenes→render→QA. edge-tts +
+  faster-whisper alignment (23 sentences, 62.4s). Authored 5 bespoke HyperFrames scenes
+  (`cd-faithful-hook`, `cd-under-the-lid`, `cd-faithful-amplifier`, `cd-flag-not-guess`,
+  `cd-would-you-catch-it`) under `templates/hyperframes/scenes/`, each standalone-rendered +
+  frame-checked, then composited via Remotion Main → `content/020-.../short/video/final.mp4`
+  (1945f = 64.8s, 1080×1920, 17.7 MB). The reframe spine ("faithful ≠ correct") shown as motion:
+  one bad row amplified 1→10→100 and stamped APPROVED. QA 10/10, `npm test` 618/618. SEO package
+  (publish.json/md) + 3 thumbnail candidates generated.
+- next: Gate 3 passed — owner approved and **published** the Short manually (2026-07-25, D-055).
+  Capture CTR/retention later for idea-bank re-ranking.
+- blockers: none.
+
 ## 2026-07-19 — KOS forcing functions + knowledge sweep (D-061)
 - who: agent (owner: "the knowledge base is drifting — fix the loop, do the sweep, leave analytics for later")
 - did: Diagnosed the drift — KB *structure* healthy (lint 0/0) but write-back ran on memory, not

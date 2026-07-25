@@ -1,0 +1,18 @@
+{
+  "hfScene": "cd-faithful-amplifier",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 332,
+  "durationSeconds": 11.07,
+  "revealsSeconds": [0.0, 1.21, 2.55, 5.35, 8.11],
+  "props": {
+    "term": "Faithful ≠ correct",
+    "left": "Faithful",
+    "right": "correct",
+    "op": "≠",
+    "badCell": "L.A.",
+    "stamp": "✓ APPROVED",
+    "note": "REFRAME money shot — bad row drops into a faithful machine → amplified 1→10→100 → stamped APPROVED (no red) → 'Faithful ≠ correct' held."
+  }
+}

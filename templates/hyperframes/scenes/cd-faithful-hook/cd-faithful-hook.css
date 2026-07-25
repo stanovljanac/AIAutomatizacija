@@ -1,0 +1,149 @@
+/* cd-faithful-hook — 020 s1 HOOK HERO (black + gold). A vibe-coding hype feed freezes, a gold
+   thesis stamp slams, cracks, and a messy row falls through it; then a dashboard snaps together,
+   the TOTAL counts to $41,000, a green check pops — and a red pulse bleeds under it.
+   Flat, face-on. Sizes scale by --u. Content held in the upper ~78% (bottom = caption safe-zone). */
+:root {
+  --bg: #05080c; --surface: #101a24; --surface-2: #16232f; --line: #24384c;
+  --text: #eaf1f8; --text2: #90a6bc;
+  --gold: #ffb020; --gold-2: #ffd37a; --red: #ff5a4d; --green: #34d399; --gray: #5d6b78; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 120% 76% at 50% 32%, #0c141d 0%, #05080c 74%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif;
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #24384c calc(89px * var(--u)), #24384c calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #24384c calc(89px * var(--u)), #24384c calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 80% 66% at 50% 34%, #000 20%, transparent 82%);
+  mask-image: radial-gradient(ellipse 80% 66% at 50% 34%, #000 20%, transparent 82%);
+}
+.glow {
+  position: absolute; left: 50%; top: 34%; width: 120%; height: 60%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(255,176,32,0.10) 0%, transparent 60%);
+  filter: blur(calc(34px * var(--u))); opacity: 0.85; will-change: opacity, transform;
+}
+
+/* ── the hype feed (visual context only, never spoken) ── */
+.feed {
+  position: absolute; left: 0; right: 0; top: 8%; height: 62%;
+  overflow: hidden; z-index: 2; will-change: opacity;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 82%, transparent 100%);
+}
+.feedtrack { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
+.hy {
+  display: block; text-align: center; font-weight: 900; letter-spacing: calc(2px * var(--u));
+  font-size: calc(78px * var(--u)); line-height: 1.42; color: var(--gold);
+  opacity: 0.5; text-shadow: 0 0 calc(30px * var(--u)) rgba(255,176,32,0.28);
+}
+.hy.dim { color: var(--text2); opacity: 0.3; text-shadow: none; }
+.freeze {
+  position: absolute; inset: 0; background: rgba(5,8,12,0.55); opacity: 0; will-change: opacity;
+  backdrop-filter: saturate(0.35);
+}
+
+/* ── the thesis stamp (two shards so it can crack) ── */
+.stamp {
+  position: absolute; left: 5%; width: 90%; top: 30%;
+  opacity: 0; z-index: 7; will-change: opacity, transform; perspective: calc(1400px * var(--u));
+}
+.shard {
+  position: relative; overflow: hidden; will-change: transform, opacity;
+  background: var(--gold); color: #14100a;
+  box-shadow: 0 calc(18px * var(--u)) calc(60px * var(--u)) rgba(0,0,0,0.6), 0 0 calc(60px * var(--u)) rgba(255,176,32,0.32);
+}
+.shard span {
+  display: block; padding: calc(30px * var(--u)) calc(34px * var(--u));
+  font-weight: 900; font-size: calc(76px * var(--u)); line-height: 1.14; letter-spacing: calc(-1px * var(--u));
+}
+/* the two halves are the SAME text clipped top/bottom — they separate on the crack */
+#shardA { clip-path: inset(0 0 50% 0); }
+#shardB { position: absolute; left: 0; right: 0; top: 0; clip-path: inset(50% 0 0 0); }
+
+/* ── the culprit row that falls through the crack ── */
+.culprit {
+  position: absolute; left: 12%; width: 76%; top: 46%;
+  display: flex; align-items: center; gap: calc(18px * var(--u));
+  padding: calc(20px * var(--u)) calc(24px * var(--u));
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: calc(2px * var(--u)) solid var(--line); border-radius: calc(16px * var(--u));
+  box-shadow: 0 calc(16px * var(--u)) calc(44px * var(--u)) rgba(0,0,0,0.6);
+  opacity: 0; z-index: 6; will-change: transform, opacity;
+}
+.culprit span {
+  flex: 1; text-align: center; font-weight: 800; font-size: calc(44px * var(--u));
+  color: var(--text); font-variant-numeric: tabular-nums;
+}
+.culprit .c1 { color: var(--gold-2); }
+.culpritlabel {
+  position: absolute; left: 5%; width: 90%; top: 57%; text-align: center;
+  font-weight: 900; font-size: calc(72px * var(--u)); color: var(--text);
+  opacity: 0; z-index: 6; will-change: transform, opacity;
+}
+
+/* ── the dashboard that "worked first try" ── */
+.dash {
+  position: absolute; left: 5%; width: 90%; top: 12%;
+  padding: calc(38px * var(--u)) calc(38px * var(--u)) calc(44px * var(--u));
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: calc(2px * var(--u)) solid var(--line); border-radius: calc(28px * var(--u));
+  box-shadow: 0 calc(26px * var(--u)) calc(70px * var(--u)) rgba(0,0,0,0.6);
+  opacity: 0; z-index: 5; will-change: transform, opacity;
+}
+.dhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: calc(30px * var(--u)); }
+.dtitle { color: var(--text2); font-weight: 900; font-size: calc(34px * var(--u)); letter-spacing: calc(4px * var(--u)); }
+.dpill {
+  padding: calc(7px * var(--u)) calc(20px * var(--u)); border-radius: calc(999px * var(--u));
+  background: rgba(52,211,153,0.14); color: var(--green); border: calc(1px * var(--u)) solid rgba(52,211,153,0.4);
+  font-weight: 800; font-size: calc(26px * var(--u)); letter-spacing: calc(2px * var(--u));
+}
+.chart {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: calc(18px * var(--u));
+  height: calc(520px * var(--u)); margin-bottom: calc(36px * var(--u));
+}
+.bar {
+  flex: 1; height: 100%; border-radius: calc(12px * var(--u)) calc(12px * var(--u)) calc(4px * var(--u)) calc(4px * var(--u));
+  background: linear-gradient(180deg, var(--gold-2), var(--gold));
+  box-shadow: 0 0 calc(24px * var(--u)) rgba(255,176,32,0.28);
+  transform-origin: bottom center; transform: scaleY(0); will-change: transform;
+}
+.totalrow {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding-top: calc(26px * var(--u)); border-top: calc(2px * var(--u)) solid var(--line);
+  opacity: 0; will-change: opacity; /* revealed on the "Total:" beat — a visible $0 reads as broken */
+}
+.tlabel { color: var(--text2); font-weight: 900; font-size: calc(32px * var(--u)); letter-spacing: calc(3px * var(--u)); }
+.tval {
+  color: var(--gold); font-weight: 900; font-size: calc(92px * var(--u)); font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 calc(30px * var(--u)) rgba(255,176,32,0.45);
+}
+.check {
+  position: absolute; right: calc(30px * var(--u)); bottom: calc(-42px * var(--u));
+  width: calc(112px * var(--u)); height: calc(112px * var(--u)); border-radius: 50%;
+  display: grid; place-items: center; background: #0b1a15;
+  border: calc(4px * var(--u)) solid var(--green);
+  box-shadow: 0 0 calc(34px * var(--u)) rgba(52,211,153,0.45);
+  opacity: 0; transform: scale(0.4); will-change: transform, opacity; z-index: 6;
+}
+.check .tick { color: var(--green); font-size: calc(66px * var(--u)); font-weight: 900; line-height: 1; }
+/* the red pulse that bleeds out from UNDER the green check */
+.check .ring {
+  position: absolute; inset: calc(-10px * var(--u)); border-radius: 50%;
+  border: calc(5px * var(--u)) solid var(--red); opacity: 0; transform: scale(1);
+  box-shadow: 0 0 calc(40px * var(--u)) rgba(255,90,77,0.8); will-change: transform, opacity;
+}
+
+/* ── the verdict ── */
+.verdict {
+  position: absolute; left: 5%; width: 90%; top: 64%; text-align: center;
+  font-weight: 900; font-size: calc(150px * var(--u)); letter-spacing: calc(4px * var(--u));
+  color: var(--red); text-shadow: 0 0 calc(50px * var(--u)) rgba(255,90,77,0.5);
+  opacity: 0; z-index: 8; will-change: transform, opacity;
+}

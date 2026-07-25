@@ -1,0 +1,17 @@
+{
+  "hfScene": "cd-would-you-catch-it",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 386,
+  "durationSeconds": 12.87,
+  "revealsSeconds": [0.0, 4.31, 6.25, 9.05],
+  "props": {
+    "front": "CAN AI BUILD IT?",
+    "back": "WOULD YOU CATCH IT WHEN IT'S WRONG?",
+    "line": "Unsexy — that's the point.",
+    "brand": "The Automation Desk",
+    "tagline": "the boring parts everyone skips.",
+    "note": "CTA MONOLITH — 'Unsexy — that's the point.' → 'CAN AI BUILD IT?' struck → Y-flip to 'WOULD YOU CATCH IT WHEN IT'S WRONG?' held + caret → brand row rises below."
+  }
+}

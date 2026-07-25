@@ -22,7 +22,7 @@ Under the root **AI Decision Automation**, an idea is one of four kinds of decis
 | **Attention** | *What deserves my attention right now?* | `attention/inbox`, `attention/notifications`, `attention/meetings` |
 | **Change Detection** | *Did something I rely on change, and does it matter?* | `change-detection/policy`, `change-detection/pricing`, `change-detection/competitors`, `change-detection/docs` |
 | **Failure Detection** | *Did something that should have happened not happen?* | `failure-detection/stopped-jobs`, `failure-detection/missing-sales`, `failure-detection/broken-flows` |
-| **Execution** | *Do the routine action / produce the routine artifact.* | `execution/reports`, `execution/summaries`, `execution/actions` |
+| **Execution** | *Do the routine action / produce the routine artifact.* | `execution/reports`, `execution/summaries`, `execution/actions`, `execution/data-cleaning` |
 
 > A `subject` is always `branch/leaf`. Add a new leaf freely; add a new **branch** only with an
 > owner decision (it reshapes the channel).
@@ -35,6 +35,7 @@ Under the root **AI Decision Automation**, an idea is one of four kinds of decis
 | **016** — n8n Inbox Triage | `attention/inbox` | The AI Agent · ai-how-to | the *buildable* inbox teardown (deliberate cluster-mate of 011, not a dup) |
 | **017** — Watch the Fine Print | `change-detection/policy` | The AI Agent (Ep. 1) · desk-notes | agent = a decision layer, not a scraper |
 | ~~**015**~~ — Emails I Shouldn't Answer | ~~`attention/inbox`~~ | — | **RETIRED (D-059):** near-duplicate of 011; replaced by 017 |
+| **020** — Clean the Data First | `execution/data-cleaning` | everyone-asks-ai · desk-notes | Short; "write code → clean the mess underneath" seed; first Execution-branch slot |
 
 **Open territory** (branches with no video yet): most of Change Detection, all of Failure
 Detection, all of Execution. Bias new ideas here for reach without cannibalizing 011/016.

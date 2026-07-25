@@ -1,0 +1,18 @@
+{
+  "hfScene": "cd-under-the-lid",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationFrames": 307,
+  "durationSeconds": 10.23,
+  "revealsSeconds": [0.0, 0.98, 4.65, 8.88],
+  "props": {
+    "term": "LA · L.A. · Los Angeles",
+    "definition": "= same place",
+    "spellings": ["LA", "L.A.", "Los Angeles"],
+    "badDates": ["03/14/26", "Mar 14", "14-03-2026"],
+    "dateTag": "text, not a date",
+    "total": "$41,000",
+    "note": "CAUSE — match-cut lid peels → three spellings of one city bracketed → two text 'dates' drop out → the total never moves, the check goes hollow → rows compress into one bad row (carry into s3)."
+  }
+}
