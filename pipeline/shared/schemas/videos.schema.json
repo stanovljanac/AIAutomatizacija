@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "videos.json",
+  "description": "The video lifecycle LEDGER (pipeline/state/videos.json) — the only writable lifecycle state (D-062). Every other lifecycle file (ideas.json status, publish.json status, produced_subjects.json) is a derived projection regenerated idempotently by pipeline/state/reconcile.mjs. One-way (ledger → derived) and forward-only (a projection never demotes). Governs `live_from` onward; earlier videos carry a closed backfill stamp.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "updated", "live_from", "videos"],
+  "properties": {
+    "schema_version": { "const": 1, "description": "Ledger format version. Bump only with a migration." },
+    "updated": { "type": "string", "description": "ISO date (YYYY-MM-DD) this ledger was last written." },
+    "live_from": {
+      "type": "string",
+      "pattern": "^[0-9]{3}$",
+      "description": "First video sequence the ledger GOVERNS (e.g. \"020\"). Records below it are backfilled history: never owed a lesson, never scheduled for analytics."
+    },
+    "videos": {
+      "type": "object",
+      "description": "One record per publish.json — keyed by that file's directory relative to content/ (\"018-life-story\" for the long, \"018-life-story/short\" for its Short).",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[0-9]{3}-[a-z0-9-]+(/short)?$": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["content_type", "status", "lesson", "analytics"],
+          "properties": {
+            "subject": {
+              "type": ["string", "null"],
+              "description": "Channel-map coordinate 'branch/leaf' (mirrors docs/CHANNEL_MAP.md). Projected into produced_subjects.json; null when the video claims none."
+            },
+            "idea_id": {
+              "type": ["string", "null"],
+              "description": "ideas.json idea this video came from. null for a bespoke video with no bank entry — the ideas projection is then a no-op."
+            },
+            "content_type": {
+              "type": "string",
+              "enum": ["long", "short"],
+              "description": "Kept separate from long-form because Shorts need their own analytics baselines (creatorContentType)."
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft_pending", "uploaded_private", "published"],
+              "description": "Lifecycle status, same vocabulary as publish.json. Forward-only: published never demotes to draft_pending."
+            },
+            "published_at": { "type": ["string", "null"], "description": "ISO date the owner published it; null until published." },
+            "youtube_video_id": { "type": ["string", "null"] },
+            "lesson": {
+              "type": "object",
+              "description": "The one obligation a machine cannot produce: the durable insight (D-061). State is EXPLICIT, never inferred from field presence.",
+              "additionalProperties": false,
+              "required": ["state"],
+              "properties": {
+                "state": {
+                  "type": "string",
+                  "enum": ["pending", "none", "linked"],
+                  "description": "pending = owed (the Stop hook blocks) · none = reviewed, nothing durable to write · linked = a KOS note exists (`note` = its slug)."
+                },
+                "at": { "type": ["string", "null"], "description": "ISO date the lesson state was settled." },
+                "note": { "type": ["string", "null"], "description": "KOS note slug when state=linked; \"backfill\" for the closed pre-live_from stamp." }
+              }
+            },
+            "analytics": {
+              "type": "object",
+              "description": "The analytics loop's schedule + history. YouTube data is 48-72h delayed, so snapshots are dated and never overwritten.",
+              "additionalProperties": false,
+              "required": ["due_at", "snapshots"],
+              "properties": {
+                "due_at": { "type": ["string", "null"], "description": "ISO date the next snapshot is due (publish +7d, then +28d). null = never scheduled (backfilled history)." },
+                "snapshots": {
+                  "type": "array",
+                  "description": "Append-only dated metric snapshots. Item shape is intentionally open until the analytics thread lands.",
+                  "items": { "type": "object" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

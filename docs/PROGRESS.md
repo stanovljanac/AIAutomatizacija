@@ -19,6 +19,168 @@ Format:
 
 ---
 
+## 2026-07-25 — Lifecycle ledger: backfill applied, hook armed, D-062 (session 5 of 5 — DONE)
+- who: agent (owner: "implement <ledger plan> session 5")
+- resolved the three open items first, before anything was written: (a) **006/007/011 are genuinely
+  live** — an unauthenticated fetch of their `youtube_video_id`s returns real titles, so the
+  `uploaded_private → published` flip is correct; (b) 019's `llm-mental-model` **registers as-is**
+  (owner's call — the registry is a collision lookup where any stable string works; retag later if
+  explainers ever get a branch); (c) 005/016 have no publish.json, so they stay `in-progress` and are
+  just listed. Owner also approved capturing `youtube_video_id` into the ledger.
+- did: `reconcile.mjs` grew `--backfill` — the same ruleset narrowed to the videos **below**
+  `live_from`, so the one-time historical seeding could be reviewed and applied on its own without the
+  live records riding along in the diff (`ingestPublish` already stamps pre-live records closed, so
+  there is no second ruleset). `resolveFact` now reads `youtube_video_id` from the publish.json and
+  `ingestPublish` freezes it set-once. Then ran it for real: **`--backfill --dry-run` → apply → full
+  `--dry-run` → apply**, with every target file snapshotted to the scratchpad first.
+- result on real state: ledger = **13 records** (12 backfilled history + 020 live, `lesson: pending`,
+  `analytics.due_at 2026-08-01`); **019's Short flipped `draft_pending → published`** at last; the
+  shipped-but-`in-progress` drift cleared (006/008/012 → `produced`, 013/017 bound to their video while
+  correctly staying in the backlog as recurring/parked entries); `produced_subjects.json` gained
+  `llm-mental-model`. 11 of 13 publish.json flipped to `published`.
+- the bug the real run exposed: `applyPlan` **threw** on the first document that failed schema
+  validation and abandoned the rest of the pass. Two legacy files are already invalid — 004's `medium`
+  is a filename where the schema wants an object, 007 predates `title_options` — so from the turn-end
+  hook that would have left every video after them unhealed forever. It now **skips and reports** an
+  invalid derived write and finishes the pass; the ledger stays strict (it's our own document, so an
+  invalid one is a bug). Those two flips are the only thing a `--dry-run` still lists.
+- armed: `.claude/hooks/publish-close.mjs` registered in the `Stop` array of `.claude/settings.json`
+  beside `test-gate.mjs` + `knowledge-lint.mjs` (deferred from session 4 by the owner, as planned).
+  Verified live against the real repo: it blocks naming `020-everyone-asks-clean-data/short` and both
+  exits. Reconcile is idempotent (two `--fix` runs in a row change nothing). `npm test` **682/682**.
+- docs: **D-062** (ledger + reconciler, Option B, `live_from` 020, one-way + forward-only, explicit
+  lesson enum, CHANNEL_MAP stays human), WORKFLOW **Step 7** → a close-out section pointing at
+  `reconcile`, ARCHITECTURE **§12** → the ledger as lifecycle source of truth.
+- closed out (owner approved the repairs; 020's lesson call delegated to me): 004's `medium` is now
+  `{title, cover}` and 007 gained `title_options` from its `chosen_title` — nothing invented — so both
+  flips landed and **`reconcile --dry-run` is fully clean**. 020's lesson settled `--nothing`: its cycle
+  logged no owner rejection, no incident, QA 10/10, and its craft pattern (bespoke HF scenes) is already
+  codified in D-060 — per WORKFLOW Step 7, nothing durable means nothing owed. The hook now allows.
+  Added the human `CHANNEL_MAP.md` row for 019 (the reconciler registered the machine mirror only).
+- lesson written (build-sprint DOCUMENT step): **a self-healing pass that runs on every turn-end must
+  skip what it can't write, never abort the pass** —
+  `knowledge/desk-knowledge/lessons/2026-07-25-self-healing-passes-skip-not-abort.md` (`draft`),
+  knowledge-lint 0 errors.
+- blockers: none. Thread B (analytics snapshots → drafted lessons) is still spec-only in the plan file.
+
+## 2026-07-25 — Lifecycle ledger: the close-out Stop hook (session 4 of 5)
+- who: agent (owner: "implement <ledger plan> session 4")
+- did: `.claude/hooks/publish-close.mjs` — the forcing function that turns D-061's close-out *rule*
+  into code. On every turn-end it runs the reconciler against the repo, **silently self-heals** every
+  derived file a machine can compute (ideas.json status, produced_subjects.json, a video's publish.json
+  status), then **blocks only** on the one thing a machine can't produce: a shipped video whose
+  `lesson.state` is still `pending`. The block message names the videos and both ways out
+  (`--learned --note <slug>` after writing the KOS note, or `--learned --nothing`), and — when the pass
+  just registered a subject — reminds the owner to add the human row to `docs/CHANNEL_MAP.md` (the
+  reconciler owns the machine mirror, never the prose). Safety is `knowledge-lint.mjs`'s design, cloned:
+  fail-open on any error, skip in plan mode, `[skip-close]` escape (which skips the self-heal too), and
+  `MAX_BLOCKS=2` per session in a tmp state file so the gate can never loop. Two deliberate differences
+  from the other two Stop hooks: detection is the **filesystem**, not git (content/ and the idea bank are
+  git-ignored, so a freshly shipped video is invisible to `git status`), and the reconciler is imported
+  **lazily** inside the try so a broken module still can't crash a turn's end. An empty stdin payload is
+  treated as "nothing to reconcile" rather than "reconcile the real repo". 6 tests
+  (`pipeline/state/publish-close.test.mjs`) spawn the hook as a real process against a throwaway repo
+  root: block + self-heal, allow once the lesson is settled, plan-mode, `[skip-close]`, empty/malformed
+  stdin, and the bounded re-block counter. `npm test` 680/680 green; the real ledger is still the empty
+  one (no test touches project state).
+- deviation (owner's call): the `.claude/settings.json` `Stop` registration is **deferred to session 5**.
+  Registering it now would make the hook apply the 15-file reconcile at the next turn-end — silently, and
+  `ideas.json` / `produced_subjects.json` are git-ignored, so that write isn't recoverable. It goes live
+  at the top of session 5, right after `--backfill` runs under the owner's review.
+- next: session 5 — `--backfill`, the first real (reviewed) apply, register the hook in `settings.json`,
+  then the docs: D-062, WORKFLOW Step 7, ARCHITECTURE §12.
+- blockers: none.
+
+## 2026-07-25 — Lifecycle ledger: reconciler CLI (session 3 of 5)
+- who: agent (owner: "implement <ledger plan> session 3")
+- did: Wired the pure core to real files — `pipeline/state/reconcile.mjs` grew an fs/CLI edge
+  (`scanVideos` → `resolveFact` → `planReconcile` → `applyPlan` / `stampLesson` / `parseArgs`), so the
+  reconciler is now usable by hand: `node pipeline/state/reconcile.mjs` prints the diff and writes
+  nothing, `--fix` writes, `<id> --learned --note <slug>|--nothing` settles the lesson. `statePaths(root)`
+  makes the root injectable, which is what lets the integration tests run against a throwaway `content/`
+  tree instead of the repo. The three things session 2's dry run surfaced are all handled in the resolver:
+  `brief.json` carries no `subject` on most videos and no `idea_id` before 013, so both fall back to a
+  **reverse lookup** of the derived files (which subject claims this video · which idea points at it) —
+  without the idea fallback the shipped-but-`in-progress` drift never clears; and `NON_VIDEOS` excludes
+  the two folders that own a publish.json but aren't videos (`001-sta-je-ai` = archived Serbian pilot,
+  `004-hfproof` = render proof), where "presence ⇒ published" would invent a lifecycle. Safety at the
+  edge: every document is schema-validated before it reaches disk (`applyPlan`, and `saveLedger` for the
+  ledger), a *missing* derived file is created but a file that **exists and won't parse is never
+  rewritten** (warn + skip, so a broken `produced_subjects.json` can't be clobbered), and an unreadable
+  `publish.json` is still ingested (presence is the approval signal) without projecting a status back
+  into it. 10 new integration tests on a temp fixture root: dry pass writes nothing (not even the
+  ledger), `--fix` flips the two publish files + clears the idea drift + registers the subject, the
+  second pass is clean, `--learned --nothing` clears the obligation and the next pass does not re-open
+  it, plus the fail-soft and validation paths. `npm test` 674/674 green.
+- ran for real (dry, nothing written): 13 publish.json ingested (the 2 non-videos correctly skipped),
+  **15 files** would change, only `020-…/short` owes a lesson, 8 folders have no publish.json yet.
+  Three things for the owner to eyeball **before session 5 applies this**: (a) 006/007/011 are
+  `uploaded_private` and would flip to `published` — correct if they're live on the channel, and the
+  richer publish lifecycle is deliberately deferred (Thread B); (b) 019's `brief.subject` is
+  `llm-mental-model`, not a `branch/leaf` CHANNEL_MAP coordinate, so it would enter
+  `produced_subjects.json` in that shape; (c) 005/016 have **no publish.json**, so their `in-progress`
+  drift stays until they ship (listed, never invented).
+- next: session 4 — the `.claude/hooks/publish-close.mjs` Stop hook (clone `knowledge-lint.mjs`'s
+  fail-open / plan-skip / `MAX_BLOCKS` design; run `reconcile --fix` silently, then block only on a
+  pending lesson). D-062 is still written in session 5.
+- blockers: none.
+
+## 2026-07-25 — Lifecycle ledger: reconciler pure core (session 2 of 5)
+- who: agent (owner: "implement <ledger plan> session 2")
+- did: `pipeline/state/reconcile.mjs` — the whole reconciler ruleset as **io-free** functions (the
+  fs/CLI layer is session 3), styled after `fetch-analytics.mjs`: pure logic here, side effects at the
+  edge. `ingestPublish(ledger, fact)` turns one video's reality into a record; `projectIdeas`,
+  `projectSubjects`, `projectPublishStatus` push the ledger onto the three derived files;
+  `lessonOwed` / `owedLessons` / `setLesson` carry the one manual obligation (D-061). Every function
+  reports `changed` and returns the **input object untouched** when false, so "nothing to do" is
+  cheap and unambiguous for the turn-end hook. Rules worth naming: a publish.json's **presence** is
+  the owner-approval signal (its own `status` is derived and may be stale — 019), so it can only
+  raise the ledger status, never cap it; `published_at` is stamped once and only for live videos (no
+  fabricated ship dates for pre-`live_from` history); `analytics.due_at` = +7d only while a live
+  record has no snapshots; `lesson` seeds `pending` at/after `live_from` and `none`/`"backfill"`
+  below it — so session 5's `--backfill` is just an ingest of the pre-live videos. `projectIdeas` is
+  deliberately narrow: **only** `in-progress → produced`, and `produced_video_id` bound only when
+  empty — a recurring series entry (`everyone-asks-ai-series`) stays spendable in the backlog and a
+  `parked` decision is never reversed by a projection. Shorts project onto their **topic folder**
+  (`019-…/short` → `019-…`), matching what `ideas.produced_video_id` / `produced_subjects.json` name.
+  29 new tests (`reconcile.test.mjs`) assert idempotency and forward-only per function plus a full
+  ingest→project pass twice over. Also dry-ran the core over the **real** 15 publish.json files in
+  memory (nothing written): schema-valid, second pass clean, only 020's Short owes a lesson.
+- next: session 3 — the fs/CLI layer (`scan / --dry-run / --fix / --learned`). Three things the dry
+  run surfaced, all belonging to the scanner, not the core: (a) `brief.json` has **no `subject`** and
+  most ideas carry none, so the resolver must reverse-look-up `produced_subjects.json`; (b) `brief.idea_id`
+  is missing on the older videos, so `ideaId` must also reverse-look-up the idea whose
+  `produced_video_id` matches — without it the 005/006/008/012/016 `in-progress` drift does **not**
+  clear; (c) the scan hits two non-videos with a publish.json — `001-sta-je-ai` (Serbian archive) and
+  `004-hfproof` (render proof) — which need an exclusion list before session 5 mutates real files,
+  since "presence ⇒ published" is wrong for both. D-062 is still written in session 5.
+- blockers: none. `npm test` 664/664 green.
+
+## 2026-07-25 — Lifecycle ledger: foundation (session 1 of 5)
+- who: agent (owner: "implement <ledger plan> session 1")
+- did: First slice of the video-lifecycle ledger (Thread A/5). A video's lifecycle currently lives in
+  five mutable files with no owner, so shipping means hand-editing several *while in ship mode* — hence
+  the measurable drift (5 shipped videos still `in-progress`, `produced_subjects.json` half-filled, the
+  D-061 lesson skipped twice). The fix makes the mechanism **code, not a rule**: one tracked ledger owns
+  each video's lifecycle, every other file becomes a derived projection. Landed this session:
+  `pipeline/shared/schemas/videos.schema.json` (`additionalProperties:false`; closed enums for `status`,
+  `content_type` and the explicit `lesson.state` = `pending|none|linked`; `schema_version` pinned to
+  `const 1`; video keys constrained to `NNN-slug[/short]` so one record maps to one `publish.json`),
+  the valid empty ledger `pipeline/state/videos.json` (`live_from:"020"`), `"videos.json"` registered in
+  **both** schema maps (`validate-lib.mjs` + the CJS `validate.js`), and `pipeline/state/ledger.mjs` —
+  load / save-with-validate / `videoSeq`. Deliberate asymmetry in `loadLedger`: fail-soft on a *missing*
+  file (no bootstrap step) but **loud** on a malformed one, since silently swapping a corrupt source of
+  truth for an empty one would erase real state; `saveLedger` validates before writing so an invalid
+  ledger can never reach disk. 17 new tests (`ledger.test.mjs`) cover schema accept/reject incl. bad
+  `lesson.state`, an empty `lesson` object, malformed keys and a future `schema_version`; save→load
+  round-trip; and `videoSeq` across ids, nested Short keys, legacy `002-short` and non-matches.
+  `npm test` 635/635 green; ledger PASSes the CLI validator.
+- next: session 2 — `pipeline/state/reconcile.mjs` **pure core** (`ingestPublish`, `projectIdeas`,
+  `projectSubjects`, `projectPublishStatus`, `lessonOwed`, `setLesson`), io-free and fully tested for
+  idempotency + forward-only behavior. Nothing is wired to real files until session 3; D-062 is written
+  in session 5.
+- blockers: none.
+
 ## 2026-07-23 — 020 Short rendered ("The AI didn't make the mistake. My spreadsheet did.")
 - who: agent (owner: "020 shorts script approved. Continue")
 - did: Took the Gate-2-approved 020 Short through voice→plan→bespoke scenes→render→QA. edge-tts +

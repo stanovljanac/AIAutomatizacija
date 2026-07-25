@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-14",
+  "updated": "2026-07-25",
   "ideas": [
     {
       "id": "bulk-personalized-emails",
@@ -89,7 +89,7 @@
       "archetype": "diagram",
       "angle_hint": "Don't fix errors after the fact — build rules so they can never get entered. (Teased sequel to 004.)",
       "score": 84,
-      "status": "in-progress",
+      "status": "produced",
       "produced_video_id": "006-validated-cleanup-system"
     },
     {
@@ -102,7 +102,7 @@
       "archetype": "ideas",
       "angle_hint": "The most-hated five minutes of every small business owner's week.",
       "score": 83,
-      "status": "in-progress",
+      "status": "produced",
       "produced_video_id": "008-receipt-to-spreadsheet"
     },
     {
@@ -812,7 +812,7 @@
       "lane": "ai-how-to",
       "angle_hint": "STUDIO REVEAL, anti-hype positioning (sequel to 010 point-of-trust). The channel's own autonomous studio as a public case-study: the system + review loops + QA + human gates + where it fails. Keep the searchable phrase 'AI employee' but with self-referential specificity; explicitly distance from the get-rich faceless genre (YouTube's July-2025 inauthentic-content policy punishes lazy mass automation — we position AS the counterexample: AI as production accelerator, human as creative direction + gates). Absorbs the 'Stop Building AI Agents Wrong' story (Input -> Validation -> Retries -> Human review). Message: leverage for a solo operator, not a magic worker.",
       "score": 88,
-      "status": "in-progress",
+      "status": "produced",
       "value_type": [
         "teaches-system",
         "corrects-misbelief"
@@ -864,7 +864,7 @@
         "teaches-system"
       ],
       "takeaway": "Every automation breaks eventually — the design goal is that it tells you, loudly, instead of failing silently.",
-      "produced_video_id": null,
+      "produced_video_id": "013-fail-loud",
       "source": {
         "origin": "manual",
         "added": "2026-07-08"
@@ -985,7 +985,7 @@
       "takeaway": "An AI agent isn't a scraper that flags every change — it's a decision layer that reads a change, judges whether it matters, and hands you the call. Automate the deciding, keep the approval.",
       "value_score": 9,
       "value_band": "qualify",
-      "produced_video_id": null,
+      "produced_video_id": "017-fine-print-watch",
       "source": {
         "origin": "manual",
         "added": "2026-07-15"

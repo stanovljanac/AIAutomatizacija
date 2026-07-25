@@ -528,6 +528,46 @@ old one (don't delete history).
   capture is a written step in both the video workflow and the engineering cycle instead of relying on
   recall. The bigger analytics→KOS auto-lesson loop (#4) stays deferred to ROADMAP.
 
+## D-062 — One lifecycle ledger; every other lifecycle file is a derived projection (owner plan, 2026-07-25)
+- **Context:** a video's lifecycle state lived in *five* mutable files with no owner — `ideas.json`
+  (`status`/`produced_video_id`), each `content/<id>/publish.json` (`status`),
+  `produced_subjects.json`, `docs/CHANNEL_MAP.md`, the run manifest. Shipping meant hand-editing
+  several **while in ship mode**, so it got skipped. Measured drift: **5 videos shipped but still
+  `in-progress`**, `produced_subjects.json` half-filled, 019's Short still `draft_pending` weeks after
+  it went live. D-061 had just added a *sixth* manual obligation (write the KOS lesson) as a **policy
+  rule** — and that is exactly the kind of thing ship mode skips (018, then 019, then 020). The
+  owner's point: the mechanism must be **code, not a rule**.
+- **Decision (Option B).** `pipeline/state/videos.json` — a tracked, schema-validated **ledger** — is
+  the only writable lifecycle state, one record per publish.json. `ideas.json` status,
+  `publish.json` status and `produced_subjects.json` become **derived projections**, regenerated
+  idempotently by `pipeline/state/reconcile.mjs`. Two invariants: **one-way** (ledger → derived,
+  never reverse) and **forward-only** (`published` ↛ `draft_pending`, `produced` ↛ `in-progress`, a
+  subject entry is never removed, a settled lesson never re-opens). A Stop hook
+  (`.claude/hooks/publish-close.mjs`) runs the reconciler on every turn-end: it **silently self-heals**
+  everything a machine can compute and **blocks only** on the one thing it can't — a shipped video
+  whose `lesson.state` is still `pending`.
+- **Boundary.** `ideas.json` stays authoritative for idea *selection* (backlog, scores, metrics); the
+  ledger is authoritative for the *lifecycle of a video that exists*. They overlap at exactly
+  `in-progress → produced` + `produced_video_id`, so `pick-next.mjs`, `auto-run.mjs` and
+  `fetch-analytics.mjs` were untouched. **`CHANNEL_MAP.md` stays human prose** (retirement
+  strikethroughs, cluster-mate notes) — code owns the machine mirror only, and the hook *reminds* the
+  owner to add the human row.
+- **Lesson state is an explicit enum** (`pending` / `none` / `linked`), never inferred from a missing
+  field, so a malformed record can't silently block a turn or silently absolve one. `--learned --note
+  <slug>` links a KOS note; `--learned --nothing` records "reviewed, nothing durable".
+- **Scope: `live_from: "020"` onward.** Everything ≤019 was backfilled once (`--backfill`) with a
+  closed stamp (`lesson: none/"backfill"`, no fabricated ship date, no analytics schedule) — history
+  is recorded, never owed. Applying it cleared the whole measured drift and flipped 019's Short to
+  `published`.
+- **Rejected / deferred:** Option C (append-only `events.jsonl`, state = fold) — revisit only if
+  lifecycle branching grows. Auto-writing `CHANNEL_MAP.md`. A richer publish lifecycle (per-platform,
+  scheduled) and dated analytics snapshots → the analytics thread.
+- **Consequences:** close-out is no longer a rule anyone has to remember; the drift class that
+  produced "5 shipped videos still `in-progress`" is now mechanically impossible to leave behind. A
+  by-product worth naming: `applyPlan` **skips** (and reports) a derived file that is already
+  schema-invalid instead of aborting the pass — two legacy files (004's `medium` is a filename, 007
+  predates `title_options`) would otherwise stall the self-heal for every video after them, forever.
+
 > Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
 > **D-012** (name) → see D-023. **D-014** (TTS) → see D-024. The old "no AI-disclosure" note → see D-025.
 > Still in force: **D-002** (no YouTube transcripts; clean sources only).

@@ -30,6 +30,8 @@ export const FILENAME_TO_SCHEMA = {
   "config.json": "config.schema.json",
   "config.example.json": "config.schema.json",
   "thumb_candidates.json": "thumb-candidates.schema.json",
+  // The lifecycle ledger (pipeline/state/videos.json) — D-062.
+  "videos.json": "videos.schema.json",
 };
 
 let _ajv = null;

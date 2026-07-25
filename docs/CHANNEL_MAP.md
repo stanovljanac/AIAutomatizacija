@@ -35,6 +35,7 @@ Under the root **AI Decision Automation**, an idea is one of four kinds of decis
 | **016** — n8n Inbox Triage | `attention/inbox` | The AI Agent · ai-how-to | the *buildable* inbox teardown (deliberate cluster-mate of 011, not a dup) |
 | **017** — Watch the Fine Print | `change-detection/policy` | The AI Agent (Ep. 1) · desk-notes | agent = a decision layer, not a scraper |
 | ~~**015**~~ — Emails I Shouldn't Answer | ~~`attention/inbox`~~ | — | **RETIRED (D-059):** near-duplicate of 011; replaced by 017 |
+| **019** — The Next-Word Engine | `llm-mental-model` | desk-notes | Short; an **explainer**, not a decision-automation slot — the coordinate is a bare leaf on purpose, since none of the four branches covers "how the tool itself works" (owner call, 2026-07-25) |
 | **020** — Clean the Data First | `execution/data-cleaning` | everyone-asks-ai · desk-notes | Short; "write code → clean the mess underneath" seed; first Execution-branch slot |
 
 **Open territory** (branches with no video yet): most of Change Detection, all of Failure

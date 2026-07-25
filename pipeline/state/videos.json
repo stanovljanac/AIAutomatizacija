@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "updated": "2026-07-25",
+  "live_from": "020",
+  "videos": {
+    "002-what-is-ai-automation": {
+      "subject": null,
+      "idea_id": null,
+      "content_type": "long",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "004-claude-vs-chatgpt-spreadsheets": {
+      "subject": null,
+      "idea_id": "claude-vs-chatgpt-spreadsheets",
+      "content_type": "long",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "006-validated-cleanup-system": {
+      "subject": null,
+      "idea_id": "validated-cleanup-system",
+      "content_type": "long",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": "eZXUIn9GZTI",
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "007-fable-rise-and-fall": {
+      "subject": null,
+      "idea_id": null,
+      "content_type": "long",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": "ppuPa2kSOdk",
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "008-receipt-to-spreadsheet": {
+      "subject": null,
+      "idea_id": "expense-receipt-to-sheet",
+      "content_type": "long",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "011-read-my-inbox": {
+      "subject": "attention/inbox",
+      "idea_id": "read-my-inbox",
+      "content_type": "short",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": "-pBNgF-zPgU",
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "012-studio-reveal": {
+      "subject": null,
+      "idea_id": "ai-employee-studio-reveal",
+      "content_type": "long",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "013-fail-loud": {
+      "subject": null,
+      "idea_id": "automation-maintenance-story",
+      "content_type": "short",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "014-worst-hour": {
+      "subject": null,
+      "idea_id": "everyone-asks-ai-series",
+      "content_type": "short",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "017-fine-print-watch": {
+      "subject": "change-detection/policy",
+      "idea_id": "agent-fine-print-watch",
+      "content_type": "short",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "018-life-story": {
+      "subject": null,
+      "idea_id": null,
+      "content_type": "long",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "019-next-word-engine/short": {
+      "subject": "llm-mental-model",
+      "idea_id": "desk-lessons-llm-next-word",
+      "content_type": "short",
+      "status": "published",
+      "published_at": null,
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": "backfill"
+      },
+      "analytics": {
+        "due_at": null,
+        "snapshots": []
+      }
+    },
+    "020-everyone-asks-clean-data/short": {
+      "subject": "execution/data-cleaning",
+      "idea_id": "everyone-asks-ai-series",
+      "content_type": "short",
+      "status": "published",
+      "published_at": "2026-07-25",
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "none",
+        "at": "2026-07-25",
+        "note": null
+      },
+      "analytics": {
+        "due_at": "2026-08-01",
+        "snapshots": []
+      }
+    }
+  }
+}

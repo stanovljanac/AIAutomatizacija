@@ -20,4 +20,5 @@ lesson with no evidence stays `draft` forever.
 - [A well-written script cannot save a weak story — score story strength at the idea](2026-07-12-story-strength-scored-at-the-idea.md) — lesson, stable
 - [A near-duplicate hides when ideas have no coordinate — give each a subject, gate the seed](2026-07-15-subject-map-stops-near-duplicates.md) — lesson, stable
 - [When the owner authors the visuals, invert the sync — fit narration to the animation, don't regenerate it](2026-07-19-owner-authored-visuals-invert-the-sync.md) — lesson, draft
+- [A self-healing pass that runs on every turn-end must skip what it can't write, never abort the pass](2026-07-25-self-healing-passes-skip-not-abort.md) — lesson, draft
 <!-- AUTO-INDEX:END -->

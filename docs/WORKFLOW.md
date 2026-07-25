@@ -210,6 +210,30 @@ How:
 But an owner rejection almost always is one. Output: a new/updated note under
 `knowledge/desk-knowledge/`.
 
+### Close out the lifecycle — `reconcile` (D-062)
+
+Everything else about closing a video out is **derived**, so don't hand-edit it. The ledger
+`pipeline/state/videos.json` owns each video's lifecycle; `ideas.json` status,
+`publish.json` status and `produced_subjects.json` are projections of it:
+
+```
+node pipeline/state/reconcile.mjs            # what would change (writes nothing)
+node pipeline/state/reconcile.mjs --fix      # apply it
+```
+
+The Stop hook `.claude/hooks/publish-close.mjs` runs that self-heal on **every turn-end**, so in
+practice the derived files fix themselves. It then **blocks** on the only thing it can't compute —
+this step's lesson — until you settle it:
+
+```
+node pipeline/state/reconcile.mjs <id> --learned --note <slug>   # a KOS note exists
+node pipeline/state/reconcile.mjs <id> --learned --nothing       # reviewed, nothing durable
+```
+
+Two things stay **manual on purpose**: the human row in [`docs/CHANNEL_MAP.md`](CHANNEL_MAP.md)
+(the reconciler owns only the machine mirror, never the prose — the hook reminds you when a
+subject was just registered), and the judgement above about whether a lesson is owed at all.
+
 ---
 
 ## Starting a video
