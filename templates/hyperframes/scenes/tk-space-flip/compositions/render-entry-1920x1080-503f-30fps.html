@@ -1,0 +1,59 @@
+<!doctype html>
+<!--
+  tk-space-flip — 021 long s9 (phase 1) + s10 (phase 2) + Short s3 (phase "short"). ONE file so the
+  counter and the capsule row are literally the same objects across the boundary (author-side carry).
+
+  THE POINT: what the model receives changes from something you cannot see. So the invisible cause is
+  RENDERED — the space in front of the word becomes a small gold interpunct that pulses once.
+
+  PHASE 1 (s9)  three labelled capsules + a big gold counter reading 3 → a space is typed in front →
+                the three slide together and FUSE into one → the counter ticks 3 → 1, slowly enough to
+                be unmistakable, then the whole move REPLAYS once faster (the double-take).
+  PHASE 2 (s10) opens on the fused capsule. Three stamps land on one baseline (SAME TEN LETTERS ·
+                SAME WORD · DIFFERENT INPUT, the third in gold), then the word flips to capitals and
+                re-splits into FOUR. The counter never moves position — only its number changes.
+  PHASE short   the s9 move plus the two closing stamps, vertical.
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":490},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":16.34}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="../tk-space-flip.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="tk-space-flip" data-start="0" data-duration="16.75" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <div class="counter" id="counter">
+        <span class="cnum" id="cnum">3</span>
+        <span class="clab">chunks</span>
+      </div>
+
+      <div class="stage" id="stage">
+        <span class="dot" id="dot"></span>
+        <div class="three" id="three"></div>
+        <div class="one" id="one"></div>
+        <div class="four" id="four"></div>
+      </div>
+
+      <div class="stamps" id="stamps"></div>
+      <div class="caption" id="caption"></div>
+      <div class="chip" id="chip"></div>
+    </div>
+    <script src="../tk-space-flip.js"></script>
+  </body>
+</html>

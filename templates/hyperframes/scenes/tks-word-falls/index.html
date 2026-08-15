@@ -1,0 +1,43 @@
+<!doctype html>
+<!--
+  tks-word-falls — 021 SHORT, s1. HOOK HERO, vertical (black+gold).
+  The punch must land inside 3s (the vertical gate, format.hook.visual_detail.short_first_seconds),
+  so FRAME 1 already shows a typed word, big and centred: "strawberry". On the very first spoken beat
+  the letters FALL AWAY and are replaced by three gold capsules — st · raw · berry — snapping into
+  their place with a hard stop. No build-up, no title card, no logo first: the TRANSFORMATION is the
+  hook. Type in the upper-middle third, capsules dead centre, caption band clear at the bottom.
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":126},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":4.18}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="tks-word-falls.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="tks-word-falls" data-start="0" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="aurora"></div><div class="glow" id="glow"></div></div>
+
+      <div class="kicker" id="kicker"></div>
+      <div class="stage">
+        <div class="word" id="word"></div>
+        <div class="caps" id="caps"></div>
+      </div>
+      <div class="rule" id="rule"></div>
+    </div>
+    <script src="tks-word-falls.js"></script>
+  </body>
+</html>

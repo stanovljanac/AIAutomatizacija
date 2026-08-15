@@ -1,0 +1,94 @@
+/* tk-next-lesson — 021 s23+s24 and Short s5 (black + gold outro). Capsules stream, a window closes
+   around them, the closing question lands inside it. Sizes scale by --u. Content above the bottom
+   19.5% caption band; the next-lesson plate and the brand mark sit in RESERVED space (D-054). */
+:root {
+  --bg: #05080c; --line: #24384c; --text: #eaf1f8; --text2: #90a6bc; --steel: #7d8fa3;
+  --gold: #ffb020; --gold-2: #ffd37a; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 108% 80% at 50% 42%, #0b1016 0%, #04070a 76%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif; color: var(--text);
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.aurora {
+  position: absolute; left: -10%; top: -15%; width: 120%; height: 85%;
+  background: radial-gradient(ellipse 50% 40% at 32% 45%, rgba(255,176,32,0.09) 0%, transparent 60%),
+              radial-gradient(ellipse 45% 35% at 70% 55%, rgba(255,211,122,0.06) 0%, transparent 62%);
+  filter: blur(calc(30px * var(--u)));
+}
+.glow {
+  position: absolute; left: 50%; top: 40%; width: 110%; height: 60%; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(255,176,32,0.12) 0%, transparent 62%);
+  filter: blur(calc(44px * var(--u))); opacity: 0.7;
+}
+
+/* the stream of capsules */
+.stream {
+  position: absolute; left: 0; width: 100%; top: 34%; height: calc(150px * var(--u)); z-index: 3;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  overflow: hidden;
+}
+.streamtrack { display: flex; align-items: center; gap: calc(14px * var(--u)); padding-top: calc(30px * var(--u)); will-change: transform; }
+.streamtrack .cp {
+  flex: 0 0 auto; width: calc(94px * var(--u)); height: calc(74px * var(--u));
+  border-radius: calc(18px * var(--u));
+  background: linear-gradient(180deg, #ffd37a 0%, #ffb020 58%, #e29310 100%);
+  box-shadow: 0 calc(8px * var(--u)) calc(22px * var(--u)) rgba(255,176,32,0.22);
+}
+.streamtrack .cp.dim { background: linear-gradient(180deg, #3a4c5e 0%, #26333f 100%); box-shadow: none; }
+
+/* the context window, drawn once */
+.window {
+  position: absolute; left: 27%; width: 46%; top: 30%; height: calc(190px * var(--u)); z-index: 5;
+  border: calc(5px * var(--u)) solid var(--gold); border-radius: calc(22px * var(--u));
+  box-shadow: 0 0 calc(40px * var(--u)) rgba(255,176,32,0.3), inset 0 0 calc(40px * var(--u)) rgba(255,176,32,0.08);
+  opacity: 0; transform-origin: center; will-change: transform, opacity;
+}
+
+.question {
+  position: absolute; left: 10%; width: 80%; top: 30%; text-align: center; z-index: 7;
+  color: var(--gold-2); font-size: calc(70px * var(--u)); font-weight: 900; line-height: 1.12;
+  letter-spacing: calc(-1px * var(--u)); opacity: 0;
+  text-shadow: 0 calc(6px * var(--u)) calc(34px * var(--u)) rgba(255,176,32,0.3);
+}
+
+.shelf { position: absolute; left: 18%; width: 64%; top: 56%; z-index: 6; opacity: 0; }
+.shelf .cards { display: flex; justify-content: center; gap: calc(18px * var(--u)); align-items: flex-end; }
+.shelf .fc {
+  padding: calc(12px * var(--u)) calc(16px * var(--u));
+  background: linear-gradient(180deg, #1a2531 0%, #121b25 100%);
+  border: calc(1.5px * var(--u)) solid rgba(144,166,188,0.35); border-radius: calc(10px * var(--u));
+  color: var(--steel); font-size: calc(26px * var(--u)); font-weight: 700; opacity: 0;
+  will-change: transform, opacity;
+}
+.shelf .shelfline {
+  display: block; margin-top: calc(14px * var(--u)); height: calc(4px * var(--u)); border-radius: calc(2px * var(--u));
+  background: linear-gradient(90deg, transparent, rgba(255,176,32,0.5), transparent);
+}
+
+/* RESERVED space — never over the text (D-054) */
+.plate {
+  position: absolute; left: 0; width: 100%; top: 66%; text-align: center; z-index: 6; opacity: 0;
+}
+.plate .series {
+  display: block; color: var(--gold); font-size: calc(26px * var(--u)); font-weight: 800;
+  letter-spacing: calc(6px * var(--u)); text-transform: uppercase; margin-bottom: calc(10px * var(--u));
+}
+.plate .next { display: block; color: var(--text); font-size: calc(56px * var(--u)); font-weight: 800; }
+.brand {
+  position: absolute; left: 0; width: 100%; top: 78%; text-align: center; z-index: 6;
+  color: var(--text2); font-size: calc(28px * var(--u)); font-weight: 700;
+  letter-spacing: calc(4px * var(--u)); text-transform: uppercase; opacity: 0;
+}
+
+/* ── vertical ── */
+.portrait .window { left: 8%; width: 84%; top: 34%; }
+.portrait .stream { top: 38%; }
+.portrait .question { font-size: calc(60px * var(--u)); }
+.portrait .plate { top: 60%; }
+.portrait .plate .next { font-size: calc(50px * var(--u)); }
+.portrait .brand { top: 70%; }

@@ -1,0 +1,80 @@
+<!doctype html>
+<!--
+  tk-vocab-shelf — 021 long, s4 (phase 1) + s5 (phase 2). ONE file, two phases, so the shelf the
+  vocabulary is built on survives the boundary at the same size and position (author-side `carry`).
+
+  PHASE 1 (s4, THE MECHANISM — concept altitude ONLY: no merge tables, no BPE math)
+    b0  a hand-written list is crossed out — nobody wrote this by hand
+    b1  a fast river of text streams past; four pairs of fragments COLLIDE and FUSE into capsules,
+        each finished capsule dropping onto a shelf building along the bottom (that shelf IS the
+        vocabulary — it stays through s5)
+    b2  "frequency decides shape" — the shelf sorts itself in one sweep: fat frequent capsules
+        left, thin rare fragments right
+
+  PHASE 2 (s5) — opens on the shelf ALREADY built
+    b0  "automation" drops as ONE fat solid capsule with a gold 1; a frequency meter fills
+    b1  a rare word lands beside it and visibly CRACKS into scraps
+    b2  the shelf slides down out of frame to clear the stage for the names
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":350},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":11.67}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="tk-vocab-shelf.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="tk-vocab-shelf" data-start="0" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <!-- phase 1: the hand-written list nobody wrote -->
+      <div class="handlist" id="handlist">
+        <div class="hl">token · chunk · piece</div><div class="hl">word · fragment</div><div class="hl">…</div>
+        <span class="hslash" id="hslash"></span>
+      </div>
+
+      <!-- the river of training text -->
+      <div class="river" id="river"><div class="rivertrack" id="rivertrack"></div></div>
+
+      <!-- the fusion stage -->
+      <div class="fusion" id="fusion"></div>
+
+      <!-- the vocabulary shelf -->
+      <div class="shelfwrap" id="shelfwrap">
+        <div class="shelf" id="shelf"></div>
+        <div class="shelfline"></div>
+        <div class="shelflabel" id="shelflabel">the vocabulary</div>
+      </div>
+
+      <div class="caption" id="caption"></div>
+
+      <!-- phase 2: whole vs. assembled-from-scraps -->
+      <div class="cards" id="cards">
+        <div class="card whole" id="whole">
+          <div class="cardword" id="wholeword"></div>
+          <div class="meter"><span class="fill" id="meterfill"></span></div>
+          <div class="cardnum" id="wholenum"></div>
+        </div>
+        <div class="card rare" id="rare">
+          <div class="cardword" id="rareword"></div>
+          <div class="scraps" id="scraps"></div>
+        </div>
+      </div>
+      <div class="chip" id="chip"></div>
+    </div>
+    <script src="tk-vocab-shelf.js"></script>
+  </body>
+</html>

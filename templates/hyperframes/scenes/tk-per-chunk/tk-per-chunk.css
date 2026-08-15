@@ -1,0 +1,80 @@
+/* tk-per-chunk — 021 s14 (blue + gold body). The two instruments s15/s16 read off: a memory bar in
+   TOKENS and a cost readout PER TOKEN. Sizes scale by --u. Content above the bottom 19.5% caption
+   band. Flat, face-on. No model name, no price figure, no window size — those age. */
+:root {
+  --bg: #05080c; --line: #24384c; --text: #eaf1f8; --text2: #90a6bc; --steel: #7d8fa3;
+  --gold: #ffb020; --gold-2: #ffd37a; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 112% 86% at 50% 44%, #0e1a26 0%, #060b11 78%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif; color: var(--text);
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #2b4a68 calc(89px * var(--u)), #2b4a68 calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #2b4a68 calc(89px * var(--u)), #2b4a68 calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 78% 68% at 50% 44%, #000 16%, transparent 84%);
+  mask-image: radial-gradient(ellipse 78% 68% at 50% 44%, #000 16%, transparent 84%);
+}
+.glow {
+  position: absolute; left: 50%; top: 42%; width: 112%; height: 62%; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(56,132,208,0.15) 0%, transparent 62%);
+  filter: blur(calc(42px * var(--u))); opacity: 0.75;
+}
+
+.instruments {
+  position: absolute; left: 8%; width: 84%; top: 22%;
+  display: flex; gap: calc(60px * var(--u)); z-index: 4;
+}
+.inst {
+  flex: 1 1 0; opacity: 0; will-change: transform, opacity;
+  background: linear-gradient(180deg, rgba(22,32,43,0.92) 0%, rgba(14,22,30,0.92) 100%);
+  border: calc(1.5px * var(--u)) solid var(--line); border-radius: calc(22px * var(--u));
+  padding: calc(28px * var(--u)) calc(32px * var(--u)) calc(34px * var(--u));
+}
+.il {
+  color: var(--text2); font-size: calc(28px * var(--u)); font-weight: 700;
+  letter-spacing: calc(3px * var(--u)); text-transform: uppercase; margin-bottom: calc(22px * var(--u));
+}
+.bar {
+  position: relative; height: calc(70px * var(--u)); border-radius: calc(12px * var(--u));
+  background: #16222f; overflow: hidden;
+}
+.bar .fill {
+  position: absolute; left: 0; top: 0; height: 100%; width: 100%;
+  background: linear-gradient(90deg, rgba(255,176,32,0.85), rgba(255,211,122,0.95));
+  transform: scaleX(0); transform-origin: left center; will-change: transform;
+}
+.bar .unit {
+  position: absolute; right: calc(18px * var(--u)); top: 50%; transform: translateY(-50%);
+  color: var(--text); font-size: calc(30px * var(--u)); font-weight: 800; letter-spacing: calc(2px * var(--u));
+  text-transform: uppercase; opacity: 0;
+}
+.readout { display: flex; align-items: baseline; gap: calc(14px * var(--u)); }
+.readout .num { color: var(--gold-2); font-size: calc(84px * var(--u)); font-weight: 900; line-height: 1; }
+.readout .per { color: var(--text2); font-size: calc(32px * var(--u)); font-weight: 800; }
+
+.swap {
+  position: absolute; left: 8%; width: 84%; top: 58%; text-align: center; z-index: 6;
+  height: calc(120px * var(--u));
+}
+.swap span {
+  position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+  font-size: calc(88px * var(--u)); font-weight: 900; white-space: nowrap;
+}
+.swap .wrong { color: var(--steel); opacity: 0; }
+.swap .right { color: var(--gold-2); opacity: 0; text-shadow: 0 calc(6px * var(--u)) calc(30px * var(--u)) rgba(255,176,32,0.3); }
+
+.caption {
+  position: absolute; left: 6%; width: 88%; top: 72%; text-align: center; z-index: 6;
+  color: var(--text2); font-size: calc(40px * var(--u)); font-weight: 800; opacity: 0;
+}
+
+/* ── vertical ── */
+.portrait .instruments { flex-direction: column; top: 18%; }
+.portrait .swap span { font-size: calc(66px * var(--u)); }

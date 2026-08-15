@@ -1,0 +1,95 @@
+/* tk-space-flip — 021 s9+s10 and Short s3 (blue + gold body). One counter, one row of capsules, one
+   invisible cause made visible. Sizes scale by --u. Content above the bottom 19.5% caption band. */
+:root {
+  --bg: #05080c; --surface: #101a24; --line: #24384c;
+  --text: #eaf1f8; --text2: #90a6bc; --steel: #7d8fa3;
+  --gold: #ffb020; --gold-2: #ffd37a; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 112% 86% at 50% 44%, #0e1a26 0%, #060b11 78%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif; color: var(--text);
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.grid {
+  position: absolute; inset: 0; opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(89px * var(--u)), #2b4a68 calc(89px * var(--u)), #2b4a68 calc(90px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(89px * var(--u)), #2b4a68 calc(89px * var(--u)), #2b4a68 calc(90px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 78% 68% at 50% 44%, #000 16%, transparent 84%);
+  mask-image: radial-gradient(ellipse 78% 68% at 50% 44%, #000 16%, transparent 84%);
+}
+.glow {
+  position: absolute; left: 50%; top: 44%; width: 112%; height: 62%; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(56,132,208,0.15) 0%, transparent 62%);
+  filter: blur(calc(42px * var(--u))); opacity: 0.75; will-change: opacity, transform;
+}
+
+/* ── the counter: the constant element. Same position, same type — only the number moves. ── */
+.counter { position: absolute; left: 0; width: 100%; top: 14%; text-align: center; z-index: 6; }
+.cnum {
+  display: block; font-size: calc(190px * var(--u)); font-weight: 900; line-height: 0.9;
+  color: var(--gold-2); letter-spacing: calc(-4px * var(--u));
+  text-shadow: 0 calc(8px * var(--u)) calc(40px * var(--u)) rgba(255,176,32,0.3);
+  will-change: transform, opacity;
+}
+.clab {
+  display: block; margin-top: calc(8px * var(--u)); color: var(--text2);
+  font-size: calc(28px * var(--u)); font-weight: 700; letter-spacing: calc(4px * var(--u)); text-transform: uppercase;
+}
+
+/* ── the capsule row ── */
+.stage {
+  position: absolute; left: 6%; width: 88%; top: 46%; height: calc(200px * var(--u));
+  display: grid; place-items: center; z-index: 5;
+}
+.three, .one, .four { position: absolute; display: flex; align-items: center; gap: calc(14px * var(--u)); }
+.cap {
+  display: inline-block; padding: calc(20px * var(--u)) calc(26px * var(--u));
+  font-size: calc(76px * var(--u)); font-weight: 900; line-height: 1; white-space: pre; color: #16232f;
+  background: linear-gradient(180deg, #ffd37a 0%, #ffb020 55%, #e29310 100%);
+  border-radius: calc(20px * var(--u));
+  box-shadow: 0 calc(14px * var(--u)) calc(40px * var(--u)) rgba(255,176,32,0.3);
+  will-change: transform, opacity;
+}
+.one .cap { border-radius: calc(999px * var(--u)); padding-left: calc(40px * var(--u)); padding-right: calc(40px * var(--u)); }
+.dot {
+  position: absolute; left: calc(50% - 430px * var(--u)); top: 50%; transform: translateY(-50%);
+  width: calc(22px * var(--u)); height: calc(22px * var(--u)); border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 calc(26px * var(--u)) rgba(255,176,32,0.9); opacity: 0; z-index: 6;
+}
+
+/* ── the stamps ── */
+.stamps {
+  position: absolute; left: 5%; width: 90%; top: 66%;
+  display: flex; justify-content: center; gap: calc(40px * var(--u)); z-index: 6;
+}
+.stamps .st {
+  display: inline-block; padding: calc(10px * var(--u)) calc(20px * var(--u));
+  border: calc(2.5px * var(--u)) solid rgba(144,166,188,0.55); border-radius: calc(10px * var(--u));
+  color: var(--steel); font-size: calc(38px * var(--u)); font-weight: 900; letter-spacing: calc(1px * var(--u));
+  opacity: 0; will-change: transform, opacity;
+}
+.stamps .st.gold { color: var(--gold-2); border-color: rgba(255,176,32,0.85); }
+
+.caption {
+  position: absolute; left: 6%; width: 88%; top: 74%; text-align: center; z-index: 7;
+  color: var(--gold-2); font-size: calc(60px * var(--u)); font-weight: 900; opacity: 0;
+}
+.chip {
+  position: absolute; right: 4%; top: 7%; padding: calc(7px * var(--u)) calc(16px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(144,166,188,0.4); border-radius: calc(999px * var(--u));
+  color: var(--text2); font-size: calc(24px * var(--u)); font-weight: 700; opacity: 0; z-index: 8;
+}
+
+/* ── vertical ── */
+.portrait .counter { top: 20%; }
+.portrait .cnum { font-size: calc(210px * var(--u)); }
+.portrait .stage { top: 48%; left: 4%; width: 92%; }
+.portrait .cap { font-size: calc(62px * var(--u)); padding: calc(16px * var(--u)) calc(18px * var(--u)); }
+.portrait .dot { left: calc(50% - 370px * var(--u)); }
+.portrait .stamps { top: 64%; flex-direction: column; align-items: center; gap: calc(18px * var(--u)); }
+.portrait .caption { top: 76%; font-size: calc(56px * var(--u)); }
+.portrait .chip { top: 12%; }

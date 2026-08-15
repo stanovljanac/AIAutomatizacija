@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+  tk-per-chunk — 021 long, s14. THE TAX, SETUP (blue+gold).
+  Two instruments are established cleanly and briefly, because s15 and s16 both read off them:
+  a MEMORY bar with its unit printed on it IN TOKENS, and a COST readout priced PER TOKEN. Both are
+  explicitly unit-labelled "tokens" — never "words"; that mislabel is the belief we are correcting.
+  On the last line a gray "per word" is replaced IN PLACE by a gold "per chunk".
+
+  Deliberately absent: no model name, no price figure, no context-window size — the volatile facts
+  this video avoids on purpose (sources.md).
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":235},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":7.83}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="../tk-per-chunk.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="tk-per-chunk" data-start="0" data-duration="8.516666666666667" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <div class="instruments">
+        <div class="inst" id="instMem">
+          <div class="il" id="memlabel"></div>
+          <div class="bar"><span class="fill" id="memfill"></span><span class="unit" id="memunit"></span></div>
+        </div>
+        <div class="inst" id="instCost">
+          <div class="il" id="costlabel"></div>
+          <div class="readout"><span class="num" id="costnum">0.00</span><span class="per" id="costunit"></span></div>
+        </div>
+      </div>
+
+      <div class="swap" id="swap">
+        <span class="wrong" id="wrongunit"></span>
+        <span class="right" id="rightunit"></span>
+      </div>
+      <div class="caption" id="caption"></div>
+    </div>
+    <script src="../tk-per-chunk.js"></script>
+  </body>
+</html>

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-25",
+  "updated": "2026-08-15",
   "ideas": [
     {
       "id": "bulk-personalized-emails",
@@ -989,6 +989,34 @@
       "source": {
         "origin": "manual",
         "added": "2026-07-15"
+      }
+    },
+    {
+      "id": "desk-lessons-what-is-a-token",
+      "title": "AI Can't See the Letters in Your Words",
+      "search_term": "what is a token in ai",
+      "task": "other",
+      "sector": "general",
+      "subject": "llm-mental-model",
+      "series": "Desk Lessons",
+      "tool": "None (concept video; tiktoken used only as the measuring instrument)",
+      "archetype": "ideas",
+      "angle_hint": "Not the definition ('~4 characters'). The letters never arrive — the model receives learned chunks, and the chunk is the only unit it perceives, remembers and bills.",
+      "score": 89,
+      "status": "produced",
+      "lane": "desk-notes",
+      "value_type": [
+        "corrects-misbelief",
+        "teaches-system",
+        "surprising-truth",
+        "saves-money"
+      ],
+      "takeaway": "The chunk is the model's atom: it cannot look inside one, and it pays for every one. When an AI fails something trivially easy, ask what it can actually see — and put character-exact work in a tool, not in the guess.",
+      "value_score": 8.35,
+      "value_band": "owner",
+      "produced_video_id": "021-what-is-a-token",
+      "source": {
+        "origin": "manual"
       }
     }
   ]

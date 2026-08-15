@@ -1,0 +1,57 @@
+<!doctype html>
+<!--
+  tks-can-it-see — 021 SHORT, s4. THE TAKEAWAY, vertical (blue → black+gold).
+
+  ORDER IS THE WHOLE POINT: the code tip is the CONSEQUENCE, the reframe is the PAYOFF — the Short
+  must not sign off as one more AI productivity tip, so the reframe is what the VO lands on last and
+  what the viewer keeps.
+
+  BEAT 1  a gray myth label ("it's just not that smart") takes the gold slash
+  BEAT 2  quick and subordinate (~3s): a "count the r's" task card slides off the sealed capsule and
+          docks into a small code block that returns one hard number — the handover made physical —
+          then it clears
+  BEAT 3  the payoff, as MOVEMENT and not a text swap: a magnifier pointed at the ANSWER turns away
+          and lands on the INPUT, and the question stamps in gold. That stamp is the last thing on
+          screen: held, screenshotable, nothing else moving.
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":391},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":13.04}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="tks-can-it-see.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="tks-can-it-see" data-start="0" data-width="1080" data-height="1920">
+      <div class="bg" data-layout-ignore><div class="aurora"></div><div class="glow" id="glow"></div></div>
+
+      <div class="mythwrap" id="mythwrap"><span class="myth" id="myth"></span><span class="slash" id="slash"></span></div>
+
+      <div class="handover" id="handover">
+        <div class="capsule" id="capsule"></div>
+        <div class="fumble" id="fumble"><span class="fv">2 r's</span><span class="fx">✕</span></div>
+        <div class="task" id="task"></div>
+        <div class="code" id="code"><span class="cl" id="codeline"></span><span class="ret" id="result"></span></div>
+      </div>
+
+      <div class="card answer" id="answer"><span class="ct">ANSWER</span><span class="cv" id="answertext"></span></div>
+      <div class="card input" id="input"><span class="ct">YOUR INPUT</span><span class="cv" id="inputtext"></span></div>
+      <div class="lens" id="lens"><span class="handle"></span></div>
+      <div class="stamp" id="stamp"></div>
+    </div>
+    <script src="tks-can-it-see.js"></script>
+  </body>
+</html>

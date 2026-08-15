@@ -1,0 +1,56 @@
+/* tks-word-falls — 021 Short s1 HOOK HERO, vertical (black + gold). The letters fall, the capsules
+   snap in. Sizes scale by --u. Content in the upper-middle third; the bottom caption band stays
+   clear. Flat, face-on. */
+:root {
+  --bg: #05080c; --text: #eaf1f8; --text2: #90a6bc;
+  --gold: #ffb020; --gold-2: #ffd37a; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 118% 62% at 50% 40%, #0b1016 0%, #04070a 74%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif; color: var(--text);
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.aurora {
+  position: absolute; left: -10%; top: 8%; width: 120%; height: 60%;
+  background: radial-gradient(ellipse 50% 40% at 34% 45%, rgba(255,176,32,0.13) 0%, transparent 62%),
+              radial-gradient(ellipse 45% 35% at 70% 55%, rgba(255,211,122,0.08) 0%, transparent 62%);
+  filter: blur(calc(30px * var(--u)));
+}
+.glow {
+  position: absolute; left: 50%; top: 40%; width: 130%; height: 40%; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(255,176,32,0.16) 0%, transparent 62%);
+  filter: blur(calc(44px * var(--u))); opacity: 0.8; will-change: opacity, transform;
+}
+
+.kicker {
+  position: absolute; left: 6%; width: 88%; top: 24%; text-align: center; z-index: 5;
+  color: var(--text2); font-size: calc(34px * var(--u)); font-weight: 800;
+  letter-spacing: calc(4px * var(--u)); text-transform: uppercase; opacity: 0;
+}
+.stage {
+  position: absolute; left: 4%; width: 92%; top: 36%; height: calc(300px * var(--u));
+  display: grid; place-items: center; z-index: 6;
+}
+.word {
+  position: absolute; display: flex; align-items: baseline; justify-content: center;
+  font-size: calc(132px * var(--u)); font-weight: 900; color: var(--text); line-height: 1;
+  letter-spacing: calc(-2px * var(--u));
+}
+.word span { display: inline-block; will-change: transform, opacity; }
+.caps { position: absolute; display: flex; align-items: center; gap: calc(16px * var(--u)); }
+.caps .cap {
+  display: inline-block; padding: calc(24px * var(--u)) calc(28px * var(--u));
+  font-size: calc(88px * var(--u)); font-weight: 900; line-height: 1; color: #16232f; white-space: pre;
+  background: linear-gradient(180deg, #ffd37a 0%, #ffb020 55%, #e29310 100%);
+  border-radius: calc(24px * var(--u)); opacity: 0;
+  box-shadow: 0 calc(16px * var(--u)) calc(46px * var(--u)) rgba(255,176,32,0.34);
+  will-change: transform, opacity;
+}
+.rule {
+  position: absolute; left: 22%; width: 56%; top: 56%; height: calc(6px * var(--u));
+  border-radius: calc(3px * var(--u)); z-index: 6; transform: scaleX(0);
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-2), var(--gold), transparent);
+}

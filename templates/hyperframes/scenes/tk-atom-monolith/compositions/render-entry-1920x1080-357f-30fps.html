@@ -1,0 +1,57 @@
+<!doctype html>
+<!--
+  tk-atom-monolith — 021 long, s22. THE TAKEAWAY MONOLITH (black+gold; the quotable frame).
+
+  The wrong model appears first in gray — "a token = a small word" — and on the 0.8s SCRIPTED PAUSE
+  (D-063) it simply STOPS: no slash, no shatter, just held silence with the gray line alone on black.
+  Then the gold line lands in the SAME position at the same weight. The spine capsule from s1/s7
+  returns beneath it; a probe touches it and is REFUSED with a small gold ring pulse (no entry), and
+  a credit tick increments once per capsule across a short row.
+
+  The line is "never RECEIVES what's inside one", not "can't look inside one": this scene is the last
+  word of the video and it must not overwrite the s21 precision guard. Both statements have to survive
+  a model that answers correctly.
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":344},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":11.48}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="../tk-atom-monolith.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="tk-atom-monolith" data-start="0" data-duration="11.883333333333333" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="aurora"></div><div class="glow" id="glow"></div></div>
+
+      <div class="lines">
+        <div class="wrong" id="wrong"></div>
+        <div class="right" id="right"></div>
+      </div>
+
+      <div class="capsulerow" id="capsulerow">
+        <div class="spine" id="spine">
+          <span class="sheen" id="sheen"></span>
+          <span class="ring" id="ring"></span>
+          <span class="probe" id="probe"></span>
+        </div>
+        <div class="credits" id="credits"></div>
+      </div>
+
+      <div class="brand" id="brand"></div>
+    </div>
+    <script src="../tk-atom-monolith.js"></script>
+  </body>
+</html>

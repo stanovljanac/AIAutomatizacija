@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-25",
+  "updated": "2026-08-15",
   "note": "Machine mirror of docs/CHANNEL_MAP.md — the subject coordinates already CLAIMED by a video (produced or in-progress). pick-next.mjs reads this and WARNS (never blocks) when a candidate idea's `subject` collides with an already-claimed one, so a near-duplicate like 015≈011 is visible at pick time (D-059). Add an entry when a video commits to a subject; keep it in sync with CHANNEL_MAP.md.",
   "subjects": {
     "attention/inbox": [
@@ -13,7 +13,8 @@
       "020-everyone-asks-clean-data"
     ],
     "llm-mental-model": [
-      "019-next-word-engine"
+      "019-next-word-engine",
+      "021-what-is-a-token"
     ]
   }
 }

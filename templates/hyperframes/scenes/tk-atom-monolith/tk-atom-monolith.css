@@ -1,0 +1,81 @@
+/* tk-atom-monolith — 021 s22 (black + gold hero). The quotable frame: the wrong model stops, the
+   right one lands in its place, the spine capsule refuses the probe. Sizes scale by --u. Content
+   above the bottom 19.5% caption band; the brand mark sits in RESERVED space below the text (D-054). */
+:root {
+  --bg: #05080c; --line: #24384c; --text: #eaf1f8; --text2: #90a6bc; --steel: #7d8fa3;
+  --gold: #ffb020; --gold-2: #ffd37a; --u: 1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse 108% 80% at 50% 40%, #0b1016 0%, #04070a 76%);
+  font-family: "Segoe UI", system-ui, Arial, sans-serif; color: var(--text);
+}
+.bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.aurora {
+  position: absolute; left: -10%; top: -20%; width: 120%; height: 90%;
+  background: radial-gradient(ellipse 50% 40% at 30% 40%, rgba(255,176,32,0.10) 0%, transparent 60%),
+              radial-gradient(ellipse 45% 35% at 72% 55%, rgba(255,211,122,0.07) 0%, transparent 62%);
+  filter: blur(calc(30px * var(--u)));
+}
+.glow {
+  position: absolute; left: 50%; top: 38%; width: 110%; height: 60%; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(255,176,32,0.14) 0%, transparent 62%);
+  filter: blur(calc(44px * var(--u))); opacity: 0.7; will-change: opacity, transform;
+}
+
+.lines { position: absolute; left: 6%; width: 88%; top: 26%; height: calc(260px * var(--u)); z-index: 5; }
+.lines > div {
+  position: absolute; left: 0; width: 100%; top: 0; text-align: center;
+  font-weight: 900; line-height: 1.06; letter-spacing: calc(-1.5px * var(--u));
+}
+.wrong { color: var(--steel); font-size: calc(92px * var(--u)); font-style: italic; opacity: 0; }
+.right {
+  color: var(--gold-2); font-size: calc(104px * var(--u)); opacity: 0;
+  text-shadow: 0 calc(8px * var(--u)) calc(44px * var(--u)) rgba(255,176,32,0.35);
+}
+
+.capsulerow { position: absolute; left: 10%; width: 80%; top: 52%; z-index: 5; }
+.spine {
+  position: relative; margin: 0 auto; width: calc(560px * var(--u)); height: calc(140px * var(--u));
+  border-radius: calc(70px * var(--u)); opacity: 0;
+  background: linear-gradient(180deg, #ffd37a 0%, #ffb020 52%, #e29310 100%);
+  box-shadow: 0 calc(18px * var(--u)) calc(60px * var(--u)) rgba(255,176,32,0.32),
+              inset 0 calc(2px * var(--u)) calc(6px * var(--u)) rgba(255,255,255,0.4);
+  overflow: visible; will-change: transform, opacity;
+}
+.spine .sheen {
+  position: absolute; left: 0; top: 0; width: 30%; height: 100%; border-radius: calc(70px * var(--u));
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.4), transparent);
+}
+.spine .ring {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1);
+  width: calc(560px * var(--u)); height: calc(140px * var(--u)); border-radius: calc(70px * var(--u));
+  border: calc(4px * var(--u)) solid var(--gold-2); opacity: 0;
+}
+.spine .probe {
+  position: absolute; left: 50%; top: calc(-90px * var(--u)); transform: translateX(-50%);
+  width: calc(10px * var(--u)); height: calc(80px * var(--u)); border-radius: calc(5px * var(--u));
+  background: linear-gradient(180deg, rgba(234,241,248,0.15), rgba(234,241,248,0.75)); opacity: 0;
+}
+.credits {
+  display: flex; justify-content: center; gap: calc(14px * var(--u)); margin-top: calc(28px * var(--u));
+}
+.credits .cr {
+  width: calc(58px * var(--u)); height: calc(24px * var(--u)); border-radius: calc(12px * var(--u));
+  background: #22323f; opacity: 0;
+}
+.credits .cr.paid { background: linear-gradient(90deg, var(--gold), var(--gold-2)); }
+
+.brand {
+  position: absolute; left: 0; width: 100%; top: 78%; text-align: center; z-index: 6;
+  color: var(--text2); font-size: calc(30px * var(--u)); font-weight: 700;
+  letter-spacing: calc(4px * var(--u)); text-transform: uppercase; opacity: 0;
+}
+
+/* ── vertical ── */
+.portrait .wrong { font-size: calc(72px * var(--u)); }
+.portrait .right { font-size: calc(84px * var(--u)); }
+.portrait .spine { width: calc(760px * var(--u)); }
+.portrait .spine .ring { width: calc(760px * var(--u)); }

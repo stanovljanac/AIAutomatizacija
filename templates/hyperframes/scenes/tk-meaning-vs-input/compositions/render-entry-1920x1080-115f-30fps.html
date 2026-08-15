@@ -1,0 +1,49 @@
+<!doctype html>
+<!--
+  tk-meaning-vs-input — 021 long, s11. MONEY BEAT #2, THE LOCK (~3.4s, and it earns its own scene
+  because it is the sentence the viewer repeats).
+
+  TWO RAILS. The TOP rail — "what you meant" — holds one unchanging word, dead still, through both
+  lines. The BOTTOM rail — "what arrived" — cycles the three shapes s9/s10 just built (3 capsules →
+  1 capsule → 4 capsules) in quick succession. The contrast IS the visual: one rail frozen, one rail
+  thrashing. Both rails are held at the end so the frame is screenshotable.
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":103},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":3.43}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="../tk-meaning-vs-input.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="tk-meaning-vs-input" data-start="0" data-duration="3.816666666666667" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <div class="rail top" id="railtop">
+        <div class="raillabel" id="meantlabel"></div>
+        <div class="railbody"><span class="meant" id="meant"></span></div>
+      </div>
+
+      <div class="rail bottom" id="railbottom">
+        <div class="raillabel" id="arrivedlabel"></div>
+        <div class="railbody" id="shapes"></div>
+      </div>
+
+      <div class="caption" id="caption"></div>
+    </div>
+    <script src="../tk-meaning-vs-input.js"></script>
+  </body>
+</html>

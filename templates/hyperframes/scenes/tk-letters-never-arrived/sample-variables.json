@@ -1,0 +1,22 @@
+{
+  "hfScene": "tk-letters-never-arrived",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "durationFrames": 360,
+  "durationSeconds": 12.0,
+  "revealsSeconds": [0.0, 6.35, 9.82, 10.68],
+  "props": {
+    "word": "strawberry",
+    "myth": "it's just not that smart",
+    "wrongCount": "2 r's",
+    "title": "The letters never arrived.",
+    "codeLines": [
+      "def send_invoice(order):",
+      "    total = sum(l.qty * l.price for l in order.lines)",
+      "    pdf = render(TEMPLATE, order=order, total=total)",
+      "    mail(order.customer.email, pdf)",
+      "    return total"
+    ]
+  }
+}

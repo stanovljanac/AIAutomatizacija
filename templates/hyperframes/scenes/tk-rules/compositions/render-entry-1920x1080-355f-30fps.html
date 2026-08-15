@@ -1,0 +1,71 @@
+<!doctype html>
+<!--
+  tk-rules — 021 long s17/s18/s19/s20 (phases 1-4). ONE file, four phases, because the numbered rail
+  on the left is the THROUGH-LINE of the whole payoff movement: it must be the same object, in the
+  same place, with the same slot lit, across three scene boundaries (author-side carry).
+
+  PHASE 1 (s17) the rail appears; slot 1 lights; "Not the guess. Code." lands as a phrase.
+  PHASE 2 (s18) four task cards stack ON the sealed guess-capsule, which SAGS under them; then they
+                slide off and DOCK into a small code block that returns one hard, exact number. The
+                handover made physical: the capsule guesses, the code knows. No product is named.
+  PHASE 3 (s19) a magnifier argues with the ANSWER (which just repeats), a gray "write a better
+                prompt" fades out — then the magnifier TURNS AWAY and lands on the INPUT, and the
+                question stamps in gold. The MOVEMENT is the beat, not a text swap.
+  PHASE 4 (s20) the cost readout returns with a toggle; flicking it visibly moves the number. Then
+                all three slots sit lit together — the only moment the full list is visible, which is
+                what makes it screenshotable instead of a list held static for 40 seconds.
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":188},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":6.26}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <link rel="stylesheet" href="../tk-rules.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="tk-rules" data-start="0" data-duration="11.816666666666666" data-width="1920" data-height="1080">
+      <div class="bg" data-layout-ignore><div class="grid"></div><div class="glow" id="glow"></div></div>
+
+      <!-- the through-line: the numbered rail -->
+      <div class="rail" id="rail"></div>
+
+      <!-- the stage -->
+      <div class="headline" id="headline"></div>
+
+      <!-- phase 2: tasks → capsule → code -->
+      <div class="tasks" id="tasks"></div>
+      <div class="guess" id="guess"><span class="gl">the guess</span></div>
+      <div class="codeblock" id="codeblock">
+        <span class="cl" id="codeline"></span>
+        <span class="ret" id="result"></span>
+      </div>
+
+      <!-- phase 3: the magnifier turns -->
+      <div class="card answer" id="answer"><span class="ct">ANSWER</span><span class="cv" id="answertext"></span></div>
+      <div class="card input" id="input"><span class="ct">YOUR INPUT</span><span class="cv" id="inputtext"></span></div>
+      <div class="dismiss" id="dismiss"></div>
+      <div class="lens" id="lens"><span class="handle"></span></div>
+      <div class="stamp" id="stamp"></div>
+
+      <!-- phase 4: the dial -->
+      <div class="dial" id="dial">
+        <div class="toggles" id="toggles"></div>
+        <div class="cost"><span class="cnum" id="cnum">0.42</span><span class="cper">per token</span></div>
+      </div>
+    </div>
+    <script src="../tk-rules.js"></script>
+  </body>
+</html>

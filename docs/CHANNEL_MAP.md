@@ -37,6 +37,7 @@ Under the root **AI Decision Automation**, an idea is one of four kinds of decis
 | ~~**015**~~ — Emails I Shouldn't Answer | ~~`attention/inbox`~~ | — | **RETIRED (D-059):** near-duplicate of 011; replaced by 017 |
 | **019** — The Next-Word Engine | `llm-mental-model` | desk-notes | Short; an **explainer**, not a decision-automation slot — the coordinate is a bare leaf on purpose, since none of the four branches covers "how the tool itself works" (owner call, 2026-07-25) |
 | **020** — Clean the Data First | `execution/data-cleaning` | everyone-asks-ai · desk-notes | Short; "write code → clean the mess underneath" seed; first Execution-branch slot |
+| **021** — AI Can't See the Letters | `llm-mental-model` | Desk Lessons (Ep. 2) · desk-notes | long + Short; deliberate cluster-mate of 019, one rung further in (019 = how the next word is picked → 021 = what a "word" even is to the model). Signs off into Ep. 3, the context window |
 
 **Open territory** (branches with no video yet): most of Change Detection, all of Failure
 Detection, all of Execution. Bias new ideas here for reach without cannibalizing 011/016.
