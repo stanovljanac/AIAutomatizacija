@@ -19,6 +19,39 @@ Format:
 
 ---
 
+## 2026-08-15 — D-063's missing assets: the sfx library is generated, not downloaded
+- who: agent (owner: "prvo sfx assets + commit D-063")
+- context: D-063 shipped the sound-design layer and the scripted-pause mechanism on 2026-07-25 but
+  left `assets/sfx/` empty, so 016's hero shot still had nothing to play. The plan was to acquire three
+  CC0 files.
+- did: changed the approach first, for a reason `git check-ignore -v assets/sfx/riser.mp3` makes
+  concrete — `.gitignore:82:*.mp3`. A **downloaded** cue is untracked state on one machine: it survives
+  no clone, and a missing cue fails soft (by design), so the loss would surface as a video that quietly
+  has no sound design. Built `scripts/make-sfx.mjs` instead — the three cues synthesized with the
+  **vendored ffmpeg** (`templates/hyperframes/.bin`, the same binary `make_voice.py` splices silence
+  with). Each cue is one `aevalsrc` expression over `t`, so the formula is readable and tunable:
+  **riser** 11.0s (exponential 120→900 Hz sweep + a detuned partial + an octave + a rising air layer +
+  an accelerating pulse; peaks at 10s and **resolves** over ~1s so the impact lands in its tail),
+  **impact** 1.8s (sub dropping 110→45 Hz + a 180 Hz thud — a pure sub is inaudible on a phone — + an
+  18 ms noise transient), **accent** 0.65s (three fast-decaying partials). The tracked recipe *is* the
+  asset; regeneration is byte-identical; licence risk is zero because we authored them.
+- verified by measurement, not just by file existence: the riser's segments climb **−50.2 → −24.4 →
+  −13.5 dB** across the rise and resolve to −20.8 dB in the tail, the impact is front-loaded
+  (−8.3 dB in its first 200 ms → −39.3 dB at the end), and nothing clips (peaks −3.0 / −1.1 / −2.8
+  dBFS). 7 new tests (`scripts/make-sfx.test.mjs`): filtergraph escaping (an unescaped comma in
+  `min(a,b)` silently reads as "next filter"), expression well-formedness, the fade fitting inside the
+  file, and — guarded on ffmpeg's presence — a real generate, the **no-overwrite** policy (an
+  owner-supplied CC0 file under the same name is kept until `--force`), and the accent's decay shape.
+  `npm test` **720/720**.
+- docs: D-063 amendment, `assets/sfx/README.md` rewritten (generated-by-default, acquisition as the
+  documented fallback, inventory filled), KOS lesson
+  `knowledge/desk-knowledge/lessons/2026-08-15-generate-shared-assets-that-git-ignores.md` (`draft`).
+- next: **016 is the blocked thread** — its rewritten script waits at Gate ② *before* the recording
+  session (`content/016-n8n-inbox-triage/captures/plan.md`). The scene-plan `audio` block is authored
+  after alignment exists (`atSeconds` comes off `alignment.json`). Everything in the working tree
+  (D-063 + this) is uncommitted, per the owner's standing rule.
+- blockers: none.
+
 ## 2026-07-25 — Lifecycle ledger: backfill applied, hook armed, D-062 (session 5 of 5 — DONE)
 - who: agent (owner: "implement <ledger plan> session 5")
 - resolved the three open items first, before anything was written: (a) **006/007/011 are genuinely

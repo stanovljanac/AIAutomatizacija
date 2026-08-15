@@ -21,4 +21,5 @@ lesson with no evidence stays `draft` forever.
 - [A near-duplicate hides when ideas have no coordinate — give each a subject, gate the seed](2026-07-15-subject-map-stops-near-duplicates.md) — lesson, stable
 - [When the owner authors the visuals, invert the sync — fit narration to the animation, don't regenerate it](2026-07-19-owner-authored-visuals-invert-the-sync.md) — lesson, draft
 - [A self-healing pass that runs on every turn-end must skip what it can't write, never abort the pass](2026-07-25-self-healing-passes-skip-not-abort.md) — lesson, draft
+- [A shared asset library whose files are git-ignored must be generated, not acquired](2026-08-15-generate-shared-assets-that-git-ignores.md) — lesson, draft
 <!-- AUTO-INDEX:END -->

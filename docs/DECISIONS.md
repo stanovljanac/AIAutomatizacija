@@ -604,6 +604,16 @@ old one (don't delete history).
   byte-identical output to before (the golden-props acceptance test still passes). 016 s6 is the first
   user: a 3.216s scripted hold before the run, measured end to end at a 3.69s silent region with the
   alignment matching the audio exactly.
+- **Amendment 2026-08-15 — the cues are generated, not acquired.** The library shipped empty with a
+  README pointing at CC0 catalogues; `git check-ignore` settles why that was the wrong default:
+  `*.mp3` is ignored repo-wide, so a downloaded cue is untracked state on one machine and a fresh
+  clone silently renders with no sound design. `scripts/make-sfx.mjs` synthesizes the three cues with
+  the **vendored ffmpeg** (`aevalsrc`: one arithmetic expression over `t` per cue — envelope, pitch
+  sweep, noise layer), so the tracked recipe *is* the asset and regenerating is byte-identical.
+  Licence risk drops to zero — we authored them. `generateCue` **never overwrites** an existing file
+  without `--force`, so a CC0 file dropped in under the same name wins and survives regeneration; the
+  library stays swappable. Verified by measurement: the riser climbs −50 → −24 → −13.5 dB across its
+  rise and resolves to −20.8 dB in its tail, and no cue clips (−3.0 / −1.1 / −2.8 dBFS peak).
 
 > Superseded: **D-008** (avatar) — dropped permanently; the channel is faceless forever.
 > **D-012** (name) → see D-023. **D-014** (TTS) → see D-024. The old "no AI-disclosure" note → see D-025.
