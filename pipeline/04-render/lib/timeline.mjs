@@ -165,12 +165,28 @@ export function buildTimeline({ script, plan, alignment, fmt, timings, fps, cros
     words: g.map((w) => ({ w: /^ai$/i.test(w.w) ? "AI" : w.w, start_seconds: introSeconds + w.start, end_seconds: introSeconds + w.end })),
   }));
 
+  // Optional SOUND DESIGN layer (D-063). The narration is still the one continuous track that is
+  // never cut; these are ADDITIONAL tracks mixed alongside it — a quiet bed under the whole video and
+  // one-shot cues (a riser into a run, an impact on a reveal). Authored in scene-plan.audio because
+  // it is art direction; `at_seconds` is authored on the NARRATION clock, the same clock as
+  // alignment.json, and snapped to a frame here so a cue lands exactly on the beat it was written for.
+  const sfxIn = plan.audio?.sfx ?? [];
+  const audioLayers = {
+    ...(plan.audio?.bed ? { bed: { src: plan.audio.bed.src, gain: plan.audio.bed.gain ?? 0.08 } } : {}),
+    ...(sfxIn.length
+      ? { sfx: sfxIn.map((c) => ({ src: c.src, at_seconds: snap(c.atSeconds), gain: c.gain ?? 0.6 })) }
+      : {}),
+  };
+
   return {
     version: 1,
     out_id: outId,
     format: { width: dims.width ?? 1920, height: dims.height ?? 1080, fps },
     duration_seconds: audioEndSeconds + outroSeconds, // (intro + round(dur*fps) + outro) frames, as seconds
     audio: { src: `${outId}/narration.mp3`, start_seconds: introSeconds },
+    // conditional spread: a plan with no sound design emits no key, so its timeline keeps the
+    // pre-D-063 shape byte-for-byte.
+    ...(Object.keys(audioLayers).length ? { audio_layers: audioLayers } : {}),
     intro: { duration_seconds: introSeconds, wordmark: "The Automation Desk", tagline: "automate the boring stuff" },
     outro: { duration_seconds: outroSeconds, cta: "@TheAutomationDesk", brand: "" },
     crossfade_seconds: crossfadeFrames / fps,

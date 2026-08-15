@@ -25,6 +25,35 @@
         "start_seconds": { "type": "number", "minimum": 0, "description": "When narration starts (after intro)." }
       }
     },
+    "audio_layers": {
+      "type": "object",
+      "description": "OPTIONAL sound design (D-063), compiled from scene-plan.audio. Extra tracks mixed alongside the narration above; `at_seconds` is ABSOLUTE video time, frame-snapped.",
+      "additionalProperties": false,
+      "properties": {
+        "bed": {
+          "type": "object",
+          "required": ["src"],
+          "additionalProperties": false,
+          "properties": {
+            "src": { "type": "string" },
+            "gain": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "sfx": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["src", "at_seconds"],
+            "additionalProperties": false,
+            "properties": {
+              "src": { "type": "string" },
+              "at_seconds": { "type": "number", "minimum": 0 },
+              "gain": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        }
+      }
+    },
     "intro": {
       "type": "object",
       "properties": {

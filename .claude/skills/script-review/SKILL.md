@@ -50,6 +50,12 @@ write `script.review.json` with `pass: true|false` + a list of issues.
       ("Which hour would you hand over first?") is ALLOWED (Phase 1.3) — do **not** flag it as
       engagement-begging; only flag stacked CTAs / like-begging (STYLE_GUIDE §9).
 - [ ] Term usage consistent (TERMBANK note); reads fluently aloud for an AI voice.
+- [ ] **Editing law (only when `brief.editing_law` exists):** run
+      `node pipeline/01-script/lint-vo.mjs <content-id>`. For capture-driven videos this is a HARD
+      check — no narration sentence may open with click-narration ("then I", "next I click", "go
+      to") and none of the declared setup vocabulary (OAuth, API key, Google Cloud…) may appear in
+      any VO line. The picture shows the click; the voice says what changed and why. A brief with no
+      `editing_law` skips it.
 
 ## Output
 - `script.review.json`: `{ pass, issues: [{ scene_id?, severity, rule, note, fix_hint }] }`.

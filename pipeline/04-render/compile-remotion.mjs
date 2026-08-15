@@ -79,6 +79,12 @@ export function compileTimeline(timeline, { leadFrames = 0, tailSeconds = 0 } = 
     crossfadeFrames,
     audioSrc: timeline.audio.src,
     audioFromFrame: F(timeline.audio.start_seconds),
+    // D-063 sound design — extra tracks mixed alongside the narration (conditional spread: a
+    // timeline with no audio_layers produces the exact props shape it did before).
+    ...(timeline.audio_layers?.bed ? { bed: { ...timeline.audio_layers.bed } } : {}),
+    ...(timeline.audio_layers?.sfx?.length
+      ? { sfx: timeline.audio_layers.sfx.map((c) => ({ src: c.src, fromFrame: F(c.at_seconds), gain: c.gain })) }
+      : {}),
     intro: { wordmark: timeline.intro.wordmark, tagline: timeline.intro.tagline },
     outro: { cta: timeline.outro.cta, brand: timeline.outro.brand },
     motion: timeline.motion,
@@ -172,6 +178,26 @@ export function copyRemotionAssets({ root, cdir, outId, props, brollEnabled = tr
     } else {
       warnings.push(`b-roll missing for "${sc.props.broll}" — run: node pipeline/03-visuals/fetch-stock.mjs (scene renders without b-roll)`);
     }
+  }
+
+  // sound design (D-063): assets/sfx/* → public/sfx/*. The library is SHARED across videos on
+  // purpose — a riser and an impact bought once get reused on every hero moment. A missing file is a
+  // warning and the cue is dropped, exactly like a missing logo: sound design must never be the
+  // reason a render dies.
+  const sfxCues = [...(props.sfx ?? []), ...(props.bed ? [props.bed] : [])];
+  if (sfxCues.length) {
+    const sfxSrc = join(root, "assets", "sfx");
+    const sfxDst = join(root, "templates/remotion/public/sfx");
+    for (const cue of sfxCues) {
+      const name = String(cue.src).replace(/^.*[\\/]/, "");
+      const f = join(sfxSrc, name);
+      if (!existsSync(f)) { cue.missing = true; warnings.push(`sfx missing: assets/sfx/${name} — cue dropped (render continues silent there)`); continue; }
+      mkdirSync(sfxDst, { recursive: true });
+      cpSync(f, join(sfxDst, name));
+      cue.src = `sfx/${name}`;
+    }
+    if (props.sfx) props.sfx = props.sfx.filter((c) => !c.missing);
+    if (props.bed?.missing) delete props.bed;
   }
 
   // continuous narration → public/<outId>/narration.mp3

@@ -6,6 +6,37 @@
   "required": ["id", "scenes"],
   "properties": {
     "id": { "type": "string" },
+    "audio": {
+      "type": "object",
+      "description": "OPTIONAL sound design (D-063) — tracks mixed ALONGSIDE the narration, which remains the one continuous track that is never cut. Files come from the shared assets/sfx/ library, so a riser bought once is reused on every hero moment. A missing file is a warning and the cue is dropped: sound design never kills a render.",
+      "additionalProperties": false,
+      "properties": {
+        "bed": {
+          "type": "object",
+          "description": "A quiet music bed under the whole video, looped.",
+          "required": ["src"],
+          "additionalProperties": false,
+          "properties": {
+            "src": { "type": "string", "description": "Filename in assets/sfx/." },
+            "gain": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.08, "description": "Keep it low — the voice normalizes to -16 LUFS and nothing here is side-chain ducked." }
+          }
+        },
+        "sfx": {
+          "type": "array",
+          "description": "One-shot cues placed on the NARRATION clock (the same clock as alignment.json), snapped to a frame here.",
+          "items": {
+            "type": "object",
+            "required": ["src", "atSeconds"],
+            "additionalProperties": false,
+            "properties": {
+              "src": { "type": "string", "description": "Filename in assets/sfx/." },
+              "atSeconds": { "type": "number", "minimum": 0, "description": "Narration-clock seconds, as read off alignment.json." },
+              "gain": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.6 }
+            }
+          }
+        }
+      }
+    },
     "scenes": {
       "type": "array",
       "minItems": 1,

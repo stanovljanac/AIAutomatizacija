@@ -144,6 +144,31 @@ A prose blob on the render side would re-render the clip on every typo fix. Anyt
 obey becomes a new field next to `transitionOut` (the executable side); it is never "`direction` becoming
 executable".
 
+## Sound design (D-063, opt-in — for hero moments only)
+
+A top-level `audio` block adds tracks **beside** the narration (which is still the one continuous
+track, never cut): a quiet looped bed, and one-shot cues placed on the narration clock.
+
+```json
+"audio": {
+  "bed": { "src": "bed-low-pulse.mp3", "gain": 0.06 },
+  "sfx": [
+    { "src": "riser.mp3",  "atSeconds": 182.4, "gain": 0.45 },
+    { "src": "impact.mp3", "atSeconds": 196.9, "gain": 0.7  }
+  ]
+}
+```
+
+- `atSeconds` uses the **narration clock** — read the number straight off `alignment.json`. It is
+  frame-snapped, so a cue lands exactly on the beat it was written for.
+- Files come from the shared `assets/sfx/` library (**CC0 only** — see its README). A missing file
+  warns and drops the cue; sound design never kills a render.
+- **Be sparing.** One riser + one impact on the video's single peak beat. Cues under ordinary scene
+  changes turn into a nervous tic, and the bed above ~0.10 gain fights the voice (nothing is
+  side-chain ducked, deliberately).
+- The sibling feature, **scripted silence**, is declared on the *script* (`pause_after`), not here —
+  see the `voice-synthesis` skill.
+
 ## Output & status
 - Write `scene-plan.json`; validate:
   `node pipeline/shared/validate.js content/<id>/scene-plan.json`.

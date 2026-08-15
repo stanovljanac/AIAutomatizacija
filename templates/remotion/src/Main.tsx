@@ -90,6 +90,9 @@ export type MainProps = {
   crossfadeFrames: number;
   audioSrc: string;
   audioFromFrame: number;
+  /** D-063 sound design: a quiet bed under the whole video, and one-shot cues on the frame. */
+  bed?: { src: string; gain?: number };
+  sfx?: { src: string; fromFrame: number; gain?: number }[];
   intro: { wordmark: string; tagline: string };
   outro: { cta: string; brand: string };
   motion?: MotionBudget;
@@ -127,6 +130,16 @@ export const Main: React.FC<MainProps> = (p) => {
       <Sequence from={p.audioFromFrame} name="audio">
         <Audio src={staticFile(p.audioSrc)} />
       </Sequence>
+
+      {/* D-063 sound design: the bed runs the whole video at a low fixed gain; each sfx cue is a
+          one-shot placed on its own frame (a riser into a run, an impact on a reveal). These are
+          ADDITIONAL tracks — the narration above is still the single continuous one, never cut. */}
+      {p.bed && <Audio src={staticFile(p.bed.src)} volume={p.bed.gain ?? 0.08} loop />}
+      {(p.sfx ?? []).map((cue, i) => (
+        <Sequence key={`sfx-${i}`} from={cue.fromFrame} name={`sfx-${i}`}>
+          <Audio src={staticFile(cue.src)} volume={cue.gain ?? 0.6} />
+        </Sequence>
+      ))}
 
       {/* brand bumpers, not scene cuts — they always cross-blend with the body by xf (D-060) */}
       <Sequence from={0} durationInFrames={p.introFrames + xf} name="Intro">

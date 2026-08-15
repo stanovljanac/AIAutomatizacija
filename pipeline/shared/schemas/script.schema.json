@@ -51,7 +51,26 @@
           "narration": { "type": "string" },
           "sentences": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
           "on_screen_text": { "type": ["string", "null"] },
-          "capture_id": { "type": ["string", "null"], "description": "Set only for capture-segment scenes (mini-demo)." },
+          "capture_id": { "type": ["string", "null"], "description": "Set only for capture-segment scenes (mini-demo). The scene's PRIMARY clip." },
+          "capture_ids": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "description": "Optional: every clip a capture-segment scene draws on, in beat order, when one scene cuts between several takes (016 s6: before → run → after). capture_id stays the primary; the scene-plan's beats bind one id each."
+          },
+          "pause_after": {
+            "type": "array",
+            "description": "Optional scripted silence: hold a beat by splicing real silence into the narration after a sentence. Sentence-final punctuation only buys ~0.4s, so a designed hold (016 s6, the moment before the run) has to be synthesized. scripts/make_voice.py cuts the track into segments at each pause and shifts every later timestamp; the scene window widens to match.",
+            "items": {
+              "type": "object",
+              "required": ["after_sentence", "seconds"],
+              "additionalProperties": false,
+              "properties": {
+                "after_sentence": { "type": "integer", "minimum": 0, "description": "Index into THIS scene's sentences[]." },
+                "seconds": { "type": "number", "exclusiveMinimum": 0, "maximum": 10 }
+              }
+            }
+          },
           "notes": { "type": "string" }
         }
       }

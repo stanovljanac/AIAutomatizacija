@@ -25,11 +25,26 @@ captions are positioned in time to match it.
 - One consistent channel voice = brand recognition. Each scene's `narration` is concatenated
   in order into one continuous track `voice/narration.mp3`; never cut the audio (PRD R11).
 
+## Scripted silence (D-063)
+- A designed hold — the beat before a run, the pause after a punchline — cannot come from
+  punctuation: measured on our voice, a sentence break buys ~0.42s and an ellipsis ~0.79s. Declare it
+  on the script scene instead:
+  `"pause_after": [{ "after_sentence": 1, "seconds": 3.2 }]` (index into THAT scene's `sentences`).
+- `make_voice.py` then synthesizes in **segments** split at each pause, splices real silence between
+  them, and shifts every later timestamp. The scene window still runs from one sentence start to the
+  next, so the silence widens the beat it sits in. The track is *lengthened*, never cut.
+- Silence is generated with the repo's vendored ffmpeg (`templates/hyperframes/.bin`). Use it
+  sparingly — one held beat per video is a device; three is a pacing problem.
+
 ## Alignment
-- edge-tts emits no WordBoundary events here, so we recover per-word timing from the (clean)
-  TTS audio with **faster-whisper** and snap it to the known script:
-  `python scripts/make_alignment.py <id>` → `alignment.json` (sentence + word `{start,end}`).
-  Re-run it whenever the audio changes (e.g. after the Azure final voice).
+- Per-word timing comes from **edge-tts's own WordBoundary events** — no separate aligner.
+  `make_voice.py` writes `voice/narration.mp3` and `alignment.json` in the same pass.
+- **edge-tts ≥7 defaults to `boundary="SentenceBoundary"`**, which emits no word events at all and
+  lands every word at 0.0s — a valid-looking alignment with a dead clock. The script asks for
+  `WordBoundary` explicitly and **fails loud** if none arrive; never "fix" that by removing the guard.
+- `python scripts/make_alignment.py <id>` (faster-whisper) exists as the provider-agnostic fallback
+  for audio that carries no word events — e.g. re-aligning the Azure final voice. Re-run it whenever
+  the audio changes.
 - Schema: `pipeline/shared/schemas/alignment.schema.json`.
 
 ## Validate (hard gate before proceeding)
