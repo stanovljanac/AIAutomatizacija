@@ -136,6 +136,32 @@ def tokens_of(sentence: str):
     return out
 
 
+def expand_boundaries(wbs):
+    """Split a compound WordBoundary into one slot per token, so the 1:1 word walk stays in step.
+
+    MEASURED 2026-08-15 (en-US-AndrewMultilingualNeural, edge-tts 7.2.8): edge-tts emits a hyphenated
+    compound as a SINGLE event ("seventy-five", "character-exact"), while tokens_of splits it in two.
+    The mapping below consumes one event per token in strict order, so each compound shifted every
+    LATER word by one — on 021 the drift reached the takeaway scene and exposed a spliced pause 1.4s
+    early. Share the event's span across its parts (proportional to length) instead of guessing.
+    """
+    out = []
+    for wb in wbs:
+        parts = [p for p in re.split(r"[-–—]", wb["w"]) if norm(p)]
+        if len(parts) <= 1:
+            out.append(wb)
+            continue
+        total = sum(len(p) for p in parts)
+        span = wb["end"] - wb["start"]
+        t = wb["start"]
+        for i, p in enumerate(parts):
+            # the last part keeps the event's exact end — the track clock must not drift by rounding
+            end = wb["end"] if i == len(parts) - 1 else t + span * len(p) / total
+            out.append({"w": p, "start": round(t, 3), "end": round(end, 3)})
+            t = end
+    return out
+
+
 async def main(cid: str):
     cdir = ROOT / "content" / cid
     cfg = json.loads((ROOT / "pipeline" / "shared" / "config.json").read_text(encoding="utf-8"))
@@ -213,6 +239,9 @@ async def main(cid: str):
             f"      voice={voice}. Nothing was written."
         )
     mp3.write_bytes(bytes(audio))
+
+    # one slot per expected token before the 1:1 walk below (a hyphenated compound arrives as one event)
+    wbs = expand_boundaries(wbs)
 
     # sequential map: walk wb stream, assign to expected tokens 1:1 (normalized)
     flat = []  # expected tokens with their sentence ref

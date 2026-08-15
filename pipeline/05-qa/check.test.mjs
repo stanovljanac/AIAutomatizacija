@@ -209,6 +209,26 @@ test("no_adjacent_repeat FAILS on two identical templates back-to-back", () => {
   assert.match(c.detail, /b\.0/);
 });
 
+// A multi-PHASE HyperFrames scene file is how a `carry` boundary is authored (D-060): the same scene
+// file draws both sides of the cut so the shared object lands at the same size and position. That is a
+// continuation, not the "same card again" smell — but the SAME file at the SAME phase twice still is.
+test("no_adjacent_repeat allows two PHASES of one hf_scene, but not the same phase twice", () => {
+  const phased = cleanProps({ scenes: [
+    { sceneId: "s1.0", engine: "hyperframes", template: "term-highlight", props: { hf_scene: "tk-slice-and-turn", phase: 1 }, fromFrame: 45, durFrames: 300 },
+    { sceneId: "s2.0", engine: "hyperframes", template: "term-highlight", props: { hf_scene: "tk-slice-and-turn", phase: 2 }, fromFrame: 345, durFrames: 300 },
+    { sceneId: "s3.0", engine: "hyperframes", template: "custom", props: { hf_scene: "tk-sealed", phase: "arrive" }, fromFrame: 645, durFrames: 300 },
+  ] });
+  assert.equal(byName(check(phased).checks, "no_adjacent_repeat").pass, true, "phase 1 → phase 2 is a carry, not a repeat");
+
+  const repeated = cleanProps({ scenes: [
+    { sceneId: "s1.0", engine: "hyperframes", template: "term-highlight", props: { hf_scene: "tk-sealed", phase: "arrive" }, fromFrame: 45, durFrames: 300 },
+    { sceneId: "s2.0", engine: "hyperframes", template: "term-highlight", props: { hf_scene: "tk-sealed", phase: "arrive" }, fromFrame: 345, durFrames: 300 },
+  ] });
+  const c = byName(check(repeated).checks, "no_adjacent_repeat");
+  assert.equal(c.pass, false, "the same file at the same phase back-to-back is literally the same clip twice");
+  assert.match(c.detail, /s2\.0/);
+});
+
 test("the slideshow (>=5 scenes, all template, no bespoke) FAILS bespoke_ratio + template_repeat", () => {
   const { pass, checks } = check(slideshowProps());
   assert.equal(pass, false);

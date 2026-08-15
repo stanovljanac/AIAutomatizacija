@@ -20,9 +20,17 @@ SEO/claims rubric in `pipeline/shared/review/rubric.mjs` (`publish` entry; weigh
 
 ## Timing (owner rule 2026-06-07)
 - **Draft the SEO now, at SCRIPT APPROVAL — instant, don't wait for publish.** As soon as the
-  script is approved, generate `publish.json` with the **title (name) for BOTH the video AND
+  script is approved, generate the package with the **title (name) for BOTH the video AND
   the Short**, the description, tags, and the Short's **one-line caption**. Refine here at the
   publish step (chapters need final timings). This gives the owner the names early.
+- **Write it as `publish.draft.json` until Gate ③, then rename it to `publish.json`.** Same
+  schema, same content — only the filename waits. The lifecycle ledger (D-062) reads the mere
+  **presence** of `publish.json` as "the owner approved the final video", so an early one makes
+  `reconcile` stamp the video `published` with a ship date, schedule its analytics snapshot and
+  demand the close-out lesson — for a video that has not rendered yet (measured on 021,
+  2026-08-15). Validate the draft with
+  `node pipeline/shared/validate.js content/<id>/publish.draft.json --schema publish` (the
+  filename→schema map only knows `publish.json`, so pass `--schema` until it is renamed).
 
 ## Generate (English, SEO — STYLE_GUIDE §8, CHANNEL §7)
 - **Title:** benefit/curiosity + front-loaded **search keyword** (`brief.search_term`),

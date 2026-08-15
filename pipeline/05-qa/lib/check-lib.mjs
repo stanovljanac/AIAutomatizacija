@@ -33,7 +33,15 @@ const VARIETY_MIN_SCENES = 5;
 /** A scene's visual "kind": bespoke scenes are identified by their component/hero so two DIFFERENT
  *  bespoke scenes don't read as a repeat; gallery scenes are identified by their template. */
 function sceneKind(s) {
-  if (s.engine === "hyperframes") return `hf:${s.props?.hf_scene ?? s.props?.hfSrc ?? "hf"}`;
+  // A multi-PHASE HyperFrames scene file is how a `carry` boundary is authored (D-060): one file draws
+  // both sides of the cut so the shared object lands at the same size and position. Two phases are a
+  // CONTINUATION, not the "same card again" smell — so the phase is part of the kind. The same file at
+  // the same phase back-to-back is still a repeat (it would be literally the same clip twice).
+  if (s.engine === "hyperframes") {
+    const base = s.props?.hf_scene ?? s.props?.hfSrc ?? "hf";
+    const phase = s.props?.phase;
+    return `hf:${base}${phase == null ? "" : `#${phase}`}`;
+  }
   if (s.template === "custom") return `custom:${s.props?.component ?? "custom"}`;
   return s.template;
 }

@@ -69,6 +69,43 @@ test("pause_map ignores non-positive pauses and sums repeats on one sentence", {
   assert.deepEqual(out, { 1: 1.5 });
 });
 
+// MEASURED 2026-08-15 (en-US-AndrewMultilingualNeural, edge-tts 7.2.8): edge-tts emits a hyphenated
+// compound as ONE WordBoundary event ("seventy-five"), while tokens_of splits it into two tokens. The
+// word→event walk is strictly 1:1, so every such compound used to shift every LATER timestamp by one
+// word — on 021 the drift reached the takeaway scene and exposed a spliced pause 1.4s early.
+test("expand_boundaries splits a hyphenated event so the 1:1 word walk stays in step", { skip: !havePython }, () => {
+  const wbs = JSON.stringify([
+    { w: "up", start: 1.0, end: 1.2 },
+    { w: "seventy-five", start: 1.2, end: 2.0 },
+    { w: "percent", start: 2.0, end: 2.4 },
+  ]);
+  const out = py(`print(json.dumps(mv.expand_boundaries(json.loads('''${wbs}'''))))`);
+  assert.equal(out.length, 4, "3 events, one of them a compound → 4 word slots");
+  assert.deepEqual(out.map((w) => w.w), ["up", "seventy", "five", "percent"]);
+  assert.equal(out[1].start, 1.2, "the compound's first part keeps the event's start");
+  assert.equal(out[2].end, 2.0, "its last part keeps the event's end");
+  assert.equal(out[1].end, out[2].start, "the split is contiguous — no gap invented inside a word");
+  assert.ok(out[1].end > 1.2 && out[1].end < 2.0, "the span is shared, not duplicated");
+});
+
+test("expand_boundaries leaves ordinary events untouched", { skip: !havePython }, () => {
+  const wbs = JSON.stringify([{ w: "chunks", start: 0.5, end: 0.9 }]);
+  const out = py(`print(json.dumps(mv.expand_boundaries(json.loads('''${wbs}'''))))`);
+  assert.deepEqual(out, [{ w: "chunks", start: 0.5, end: 0.9 }]);
+});
+
+test("expanded events line up 1:1 with tokens_of on the same sentence", { skip: !havePython }, () => {
+  // the real 021 s16 line; edge sends 8 events (twenty-one style compound merged), tokens_of wants 9
+  const sentence = "Same meaning, same work — up to seventy-five percent more chunks.";
+  const events = ["Same", "meaning", "same", "work", "up", "to", "seventy-five", "percent", "more", "chunks"];
+  const wbs = JSON.stringify(events.map((w, i) => ({ w, start: i * 0.3, end: i * 0.3 + 0.25 })));
+  const out = py(
+    `print(json.dumps({'toks': len(mv.tokens_of('''${sentence}''')), ` +
+      `'events': len(mv.expand_boundaries(json.loads('''${wbs}''')))}))`,
+  );
+  assert.equal(out.events, out.toks, "a drift of even one here desyncs every later scene");
+});
+
 test("make_silence returns exactly the frames the requested hold needs", { skip: !havePython || !existsSync(FFMPEG) }, () => {
   const out = py(
     "s=mv.make_silence(3.2)\n" +
