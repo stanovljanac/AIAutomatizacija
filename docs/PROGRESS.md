@@ -19,6 +19,168 @@ Format:
 
 ---
 
+## 2026-08-18 — 022 v2 review round: the compositor dropout found, plus four owner fixes
+- who: owner reviewed `final-v2.mp4` frame by frame; agent diagnosed and fixed.
+- **the "blic" was a COMPOSITOR bug, and the Short's render is what named it.** Five single black
+  frames in the long cut (4.50 / 22.40 / 27.00 / 31.60 / 37.33s): the video layer gone for one frame
+  while the caption above it still drew. Ruled out in turn — the clips decode clean end-to-end, the
+  PTS ladder is exact, an ALL-INTRA re-encode leaves the dropouts at the same indices, and
+  `--concurrency=1` plus a five-frame render reproduce them exactly. The portrait render then
+  HARD-FAILED with the actual cause: `Compositor error: No frame found at position … hf/s1.0.mp4`.
+  Fix is TWO steps, and the first is not enough on its own: every HF clip is normalised after render
+  (CFR at the exact fps + a cloned tail past the end — `buildNormaliseCommand` in
+  `compile-hyperframes.mjs`), which ends the hard failure and healed 1 of the 5 dropouts; the other
+  four survived unchanged, so `scripts/repair-dropouts.mjs` repairs the OUTPUT and is mandatory after
+  every render. Long cut now: 11,262 frames, 0 dropouts, duration/audio untouched. Lesson:
+  `2026-08-18-a-rendered-clip-is-not-a-seekable-clip.md`.
+- **`cw-whole-chat` wired into long s4** (replacing `cw-handoff`, as the owner asked). Authoring it
+  exposed the cycle lesson's mirror image: packing the three turns tight left FOUR seconds of bare
+  desk before the closing handover. The turns are now paced across b1→b3 with the read absorbing the
+  slack, and the ghost crosses the desk at full size instead of squashing on the way.
+- **`cw-fifo`'s pin label taken OFF the paper.** The `.fx-chip` plate fix did not hold — over bright
+  paper no plate alpha wins. The label now stands in empty frame with a gold leader line to the page.
+- **`riser.mp3` banned permanently** (owner: it read as a siren). Dropped from 022's scene-plan and
+  written into the storyboard skill; a peak beat gets one impact and nothing else.
+- **Short s4 (`cws-restart`) re-scaled.** The growth curve filled 83% of the width and still read as
+  a small mark, because a quadratic hugs its baseline. Bigger plot + BOTH ends labelled
+  (`8 questions · 4.5× measured` → `40 questions ≈ 20×`) + an axis caption.
+- `.gitignore`: `templates/hyperframes/**/compositions/` (72 disposable render entries untracked).
+  `templates/` itself stays tracked — it is the video system.
+- docs: `style/MOTION_SPEC.md` §10 (ink-not-box, both ends of a projection, labels off bright
+  subjects) and §11; two lessons; memory `no-riser-sfx`.
+
+## 2026-08-17 — 022 v2: the 3D tests promoted to real scenes + a portrait cut of the Short's mechanism
+- who: owner ("radi final v2", "kreni sa portretom za cws whole chat za short s2"); agent built.
+- **the 3D tests became scenes.** `t3d-hook` → long s1, `t3d-window` → s2 (phase 1) + s3 (phase 2),
+  `t3d-pile` → s5. Each now derives every mark from `S.beatAt(...)` instead of the fixed 7s test
+  clock, carries the SAME props contract as its 2D twin (so the swap is one `props.hf_scene` field),
+  and lost its `3D TEST · …` corner label. `t3d-window` gained the two things it was missing against
+  `cw-window-frame`: the four group labels and the token-capsule dissolve (the Ep.2 callback), plus
+  phase 2's shelf-room and green tick. Owner's "loš kvalitet i senka" on the old hook clip was the
+  giant gold hole-sprite — shrunk 8.5→4.4 units and moved onto the pinned panel.
+- **the non-obvious defect: text in a 3D scene must write depth.** `HF3.composite` reads the depth
+  buffer, so `depthWrite:false` on a label left the depth of the back wall 16 units behind it and the
+  DOF blurred every word to max CoC while the paper beside it stayed sharp. Fixed with
+  `depthWrite:true` + `alphaTest` in the new `HF3.textPlane()` (and on the window's glass pane).
+- **`HF3.textPlane()`** added to `_lib/hf-three.js`: a canvas-textured plane so a LABEL can live in
+  the scene and orbit with its object, while the line a scene installs stays flat DOM.
+- **`cws-whole-chat`** (new) — Short s2, the mechanism as GRAVITY: your chat is pinned to the top and
+  never leaves; you send one line, a ghost of the whole conversation falls, lands as a tower, is read
+  top-down, one page flies back up as its answer, the tower drops out. Three turns, 12 → 14 → 16
+  pages, and the third tower no longer fits — its top is cut off under the chat. Replaces `cw-tower`.
+- verified on stills pulled from the rendered clips at their real slot lengths (not the test length);
+  `npm test` 730/730. v1 clips preserved under `video/hf/v1-2d/` and `short/video/hf/v1-tower/`.
+- next: **owner compares** `video/final-v2.mp4` against `video/final.mp4` and the new Short, and says
+  which take ships. Nothing committed.
+- docs: `style/MOTION_SPEC.md` §11 (3D scene rules), lesson
+  `2026-08-17-a-3d-test-clip-is-not-a-scene.md`.
+
+## 2026-08-17 — 022 mechanism re-authored (handover, not wipe) + the first 3D tests
+- who: owner reviewed the 022 render frame-by-frame and chose the replacements (A for the long cut,
+  B for the Short, "isti hook kao long" for the Short's opener) and asked for standalone Three.js
+  tests before deciding whether 3D goes into videos; agent built.
+- **the defect was arithmetic, not taste.** `cw-desk-cycle`'s `cycle()` both started and ENDED a
+  turn (it wiped the desk), so three chained cycles filled only ~5.3s of a 10.4s scene and left
+  **5s of empty desk under live narration** (long 52–60s; Short s1 had the same hole for 2s). The
+  clip was exactly the right length and every frame rendered, so nothing in the pipeline caught it.
+- **new scenes** (`cw-desk-cycle` left intact, no longer referenced by 022):
+  - `cw-handoff` — long s4. Four carriers built from one seed: the stack enters from the left, is
+    read (1.0s → 1.45s → 2.35s, slower every turn because it is taller), writes one gold page, and
+    recedes right onto a dim trail of its earlier selves while the next is already entering. Chip
+    counts turn 1·2·3·4. The read zone is never bare.
+  - `cw-tower` — Short s2, portrait-native. The whole tower LIFTS off the desk (that gap *is*
+    "between two messages it holds nothing"), is read while it hangs, gains a page, drops back. The
+    camera gives ground only as fast as it must: 47% → 60% of frame height, counter 154 → 606 with
+    its source chip. Reserved header sits outside the camera rig.
+  - `cws-forgot` — Short s1. The Short now opens on the SAME hook as the long video (the thread
+    races away, the pinned line is simply absent, the hole has a cooling afterglow), and its last
+    frame is authored to be `cw-tower`'s first frame.
+- **two small fixes**: `cw-fifo`'s pin label was gold-on-gold over a gold page → `.fx-chip` dark
+  glass; `cw-window-frame` phase 1 left the un-redistributed pages floating across the next row's
+  label → the remainder now settles onto the base as each group leaves.
+- **3D, evidence not claims** (`_lib/hf-three.js` + three `t3d-*` scenes, NOT wired into any video):
+  first use of the HyperFrames Three.js adapter. Real sheets with thickness and soft shadows, a
+  key/rim rig, an orbiting camera, depth-of-field + bloom from a hand-written composite pass over a
+  render target with a depth texture (no `three/examples` vendored — the core build is the whole
+  payload). `t3d-pile` (hero stack), `t3d-hook` (the thread you fly along), `t3d-window` (the
+  context window as a frame that fills then empties). **~17s to render 210 frames at 1920×1080 —
+  the same order as our 2D scenes**, so cost is not the objection.
+- `_lib/make-entry.mjs` now also rewrites `window.__THREE_URL` (a dynamic-import URL lives in a JS
+  string the CLI compiler never scans); covered by `pipeline/04-render/make-entry.test.mjs`.
+- docs: `style/MOTION_SPEC.md` §10 (repeating mechanisms + portrait scale + label contrast), KOS
+  lesson `2026-08-17-a-cycle-must-never-empty-the-frame.md`.
+- **owner review, same day.** `cws-forgot`, `cw-fifo`, `cw-window-frame` approved. 3D: pile "nije
+  loše", window "sviđa mi se kao ideja", hook rejected — but all three read as low quality with "neki
+  shadow ogroman oko objekata". **That was my bug, not 3D's**: (a) the offscreen render target was
+  single-sampled, so `antialias: true` on the renderer applied to a framebuffer we had stopped drawing
+  to — every silhouette was stair-stepped; (b) the gather-DOF let sharp foreground pixels bleed
+  outward over the background, which is the "huge shadow"; (c) bloom at threshold 0.82 haloed bright
+  paper, not just gold. Fixed in `_lib/hf-three.js`: `samples: 4`, a depth-rejecting DOF gather, a
+  dead zone so in-focus stays pixel-sharp, and bloom as a highlight (0.93 / 0.3 / 13px). Re-rendered
+  as `t3d-pile-v2` / `t3d-window-v2`. 3D itself stays deferred — the owner wants parallel 3D/2D
+  versions per scene in future videos, decided clip by clip.
+- **`cw-handoff` + `cw-tower`: "bolje nego blinkanje, ali i dalje nije to to".** Diagnosis: the motion
+  was never the problem, the OBJECT was. A stack of featureless bars is a bar chart — nothing in it
+  says "your conversation" — and for 18s it is the only thing on screen. The hook works *because* the
+  thread is recognisable, and the mechanism scene throws that recognition away.
+- **`cw-whole-chat`** — alternative take of long s4, built BESIDE `cw-handoff` for comparison. Your
+  chat stays on screen the whole scene as the anchor; you send ONE line; a ghost of the whole
+  conversation flies across and lands as paper; it is read (pages dim behind the sweep); one page
+  flies back and becomes its answer in your chat; the desk drops the rest. Chip counts
+  `you sent 1 line · it read 12 → 14 → 16 → 18 pages`. The empty-frame problem dissolves structurally:
+  the desk emptying is now the POINT, because your chat is still there.
+- next: **owner picks the long-s4 take** (`cw-handoff` vs `cw-whole-chat`). If the whole-chat take
+  wins, `cw-tower` gets the portrait equivalent (chat above, tower below). Then re-render and rebuild.
+  Nothing committed.
+- blockers: none. `npm test` 730 green.
+
+## 2026-08-16 — 022 Gate ② approved → the visual substrate rebuilt, 26 bespoke scenes rendered
+- who: owner approved the script and set the bar ("napravi nove scene hero bespoke, nemoj samo
+  slideshow sa recima i obicnom pozadinom — 021 je bio previse plain… profesionalna produkcija kao da
+  radi ozbiljan tim strucnjaka"); agent built.
+- **the diagnosis, not the symptom.** 021 shipped 24 bespoke scenes and still read as flat. Every
+  scene was re-inventing a thin stage (one radial + one grid) in its own CSS and spending the rest of
+  its budget on typography, so the FRAME itself never had production value. Fix: a shared cinematic
+  substrate (**D-064**) — `templates/hyperframes/_lib/hf-fx.css` + `hf-fx.js`. Six-layer stage (depth
+  ground · masked grid · volumetric shafts · focal bloom · deterministic dust · stepped film grain ·
+  vignette · caption band), a camera rig, physical paper (`FX.pile`/`sheet`/`desk`/`sweep`) with real
+  shadow stacks, gradient gold type, source chips, myth plate + gold slash, `FX.count`, and
+  `FX.ambient()` — one line that keeps every frame alive for the scene's whole duration.
+  `_lib/make-entry.mjs` collapses the per-scene render-entry boilerplate to two lines.
+- **022 authored on it:** 14 scene dirs → **26 long scenes + 5 Short scenes, 100% HyperFrames**, nine
+  multi-phase so a `carry` boundary is literally the same object at the same size and position. One
+  spine object (THE PILE) runs through eleven scenes. Voice + alignment (371.4s long / 53.1s Short),
+  scene-plan + sound design (accent · riser · impact), `publish.draft.json` (SEO at approval).
+- **defect found and written into the rules:** `gsap.fromTo` defaults to `immediateRender:true`, so a
+  fromTo placed at 12s applies its `from` values at build time (a gold page sat at opacity 0.2 from
+  frame 0). Landed as `FX.fromTo(...)`; the global `gsap.defaults({immediateRender:false})` "fix" was
+  tried and **reverted** because `gsap.set()` depends on immediateRender and silently stopped applying.
+- docs: **D-064**, `style/MOTION_SPEC.md` **§9 "The stage is built once"**, KOS lesson
+  `2026-08-16-the-stage-is-built-once.md`, `content/022-context-window/log.md`.
+- next: QA both cuts + 04b thumbnail candidates → **Gate ③** (owner watches).
+
+## 2026-08-16 — 021 published (long + Short) → Desk Lessons Ep.3 started
+- who: owner published; agent closed 021 out and opened the next episode.
+- **021 is live on both cuts** (manual upload, D-055). Close-out: `brief.json.status` → `published`
+  (schema PASS), `content/021-what-is-a-token/log.md` entry. The lifecycle ledger needed no change —
+  the Gate-③ promotion had already created the record (`published`, lesson **linked** →
+  `2026-08-15-word-alignment-is-1to1-with-the-tts-events`, analytics due **2026-08-22**) and
+  `reconcile --dry-run` reports clean. The Short is covered by the long's record on purpose: its
+  metadata lives in `publish.json.short`, and the ledger keys one record per publish.json.
+- **owner action still owed on 021:** paste the two YouTube ids into `publish.json` so the frozen
+  `youtube_video_id` can be ingested — without it `fetch-analytics.mjs` has nothing to query on the
+  22nd.
+- then: opened **022-context-window** — Desk Lessons **Ep.3**, the concept 021 signed off into.
+  Researched live (vendor platform docs + three published studies), **measured** the episode's core
+  proof locally with tiktoken (a synthetic 8-request thread: 658 tokens said, **2,737 read, 4.16×**),
+  and wrote both scripts: long **26 scenes / 1,036 words ≈ 7:00**, Short **5 scenes ≈ 57s**. Idea
+  added to the bank (`desk-lessons-context-window`, 90), subject registered in `produced_subjects.json`
+  + `CHANNEL_MAP.md` as a deliberate 019/021 cluster-mate, seed-gate PASS, `claims.json` 15/15
+  verified, inline `script.review.json` pass (8.6, panel NOT dispatched — no sub-agents this session).
+- next: **Gate ② — owner reads `content/022-context-window/script.json`.** On approval: SEO package,
+  voice + alignment, then the bespoke HyperFrames scenes.
+- blockers: none.
+
 ## 2026-08-15 — D-063's missing assets: the sfx library is generated, not downloaded
 - who: agent (owner: "prvo sfx assets + commit D-063")
 - context: D-063 shipped the sound-design layer and the scripted-pause mechanism on 2026-07-25 but

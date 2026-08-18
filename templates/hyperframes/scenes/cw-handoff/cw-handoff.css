@@ -1,0 +1,64 @@
+/* cw-handoff — 022 long s4 (16:9). The stack is handed over, never wiped: in from the left, read,
+   one page written, out to the right onto a receding trail of its own earlier selves.
+   Stage / paper / desk / sweep / chip come from _lib/hf-fx.css; this file is art direction only. */
+
+/* the wrong picture, dissolving out of the way at b0 */
+.brain {
+  position: absolute; left: 50%; top: calc(292px * var(--u)); transform: translateX(-50%);
+  width: calc(300px * var(--u)); height: calc(300px * var(--u)); z-index: 14; opacity: 0.9;
+}
+.brainlbl {
+  position: absolute; left: 0; right: 0; top: calc(612px * var(--u)); text-align: center; z-index: 14;
+  font-size: calc(38px * var(--u)); font-weight: 700; color: var(--ghost);
+  letter-spacing: calc(1px * var(--u));
+}
+
+/* the desk runs the FULL width — it is a counter the work crosses, not a pedestal it sits on */
+.deskhost { position: absolute; inset: 0; z-index: 10; }
+.stage { position: absolute; inset: 0; z-index: 16; }
+.sweephost { position: absolute; inset: 0; z-index: 24; }
+
+/* one carrier = the stack on one turn. It is also its own ghost afterwards: the same host slides
+   right, shrinks and dims into the trail, so nothing is ever destroyed on screen. */
+.carrier { position: absolute; inset: 0; opacity: 0; will-change: transform, opacity; }
+
+.impact {
+  position: absolute; left: 50%; top: calc(820px * var(--u)); transform: translate(-50%, -50%);
+  width: calc(1080px * var(--u)); height: calc(170px * var(--u));
+  background: radial-gradient(ellipse at center, rgba(122, 178, 236, 0.5), transparent 68%);
+  filter: blur(calc(26px * var(--u))); opacity: 0; z-index: 13;
+}
+
+/* the load-bearing label: its own last answer is INSIDE the stack you hand back.
+   Dark glass, not translucent gold — gold-on-gold is what made the s19 label unreadable. */
+.tag {
+  position: absolute; left: calc(50% + 300px * var(--u)); top: calc(430px * var(--u));
+  padding: calc(10px * var(--u)) calc(20px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(255, 176, 32, 0.5); border-radius: calc(10px * var(--u));
+  background: rgba(9, 17, 26, 0.86); color: var(--gold-2);
+  box-shadow: 0 calc(14px * var(--u)) calc(40px * var(--u)) rgba(0, 0, 0, 0.6);
+  font-size: calc(30px * var(--u)); font-weight: 700; white-space: nowrap;
+  opacity: 0; z-index: 26;
+}
+/* the leader line from the label to the page it names */
+.tag::before {
+  content: ""; position: absolute; left: calc(-58px * var(--u)); top: 50%;
+  width: calc(58px * var(--u)); height: calc(2px * var(--u));
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+/* the turn counter — reserved space on the left, never over the stack */
+.turnchip { position: absolute; left: calc(96px * var(--u)); top: calc(214px * var(--u)); z-index: 24; opacity: 0; }
+
+.kicker {
+  position: absolute; left: 0; right: 0; top: calc(86px * var(--u)); text-align: center;
+  color: var(--text); opacity: 0; z-index: 22;
+}
+
+/* ── portrait fallback (this scene is authored for 16:9; the Short uses cw-tower) ── */
+.portrait .brain { top: calc(520px * var(--u)); }
+.portrait .kicker { top: calc(300px * var(--u)); }
+.portrait .tag { left: 50%; top: calc(760px * var(--u)); transform: translateX(-50%); }
+.portrait .tag::before { display: none; }
+.portrait .turnchip { left: 50%; top: calc(430px * var(--u)); transform: translateX(-50%); }
+.portrait .impact { top: calc(1330px * var(--u)); width: calc(980px * var(--u)); }

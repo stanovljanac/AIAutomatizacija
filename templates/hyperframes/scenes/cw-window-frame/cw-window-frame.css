@@ -1,0 +1,83 @@
+/* cw-window-frame — 022 s2 (the window, answered first) + s3 (the turn: nothing is kept).
+   Stage/paper/type come from _lib/hf-fx.css; this file is art direction only. */
+
+.motif { position: absolute; left: 50%; top: calc(74px * var(--u)); transform: translateX(-50%); z-index: 40; opacity: 0; }
+
+/* ── the window frame: four gold edges that DRAW themselves ──────────────────── */
+.frame {
+  position: absolute; left: 50%; top: calc(300px * var(--u));
+  width: calc(1300px * var(--u)); height: calc(520px * var(--u));
+  transform: translateX(-50%);
+  border-radius: calc(20px * var(--u));
+  background: linear-gradient(168deg, rgba(18,30,44,0.52) 0%, rgba(9,16,24,0.62) 100%);
+  box-shadow: inset 0 0 calc(120px * var(--u)) rgba(56,132,208,0.10);
+  z-index: 12;
+}
+.edge { position: absolute; background: linear-gradient(90deg, var(--gold-2), var(--gold)); box-shadow: 0 0 calc(24px * var(--u)) rgba(255,176,32,0.55); }
+.edge.t { left: 0; top: 0; height: calc(4px * var(--u)); width: 100%; transform-origin: 0 50%; }
+.edge.b { left: 0; bottom: 0; height: calc(4px * var(--u)); width: 100%; transform-origin: 100% 50%; }
+.edge.l { left: 0; top: 0; width: calc(4px * var(--u)); height: 100%; transform-origin: 50% 100%; background: linear-gradient(180deg, var(--gold-2), var(--gold)); }
+.edge.r { right: 0; top: 0; width: calc(4px * var(--u)); height: 100%; transform-origin: 50% 0; background: linear-gradient(180deg, var(--gold-2), var(--gold)); }
+.tick {
+  position: absolute; right: calc(34px * var(--u)); bottom: calc(24px * var(--u));
+  font-size: calc(64px * var(--u)); font-weight: 800; color: var(--green);
+  text-shadow: 0 0 calc(40px * var(--u)) rgba(61,220,151,0.6);
+  opacity: 0;
+}
+/* the frame's own name, seated on its top-left corner like a window title (not a title card) */
+.framelabel {
+  position: absolute; left: calc(50% - 646px * var(--u)); top: calc(244px * var(--u));
+  font-size: calc(30px * var(--u)); font-weight: 700; letter-spacing: calc(3.4px * var(--u));
+  text-transform: uppercase; color: var(--gold-2); opacity: 0; z-index: 40; white-space: nowrap;
+}
+
+/* ── the pages inside it ─────────────────────────────────────────────────────── */
+.pilehost { position: absolute; inset: 0; z-index: 16; }
+.caps { position: absolute; left: 0; right: 0; top: calc(478px * var(--u)); text-align: center; z-index: 18; }
+.cap {
+  display: inline-block; margin: 0 calc(4px * var(--u));
+  padding: calc(10px * var(--u)) calc(15px * var(--u));
+  border-radius: calc(12px * var(--u));
+  background: linear-gradient(180deg, #24354a 0%, #16232f 100%);
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.5);
+  color: var(--gold-2); font-size: calc(34px * var(--u)); font-weight: 800; line-height: 1;
+  opacity: 0; will-change: transform, opacity;
+}
+
+/* ── the four labelled groups ────────────────────────────────────────────────── */
+.rows { position: absolute; inset: 0; z-index: 17; }
+.row { position: absolute; left: 50%; width: calc(1180px * var(--u)); transform: translateX(-50%); opacity: 0; }
+.rowlbl {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  font-size: calc(38px * var(--u)); font-weight: 700; color: var(--text);
+  letter-spacing: calc(-0.4px * var(--u)); white-space: nowrap;
+}
+.row.gold .rowlbl { color: var(--gold-2); }
+
+/* ── the ghost room (the wrong mental model) ─────────────────────────────────── */
+.room { position: absolute; inset: 0; z-index: 8; opacity: 0; }
+.shelf {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  height: calc(5px * var(--u)); border-radius: calc(3px * var(--u));
+  background: linear-gradient(90deg, transparent, rgba(125,143,163,0.55) 12%, rgba(125,143,163,0.55) 88%, transparent);
+}
+.box {
+  position: absolute; border-radius: calc(4px * var(--u));
+  background: linear-gradient(180deg, rgba(112,130,150,0.42), rgba(72,88,106,0.42));
+  border: calc(1px * var(--u)) solid rgba(150,168,190,0.28);
+  will-change: transform, opacity;
+}
+
+/* ── the empty verdict ───────────────────────────────────────────────────────── */
+.empty {
+  position: absolute; left: 0; right: 0; top: calc(508px * var(--u));
+  text-align: center; color: var(--text); opacity: 0; z-index: 30;
+}
+
+/* ── portrait ────────────────────────────────────────────────────────────────── */
+.portrait .frame { width: calc(980px * var(--u)); top: calc(600px * var(--u)); height: calc(720px * var(--u)); }
+.portrait .framelabel { left: calc(50% - 486px * var(--u)); top: calc(544px * var(--u)); }
+.portrait .caps { top: calc(920px * var(--u)); }
+.portrait .empty { top: calc(930px * var(--u)); }
+.portrait .row { width: calc(880px * var(--u)); }
+.portrait .rowlbl { font-size: calc(42px * var(--u)); }

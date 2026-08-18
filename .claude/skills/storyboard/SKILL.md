@@ -153,11 +153,16 @@ track, never cut): a quiet looped bed, and one-shot cues placed on the narration
 "audio": {
   "bed": { "src": "bed-low-pulse.mp3", "gain": 0.06 },
   "sfx": [
-    { "src": "riser.mp3",  "atSeconds": 182.4, "gain": 0.45 },
-    { "src": "impact.mp3", "atSeconds": 196.9, "gain": 0.7  }
+    { "src": "impact.mp3", "atSeconds": 196.9, "gain": 0.7 }
   ]
 }
 ```
+
+> **NEVER use `riser.mp3` (owner rule, 2026-08-17 — permanent).** On the 022 render the rising sweep
+> read as a **siren** over the closing beat: "totalno je nepotreban i neuskladjen sa videom. nemoj da
+> ga dodajes vise ikada." A rising pitch sweep is a trailer device; this channel's register is a desk,
+> not a countdown. The file stays in `assets/sfx/` for the record, but no scene-plan may reference it.
+> A peak beat gets **one impact** and nothing else.
 
 - `atSeconds` uses the **narration clock** — read the number straight off `alignment.json`. It is
   frame-snapped, so a cue lands exactly on the beat it was written for.

@@ -1,0 +1,58 @@
+<!doctype html>
+<!--
+  cws-forgot — 022 Short s1 HOOK (9:16, black+gold). The Short now opens on the SAME hook as the
+  long video: your own long chat, and the line you pinned at the start simply not being there.
+
+  WHY (owner, 2026-08-17): the Short used to open on the mechanism — the same abstract object the
+  next scene is about — so the first sixteen seconds were one unexplained shape and the hook had no
+  second of context. A hook has to be the thing the viewer recognises. So: their thread, scrolling.
+
+  THE CUT (6.3s, no title card — the burned-in captions carry the words)
+    b0  "You have never had a conversation with an AI."
+        the thread is already racing away from us; the pinned message goes quiet while it is off
+        screen (nothing is crossed out — absence is the claim), we snap back to the top, and the
+        slot is a hole with a cooling afterglow
+    b1  "You have handed it the same pile of paper, over and over."
+        every message collapses into a page and the pile lands on a desk with weight; one handoff
+        pulse runs, and the camera pushes to exactly the framing cw-tower (s2) opens on
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":188},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":6.27}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="cws-forgot.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cws-forgot" data-start="0" data-width="1080" data-height="1920">
+      <div id="world" class="fx-world">
+        <div class="threadclip" id="threadclip">
+          <div class="thread" id="thread"></div>
+        </div>
+        <!-- nothing is drawn in the empty slot; only a cooling afterglow says something was there -->
+        <div class="hole" id="hole"></div>
+
+        <div class="deskhost" id="deskhost"></div>
+        <div class="pilehost" id="pilehost"></div>
+        <div class="sweephost" id="sweephost"></div>
+        <div class="impact" id="impact"></div>
+      </div>
+    </div>
+    <script src="cws-forgot.js"></script>
+  </body>
+</html>

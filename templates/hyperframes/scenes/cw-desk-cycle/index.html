@@ -1,0 +1,68 @@
+<!doctype html>
+<!--
+  cw-desk-cycle — 022 long s4 (phase 1, 16:9) + 022 Short s2 (phase 2, 9:16).
+
+  MECHANISM HERO — the metaphor the whole video runs on, so it is the most PHYSICAL scene in the
+  piece: a desk, a stack of paper with real mass, a read sweep, a page written, and the desk wiped.
+  Then the identical stack lands again, one page taller. The cycle repeats and accelerates, which is
+  the argument: nothing is kept, so everything is re-handed and re-read.
+
+  PHASE 1 (s4, blue+gold)
+    b0  a gray brain dissolves and the desk slides in over it
+    b1  the pile lands with weight, FANS so you can count it, and its top page — the model's own last
+        answer, in gold — slots onto the same pile as the user's pages (load-bearing detail)
+    b2  read sweep → one new page written → the desk WIPES clean; the cycle repeats, accelerating
+    b3  the identical pile lands again, one page taller
+
+  PHASE 2 (Short s2, portrait) — the same object, its own cut: the empty surface between two
+  landings is HELD, then the pile lands with its own gold answer page going back in as input.
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds + revealsSeconds[] + props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":532},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":17.73}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="cw-desk-cycle.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cw-desk-cycle" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <!-- the wrong picture, dissolving out of the way -->
+        <svg class="brain" id="brain" viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="100" r="72" stroke="#5d6f83" stroke-width="5" />
+          <path d="M100 30 C 78 62, 122 78, 100 108 C 82 134, 120 146, 100 170" stroke="#5d6f83" stroke-width="5" stroke-linecap="round" />
+          <path d="M62 58 C 84 84, 56 104, 74 132" stroke="#4d5d6f" stroke-width="4" stroke-linecap="round" />
+          <path d="M138 58 C 116 84, 144 104, 126 132" stroke="#4d5d6f" stroke-width="4" stroke-linecap="round" />
+        </svg>
+        <div class="brainlbl" id="brainlbl"></div>
+
+        <div class="deskhost" id="deskhost"></div>
+        <div class="stage" id="stage">
+          <div class="pilehost" id="pilehost"></div>
+          <div class="sweephost" id="sweephost"></div>
+        </div>
+        <div class="impact" id="impact"></div>
+        <div class="wipe" id="wipe"></div>
+
+        <div class="tag" id="tag"></div>
+        <div class="kicker fx-h2" id="kicker"></div>
+      </div>
+    </div>
+    <script src="cw-desk-cycle.js"></script>
+  </body>
+</html>

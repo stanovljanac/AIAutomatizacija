@@ -29,7 +29,7 @@
  *   node pipeline/04-render/compile-hyperframes.mjs 004-foo/short [--force]
  */
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { delimiter, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveFormat } from "../shared/lib/format.mjs";
@@ -112,6 +112,39 @@ export function jobVariables(job) {
  */
 export function buildEntryCommand(job, { varsFile }) {
   return { cmd: "node", args: [`scenes/${job.hfScene}/make-entry.mjs`, varsFile] };
+}
+
+/**
+ * PURE: the ffmpeg command that makes a freshly-rendered clip SAFE FOR THE REMOTION COMPOSITOR.
+ *
+ * WHY (measured 2026-08-17/18, cost two long renders). Remotion's Rust compositor reads OffthreadVideo
+ * frames by seeking the mp4 directly, and on the HyperFrames output it intermittently reports
+ * `Compositor error: No frame found at position …`. In a portrait render that HARD-FAILS the whole
+ * job; in the 16:9 render it silently returns ONE BLACK FRAME while the caption layer above it still
+ * draws — five of them in a 6-minute cut, always inside a Three.js clip.
+ *
+ * Ruled out first, so nobody repeats the experiments: the clips themselves decode clean end-to-end
+ * (no black frame, exact frame count, perfectly regular PTS); an ALL-INTRA re-encode leaves the
+ * dropouts at the same indices, so it is not keyframe seeking; `--concurrency=1` and even a
+ * five-frame render reproduce them, so it is not a worker race.
+ *
+ * What does fix it is normalising the container: re-encode CFR at the exact fps and CLONE a short
+ * tail past the end, so the compositor is never asked for a frame at or beyond the last one.
+ * Remotion documents the tail padding as the remedy for this error class.
+ *
+ * @param {object} job @param {string} inFile @param {string} outFile
+ */
+export function buildNormaliseCommand(job, { inFile, outFile }) {
+  return {
+    cmd: "ffmpeg",
+    args: [
+      "-v", "error", "-i", inFile,
+      "-vf", `tpad=stop_mode=clone:stop_duration=0.25,fps=${job.fps}`,
+      "-c:v", "libx264", "-preset", "veryfast", "-crf", "16",
+      "-pix_fmt", "yuv420p", "-vsync", "cfr", "-an",
+      "-movflags", "+faststart", "-y", outFile,
+    ],
+  };
 }
 
 export function buildRenderCommand(job, { varsFile, outFile, entry }) {
@@ -229,6 +262,21 @@ export function renderHyperframesScenes({ root, cdir, jobs, force = false, spawn
           `The mp4 was discarded. Check templates/hyperframes/scenes/${job.hfScene} (asset paths must resolve; _lib is referenced as ../../_lib/…).`,
       );
     }
+    // normalise the container so Remotion's compositor can seek every frame of it (see
+    // buildNormaliseCommand). Done in place via a temp file so the cache key stays the variables.
+    const tmpFile = `${outFile}.norm.mp4`;
+    const nc = buildNormaliseCommand(job, { inFile: outFile, outFile: tmpFile });
+    const nres = spawn(nc.cmd, q(nc.args), { cwd: hfRoot, env: childEnv, encoding: "utf8", shell: winShell });
+    if (nres.status === 0 && existsSync(tmpFile)) {
+      rmSync(outFile, { force: true });
+      renameSync(tmpFile, outFile);
+    } else {
+      // never fail the render over this: an un-normalised clip still composites, it just risks the
+      // dropout. Warn loudly so a bad clip is traceable to this step and not to the scene.
+      rmSync(tmpFile, { force: true });
+      console.warn(`WARN ${job.sceneId} — could not normalise the clip for the compositor (exit ${nres.status}); dropouts are possible: ${nres.stderr ?? ""}`);
+    }
+
     rendered.push(job.sceneId);
   }
 

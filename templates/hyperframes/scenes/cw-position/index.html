@@ -1,0 +1,59 @@
+<!doctype html>
+<!--
+  cw-position — 022 long s11 (phase 1) + s12 (phase 2). CONSEQUENCE 2: a fact does not count the
+  same everywhere on the desk.
+  ph1  the pile spreads into a readable column; ONE page glows gold and drifts from the top toward
+       the middle. Nothing else moves — the calm breath before the study.
+  ph2  the U curve draws itself and the SAME gold page RIDES it: high at the start, sagging in the
+       middle, high again at the end. One object, one motion, no second chart.
+  PRECISION GUARD (sources.md #8): past tense, about the models the paper tested — never "AI ignores
+  the middle" as a live universal law. The source chip is permanent and legible.
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":231},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":7.69}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="cw-position.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cw-position" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <div class="colhost" id="colhost"></div>
+
+        <svg class="plot" id="plot" viewBox="0 0 1400 520" preserveAspectRatio="none">
+          <path id="curve" fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round" />
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#63a8ec" /><stop offset="0.5" stop-color="#7d8fa3" /><stop offset="1" stop-color="#63a8ec" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="axis" id="axisline"></div>
+        <div class="axlbl a" id="axStart"></div>
+        <div class="axlbl b" id="axMid"></div>
+        <div class="axlbl c" id="axEnd"></div>
+        <div class="ylbl" id="yLbl"></div>
+
+        <div class="page" id="page"><span id="pagetext"></span></div>
+        <div class="fx-chip chip" id="chip"></div>
+        <div class="kicker fx-h2" id="kicker"></div>
+      </div>
+    </div>
+    <script src="cw-position.js"></script>
+  </body>
+</html>

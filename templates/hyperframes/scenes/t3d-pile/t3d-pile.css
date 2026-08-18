@@ -1,0 +1,12 @@
+/* t3d-pile — 022 s5, the 3D cut. The frame IS the WebGL canvas; the only DOM is the counter chip,
+   which stays flat because it is a READOUT about the shot, not an object inside it.
+   The subject label lives in the scene (HF3.textPlane) — it names the stack, so it stands with it. */
+
+#root { background: #04070b; }
+#gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; }
+
+.counter {
+  position: absolute; left: calc(74px * var(--u)); top: calc(74px * var(--u));
+  z-index: 40; opacity: 0; will-change: transform, opacity;
+  font-size: calc(30px * var(--u));
+}

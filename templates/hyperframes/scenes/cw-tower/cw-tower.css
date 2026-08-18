@@ -1,0 +1,44 @@
+/* cw-tower — 022 Short s2 (9:16). The tower lifts, is read, gains a page, drops back — and grows
+   out of the shot while the camera gives ground. Stage/paper/desk/sweep/type: _lib/hf-fx.css. */
+
+/* the camera pivots near the DESK LINE, not the middle of the frame: a pull-back that pivoted on
+   the centre would drive the desk down into the burned-in caption band. */
+.fx-world { transform-origin: 50% 80%; }
+
+/* ── reserved header: the count, its label and its source. Never scaled by the camera. ── */
+.head { position: absolute; left: 0; right: 0; top: 0; z-index: 40; text-align: center; }
+.chip { margin-top: calc(96px * var(--u)); opacity: 0; }
+.num {
+  margin-top: calc(18px * var(--u));
+  font-size: calc(150px * var(--u)); line-height: 1; letter-spacing: calc(-4px * var(--u));
+}
+.numlbl {
+  margin-top: calc(10px * var(--u));
+  font-size: calc(34px * var(--u)); font-weight: 700; color: var(--text-2);
+  letter-spacing: calc(2.4px * var(--u)); text-transform: uppercase; opacity: 0;
+}
+
+/* ── the desk and the tower on it ────────────────────────────────────────────── */
+.deskhost { position: absolute; inset: 0; z-index: 10; }
+.towerhost { position: absolute; inset: 0; z-index: 16; will-change: transform; }
+.sweephost { position: absolute; inset: 0; z-index: 20; }
+
+/* the gap that opens between the desk and the lifted tower — the emptiness, made visible without
+   deleting anything from the frame */
+.bare {
+  position: absolute; left: 50%; transform: translate(-50%, -50%);
+  width: calc(820px * var(--u)); height: calc(150px * var(--u));
+  background: radial-gradient(ellipse at center, rgba(122, 178, 236, 0.48), transparent 66%);
+  filter: blur(calc(20px * var(--u))); opacity: 0; z-index: 12;
+}
+.impact {
+  position: absolute; left: 50%; transform: translate(-50%, -50%);
+  width: calc(1040px * var(--u)); height: calc(180px * var(--u));
+  background: radial-gradient(ellipse at center, rgba(255, 176, 32, 0.42), transparent 68%);
+  filter: blur(calc(26px * var(--u))); opacity: 0; z-index: 14;
+}
+
+/* ── landscape fallback (this scene is authored for 9:16; the long cut uses cw-handoff) ── */
+#root:not(.portrait) .fx-world { transform-origin: 50% 74%; }
+#root:not(.portrait) .num { font-size: calc(110px * var(--u)); }
+#root:not(.portrait) .chip { margin-top: calc(52px * var(--u)); }

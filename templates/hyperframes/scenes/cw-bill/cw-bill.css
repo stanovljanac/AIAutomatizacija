@@ -1,0 +1,64 @@
+/* cw-bill — s9 (the bill) + s10 (the honest catch). The pile on the left, a printing receipt on the
+   right. Relative lengths only — no currency, no rate, no price (021's rule: prices age). */
+
+.pilehost { position: absolute; inset: 0; z-index: 14; }
+.pilelbl {
+  position: absolute; left: calc(32% - 300px * var(--u)); width: calc(600px * var(--u));
+  top: calc(792px * var(--u)); text-align: center;
+  font-size: calc(27px * var(--u)); font-weight: 700; letter-spacing: calc(2.4px * var(--u));
+  text-transform: uppercase; color: var(--text-2); opacity: 0; z-index: 20;
+}
+
+/* the receipt — a real strip of paper with a torn bottom edge */
+.receipt {
+  position: absolute; left: 66%; top: calc(216px * var(--u));
+  width: calc(520px * var(--u)); padding: calc(28px * var(--u)) calc(30px * var(--u)) calc(46px * var(--u));
+  background: linear-gradient(172deg, #f4f7fa 0%, var(--paper) 40%, #d3dde7 100%);
+  box-shadow: 0 calc(3px * var(--u)) calc(6px * var(--u)) rgba(0,0,0,0.45),
+              0 calc(28px * var(--u)) calc(70px * var(--u)) rgba(0,0,0,0.5);
+  z-index: 16; opacity: 0; will-change: transform, opacity;
+}
+.receipt::after { /* torn edge */
+  content: ""; position: absolute; left: 0; right: 0; bottom: calc(-14px * var(--u)); height: calc(16px * var(--u));
+  background: repeating-linear-gradient(135deg, #d3dde7 0 calc(11px * var(--u)), transparent calc(11px * var(--u)) calc(22px * var(--u)));
+}
+.rhead {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(25px * var(--u)); font-weight: 700; color: #3d5266;
+  letter-spacing: calc(2.4px * var(--u)); text-transform: uppercase;
+  padding-bottom: calc(16px * var(--u)); margin-bottom: calc(14px * var(--u));
+  border-bottom: calc(2px * var(--u)) dashed #a9bacb;
+}
+.rrow { display: flex; align-items: center; gap: calc(14px * var(--u)); margin-bottom: calc(14px * var(--u)); opacity: 0; }
+.rlbl {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(23px * var(--u)); font-weight: 700; color: #5c7085; white-space: nowrap;
+}
+.rbarwrap { flex: 1; height: calc(16px * var(--u)); background: rgba(120,145,172,0.22); border-radius: calc(4px * var(--u)); overflow: hidden; }
+.rbar {
+  height: 100%; border-radius: calc(4px * var(--u)); transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-2) 100%);
+}
+.stamp {
+  position: absolute; left: 50%; top: 62%;
+  transform: translate(-50%, -50%) rotate(-3deg) scale(2.2);
+  padding: calc(10px * var(--u)) calc(24px * var(--u));
+  border: calc(4px * var(--u)) solid rgba(61,220,151,0.85); border-radius: calc(8px * var(--u));
+  color: #2fae7a; font-size: calc(42px * var(--u)); font-weight: 800;
+  letter-spacing: calc(3px * var(--u)); text-transform: uppercase; white-space: nowrap;
+  opacity: 0;
+}
+
+/* the vendor's own sentence */
+.quote { left: 50%; top: calc(560px * var(--u)); width: calc(1000px * var(--u)); margin-left: calc(-500px * var(--u)); opacity: 0; z-index: 30; }
+.qtext { font-size: calc(44px * var(--u)); font-weight: 700; color: var(--text); line-height: 1.28; }
+.qchip { margin-top: calc(20px * var(--u)); }
+
+.kicker {
+  position: absolute; left: 0; right: 0; top: calc(96px * var(--u)); text-align: center;
+  color: var(--text); opacity: 0; z-index: 24;
+}
+
+.portrait .receipt { left: 50%; margin-left: calc(-260px * var(--u)); top: calc(760px * var(--u)); }
+.portrait .pilelbl { left: 50%; margin-left: calc(-300px * var(--u)); top: calc(640px * var(--u)); }
+.portrait .quote { width: calc(880px * var(--u)); margin-left: calc(-440px * var(--u)); }

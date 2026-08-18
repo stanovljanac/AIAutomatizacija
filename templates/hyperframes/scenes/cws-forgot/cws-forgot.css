@@ -1,0 +1,61 @@
+/* cws-forgot — 022 Short s1 hook (9:16, black+gold). Deliberately the same object family as the
+   long hook (cw-never-remembered) so the two cuts read as one video, not a crop and its source.
+   Stage / paper / desk / sweep come from _lib/hf-fx.css; this file is art direction only. */
+
+.fx-world { transform-origin: 50% 80%; }
+
+/* ── the thread, full-bleed: on a phone the bubbles have to be the whole frame ── */
+.threadclip {
+  position: absolute; left: 0; right: 0; top: calc(70px * var(--u)); height: calc(1500px * var(--u));
+  overflow: hidden; z-index: 20;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 8%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 8%, #000 82%, transparent 100%);
+}
+.thread { position: absolute; left: 0; right: 0; top: 0; height: calc(3000px * var(--u)); will-change: transform; }
+
+.bub {
+  position: absolute;
+  border-radius: calc(30px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(150, 140, 110, 0.2);
+  box-shadow: 0 calc(16px * var(--u)) calc(38px * var(--u)) rgba(0, 0, 0, 0.5);
+  will-change: transform, opacity;
+}
+.bub.me { right: 5%; background: linear-gradient(166deg, #2a2312 0%, #1a170e 100%); border-color: rgba(255, 176, 32, 0.24); }
+.bub.ai { left: 5%; background: linear-gradient(166deg, #1a1a1c 0%, #101012 100%); border-color: rgba(180, 180, 190, 0.14); }
+.bub .bl { position: absolute; height: calc(12px * var(--u)); border-radius: calc(6px * var(--u)); }
+.bub.me .bl { background: rgba(255, 214, 150, 0.42); }
+.bub.ai .bl { background: rgba(200, 212, 226, 0.3); }
+
+/* the pinned message — "the thing you told it at the start" */
+.bub.pinned { border-color: rgba(255, 176, 32, 0.75); box-shadow: 0 calc(18px * var(--u)) calc(56px * var(--u)) rgba(255, 176, 32, 0.24); }
+.bub.pinned::before {
+  content: ""; position: absolute; left: 0; top: calc(16px * var(--u)); bottom: calc(16px * var(--u));
+  width: calc(7px * var(--u)); border-radius: calc(4px * var(--u));
+  background: linear-gradient(180deg, var(--gold-2), var(--gold));
+  box-shadow: 0 0 calc(24px * var(--u)) rgba(255, 176, 32, 0.9);
+}
+.pin {
+  position: absolute; right: calc(-15px * var(--u)); top: calc(-15px * var(--u));
+  width: calc(30px * var(--u)); height: calc(30px * var(--u)); border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, var(--gold-3), var(--gold) 60%, #c9820c 100%);
+  box-shadow: 0 0 calc(34px * var(--u)) rgba(255, 176, 32, 0.95);
+}
+
+/* the empty slot: nothing is drawn there, only a cooling afterglow (the s19 lesson) */
+.hole {
+  position: absolute; left: 50%; transform: translate(-50%, -50%);
+  width: calc(900px * var(--u)); height: calc(190px * var(--u));
+  background: radial-gradient(ellipse at center, rgba(255, 176, 32, 0.2), transparent 68%);
+  filter: blur(calc(26px * var(--u))); opacity: 0; z-index: 18;
+}
+
+/* ── the pile it all becomes: the exact object cw-tower (s2) opens on ── */
+.deskhost { position: absolute; inset: 0; z-index: 10; }
+.pilehost { position: absolute; inset: 0; z-index: 22; }
+.sweephost { position: absolute; inset: 0; z-index: 26; }
+.impact {
+  position: absolute; left: 50%; transform: translate(-50%, -50%);
+  width: calc(1000px * var(--u)); height: calc(220px * var(--u));
+  background: radial-gradient(ellipse at center, rgba(255, 176, 32, 0.55), transparent 66%);
+  filter: blur(calc(30px * var(--u))); opacity: 0; z-index: 21;
+}

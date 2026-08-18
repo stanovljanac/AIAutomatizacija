@@ -1,0 +1,52 @@
+/* cw-position — s11 (the pivot) + s12 (the U curve). The gold page is the ONE object both phases
+   are about: it drifts into the middle of the pile, then rides the measured curve. */
+
+.colhost { position: absolute; inset: 0; z-index: 12; }
+
+.plot {
+  position: absolute; left: calc(260px * var(--u)); top: calc(200px * var(--u));
+  width: calc(1400px * var(--u)); height: calc(520px * var(--u)); z-index: 14; opacity: 0;
+}
+.axis {
+  position: absolute; left: calc(240px * var(--u)); top: calc(742px * var(--u));
+  width: calc(1440px * var(--u)); height: calc(2px * var(--u));
+  background: linear-gradient(90deg, transparent, rgba(146,178,214,0.45), transparent);
+  z-index: 13; opacity: 0; transform-origin: 50% 50%;
+}
+.axlbl {
+  position: absolute; top: calc(760px * var(--u)); z-index: 16; opacity: 0;
+  font-size: calc(26px * var(--u)); font-weight: 700; color: var(--steel);
+  letter-spacing: calc(2px * var(--u)); text-transform: uppercase; white-space: nowrap;
+  transform: translateX(-50%);
+}
+.axlbl.a { left: calc(280px * var(--u)); }
+.axlbl.b { left: calc(960px * var(--u)); }
+.axlbl.c { left: calc(1640px * var(--u)); }
+.ylbl {
+  position: absolute; left: calc(150px * var(--u)); top: calc(430px * var(--u));
+  transform: rotate(-90deg); transform-origin: 50% 50%; z-index: 16; opacity: 0;
+  font-size: calc(26px * var(--u)); font-weight: 700; color: var(--steel);
+  letter-spacing: calc(2px * var(--u)); text-transform: uppercase; white-space: nowrap;
+}
+
+/* the fact itself — a real, readable page, gold, and the only thing that ever moves */
+.page {
+  position: absolute; left: 0; top: 0; z-index: 22;
+  padding: calc(14px * var(--u)) calc(22px * var(--u));
+  border-radius: calc(8px * var(--u));
+  background: linear-gradient(180deg, #fff3d6 0%, var(--paper-gold) 40%, var(--paper-gold-2) 100%);
+  box-shadow: 0 calc(3px * var(--u)) calc(6px * var(--u)) rgba(0,0,0,0.5),
+              0 calc(14px * var(--u)) calc(44px * var(--u)) rgba(255,176,32,0.45);
+  color: #4a3708; font-size: calc(28px * var(--u)); font-weight: 800; white-space: nowrap;
+  will-change: transform;
+}
+
+.chip { position: absolute; left: 50%; transform: translateX(-50%); top: calc(830px * var(--u)); z-index: 40; opacity: 0; }
+.kicker {
+  position: absolute; left: 0; right: 0; top: calc(96px * var(--u)); text-align: center;
+  color: var(--text); opacity: 0; z-index: 24;
+}
+
+.portrait .plot { left: calc(90px * var(--u)); width: calc(900px * var(--u)); top: calc(700px * var(--u)); }
+.portrait .axis { left: calc(70px * var(--u)); width: calc(940px * var(--u)); top: calc(1242px * var(--u)); }
+.portrait .chip { top: calc(1330px * var(--u)); }

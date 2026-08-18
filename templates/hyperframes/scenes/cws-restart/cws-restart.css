@@ -1,0 +1,51 @@
+/* cws-restart — Short s4 (portrait). Projection, then the five lines worth screenshotting. */
+
+/* The plot fills the portrait frame. At 900x620 in the middle of a 1920-tall frame the curve was a
+   small mark on a phone and, worse, unreadable: a quadratic hugs its baseline, so two thirds of the
+   ink lived in the last third of the box (owner, 2026-08-17). Bigger box + a marker at BOTH ends. */
+.plot { position: absolute; left: calc(70px * var(--u)); top: calc(300px * var(--u)); width: calc(940px * var(--u)); height: calc(1010px * var(--u)); z-index: 15; }
+.chart { position: absolute; inset: 0; z-index: 14; }
+.mbar {
+  position: absolute; width: calc(24px * var(--u)); border-radius: calc(4px * var(--u)) calc(4px * var(--u)) 0 0;
+  background: linear-gradient(180deg, var(--gold-2), var(--gold)); opacity: 0.6; transform-origin: 50% 100%;
+}
+.mark { position: absolute; z-index: 20; opacity: 0; }
+.mark .dot {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: calc(26px * var(--u)); height: calc(26px * var(--u)); border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 calc(34px * var(--u)) rgba(255,176,32,0.95);
+}
+/* the end marker sits near the RIGHT edge of a 1080 frame, so its label reaches back across the
+   curve instead of centring on the dot and running off the screen */
+.mark .mlbl {
+  position: absolute; left: 50%; top: calc(-62px * var(--u)); transform: translateX(-74%);
+  font-size: calc(36px * var(--u)); font-weight: 800; color: var(--gold-2); white-space: nowrap;
+}
+.chip { position: absolute; left: 50%; transform: translateX(-50%); top: calc(1470px * var(--u)); z-index: 40; opacity: 0; }
+/* the second marker: where the MEASURED chat sits, so the curve reads as 4.5x -> 20x and not as a
+   decorative swoosh. A single labelled point at one end tells the viewer nothing to compare against. */
+.mark.below .mlbl { top: calc(30px * var(--u)); left: calc(26px * var(--u)); transform: none; font-size: calc(31px * var(--u)); color: var(--text-2); }
+.mark.below .dot { width: calc(20px * var(--u)); height: calc(20px * var(--u)); }
+.axis {
+  position: absolute; left: 0; right: 0; top: calc(1392px * var(--u)); text-align: center; z-index: 20;
+  font-size: calc(28px * var(--u)); font-weight: 700; letter-spacing: calc(2.4px * var(--u));
+  text-transform: uppercase; color: var(--text-2); opacity: 0;
+}
+
+.pilehost { position: absolute; inset: 0; z-index: 12; }
+.summary {
+  position: absolute; left: 50%; transform: translateX(-50%); top: calc(600px * var(--u));
+  width: calc(940px * var(--u)); padding: calc(38px * var(--u)) calc(36px * var(--u));
+  border-radius: calc(16px * var(--u));
+  background: linear-gradient(168deg, #f4f7fa 0%, var(--paper) 44%, #d5dfe9 100%);
+  box-shadow: 0 calc(4px * var(--u)) calc(8px * var(--u)) rgba(0,0,0,0.5),
+              0 calc(34px * var(--u)) calc(84px * var(--u)) rgba(0,0,0,0.55);
+  z-index: 24; opacity: 0;
+}
+.sline {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(34px * var(--u)); font-weight: 700; color: #2d3f52;
+  padding: calc(12px * var(--u)) 0; opacity: 0;
+}
+.sline b { color: #a06a05; }
+.kicker { position: absolute; left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(300px * var(--u)); text-align: center; color: var(--text); opacity: 0; z-index: 26; }

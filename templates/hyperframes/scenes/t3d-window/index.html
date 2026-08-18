@@ -1,0 +1,65 @@
+<!doctype html>
+<!--
+  t3d-window — 022 long s2 (phase 1) and s3 (phase 2), the 3D cut of cw-window-frame.
+
+  ONE FILE FOR BOTH PHASES, exactly like the 2D take, so the gold frame and the four labelled groups
+  cross the s2/s3 boundary as the SAME object at the same size and position. Same props contract
+  (phase · motif · frameLabel · groups[] · chunks[] · emptyLine), so swapping the takes is one field.
+
+  WHAT THE THIRD DIMENSION BUYS HERE — the emptying. In 2D "nothing is kept" is an opacity change on
+  flat rectangles. Here the frame is a real object standing in a room: the wrong mental model (a room
+  where things are FILED) is built as actual shelves behind the glass, you watch them through it, and
+  when the beat lands the shelves, the boxes and every page lift out and the frame is left with the
+  room still visible through it and its inner light cooling from gold to blue. There is somewhere for
+  the emptiness to be.
+
+  PHASE 1 (s2)
+    b0  "Here's what's actually happening."          the motif; the pile from s1 is already there
+    b1  "Every model has a context window…"          the frame draws itself AROUND the pile
+        "…counted in the chunks we measured last time" — the top page dissolves into token capsules
+    b2  "Your conversation, your instructions…"      the pile stands up into four labelled groups
+    b3  "That part is true."                         a green tick — deliberately NO strike-through
+
+  PHASE 2 (s3)
+    u0  "…a window sounds like a room where things are kept."   shelves build BEHIND the glass
+    u1  "Nothing is kept."                                       shelves, boxes and pages lift out
+    u2  "…the model holds nothing at all."                       the empty frame, cooling to blue
+
+  Seek-driven and deterministic (window.__hfThreeTime + `hf-seek`, HF3.rng seeds, no rAF/Date.now).
+  DOF + bloom from _lib/hf-three.js.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":552},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":18.4}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-three.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="t3d-window.css" />
+    <script>
+      // rewritten to ../vendor/… by _lib/make-entry.mjs for the generated entry
+      window.__THREE_URL = "./vendor/three.module.min.js";
+    </script>
+  </head>
+  <body>
+    <div id="root" data-composition-id="t3d-window" data-start="0" data-width="1920" data-height="1080">
+      <canvas id="gl" data-layout-ignore></canvas>
+
+      <!-- flat type layer: the series motif and the line phase 2 exists to install -->
+      <div class="motif fx-motif" id="motif"></div>
+      <div class="empty" id="empty"><span class="fx-gold" id="emptytext"></span></div>
+    </div>
+    <script src="t3d-window.js"></script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<!--
+  cw-fifo — 022 long s19. THE SILENT DROP, and the emotional payoff of the hook.
+  The gold page the viewer pinned in s1 is IN this pile, near the bottom. New pages land on top; the
+  bottom pages slide off the FRONT of the desk and out of frame. No sound cue, no warning label, no
+  red — that silence is the point. The camera ends on the gap where the pinned page was, framed
+  exactly as s1 ended. Source chip: this is documented behaviour of chat interfaces, not a guess.
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":483},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":16.11}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="cw-fifo.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cw-fifo" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <div class="deskhost" id="deskhost"></div>
+        <div class="pilehost" id="pilehost"></div>
+        <div class="pinlbl" id="pinlbl"></div>
+        <div class="pinline" id="pinline"></div>
+        <div class="gap" id="gap"></div>
+        <div class="fx-chip chip" id="chip"></div>
+        <div class="kicker fx-h2" id="kicker"></div>
+      </div>
+    </div>
+    <script src="cw-fifo.js"></script>
+  </body>
+</html>

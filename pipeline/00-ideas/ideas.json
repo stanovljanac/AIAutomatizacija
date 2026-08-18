@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-15",
+  "updated": "2026-08-16",
   "ideas": [
     {
       "id": "bulk-personalized-emails",
@@ -1015,6 +1015,34 @@
       "value_score": 8.35,
       "value_band": "owner",
       "produced_video_id": "021-what-is-a-token",
+      "source": {
+        "origin": "manual"
+      }
+    },
+    {
+      "id": "desk-lessons-context-window",
+      "title": "AI Has No Memory — It Re-Reads Everything",
+      "search_term": "what is a context window in ai",
+      "task": "other",
+      "sector": "general",
+      "subject": "llm-mental-model",
+      "series": "Desk Lessons",
+      "tool": "None (concept video; tiktoken used only as the measuring instrument, as in 021)",
+      "archetype": "ideas",
+      "angle_hint": "Not 'how much the AI remembers'. Nothing is remembered — every turn the whole conversation is handed back and re-read from scratch, and re-reading degrades with size and with position in the pile.",
+      "score": 90,
+      "status": "in-progress",
+      "lane": "desk-notes",
+      "value_type": [
+        "corrects-misbelief",
+        "teaches-system",
+        "surprising-truth",
+        "saves-money"
+      ],
+      "takeaway": "The window is not memory, it is what gets re-read every single turn — so curate the pile: put the task first and the question last, never bury the line that matters in the middle, and start a fresh chat with a short summary instead of dragging a long thread.",
+      "value_score": 8.75,
+      "value_band": "owner",
+      "produced_video_id": "022-context-window",
       "source": {
         "origin": "manual"
       }

@@ -1,0 +1,51 @@
+/* cw-desk-cycle — 022 s4 (16:9) + Short s2 (9:16). A desk, not a brain: land → read → write → wipe.
+   Stage/paper/desk/sweep come from _lib/hf-fx.css; this file is art direction only. */
+
+.brain {
+  position: absolute; left: 50%; top: calc(300px * var(--u)); transform: translateX(-50%);
+  width: calc(300px * var(--u)); height: calc(300px * var(--u)); z-index: 14; opacity: 0.9;
+}
+.brainlbl {
+  position: absolute; left: 0; right: 0; top: calc(620px * var(--u)); text-align: center; z-index: 14;
+  font-size: calc(38px * var(--u)); font-weight: 700; color: var(--ghost);
+  letter-spacing: calc(1px * var(--u));
+}
+
+.deskhost { position: absolute; inset: 0; z-index: 10; }
+.stage { position: absolute; inset: 0; z-index: 14; }
+.pilehost { position: absolute; inset: 0; }
+.sweephost { position: absolute; inset: 0; z-index: 18; }
+
+.impact {
+  position: absolute; left: 50%; top: calc(742px * var(--u)); transform: translate(-50%, -50%);
+  width: calc(1100px * var(--u)); height: calc(180px * var(--u));
+  background: radial-gradient(ellipse at center, rgba(122,178,236,0.5), transparent 68%);
+  filter: blur(calc(26px * var(--u))); opacity: 0; z-index: 12;
+}
+/* the wipe smear — the desk is cleared in one hard motion, and you SEE the speed */
+.wipe {
+  position: absolute; left: 0; top: calc(500px * var(--u)); width: 100%; height: calc(260px * var(--u));
+  background: linear-gradient(90deg, transparent, rgba(230,240,250,0.30) 40%, rgba(230,240,250,0.05) 70%, transparent);
+  opacity: 0; z-index: 16; will-change: transform, opacity;
+}
+
+/* the load-bearing label: the model's own last answer goes back onto the same pile */
+.tag {
+  position: absolute; left: 50%; top: calc(392px * var(--u)); transform: translateX(-50%);
+  padding: calc(9px * var(--u)) calc(20px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.55); border-radius: calc(999px * var(--u));
+  background: rgba(255,176,32,0.08); color: var(--gold-2);
+  font-size: calc(28px * var(--u)); font-weight: 700; white-space: nowrap;
+  opacity: 0; z-index: 24;
+}
+.kicker {
+  position: absolute; left: 0; right: 0; top: calc(150px * var(--u)); text-align: center;
+  color: var(--text); opacity: 0; z-index: 22;
+}
+
+/* ── portrait (Short s2) ─────────────────────────────────────────────────────── */
+.portrait .brain { top: calc(560px * var(--u)); }
+.portrait .kicker { top: calc(380px * var(--u)); }
+.portrait .tag { top: calc(880px * var(--u)); }
+.portrait .impact { top: calc(1290px * var(--u)); width: calc(980px * var(--u)); }
+.portrait .wipe { top: calc(1040px * var(--u)); }

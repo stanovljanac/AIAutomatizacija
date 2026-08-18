@@ -1,0 +1,33 @@
+/* t3d-hook — 022 s1, the 3D cut of the hook. The frame IS the WebGL canvas; the only DOM is the
+   flat type layer (myth plate, slash, kicker), which uses the house typography from _lib/hf-fx.css
+   so the 3D cut and the 2D scenes around it are visibly the same channel.
+   No _lib stage layers here on purpose — the room, the haze and the light are rendered, not faked. */
+
+#root { background: #04070b; }
+#gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; }
+
+/* the dim that carries the myth beat (in 2D this is the thread's own opacity) */
+.scrim {
+  position: absolute; inset: 0; z-index: 10; opacity: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 46%, rgba(4,7,11,0.30) 0%, rgba(4,7,11,0.72) 72%);
+}
+
+/* ── the myth ────────────────────────────────────────────────────────────────── */
+.mythwrap {
+  position: absolute; left: 50%; top: 47%; transform: translate(-50%, -50%);
+  z-index: 30; opacity: 0; will-change: transform, opacity;
+}
+.fx-myth { position: relative; font-size: calc(58px * var(--u)); letter-spacing: calc(-0.6px * var(--u)); }
+
+/* ── the line the scene exists to install — reserved space ABOVE the pile ────── */
+.kicker {
+  position: absolute; left: 0; right: 0; top: calc(300px * var(--u));
+  text-align: center; z-index: 40; opacity: 0; will-change: transform, opacity;
+}
+#kickertext {
+  font-size: calc(108px * var(--u)); font-weight: 800; line-height: 1;
+  letter-spacing: calc(-3px * var(--u));
+}
+
+.portrait .kicker { top: calc(300px * var(--u)); }
+.portrait #kickertext { font-size: calc(96px * var(--u)); }

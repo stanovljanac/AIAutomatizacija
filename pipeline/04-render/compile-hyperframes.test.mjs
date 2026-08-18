@@ -13,6 +13,7 @@ import {
   buildHyperframesJobs,
   buildEntryCommand,
   buildRenderCommand,
+  buildNormaliseCommand,
   copyHyperframesClips,
   detectDeadRender,
   jobVariables,
@@ -156,6 +157,11 @@ function fakeSpawn(calls, { status = 0, produceFile = true } = {}) {
   return (cmd, args, opts) => {
     if (cmd === "node" && /make-entry\.mjs$/.test(args[0])) {
       return { status: 0, stdout: "compositions/render-entry.html\n" };
+    }
+    if (cmd === "ffmpeg") {
+      // the compositor-safe normalisation pass: writes its -y target, never counted as a render
+      fs.writeFileSync(args[args.length - 1], "fake-normalised-mp4");
+      return { status: 0 };
     }
     calls.push({ cmd, args, opts });
     const out = args[args.indexOf("--output") + 1];
@@ -324,6 +330,10 @@ test("[REGRESSION] renderHyperframesScenes re-renders when hf_scene changes even
         if (cmd === "node" && /make-entry\.mjs$/.test(args[0])) {
           return { status: 0, stdout: "compositions/render-entry.html\n" };
         }
+        if (cmd === "ffmpeg") {
+          fs.writeFileSync(args[args.length - 1], "fake-normalised-mp4");
+          return { status: 0 };
+        }
         calls.push({ cmd, args, opts });
         // strip any cmd.exe shell-quoting so we locate the real output path
         const rawArgs = args.map((a) => (typeof a === "string" && a.startsWith('"') && a.endsWith('"') ? a.slice(1, -1).replace(/\\"/g, '"') : a));
@@ -375,6 +385,10 @@ test("[REGRESSION] renderHyperframesScenes childEnv is a fresh object (never ali
     function fakeSpawn(cmd, args, opts) {
       if (cmd === "node" && /make-entry\.mjs$/.test(args[0])) {
         return { status: 0, stdout: "compositions/render-entry.html\n" };
+      }
+      if (cmd === "ffmpeg") {
+        fs.writeFileSync(args[args.length - 1], "fake-normalised-mp4");
+        return { status: 0 };
       }
       capturedEnv = opts.env;
       // Mutate the received env object to test aliasing
@@ -546,6 +560,10 @@ test("[REGRESSION] renderHyperframesScenes skip logic works when output path con
         if (cmd === "node" && /make-entry\.mjs$/.test(args[0])) {
           return { status: 0, stdout: "compositions/render-entry.html\n" };
         }
+        if (cmd === "ffmpeg") {
+          fs.writeFileSync(args[args.length - 1], "fake-normalised-mp4");
+          return { status: 0 };
+        }
         calls.push({ cmd, args, opts });
         const rawArgs = args.map((a) =>
           typeof a === "string" && a.startsWith('"') && a.endsWith('"')
@@ -637,4 +655,25 @@ test("[ACCEPTANCE] a render that exits 0 but is DEAD throws AND discards the mp4
       "the dead mp4 must be deleted, or the next run skips it as cached-and-fine",
     );
   });
+});
+
+// ── compositor-safe normalisation (2026-08-18) ────────────────────────────────────────────────
+// Remotion's compositor intermittently reports "No frame found at position" on the raw HyperFrames
+// output — a hard failure in portrait, a single BLACK FRAME in 16:9. Every clip is re-encoded CFR
+// with a cloned tail so the compositor is never asked for a frame at or past the last one.
+test("buildNormaliseCommand pads a cloned tail and pins CFR at the job's fps", () => {
+  const { cmd, args } = buildNormaliseCommand({ fps: 30 }, { inFile: "in.mp4", outFile: "out.mp4" });
+  assert.equal(cmd, "ffmpeg");
+  const vf = args[args.indexOf("-vf") + 1];
+  assert.match(vf, /tpad=stop_mode=clone:stop_duration=/, "a cloned tail past the end is the documented remedy");
+  assert.match(vf, /fps=30$/, "and the stream is resampled to the job's exact fps");
+  assert.equal(args[args.indexOf("-vsync") + 1], "cfr", "variable frame rate is what the compositor mis-seeks");
+  assert.equal(args[args.indexOf("-i") + 1], "in.mp4");
+  assert.equal(args[args.length - 1], "out.mp4");
+  assert.ok(args.includes("-an"), "HF clips are silent; the narration lives only in Remotion");
+});
+
+test("buildNormaliseCommand follows a non-30 fps job", () => {
+  const { args } = buildNormaliseCommand({ fps: 24 }, { inFile: "a.mp4", outFile: "b.mp4" });
+  assert.match(args[args.indexOf("-vf") + 1], /fps=24$/);
 });

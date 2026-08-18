@@ -1,0 +1,34 @@
+/* cw-projection — s8. Measured = solid gold and small; projected = dashed, chipped, and clearly
+   labelled arithmetic. The two are never allowed to look like the same kind of thing. */
+
+.chart { position: absolute; inset: 0; z-index: 14; }
+.mbar {
+  position: absolute; border-radius: calc(4px * var(--u)) calc(4px * var(--u)) 0 0;
+  background: linear-gradient(180deg, var(--gold-2), var(--gold));
+  transform-origin: 50% 100%; opacity: 0.55;
+}
+.plot { position: absolute; left: calc(210px * var(--u)); top: calc(180px * var(--u)); width: calc(1500px * var(--u)); height: calc(560px * var(--u)); z-index: 15; }
+.axis {
+  position: absolute; left: calc(190px * var(--u)); top: calc(742px * var(--u));
+  width: calc(1540px * var(--u)); height: calc(2px * var(--u));
+  background: linear-gradient(90deg, rgba(146,178,214,0.5), rgba(146,178,214,0.12));
+  z-index: 13;
+}
+.mark { position: absolute; z-index: 20; opacity: 0; }
+.mark .dot {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: calc(22px * var(--u)); height: calc(22px * var(--u)); border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 calc(28px * var(--u)) rgba(255,176,32,0.9);
+}
+.mark .mlbl {
+  position: absolute; left: 50%; top: calc(-56px * var(--u)); transform: translateX(-50%);
+  font-size: calc(30px * var(--u)); font-weight: 800; color: var(--gold-2); white-space: nowrap;
+}
+.chip { position: absolute; z-index: 40; opacity: 0; }
+.chip.measured { left: calc(210px * var(--u)); top: calc(790px * var(--u)); }
+.chip.proj { right: calc(210px * var(--u)); top: calc(790px * var(--u)); }
+.kicker {
+  position: absolute; left: 0; right: 0; top: calc(90px * var(--u)); text-align: center;
+  z-index: 24; opacity: 0;
+}
+#kickertext { font-size: calc(84px * var(--u)); font-weight: 800; letter-spacing: calc(-2px * var(--u)); }

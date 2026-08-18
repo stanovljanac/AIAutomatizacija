@@ -1,0 +1,109 @@
+/* cw-whole-chat — 022 long s4, alternative take. Your chat is the anchor on the left; the desk is a
+   visitor on the right. Stage / paper / desk / sweep / chip come from _lib/hf-fx.css. */
+
+.brain {
+  position: absolute; left: calc(1290px * var(--u)); top: calc(330px * var(--u)); transform: translateX(-50%);
+  width: calc(280px * var(--u)); height: calc(280px * var(--u)); z-index: 14; opacity: 0.9;
+}
+.brainlbl {
+  position: absolute; left: calc(1290px * var(--u)); top: calc(630px * var(--u)); transform: translateX(-50%);
+  z-index: 14; font-size: calc(36px * var(--u)); font-weight: 700; color: var(--ghost);
+  letter-spacing: calc(1px * var(--u));
+}
+
+/* ── the anchor: your chat ───────────────────────────────────────────────────── */
+.phone {
+  position: absolute; left: calc(96px * var(--u)); top: calc(196px * var(--u));
+  width: calc(520px * var(--u)); height: calc(648px * var(--u));
+  border-radius: calc(26px * var(--u));
+  border: calc(2px * var(--u)) solid rgba(146, 178, 214, 0.26);
+  background: linear-gradient(168deg, rgba(19, 31, 45, 0.96) 0%, rgba(10, 18, 27, 0.96) 100%);
+  box-shadow: 0 calc(30px * var(--u)) calc(80px * var(--u)) rgba(0, 0, 0, 0.6);
+  overflow: hidden; z-index: 20; opacity: 0;
+}
+.phone::before { /* the app's top bar, so it reads as an interface at a glance */
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: calc(52px * var(--u));
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: calc(1px * var(--u)) solid rgba(146, 178, 214, 0.16);
+}
+.threadclip {
+  position: absolute; left: 0; right: 0; top: calc(52px * var(--u)); bottom: 0; overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 7%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 7%, #000 100%);
+}
+.thread { position: absolute; left: 0; right: 0; top: 0; height: calc(2400px * var(--u)); will-change: transform; }
+
+.bub {
+  position: absolute; border-radius: calc(14px * var(--u));
+  box-shadow: 0 calc(6px * var(--u)) calc(16px * var(--u)) rgba(0, 0, 0, 0.4);
+  will-change: transform, opacity;
+}
+.bub.me { right: calc(22px * var(--u)); background: linear-gradient(166deg, #2f3f52 0%, #1e2b3a 100%); }
+.bub.ai { left: calc(22px * var(--u)); background: linear-gradient(166deg, #3a2f14 0%, #241d0d 100%); }
+.bub .bl { position: absolute; height: calc(7px * var(--u)); border-radius: calc(4px * var(--u)); }
+.bub.me .bl { background: rgba(200, 216, 234, 0.42); }
+.bub.ai .bl { background: rgba(255, 214, 150, 0.44); }
+/* the line you just sent — the ONE small thing that triggers the whole handover */
+.bub.fresh { box-shadow: 0 0 calc(30px * var(--u)) rgba(255, 176, 32, 0.5); }
+
+.phonelbl {
+  position: absolute; left: calc(96px * var(--u)); top: calc(866px * var(--u)); z-index: 22;
+  font-size: calc(23px * var(--u)); opacity: 0;
+}
+
+/* the copy of the whole conversation, mid-flight: flat and face-on, never tilted */
+.ghost {
+  position: absolute; left: calc(96px * var(--u)); top: calc(196px * var(--u));
+  width: calc(520px * var(--u)); height: calc(648px * var(--u));
+  border-radius: calc(20px * var(--u));
+  border: calc(2px * var(--u)) solid rgba(255, 176, 32, 0.55);
+  background: linear-gradient(168deg, rgba(255, 205, 120, 0.20) 0%, rgba(255, 176, 32, 0.10) 100%);
+  box-shadow: 0 0 calc(60px * var(--u)) rgba(255, 176, 32, 0.28);
+  transform-origin: 50% 100%;
+  opacity: 0; z-index: 24;
+}
+
+/* ── the desk it lands on ────────────────────────────────────────────────────── */
+.deskhost { position: absolute; inset: 0; z-index: 10; }
+.pilehost { position: absolute; inset: 0; z-index: 16; will-change: transform, opacity; }
+.sweephost { position: absolute; inset: 0; z-index: 22; }
+/* the one page it writes, on its way back into your chat */
+.flyer {
+  position: absolute; left: calc(1290px * var(--u)); top: calc(300px * var(--u));
+  width: calc(600px * var(--u)); height: calc(18px * var(--u));
+  transform: translateX(-50%); border-radius: calc(3px * var(--u));
+  background: linear-gradient(180deg, #fff3d6 0%, var(--paper-gold) 26%, var(--paper-gold-2) 80%, #c99b45 100%);
+  box-shadow: 0 calc(10px * var(--u)) calc(30px * var(--u)) rgba(255, 176, 32, 0.4);
+  opacity: 0; z-index: 26;
+}
+.impact {
+  position: absolute; left: calc(1290px * var(--u)); top: calc(838px * var(--u)); transform: translate(-50%, -50%);
+  width: calc(900px * var(--u)); height: calc(160px * var(--u));
+  background: radial-gradient(ellipse at center, rgba(122, 178, 236, 0.5), transparent 68%);
+  filter: blur(calc(26px * var(--u))); opacity: 0; z-index: 13;
+}
+
+/* the load-bearing label — dark glass, never a tint over gold paper */
+.tag {
+  position: absolute; top: calc(430px * var(--u));
+  padding: calc(10px * var(--u)) calc(20px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(255, 176, 32, 0.5); border-radius: calc(10px * var(--u));
+  background: rgba(9, 17, 26, 0.88); color: var(--gold-2);
+  box-shadow: 0 calc(14px * var(--u)) calc(40px * var(--u)) rgba(0, 0, 0, 0.6);
+  font-size: calc(28px * var(--u)); font-weight: 700; white-space: nowrap;
+  opacity: 0; z-index: 28;
+}
+.tag::before {
+  content: ""; position: absolute; left: calc(-52px * var(--u)); top: 50%;
+  width: calc(52px * var(--u)); height: calc(2px * var(--u));
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+/* the cost of one line, counted where the eye already is */
+.chip { position: absolute; left: calc(1290px * var(--u)); top: calc(152px * var(--u)); transform: translateX(-50%); z-index: 30; opacity: 0; }
+.chip b { color: var(--gold-2); font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.kicker {
+  position: absolute; left: 0; right: 0; top: calc(62px * var(--u)); text-align: center;
+  color: var(--text); opacity: 0; z-index: 24;
+}

@@ -1,0 +1,63 @@
+<!doctype html>
+<!--
+  cw-rules — 022 long s21 · s22 · s23 (phases 1-3). The three habits, delivered the moment each is
+  earned. A three-slot rail is established in phase 1 with slots two and three RESERVED and empty, so
+  nothing ever lands on top of existing text ([[012-minimum-visual-benchmark]]).
+  ph1  a fat folder dumps on the desk and the read sweep struggles; all but three pages lift away and
+       the sweep runs clean and fast. Same object, no split screen.
+  ph2  the prompt shape from s14 returns as a familiar layout: brackets top and bottom, middle dim.
+  ph3  a tall messy pile compresses into FIVE gold lines that land as page one of a clean desk. The
+       five lines are real and copyable (goal · format · rules · open question · next step) and the
+       finished rail is held ≥3s with nothing moving over the text.
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":422},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":14.06}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="cw-rules.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cw-rules" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <div class="deskhost" id="deskhost"></div>
+        <div class="pilehost" id="pilehost"></div>
+        <div class="sweephost" id="sweephost"></div>
+
+        <!-- ph2: the familiar prompt shape -->
+        <div class="block" id="block">
+          <div class="lines" id="lines"></div>
+          <div class="band task" id="bandTask"><span id="taskText"></span></div>
+          <div class="band question" id="bandQ"><span id="qText"></span></div>
+          <span class="brk top" id="brkTop"></span>
+          <span class="brk bot" id="brkBot"></span>
+        </div>
+
+        <!-- ph3: the five-line summary, real and copyable -->
+        <div class="summary" id="summary"></div>
+
+        <!-- the reserved rail (established in ph1, filled one slot per scene) -->
+        <div class="rail" id="rail">
+          <div class="slot" id="s1"><span class="n">1</span><span class="t" id="t1"></span></div>
+          <div class="slot" id="s2"><span class="n">2</span><span class="t" id="t2"></span></div>
+          <div class="slot" id="s3"><span class="n">3</span><span class="t" id="t3"></span></div>
+        </div>
+      </div>
+    </div>
+    <script src="cw-rules.js"></script>
+  </body>
+</html>

@@ -236,6 +236,124 @@ the `lottie` HF adapter. No mandatory in-video attribution for any of these.
 
 ---
 
+## 9. The stage is built once — the shared substrate (D-064)
+
+**The failure this fixes (owner, 2026-08-16, after 021):** 021 shipped 24 bespoke scenes and still
+read as *"slideshow sa rečima i običnom pozadinom"*. The scenes were not lazy — the **frame** was.
+Every scene re-invented a thin stage (one radial + one grid) in its own CSS and then spent its whole
+budget on typography, so nothing in the picture ever had depth, grain, light, weight or continuous
+life. Clearing §1–§6 is not enough if the frame itself is unproduced.
+
+**The rule: never build a background again.** Include the substrate and spend the scene on the idea.
+
+```html
+<script src="../../_lib/gsap.min.js"></script>
+<script src="../../_lib/hf-scene.js"></script>
+<script src="../../_lib/hf-fx.js"></script>
+<link rel="stylesheet" href="../../_lib/hf-fx.css" />
+<link rel="stylesheet" href="my-scene.css" />
+```
+```js
+var S = HF.scene({ id: "my-scene", width: 1920, height: 1080, frames: 400 });
+FX.init(S, { palette: "body" });      // stage layers + palette + dust
+var tl = gsap.timeline({ paused: true });
+FX.ambient(tl);                       // the always-on secondary motion
+```
+
+What that buys, for free, in every scene: a **six-layer stage** (depth ground · masked blueprint grid ·
+two volumetric light shafts · a re-aimable focal bloom · deterministic dust · stepped film grain ·
+vignette · caption band), a **camera rig** (`FX.camera`), **physical paper** (`FX.pile` edge-on slabs,
+`FX.sheet` face-on, `FX.desk`, `FX.sweep`) with real contact + ambient shadows, gradient gold type,
+source chips, quote/myth plates, the gold slash (`FX.strike`) and counters (`FX.count`).
+
+Authoring rules that come with it:
+- **`FX.ambient(tl)` is not optional.** It is what makes §1 ("every ~3s something moves forward") true
+  underneath whatever the scene stages on top. A scene that drives its own camera passes `{push:false}`.
+- **Use `FX.fromTo(tl, target, from, to, at)`, never `gsap.fromTo`, for any beat later than 0.** fromTo
+  defaults to `immediateRender:true` and applies its `from` values at *build* time — a page meant to
+  fade in at 12s sits at opacity 0.2 from frame 0. Never "fix" this with a global
+  `gsap.defaults({immediateRender:false})`: `gsap.set()` depends on immediateRender and silently stops
+  applying, erasing every opening state (tried, reverted — D-064).
+- **One spine object per video.** 022's is THE PILE: the same stack of pages appears in eleven scenes,
+  and that continuity is what a deck of cards cannot buy. Pick the object before writing scene one.
+- Determinism is unchanged: `FX.rng(seed)` only — no `Math.random`, no `Date.now`, no `tl.add(callback)`.
+
+---
+
+## 10. Repeating mechanisms & portrait scale (owner, 2026-08-17 — caught on a frame)
+
+Two defects the 022 render exposed, with the numbers that prevent them. Full write-up:
+[lesson](../knowledge/desk-knowledge/lessons/2026-08-17-a-cycle-must-never-empty-the-frame.md).
+
+**A cycle moves the object; it never erases it.** A scene whose idea is a repeating mechanism
+("every turn…", "every time you hit send…") must be staged as a HANDOVER, not as a wipe. Erasing the
+subject in place reads as a render fault, and a helper that both starts *and* ends a cycle makes the
+scene's length the author's problem — chain three of them into a 10.4s scene and whatever is left
+over is dead air under live narration (022 s4: **5s of empty desk**; Short s1: 2s).
+
+- **Never end a beat on an empty stage.** The next instance must be entering while the previous one
+  is still leaving. One host per turn — a single host cannot overlap itself.
+- **Escalation is what ACCUMULATES on screen**, not what disappears: a receding trail of the earlier
+  copies, a chip counting `turn 1 · 2 · 3 · 4`, a read sweep that takes visibly longer each turn.
+- **Chain the cycle from the beats and clamp the tail** so a re-timed render can't overrun the last
+  beat (`S.cl(Math.max(t3, chainEnd), …, D - 1.05)`).
+
+**Portrait is its own composition, not a crop.** An 11-page stack at 22px pitch is 242px — **12.6%**
+of a 1920 frame, a thin strip on a phone.
+
+- **A 9:16 hero object carries 55–65% of frame height.** Grow UPWARD and let the camera give ground
+  only as fast as it must, so the object still visibly outgrows the shot (022 Short: 47% → 60%).
+- **Pivot a portrait camera near the ground line** (`transform-origin: 50% 80%`), never the centre —
+  a centre-pivot pull-back drives the subject down into the burned-in caption band.
+- **Measure the INK, not the box** (owner, 2026-08-17, on the 022 Short's growth curve: *"previše je
+  mala… ne bih znao ni šta se dešava na ekranu"*). A plot can occupy 83% of the width and still be a
+  small mark, because a quadratic hugs its baseline — two thirds of the drawn line lived in the last
+  third of the box. Size the object so the part that MOVES fills the band, then check it on a frame
+  at phone scale, not on the layout numbers.
+- **A single labelled point explains nothing.** A projection needs BOTH ends named — where the
+  measurement stops and where the projection lands (`8 questions · 4.5× measured` →
+  `40 questions ≈ 20×`) — plus what the axis counts. One marker on a curve is decoration.
+- **Reserved space lives OUTSIDE the camera rig.** A counter or chip inside `#world` gets scaled out
+  of frame by the camera move; put it in its own layer above the stage.
+- **A label never sits on the subject when the subject is bright.** Gold type over paper loses at any
+  plate alpha; 022 s19 came back unreadable twice. Stand the label OFF the object in empty frame and
+  reach it with a thin leader line — then nothing can wash out.
+- **The Short's hook is never the mechanism.** Open on what the viewer recognises, then hand off —
+  and author the hook's last frame to be the mechanism scene's first frame (same geometry, same
+  seed, same camera scale) so the cut is a continuation.
+
+**Labels sit on the subject, so contrast is judged against the subject.** A translucent gold plate
+(`rgba(255,176,32,0.08)`) over a GOLD page is unreadable. Any label landing on the object uses the
+`.fx-chip` treatment: opaque near-black plate, gold hairline, gold text — never a tinted fill.
+
+---
+
+## 11. 3D scenes (Three.js / `HF3`) — the extra rules a rendered scene needs (2026-08-17)
+
+3D is opt-in and per-scene; the default substrate is still 2D DOM + GSAP (§9). When a beat genuinely
+earns real geometry — depth you can orbit, a room you can see INTO, paper that shadows the sheet
+below it — these are the rules that separate a shippable scene from a test clip. Full write-up:
+[lesson](../knowledge/desk-knowledge/lessons/2026-08-17-a-3d-test-clip-is-not-a-scene.md).
+
+- **Every mark comes from `S.beatAt(...)`, never from a literal second.** `t / D` drives the camera;
+  the action belongs under the sentence that describes it. A 3D scene authored at a fixed length
+  cannot be re-slotted, and stretching it leaves the shot inert for the remainder.
+- **Anything the depth-of-field must focus has to WRITE DEPTH.** `HF3.composite` reads the depth
+  buffer, so `depthWrite: false` on a label or a glass pane hands those pixels the depth of the wall
+  behind them and blurs them to the maximum CoC. Use `depthWrite: true` + `alphaTest`.
+- **Words split by role.** Labels that name an object live IN the scene (`HF3.textPlane`) so they
+  orbit, occlude and take the depth of field. The line a scene installs stays FLAT DOM in the house
+  typography — a kicker in perspective breaks §5.
+- **Paper needs pitch ≈ thickness.** Any looser and a stack reads as shelves or venetian blinds.
+  When a thick panel becomes a sheet, scale its thickness down as it lands.
+- **Stage the object for the shot it is IN.** If it holds the frame alone before it redistributes,
+  it is staged large and shrinks into its final arrangement — not the other way round.
+- **Same props contract as the 2D twin**, so the two takes swap on one field (`props.hf_scene`) and
+  can be compared inside a full render instead of as isolated clips.
+- **Judge on frames pulled at the real slot length**, never on the test render.
+
+---
+
 ## Enforcement (where each rule is checked, so it can't be skipped)
 
 | Rule | Check |

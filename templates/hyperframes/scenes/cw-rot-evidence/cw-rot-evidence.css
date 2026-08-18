@@ -1,0 +1,67 @@
+/* cw-rot-evidence — s16 (18 models) + s17 (13 models at 32k). Anonymous chips: the COUNT is the
+   fact, and a model name would age the video. */
+
+.grid18 { position: absolute; left: 50%; top: calc(200px * var(--u)); transform: translateX(-50%); width: calc(1380px * var(--u)); z-index: 14; }
+.mchip {
+  position: absolute; width: calc(200px * var(--u)); height: calc(112px * var(--u));
+  border-radius: calc(12px * var(--u));
+  background: linear-gradient(168deg, rgba(26,40,56,0.95), rgba(14,24,34,0.95));
+  border: calc(1.5px * var(--u)) solid rgba(146,178,214,0.22);
+  box-shadow: 0 calc(12px * var(--u)) calc(30px * var(--u)) rgba(0,0,0,0.42);
+}
+.mchip .mtrack {
+  position: absolute; left: calc(18px * var(--u)); right: calc(18px * var(--u)); bottom: calc(24px * var(--u));
+  height: calc(14px * var(--u)); border-radius: calc(7px * var(--u)); background: rgba(120,145,172,0.22); overflow: hidden;
+}
+.mchip .mfill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 100%;
+  border-radius: calc(7px * var(--u)); transform-origin: 0 50%;
+  background: linear-gradient(90deg, #3ddc97, #63a8ec);
+}
+.mchip .mdot {
+  position: absolute; left: calc(18px * var(--u)); top: calc(20px * var(--u));
+  width: calc(14px * var(--u)); height: calc(14px * var(--u)); border-radius: 50%;
+  background: rgba(146,178,214,0.5);
+}
+
+.slider { position: absolute; left: 50%; top: calc(700px * var(--u)); transform: translateX(-50%); width: calc(1180px * var(--u)); height: calc(60px * var(--u)); z-index: 18; opacity: 0; }
+.slider .track { position: absolute; left: 0; right: 0; top: calc(26px * var(--u)); height: calc(6px * var(--u)); border-radius: calc(3px * var(--u)); background: linear-gradient(90deg, rgba(99,168,236,0.6), rgba(255,176,32,0.6)); }
+.slider .knob {
+  position: absolute; top: calc(14px * var(--u)); left: 0; width: calc(30px * var(--u)); height: calc(30px * var(--u));
+  border-radius: 50%; background: var(--gold); box-shadow: 0 0 calc(26px * var(--u)) rgba(255,176,32,0.85);
+  transform: translateX(-50%);
+}
+.slider .slbl { position: absolute; left: 0; top: calc(-42px * var(--u)); transform: translateX(-50%); font-size: calc(26px * var(--u)); font-weight: 700; color: var(--gold-2); white-space: nowrap; }
+
+.limit { position: absolute; left: calc(1690px * var(--u)); top: calc(180px * var(--u)); height: calc(560px * var(--u)); z-index: 20; opacity: 0; }
+.limit .lline { position: absolute; left: 0; top: 0; bottom: 0; width: calc(4px * var(--u)); background: repeating-linear-gradient(180deg, #ff5c5c 0 calc(12px * var(--u)), transparent calc(12px * var(--u)) calc(24px * var(--u))); }
+.limit .llbl { position: absolute; left: calc(-6px * var(--u)); top: calc(-46px * var(--u)); transform: translateX(-50%); font-size: calc(25px * var(--u)); font-weight: 700; color: #ff8f8f; white-space: nowrap; }
+
+.bracket {
+  position: absolute; left: calc(420px * var(--u)); width: calc(1270px * var(--u)); top: calc(776px * var(--u));
+  height: calc(26px * var(--u)); border: calc(4px * var(--u)) solid var(--gold); border-top: none;
+  border-radius: 0 0 calc(10px * var(--u)) calc(10px * var(--u)); z-index: 20; opacity: 0;
+}
+.bracket .blbl { position: absolute; left: 50%; top: calc(34px * var(--u)); transform: translateX(-50%); font-size: calc(28px * var(--u)); font-weight: 700; color: var(--gold-2); white-space: nowrap; }
+
+/* ── s17 ─────────────────────────────────────────────────────────────────────── */
+.bars13 { position: absolute; inset: 0; z-index: 14; }
+.b13 {
+  position: absolute; bottom: 0; border-radius: calc(6px * var(--u)) calc(6px * var(--u)) 0 0;
+  background: linear-gradient(180deg, #7fb6e8 0%, #4a7fb0 60%, #2c5372 100%);
+  transform-origin: 50% 100%;
+}
+.b13.fell { background: linear-gradient(180deg, var(--gold-2) 0%, var(--gold) 60%, #cf8a0e 100%); }
+.halfline {
+  position: absolute; left: calc(280px * var(--u)); width: calc(1360px * var(--u)); height: calc(3px * var(--u));
+  background: repeating-linear-gradient(90deg, rgba(234,241,248,0.85) 0 calc(16px * var(--u)), transparent calc(16px * var(--u)) calc(30px * var(--u)));
+  z-index: 22; opacity: 0; transform-origin: 0 50%;
+}
+.halfline .hlbl { position: absolute; right: calc(-8px * var(--u)); top: calc(-44px * var(--u)); font-size: calc(26px * var(--u)); font-weight: 700; color: var(--text); white-space: nowrap; }
+.tally {
+  position: absolute; left: 50%; transform: translateX(-50%); top: calc(150px * var(--u));
+  font-size: calc(96px * var(--u)); color: var(--gold-2); opacity: 0; z-index: 24;
+}
+
+.chip { position: absolute; left: 50%; transform: translateX(-50%); top: calc(840px * var(--u)); z-index: 40; opacity: 0; }
+.kicker { position: absolute; left: 0; right: 0; top: calc(96px * var(--u)); text-align: center; color: var(--text); opacity: 0; z-index: 24; }

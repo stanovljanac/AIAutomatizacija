@@ -1,0 +1,27 @@
+/* cw-paste-myth — s15 (the advice + the dump) + s18 (the slash, the wider desk, context rot). */
+
+.deskhost { position: absolute; inset: 0; z-index: 10; }
+.pilehost { position: absolute; inset: 0; z-index: 14; }
+.sweephost { position: absolute; inset: 0; z-index: 18; }
+
+.mythwrap {
+  position: absolute; left: 50%; top: calc(180px * var(--u)); transform: translateX(-50%);
+  z-index: 30; opacity: 0; will-change: transform, opacity;
+}
+.mythwrap .fx-myth { position: relative; font-size: calc(64px * var(--u)); white-space: nowrap; }
+
+.docs {
+  left: 50%; margin-left: calc(-560px * var(--u)); top: calc(360px * var(--u));
+  width: calc(1120px * var(--u)); opacity: 0; z-index: 32;
+}
+.dtext { font-size: calc(44px * var(--u)); font-weight: 700; color: var(--text); line-height: 1.28; }
+.dchip { margin-top: calc(20px * var(--u)); }
+
+.rot {
+  position: absolute; left: 0; right: 0; top: calc(150px * var(--u)); text-align: center;
+  z-index: 34; opacity: 0;
+}
+#rottext { font-size: calc(132px * var(--u)); font-weight: 800; letter-spacing: calc(-3.4px * var(--u)); }
+
+.portrait .mythwrap .fx-myth { font-size: calc(52px * var(--u)); white-space: normal; text-align: center; }
+.portrait .docs { margin-left: calc(-460px * var(--u)); width: calc(920px * var(--u)); }

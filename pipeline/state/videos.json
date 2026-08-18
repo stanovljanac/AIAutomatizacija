@@ -223,6 +223,23 @@
         "due_at": "2026-08-01",
         "snapshots": []
       }
+    },
+    "021-what-is-a-token": {
+      "subject": "llm-mental-model",
+      "idea_id": "desk-lessons-what-is-a-token",
+      "content_type": "long",
+      "status": "published",
+      "published_at": "2026-08-15",
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "linked",
+        "at": "2026-08-15",
+        "note": "2026-08-15-word-alignment-is-1to1-with-the-tts-events"
+      },
+      "analytics": {
+        "due_at": "2026-08-22",
+        "snapshots": []
+      }
     }
   }
 }

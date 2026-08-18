@@ -1,0 +1,81 @@
+/* cw-rules — s21/s22/s23. The rail is RESERVED space: all three slots exist from the first frame of
+   phase 1, dim and empty, so a later rule never lands on top of anything. */
+
+.deskhost { position: absolute; inset: 0; z-index: 10; }
+.pilehost { position: absolute; inset: 0; z-index: 14; }
+.sweephost { position: absolute; inset: 0; z-index: 18; }
+
+.rail {
+  position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(206px * var(--u));
+  width: calc(1560px * var(--u)); display: flex; gap: calc(24px * var(--u)); z-index: 30;
+}
+.slot {
+  flex: 1; display: flex; align-items: center; gap: calc(16px * var(--u));
+  padding: calc(16px * var(--u)) calc(20px * var(--u));
+  border-radius: calc(12px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(146,178,214,0.18);
+  background: rgba(12,20,30,0.6);
+}
+.slot .n {
+  width: calc(44px * var(--u)); height: calc(44px * var(--u)); flex: none;
+  border-radius: 50%; display: grid; place-items: center;
+  background: rgba(146,178,214,0.14); color: var(--steel);
+  font-size: calc(25px * var(--u)); font-weight: 800;
+}
+.slot .t { font-size: calc(28px * var(--u)); font-weight: 700; color: var(--ghost); opacity: 0; white-space: nowrap; }
+.slot.on { border-color: rgba(255,176,32,0.6); background: rgba(255,176,32,0.09); }
+.slot.on .n { background: linear-gradient(180deg, var(--gold-2), var(--gold)); color: #3a2a05; }
+.slot.on .t { color: var(--gold-2); }
+
+/* ph1's folder */
+.folder {
+  position: absolute; left: 50%; transform: translateX(-50%); top: calc(120px * var(--u));
+  width: calc(420px * var(--u)); height: calc(240px * var(--u)); border-radius: calc(14px * var(--u));
+  background: linear-gradient(168deg, #3a4d63 0%, #22323f 100%);
+  border: calc(2px * var(--u)) solid rgba(146,178,214,0.35);
+  box-shadow: 0 calc(24px * var(--u)) calc(60px * var(--u)) rgba(0,0,0,0.5);
+  z-index: 20; opacity: 0;
+}
+
+/* ph2's prompt shape (a deliberate callback to s14, not a new layout) */
+.block {
+  position: absolute; left: 50%; top: calc(110px * var(--u)); transform: translateX(-50%);
+  width: calc(1180px * var(--u)); height: calc(560px * var(--u)); border-radius: calc(16px * var(--u));
+  background: linear-gradient(168deg, rgba(20,32,46,0.96), rgba(11,19,28,0.96));
+  border: calc(1.5px * var(--u)) solid rgba(146,178,214,0.18);
+  box-shadow: 0 calc(30px * var(--u)) calc(80px * var(--u)) rgba(0,0,0,0.55);
+  overflow: hidden; z-index: 16; opacity: 0;
+}
+.lines { position: absolute; inset: calc(34px * var(--u)) calc(40px * var(--u)); }
+.ln { position: absolute; height: calc(12px * var(--u)); border-radius: calc(6px * var(--u)); background: rgba(126,148,172,0.34); }
+.band {
+  position: absolute; left: calc(40px * var(--u)); right: calc(40px * var(--u));
+  padding: calc(14px * var(--u)) calc(20px * var(--u)); border-radius: calc(10px * var(--u));
+  font-size: calc(29px * var(--u)); font-weight: 800; z-index: 6;
+}
+.band.task { top: calc(22px * var(--u)); background: rgba(56,132,208,0.16); border: calc(1.5px * var(--u)) solid rgba(99,168,236,0.5); color: #cfe4fb; }
+.band.question { top: calc(468px * var(--u)); background: rgba(255,176,32,0.12); border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.5); color: var(--gold-2); }
+.brk {
+  position: absolute; left: calc(18px * var(--u)); right: calc(18px * var(--u)); height: calc(4px * var(--u));
+  background: linear-gradient(90deg, var(--gold), var(--gold-2));
+  box-shadow: 0 0 calc(22px * var(--u)) rgba(255,176,32,0.7); transform: scaleX(0); z-index: 7;
+}
+.brk.top { top: calc(8px * var(--u)); }
+.brk.bot { top: calc(546px * var(--u)); }
+
+/* ph3's five-line summary — a real template someone can copy */
+.summary {
+  position: absolute; left: 50%; transform: translateX(-50%); top: calc(150px * var(--u));
+  width: calc(1120px * var(--u)); padding: calc(34px * var(--u)) calc(40px * var(--u));
+  border-radius: calc(14px * var(--u));
+  background: linear-gradient(168deg, #f4f7fa 0%, var(--paper) 44%, #d5dfe9 100%);
+  box-shadow: 0 calc(3px * var(--u)) calc(6px * var(--u)) rgba(0,0,0,0.5),
+              0 calc(30px * var(--u)) calc(76px * var(--u)) rgba(0,0,0,0.5);
+  z-index: 22; opacity: 0;
+}
+.sline {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(31px * var(--u)); font-weight: 700; color: #2d3f52;
+  padding: calc(9px * var(--u)) 0; opacity: 0; white-space: nowrap;
+}
+.sline b { color: #a06a05; }

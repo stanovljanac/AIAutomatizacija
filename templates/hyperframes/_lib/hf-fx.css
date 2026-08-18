@@ -1,0 +1,335 @@
+/* hf-fx.css — the SHARED CINEMATIC SUBSTRATE for every bespoke HyperFrames scene.
+ *
+ * WHY THIS FILE EXISTS (owner, 2026-08-16, after 021): scenes kept coming out "plain" — words on a
+ * flat gradient. Every scene re-invented a thin background (one radial + one grid) and then spent
+ * its whole budget on typography, so the FRAME itself never had production value. This file gives
+ * every scene, for free, the things a real motion team builds once: a layered stage (depth haze,
+ * blueprint grid, volumetric shafts, dust, grain, vignette), physical paper, real shadow stacks,
+ * gold that is a gradient and not a flat fill, and a camera rig to move it all.
+ *
+ * A scene includes it BEFORE its own stylesheet and spends its own file on ART DIRECTION only:
+ *   <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+ *   <link rel="stylesheet" href="my-scene.css" />
+ * (../../_lib is load-bearing — see hf-scene.js header. Never rewrite it in make-entry.mjs.)
+ *
+ * PALETTE CLASSES on #root — the house rule (VISUAL_IDENTITY §2, MOTION_SPEC §6):
+ *   .pal-hero  black + gold   — hooks, intro/outro, the takeaway monolith
+ *   .pal-body  blue  + gold   — everything in the body
+ *
+ * Everything sizes against --u (min(W,H)/1080), so ONE file serves 16:9 and 9:16.
+ * Content lives in the top 5%→85% band; the bottom ~15% is the burned-in caption band.
+ */
+
+:root {
+  /* ── ink & ground ─────────────────────────────────────────────────────────── */
+  --bg: #05080c;
+  --bg-2: #0b131c;
+  --surface: #101a24;
+  --surface-2: #16232f;
+  --line: #24384c;
+  --text: #eaf1f8;
+  --text-2: #90a6bc;
+  --steel: #7d8fa3;
+  --ghost: #5d6f83;
+
+  /* ── accents ──────────────────────────────────────────────────────────────── */
+  --gold: #ffb020;
+  --gold-2: #ffd37a;
+  --gold-3: #ffe9bd;
+  --blue: #3884d0;
+  --blue-2: #63a8ec;
+  --green: #3ddc97;
+  --red: #ff5c5c;
+
+  /* ── paper (the spine object of the desk-lessons family) ──────────────────── */
+  --paper: #e7edf4;
+  --paper-2: #c3d0de;
+  --paper-3: #9fb0c2;
+  --paper-edge: #ffffff;
+  --paper-rule: #93a7bb;
+  --paper-gold: #f6d99a;
+  --paper-gold-2: #e0b866;
+
+  --u: 1;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+
+#root {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  font-feature-settings: "kern" 1, "liga" 1, "tnum" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   1. THE STAGE — six stacked layers. Built by FX.stage(root) so no scene retypes it.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.fx-far { position: absolute; inset: calc(-6% * 1); z-index: 0; pointer-events: none; will-change: transform; }
+.fx-near { position: absolute; inset: 0; z-index: 90; pointer-events: none; }
+
+/* base ground: a deep well of light behind the subject, not a flat wash */
+.fx-ground { position: absolute; inset: 0; }
+.pal-body .fx-ground {
+  background:
+    radial-gradient(ellipse 74% 58% at 50% 44%, #14293d 0%, #0b1723 44%, #060c13 78%, #04080d 100%);
+}
+.pal-hero .fx-ground {
+  background:
+    radial-gradient(ellipse 70% 56% at 50% 46%, #1a1509 0%, #0d0c08 46%, #060505 78%, #030303 100%);
+}
+
+/* blueprint grid — fine, masked to the centre, drifts slowly (parallax) */
+.fx-grid {
+  position: absolute; inset: -8%;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent calc(87px * var(--u)), currentColor calc(87px * var(--u)), currentColor calc(88px * var(--u))),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(87px * var(--u)), currentColor calc(87px * var(--u)), currentColor calc(88px * var(--u)));
+  -webkit-mask-image: radial-gradient(ellipse 76% 66% at 50% 44%, #000 6%, transparent 82%);
+  mask-image: radial-gradient(ellipse 76% 66% at 50% 44%, #000 6%, transparent 82%);
+  will-change: transform;
+}
+.pal-body .fx-grid { color: #2f5d86; opacity: 0.10; }
+.pal-hero .fx-grid { color: #6b5220; opacity: 0.085; }
+
+/* volumetric shafts — two soft diagonals of light, breathing on the ambient loop */
+.fx-shaft {
+  position: absolute; top: -40%; height: 190%; width: calc(300px * var(--u));
+  filter: blur(calc(58px * var(--u)));
+  opacity: 0.5; will-change: opacity, transform;
+}
+.fx-shaft.a { left: 12%; transform: rotate(14deg); }
+.fx-shaft.b { right: 8%; transform: rotate(-11deg); }
+.pal-body .fx-shaft.a { background: linear-gradient(180deg, transparent, rgba(78,150,225,0.30), transparent); }
+.pal-body .fx-shaft.b { background: linear-gradient(180deg, transparent, rgba(255,176,32,0.13), transparent); }
+.pal-hero .fx-shaft.a { background: linear-gradient(180deg, transparent, rgba(255,176,32,0.20), transparent); }
+.pal-hero .fx-shaft.b { background: linear-gradient(180deg, transparent, rgba(255,176,32,0.10), transparent); }
+
+/* the bloom — the scene's focal light. Scenes re-aim it with FX.aim(x%, y%). */
+.fx-bloom {
+  position: absolute; left: 50%; top: 44%; width: 92%; height: 74%;
+  transform: translate(-50%, -50%);
+  filter: blur(calc(34px * var(--u)));
+  opacity: 0.72; will-change: opacity, transform;
+}
+.pal-body .fx-bloom { background: radial-gradient(ellipse at center, rgba(72,142,214,0.20) 0%, transparent 62%); }
+.pal-hero .fx-bloom { background: radial-gradient(ellipse at center, rgba(255,176,32,0.16) 0%, transparent 62%); }
+
+/* dust motes — deterministic positions from FX.dust(); they drift for the whole scene */
+.fx-mote {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 70%);
+  will-change: transform, opacity;
+}
+.pal-hero .fx-mote { background: radial-gradient(circle, rgba(255,214,150,0.9) 0%, rgba(255,214,150,0) 70%); }
+
+/* film grain — one static SVG noise tile, stepped by the ambient loop (cheap, deterministic) */
+.fx-grain {
+  position: absolute; inset: calc(-40px * var(--u));
+  opacity: 0.055; mix-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: calc(190px * var(--u)) calc(190px * var(--u));
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='190' height='190'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='190' height='190' filter='url(%23n)' opacity='0.9'/></svg>");
+  will-change: background-position;
+}
+
+/* vignette — the corner falloff that makes the frame feel photographed */
+.fx-vig {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 84% 78% at 50% 46%, transparent 42%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.42) 0%, transparent 16%, transparent 70%, rgba(0,0,0,0.62) 100%);
+}
+
+/* caption band shade — content stays above it; this just seats the burned-in captions */
+.fx-band {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 19%;
+  background: linear-gradient(180deg, transparent, rgba(2,5,9,0.55));
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   2. THE CAMERA — every scene puts its content in #world so it can be moved as one
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.fx-world {
+  position: absolute; inset: 0; z-index: 10;
+  transform-origin: 50% 46%;
+  will-change: transform;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   3. PAPER — the desk-lessons spine object, in two physical forms
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* 3a. .fx-slab — a page seen EDGE-ON, the unit the pile is built from (flat, face-on) */
+.fx-slab {
+  position: absolute; left: 50%; height: calc(15px * var(--u));
+  border-radius: calc(3px * var(--u));
+  background: linear-gradient(180deg, var(--paper-edge) 0%, var(--paper) 22%, var(--paper-2) 78%, var(--paper-3) 100%);
+  box-shadow:
+    0 calc(2px * var(--u)) calc(3px * var(--u)) rgba(0,0,0,0.55),
+    0 calc(9px * var(--u)) calc(22px * var(--u)) rgba(0,0,0,0.30);
+  will-change: transform, opacity;
+}
+.fx-slab.gold {
+  background: linear-gradient(180deg, #fff3d6 0%, var(--paper-gold) 26%, var(--paper-gold-2) 80%, #c99b45 100%);
+  box-shadow:
+    0 calc(2px * var(--u)) calc(3px * var(--u)) rgba(0,0,0,0.55),
+    0 calc(10px * var(--u)) calc(30px * var(--u)) rgba(255,176,32,0.30);
+}
+.fx-slab.dim { filter: saturate(0.25) brightness(0.62); }
+
+/* 3b. .fx-sheet — a page seen FACE-ON, when its content has to be readable */
+.fx-sheet {
+  position: absolute;
+  background: linear-gradient(168deg, #f2f6fa 0%, var(--paper) 38%, #d7e0ea 100%);
+  border-radius: calc(6px * var(--u));
+  box-shadow:
+    0 calc(2px * var(--u)) calc(4px * var(--u)) rgba(0,0,0,0.5),
+    0 calc(26px * var(--u)) calc(64px * var(--u)) rgba(0,0,0,0.45);
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+.fx-sheet::after { /* paper sheen */
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(122deg, rgba(255,255,255,0.55) 0%, transparent 34%, transparent 72%, rgba(120,145,175,0.18) 100%);
+  pointer-events: none;
+}
+.fx-rule { /* a ruled line of "text" on a sheet */
+  position: absolute; height: calc(7px * var(--u)); border-radius: calc(4px * var(--u));
+  background: var(--paper-rule); opacity: 0.5;
+}
+.fx-rule.gold { background: var(--gold); opacity: 1; }
+
+/* the read sweep — the gold bar that travels down a pile/sheet as it is read */
+.fx-sweep {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  height: calc(5px * var(--u)); border-radius: calc(4px * var(--u));
+  background: linear-gradient(90deg, transparent, var(--gold-2) 18%, var(--gold-3) 50%, var(--gold-2) 82%, transparent);
+  box-shadow: 0 0 calc(26px * var(--u)) rgba(255,176,32,0.85);
+  will-change: transform, opacity;
+}
+
+/* the desk plane the pile sits on (environmental — exempt from the no-tilt rule) */
+.fx-desk {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  height: calc(16px * var(--u)); border-radius: calc(3px * var(--u));
+  background: linear-gradient(180deg, #2b3d51 0%, #1a2836 42%, #0d1621 100%);
+  box-shadow:
+    0 calc(-1px * var(--u)) 0 rgba(146,178,214,0.30) inset,
+    0 calc(30px * var(--u)) calc(70px * var(--u)) rgba(0,0,0,0.6);
+  will-change: transform, opacity;
+}
+.fx-desk::before { /* contact glow where the pile meets the desk */
+  content: ""; position: absolute; left: 50%; top: calc(-30px * var(--u)); transform: translateX(-50%);
+  width: 62%; height: calc(60px * var(--u));
+  background: radial-gradient(ellipse at center, rgba(110,160,215,0.22), transparent 70%);
+  filter: blur(calc(14px * var(--u)));
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   4. TYPE & PLATES — the shared vocabulary (gold is a GRADIENT, never a flat fill)
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.fx-h1 {
+  font-size: calc(96px * var(--u)); font-weight: 800; line-height: 1.02;
+  letter-spacing: calc(-2.2px * var(--u));
+  text-shadow: 0 calc(10px * var(--u)) calc(50px * var(--u)) rgba(0,0,0,0.65);
+}
+.fx-h2 {
+  font-size: calc(62px * var(--u)); font-weight: 800; line-height: 1.08;
+  letter-spacing: calc(-1.2px * var(--u));
+}
+.fx-h3 { font-size: calc(40px * var(--u)); font-weight: 700; letter-spacing: calc(-0.4px * var(--u)); }
+.fx-lbl {
+  font-size: calc(25px * var(--u)); font-weight: 700; letter-spacing: calc(2.6px * var(--u));
+  text-transform: uppercase; color: var(--text-2);
+}
+.fx-num {
+  font-variant-numeric: tabular-nums; font-weight: 800;
+  letter-spacing: calc(-1.6px * var(--u));
+}
+.fx-gold {
+  background: linear-gradient(178deg, var(--gold-3) 0%, var(--gold-2) 34%, var(--gold) 78%, #e08c0d 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 calc(6px * var(--u)) calc(30px * var(--u)) rgba(255,176,32,0.35));
+}
+.fx-mono { font-family: "Cascadia Mono", "JetBrains Mono", Consolas, ui-monospace, monospace; }
+
+/* the small gold series tag (the Desk Lessons correction motif) — never a title card */
+.fx-motif {
+  display: inline-block;
+  padding: calc(9px * var(--u)) calc(23px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.5);
+  border-radius: calc(999px * var(--u));
+  background: rgba(255,176,32,0.07);
+  color: var(--gold-2); font-size: calc(27px * var(--u)); font-weight: 700;
+  letter-spacing: calc(0.6px * var(--u)); white-space: nowrap;
+}
+
+/* the source chip (D-026: every stated number carries its source on screen) */
+.fx-chip {
+  display: inline-flex; align-items: center; gap: calc(10px * var(--u));
+  padding: calc(9px * var(--u)) calc(18px * var(--u));
+  border: calc(1px * var(--u)) solid rgba(146,178,214,0.28);
+  border-radius: calc(8px * var(--u));
+  background: rgba(9,17,26,0.72);
+  color: var(--text-2); font-size: calc(23px * var(--u)); font-weight: 600;
+  letter-spacing: calc(0.3px * var(--u)); white-space: nowrap;
+}
+.fx-chip::before {
+  content: ""; width: calc(9px * var(--u)); height: calc(9px * var(--u)); border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 calc(12px * var(--u)) var(--gold);
+}
+
+/* a quoted plate (vendor docs / a study) — glass, not a flat rectangle */
+.fx-plate {
+  position: absolute;
+  padding: calc(28px * var(--u)) calc(34px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(146,178,214,0.22);
+  border-radius: calc(16px * var(--u));
+  background: linear-gradient(168deg, rgba(24,38,54,0.94) 0%, rgba(13,22,32,0.94) 100%);
+  box-shadow: 0 calc(26px * var(--u)) calc(70px * var(--u)) rgba(0,0,0,0.55);
+  will-change: transform, opacity;
+}
+.fx-plate::before { /* top hairline */
+  content: ""; position: absolute; left: calc(22px * var(--u)); right: calc(22px * var(--u)); top: 0;
+  height: calc(1.5px * var(--u));
+  background: linear-gradient(90deg, transparent, rgba(146,178,214,0.55), transparent);
+}
+
+/* the gray MYTH plate — the wrong mental model, always the same object family */
+.fx-myth {
+  position: absolute;
+  padding: calc(24px * var(--u)) calc(38px * var(--u));
+  border: calc(2px * var(--u)) dashed rgba(154,174,196,0.5);
+  border-radius: calc(14px * var(--u));
+  background: linear-gradient(168deg, rgba(40,50,62,0.94) 0%, rgba(24,32,42,0.94) 100%);
+  box-shadow: 0 calc(22px * var(--u)) calc(56px * var(--u)) rgba(0,0,0,0.55);
+  color: #a4b6c8; font-weight: 700;
+  will-change: transform, opacity;
+}
+/* the gold slash that kills it (an approved transient reveal, MOTION_SPEC §5) */
+.fx-slash {
+  position: absolute; left: calc(-10px * var(--u)); right: calc(-10px * var(--u)); top: 50%;
+  height: calc(6px * var(--u)); border-radius: calc(4px * var(--u));
+  background: linear-gradient(90deg, var(--gold), var(--gold-2));
+  box-shadow: 0 0 calc(24px * var(--u)) rgba(255,176,32,0.8);
+  transform: scaleX(0); transform-origin: 0 50%;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   5. PORTRAIT (9:16) — the Short is its own cut, not a crop
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.portrait .fx-bloom { top: 40%; width: 130%; height: 52%; }
+.portrait .fx-shaft { width: calc(240px * var(--u)); }
+.portrait .fx-shaft.a { left: -4%; }
+.portrait .fx-shaft.b { right: -6%; }
+.portrait .fx-band { height: 15%; }
+.portrait .fx-h1 { font-size: calc(104px * var(--u)); }
+.portrait .fx-h2 { font-size: calc(72px * var(--u)); }

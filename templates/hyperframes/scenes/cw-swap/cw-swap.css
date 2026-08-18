@@ -1,0 +1,38 @@
+/* cw-swap — s25 (the swap) + s26 (the sign-off) + Short s5. Black + gold, the series' close. */
+
+.mythwrap { position: absolute; left: 50%; top: calc(300px * var(--u)); transform: translateX(-50%); z-index: 30; opacity: 0; }
+.mythwrap .fx-myth { position: relative; font-size: calc(52px * var(--u)); max-width: calc(1400px * var(--u)); text-align: center; }
+
+.mono { position: absolute; left: calc(180px * var(--u)); right: calc(180px * var(--u)); top: calc(300px * var(--u)); text-align: center; z-index: 32; opacity: 0; }
+#monotext { font-size: calc(88px * var(--u)); font-weight: 800; line-height: 1.1; letter-spacing: calc(-2.4px * var(--u)); }
+
+.pilehost { position: absolute; inset: 0; z-index: 14; }
+.threads { position: absolute; inset: 0; z-index: 16; }
+.eye {
+  position: absolute; left: 50%; transform: translate(-50%, -50%);
+  width: calc(26px * var(--u)); height: calc(26px * var(--u)); border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 calc(46px * var(--u)) rgba(255,176,32,0.95);
+  z-index: 20; opacity: 0;
+}
+
+.nextplate {
+  position: absolute; left: 50%; transform: translateX(-50%); top: calc(120px * var(--u));
+  display: flex; align-items: center; gap: calc(16px * var(--u));
+  padding: calc(12px * var(--u)) calc(26px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.28); border-radius: calc(999px * var(--u));
+  background: rgba(255,176,32,0.05); z-index: 34; opacity: 0; white-space: nowrap;
+}
+.nlbl { font-size: calc(22px * var(--u)); font-weight: 800; letter-spacing: calc(3px * var(--u)); text-transform: uppercase; color: rgba(255,211,122,0.6); }
+.ntxt { font-size: calc(32px * var(--u)); font-weight: 800; color: var(--gold-2); }
+
+.question {
+  position: absolute; left: calc(200px * var(--u)); right: calc(200px * var(--u)); top: calc(214px * var(--u));
+  text-align: center; font-size: calc(46px * var(--u)); font-weight: 700; color: var(--text);
+  line-height: 1.24; z-index: 30; opacity: 0;
+}
+
+.portrait .mono { left: calc(70px * var(--u)); right: calc(70px * var(--u)); top: calc(420px * var(--u)); }
+.portrait #monotext { font-size: calc(84px * var(--u)); }
+.portrait .mythwrap .fx-myth { font-size: calc(46px * var(--u)); max-width: calc(900px * var(--u)); }
+.portrait .nextplate { top: calc(260px * var(--u)); }
+.portrait .question { left: calc(80px * var(--u)); right: calc(80px * var(--u)); top: calc(360px * var(--u)); }

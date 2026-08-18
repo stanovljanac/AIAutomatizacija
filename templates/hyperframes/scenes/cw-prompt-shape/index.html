@@ -1,0 +1,47 @@
+<!doctype html>
+<!--
+  cw-prompt-shape — 022 long s13 (phase 1) + s14 (phase 2). The same prompt block, twice.
+  ph1  a wall of filler with ONE gold line buried mid-wall; the wall closes over it until the line is
+       swallowed by gray — then the same line lifts out, re-seats at the BOTTOM, and stays readable.
+       One object, two positions, no cut.
+  ph2  the block reorganizes itself in one continuous motion: a TASK band snaps to the top, the
+       QUESTION band to the bottom, the bulk desaturates between them, gold brackets mark both ends.
+       Held ≥2.5s with nothing moving over the text — this is the shape people screenshot.
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":340},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":11.34}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="cw-prompt-shape.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cw-prompt-shape" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <div class="block" id="block">
+          <div class="lines" id="lines"></div>
+          <div class="band task" id="bandTask"><span id="taskText"></span></div>
+          <div class="band question" id="bandQ"><span id="qText"></span></div>
+          <span class="brk top" id="brkTop"></span>
+          <span class="brk bot" id="brkBot"></span>
+        </div>
+        <div class="kicker fx-h2" id="kicker"></div>
+      </div>
+    </div>
+    <script src="cw-prompt-shape.js"></script>
+  </body>
+</html>

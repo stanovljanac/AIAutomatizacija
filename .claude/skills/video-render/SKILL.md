@@ -53,6 +53,14 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   **light music allowed**; length per **STYLE_GUIDE §7** — ~50–60s target, hard max 2:00,
   `config.defaults.short_seconds` / `short_seconds_max`).
 - `render/props.json`. Set `brief.json.status: "rendered"`.
+- **MANDATORY after every render — repair compositor dropouts:**
+  `node scripts/repair-dropouts.mjs content/<id>/video/final.mp4` (and the Short's). Remotion's
+  compositor intermittently loses a single frame of an OffthreadVideo clip: the video layer renders
+  pure black for one frame while the burned-in caption above it still draws. The clips are normalised
+  at render time to reduce it, but that is **not sufficient** — the 022 long cut still kept four.
+  The script re-scans after repairing and exits non-zero if anything survived, so a clean exit is the
+  evidence. Full write-up:
+  `knowledge/desk-knowledge/lessons/2026-08-18-a-rendered-clip-is-not-a-seekable-clip.md`.
 - **Thumbnails (04b, after the long render):** `node pipeline/04b-thumbnails/extract.mjs <id>`
   grabs **3 caption-free candidate stills** from the video's own timeline (HF scene clips are
   caption-free by construction; Remotion scenes fall back to a caption-gap grab from final.mp4)

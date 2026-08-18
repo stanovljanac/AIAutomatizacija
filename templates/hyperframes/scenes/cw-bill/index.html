@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  cw-bill — 022 long s9 (phase 1) + s10 (phase 2). CONSEQUENCE 1: you re-buy your own conversation.
+  ph1  the pile grows one page per turn while a receipt beside it prints a LONGER line each time;
+       the model's own pages go gray, and YOUR pages light gold — you are paying for your own words
+  ph2  the honest catch: a CACHED stamp lands, the receipt's lines genuinely shrink — and the pile
+       does not lose a single page. Money down, pile identical. Then the vendor's own sentence.
+  No currency symbol, no price, no per-token rate anywhere (prices age — 021's rule).
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":370},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":12.32}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="cw-bill.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cw-bill" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <div class="pilehost" id="pilehost"></div>
+        <div class="pilelbl" id="pilelbl"></div>
+
+        <div class="receipt" id="receipt">
+          <div class="rhead" id="rhead"></div>
+          <div class="rrows" id="rrows"></div>
+          <div class="stamp" id="stamp"></div>
+        </div>
+
+        <div class="fx-plate quote" id="quote">
+          <div class="qtext" id="qtext"></div>
+          <span class="fx-chip qchip" id="qchip"></span>
+        </div>
+
+        <div class="kicker fx-h2" id="kicker"></div>
+      </div>
+    </div>
+    <script src="cw-bill.js"></script>
+  </body>
+</html>

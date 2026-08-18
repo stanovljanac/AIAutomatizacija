@@ -620,3 +620,35 @@ old one (don't delete history).
 > Still in force: **D-002** (no YouTube transcripts; clean sources only).
 
 <!-- Add D-020, D-021, … as new decisions arise. Supersede, don't delete. -->
+
+## D-064 — A shared cinematic substrate for HyperFrames scenes (`_lib/hf-fx.*`) — the stage is built once (owner note, 2026-08-16)
+- **Context:** 021 shipped **24 bespoke scenes** and the owner's verdict was still *"previše plain —
+  slideshow sa rečima i običnom pozadinom"*. The scenes were not lazy; the **frame** was. Every scene
+  file re-invented a thin stage (one radial gradient + one grid + one glow) in its own CSS and then
+  spent its entire budget on typography. Nothing in the picture had depth, grain, light, weight or
+  continuous life, so however well a beat was staged it read as text on a background.
+- **Decision:** the stage stops being per-scene work. `templates/hyperframes/_lib/hf-fx.css` +
+  `hf-fx.js` give every scene, for free:
+  - **a six-layer stage** — depth ground, masked blueprint grid, two volumetric light shafts, a
+    re-aimable focal bloom, deterministic dust motes, stepped film grain, vignette, caption band;
+  - **a camera rig** (`#world` + `FX.camera`), so a scene can push in / pull back as one object;
+  - **physical paper** — `.fx-slab` (a page seen edge-on: the unit a pile is built from) and
+    `.fx-sheet` (face-on, when its content must be readable), both with layered contact + ambient
+    shadows, plus `FX.pile/desk/sweep`;
+  - **the shared vocabulary** — gradient gold type, source chips (D-026), quote plates, the gray myth
+    plate and the gold slash, `FX.count` counters, `FX.strike`;
+  - **`FX.ambient(tl)`** — one line that gives the scene continuous, motivated secondary motion for its
+    whole duration. This is the anti-"dead frame" device.
+- **Consequence for authoring:** a scene file is now art direction only. It declares its contract in
+  two lines (`HF.scene` + `FX.init`) and spends the rest on the idea. `_lib/make-entry.mjs` does the
+  same for the render entry (two lines instead of forty).
+- **`FX.fromTo` is mandatory for any beat later than 0.** Measured 2026-08-16: `gsap.fromTo` defaults
+  to `immediateRender: true`, so a fromTo placed at 12s applies its `from` values at **build** time —
+  a gold page meant to fade in late sat at opacity 0.2 from frame 0 and dirtied every earlier frame.
+  `FX.fromTo(tl, target, from, to, at)` pins `immediateRender:false`. Do **not** "fix" this with a
+  global `gsap.defaults({immediateRender:false})`: `gsap.set()` is a zero-duration tween that relies
+  on immediateRender, and the default silently erases every opening state in the scene (tried,
+  reverted, one wasted render).
+- **First use:** 022 — 14 scene dirs covering 26 long scenes + 5 Short scenes, all 100% HyperFrames.
+- **Not changed:** existing scenes keep their own stages; this is additive. Determinism is unchanged
+  (no `Math.random`/`Date.now` — `FX.rng(seed)` only), and scenes stay silent + seek-driven.

@@ -1,0 +1,95 @@
+/* cw-measured-run — the visible run (s5/s6/s7 + Short s3). Bars are gold on blue, drawn to true
+   scale; the two columns in ph3 are drawn to the REAL ratio, because the ratio is the visual. */
+
+/* ── ph1: the synthetic thread, compressed into a ribbon ─────────────────────── */
+.ribbonclip {
+  position: absolute; left: 50%; top: calc(90px * var(--u)); transform: translateX(-50%);
+  width: calc(1080px * var(--u)); height: calc(700px * var(--u)); overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 76%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 76%, transparent 100%);
+}
+.ribbon { position: absolute; left: 0; right: 0; top: 0; height: calc(2400px * var(--u)); will-change: transform; }
+.msg {
+  position: absolute; border-radius: calc(18px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(146,178,214,0.18);
+  background: linear-gradient(166deg, rgba(24,38,54,0.95), rgba(14,24,34,0.95));
+  box-shadow: 0 calc(10px * var(--u)) calc(26px * var(--u)) rgba(0,0,0,0.4);
+  padding: calc(18px * var(--u)) calc(24px * var(--u));
+  color: var(--text-2); font-size: calc(27px * var(--u)); font-weight: 600; line-height: 1.35;
+}
+.msg.me { right: 0; border-color: rgba(255,176,32,0.22); color: #cfd9e4; }
+.msg.ai { left: 0; }
+.counter {
+  position: absolute; right: calc(210px * var(--u)); bottom: calc(230px * var(--u));
+  padding: calc(14px * var(--u)) calc(26px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.45); border-radius: calc(12px * var(--u));
+  background: rgba(255,176,32,0.08); color: var(--gold-2);
+  font-size: calc(34px * var(--u)); font-weight: 800; letter-spacing: calc(0.4px * var(--u));
+  opacity: 0; white-space: nowrap; z-index: 30;
+}
+
+/* ── ph2: the bar run ────────────────────────────────────────────────────────── */
+.chart { position: absolute; inset: 0; z-index: 14; }
+.bar {
+  position: absolute; bottom: 0; border-radius: calc(6px * var(--u)) calc(6px * var(--u)) 0 0;
+  background: linear-gradient(180deg, var(--gold-2) 0%, var(--gold) 46%, #d08c10 100%);
+  box-shadow: 0 0 calc(30px * var(--u)) rgba(255,176,32,0.28);
+  transform-origin: 50% 100%; will-change: transform;
+}
+.barval {
+  position: absolute; text-align: center;
+  font-size: calc(38px * var(--u)); font-weight: 800; color: var(--gold-2);
+  font-variant-numeric: tabular-nums; opacity: 0;
+}
+.baridx {
+  position: absolute; text-align: center;
+  font-size: calc(24px * var(--u)); font-weight: 700; color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+.axis {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  height: calc(2px * var(--u)); background: linear-gradient(90deg, transparent, rgba(146,178,214,0.45), transparent);
+  z-index: 13;
+}
+.pileside { position: absolute; inset: 0; z-index: 12; }
+
+/* ── ph3: what it adds up to ─────────────────────────────────────────────────── */
+.cols { position: absolute; inset: 0; z-index: 16; opacity: 0; }
+.col { position: absolute; bottom: 0; }
+.colbar {
+  position: absolute; bottom: 0; left: 0; width: 100%;
+  border-radius: calc(8px * var(--u)) calc(8px * var(--u)) 0 0;
+  transform-origin: 50% 100%; will-change: transform;
+}
+.col.said .colbar { background: linear-gradient(180deg, #9fb6cc 0%, #6b8299 60%, #3f5468 100%); }
+.col.read .colbar {
+  background: linear-gradient(180deg, var(--gold-2) 0%, var(--gold) 50%, #cf8a0e 100%);
+  box-shadow: 0 0 calc(50px * var(--u)) rgba(255,176,32,0.35);
+}
+.colnum {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-size: calc(52px * var(--u)); font-weight: 800; white-space: nowrap; opacity: 0;
+}
+.col.said .colnum { color: #b9c9d9; }
+.col.read .colnum { color: var(--gold-2); }
+.collbl {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-size: calc(28px * var(--u)); font-weight: 700; color: var(--text-2);
+  letter-spacing: calc(1.6px * var(--u)); text-transform: uppercase; white-space: nowrap; opacity: 0;
+}
+.ratio {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-size: calc(150px * var(--u)); font-weight: 800; opacity: 0; white-space: nowrap;
+}
+
+.chip { position: absolute; right: calc(60px * var(--u)); top: calc(58px * var(--u)); z-index: 40; opacity: 0; }
+
+/* ── portrait (Short s3) ─────────────────────────────────────────────────────── */
+.portrait .ribbonclip { width: calc(940px * var(--u)); top: calc(300px * var(--u)); height: calc(900px * var(--u)); }
+.portrait .chip { right: 50%; transform: translateX(50%); top: calc(210px * var(--u)); }
+.portrait .barval { font-size: calc(34px * var(--u)); }
+.portrait .baridx { font-size: calc(30px * var(--u)); }
+.portrait .collbl { font-size: calc(32px * var(--u)); }
+.portrait .ratio { font-size: calc(190px * var(--u)); }
+.portrait .colnum { font-size: calc(64px * var(--u)); }
+.portrait .counter { right: 50%; transform: translateX(50%); bottom: calc(420px * var(--u)); }

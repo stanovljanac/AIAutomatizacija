@@ -1,0 +1,67 @@
+<!doctype html>
+<!--
+  t3d-hook — 022 long s1 (HOOK HERO, black+gold), the 3D cut of cw-never-remembered.
+
+  Same premise, same props contract, same beats as the 2D hook — so the two takes are swappable by
+  changing ONE field (props.hf_scene) and the owner can judge them against each other in a full
+  render rather than as an isolated clip.
+
+  WHAT THE THIRD DIMENSION BUYS HERE: the thread is a real column of panels standing in a room and
+  the camera physically FLIES UP it, so "ten messages deep" is travel and not a scroll offset. The
+  pinned message goes dark while it is genuinely behind us; when we come back its slot is a hole we
+  can see THROUGH, with the panels beyond it visible in the gap. Then every message folds down into
+  paper and the thread BECOMES the pile the rest of the video runs on — one continuous object, not a
+  crossfade between two pictures.
+
+  Words: the LABELS belong to the object (none needed here), the LINES are flat DOM over the canvas
+  in the house typography — a kicker must never sit in perspective (MOTION_SPEC §5).
+
+  b0  0.0s   already mid-thread; it runs away from us, the pinned line goes quiet behind us
+  b1  b1     "Everyone calls that forgetting" — the gray myth plate rises over the empty slot
+  b2  b2     "It didn't forget" — the gold slash
+  b3  b3     the thread folds down into ONE pile of paper; the kicker lands above it
+
+  Seek-driven and deterministic (window.__hfThreeTime + `hf-seek`, HF3.rng seeds, no rAF/Date.now).
+  DOF + bloom from _lib/hf-three.js.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":349},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":11.63}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-three.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="t3d-hook.css" />
+    <script>
+      // rewritten to ../vendor/… by _lib/make-entry.mjs for the generated entry
+      window.__THREE_URL = "./vendor/three.module.min.js";
+    </script>
+  </head>
+  <body>
+    <div id="root" data-composition-id="t3d-hook" data-start="0" data-width="1920" data-height="1080">
+      <canvas id="gl" data-layout-ignore></canvas>
+
+      <!-- the world dims while the myth is named, so the plate is read and not hunted for -->
+      <div class="scrim" id="scrim"></div>
+
+      <div class="mythwrap" id="mythwrap">
+        <div class="fx-myth" id="myth"></div>
+        <span class="fx-slash" id="slash"></span>
+      </div>
+
+      <div class="kicker" id="kicker"><span class="fx-gold" id="kickertext"></span></div>
+    </div>
+    <script src="t3d-hook.js"></script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+/* t3d-window — 022 s2/s3, the 3D cut. The frame IS the WebGL canvas; the DOM carries only the two
+   pieces of type that must stay flat and face-on: the series motif and the closing line.
+   The four group labels and the token capsules live IN the scene (HF3.textPlane) because they belong
+   to the objects they name — they orbit, they take the depth of field, they occlude. */
+
+#root { background: #04070b; }
+#gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; }
+
+.motif {
+  position: absolute; left: 50%; top: calc(74px * var(--u)); transform: translateX(-50%);
+  z-index: 40; opacity: 0; will-change: transform, opacity;
+}
+
+/* phase 2's closing line — reserved space above the caption band, never over the frame's centre */
+.empty {
+  position: absolute; left: 0; right: 0; top: calc(792px * var(--u));
+  text-align: center; z-index: 40; opacity: 0; will-change: transform, opacity;
+}
+#emptytext {
+  font-size: calc(84px * var(--u)); font-weight: 800; line-height: 1;
+  letter-spacing: calc(-2.2px * var(--u));
+}
+
+.portrait .empty { top: calc(1420px * var(--u)); }
+.portrait #emptytext { font-size: calc(76px * var(--u)); }

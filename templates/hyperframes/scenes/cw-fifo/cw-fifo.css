@@ -1,0 +1,32 @@
+/* cw-fifo — s19. Pages fall off the front of the desk with nothing to announce it. */
+
+.deskhost { position: absolute; inset: 0; z-index: 10; }
+.pilehost { position: absolute; inset: 0; z-index: 14; }
+/* The label used to sit ON the pinned page with a translucent plate behind it, and it came back
+   unreadable a SECOND time (owner, 2026-08-17, on the v2 render): whatever the plate's alpha, gold
+   type over paper in a stack of paper has no contrast to win. So the label stops competing with the
+   subject and stands OFF it, in the empty half of the frame, with a gold leader line pointing at the
+   page it names. Nothing is layered over paper, so nothing can wash out. */
+.pinlbl {
+  position: absolute; left: calc(96px * var(--u)); transform: none;
+  padding: calc(11px * var(--u)) calc(22px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(255,176,32,0.55); border-radius: calc(10px * var(--u));
+  background: #0a121b; color: var(--gold-2);
+  box-shadow: 0 calc(14px * var(--u)) calc(40px * var(--u)) rgba(0,0,0,0.7);
+  font-size: calc(28px * var(--u)); font-weight: 700; white-space: nowrap; opacity: 0; z-index: 26;
+}
+/* the leader: label → the pinned page, so "which page" is stated without covering it */
+.pinline {
+  position: absolute; height: calc(2px * var(--u));
+  background: linear-gradient(90deg, rgba(255,176,32,0.75), rgba(255,176,32,0.25));
+  transform-origin: 0 50%; opacity: 0; z-index: 25;
+}
+/* the empty slot: nothing is drawn there. Only a faint, cooling afterglow says something was. */
+.gap {
+  position: absolute; left: 50%; transform: translate(-50%, -50%);
+  width: calc(760px * var(--u)); height: calc(120px * var(--u));
+  background: radial-gradient(ellipse at center, rgba(255,176,32,0.16), transparent 70%);
+  filter: blur(calc(22px * var(--u))); opacity: 0; z-index: 12;
+}
+.chip { position: absolute; left: 50%; transform: translateX(-50%); top: calc(842px * var(--u)); z-index: 40; opacity: 0; }
+.kicker { position: absolute; left: 0; right: 0; top: calc(96px * var(--u)); text-align: center; color: var(--text); opacity: 0; z-index: 24; }

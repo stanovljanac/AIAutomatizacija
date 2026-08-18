@@ -1,0 +1,49 @@
+<!doctype html>
+<!--
+  cws-restart — 022 Short s4 (9:16). THE TAKEAWAY: it gets worse as it grows, so start a new chat.
+  The eight measured bars extend into a DASHED projection bending upward with a marker at forty
+  (chipped "arithmetic · equal-size turns" — never dressed as measured data). Then the tall messy
+  pile compresses into five gold lines that land as page one of a clean surface, held ≥2.5s with
+  nothing moving over the text: this is the frame people screenshot.
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":374},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":12.47}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="cws-restart.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cws-restart" data-start="0" data-width="1080" data-height="1920">
+      <div id="world" class="fx-world">
+        <svg class="plot" id="plot" viewBox="0 0 900 620" preserveAspectRatio="none">
+          <path id="proj" fill="none" stroke="#ffb020" stroke-width="8" stroke-linecap="round" stroke-dasharray="20 18" />
+        </svg>
+        <div class="chart" id="chart"></div>
+        <div class="mark below" id="m8"><span class="dot"></span><span class="mlbl" id="m8l"></span></div>
+        <div class="mark" id="m40"><span class="dot"></span><span class="mlbl" id="m40l"></span></div>
+        <div class="axis" id="axis"></div>
+        <div class="fx-chip chip" id="chip"></div>
+
+        <div class="pilehost" id="pilehost"></div>
+        <div class="summary" id="summary"></div>
+        <div class="kicker fx-h2" id="kicker"></div>
+      </div>
+    </div>
+    <script src="cws-restart.js"></script>
+  </body>
+</html>

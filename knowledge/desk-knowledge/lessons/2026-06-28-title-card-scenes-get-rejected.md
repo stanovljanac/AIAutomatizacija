@@ -59,3 +59,6 @@ QA gate).
 - [Reused scene components must be prop-driven — a matching default masks a hardcode](2026-07-07-reused-components-must-be-prop-driven.md)
 - [Frameworks drawn as three-icons-in-a-row get rejected — give concepts full-stage treatment](2026-07-09-no-flow-strip-framework-visuals.md)
 - [Content cards are never 3D-tilted — flat resting pose; 3D only as a transient reveal](2026-07-12-no-3d-tilt-on-content-cards.md)
+- [The stage is built once — "bespoke scenes" is not enough if the frame is unproduced](2026-08-16-the-stage-is-built-once.md)
+- [A 3D test clip is not a scene — four things that must change before it can carry a beat](2026-08-17-a-3d-test-clip-is-not-a-scene.md)
+- [A repeating mechanism must move the object, never delete it — and in 9:16 it must fill the frame](2026-08-17-a-cycle-must-never-empty-the-frame.md)

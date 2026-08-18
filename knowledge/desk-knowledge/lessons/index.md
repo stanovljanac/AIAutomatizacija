@@ -23,4 +23,8 @@ lesson with no evidence stays `draft` forever.
 - [A self-healing pass that runs on every turn-end must skip what it can't write, never abort the pass](2026-07-25-self-healing-passes-skip-not-abort.md) — lesson, draft
 - [A shared asset library whose files are git-ignored must be generated, not acquired](2026-08-15-generate-shared-assets-that-git-ignores.md) — lesson, draft
 - [A 1:1 word→event walk desyncs the whole track the first time our tokenizer disagrees with the TTS](2026-08-15-word-alignment-is-1to1-with-the-tts-events.md) — lesson, draft
+- [The stage is built once — "bespoke scenes" is not enough if the frame is unproduced](2026-08-16-the-stage-is-built-once.md) — lesson, stable
+- [A 3D test clip is not a scene — four things that must change before it can carry a beat](2026-08-17-a-3d-test-clip-is-not-a-scene.md) — lesson, stable
+- [A repeating mechanism must move the object, never delete it — and in 9:16 it must fill the frame](2026-08-17-a-cycle-must-never-empty-the-frame.md) — lesson, stable
+- [A clip that plays perfectly is not necessarily a clip the compositor can SEEK — normalise it](2026-08-18-a-rendered-clip-is-not-a-seekable-clip.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

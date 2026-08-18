@@ -1,0 +1,76 @@
+<!doctype html>
+<!--
+  cws-whole-chat — 022 Short s2 (9:16). THE MECHANISM AS GRAVITY.
+
+  WHY THIS TAKE (owner, 2026-08-17): cw-tower stages the mechanism as a stack that lifts, is read and
+  drops back. It is honest and it fills the frame, but the object never says whose conversation it is
+  — the viewer sees an abstract tower for ten seconds. The long cut's answer is cw-whole-chat: keep
+  YOUR CHAT on screen as the anchor and make the DISPROPORTION the point. In portrait that idea gets
+  something 16:9 cannot give it: the disproportion becomes GRAVITY.
+
+  You send one line into the chat at the top. A ghost of the WHOLE conversation detaches and falls
+  down the frame, landing as a tower. A bar reads it from the top down — which in a vertical frame is
+  also the natural reading direction, so nothing has to be led left-to-right. One page flies back UP
+  and becomes its answer in your chat. The tower drops out through the bottom, and it happens again,
+  one line later and one storey taller.
+
+  What the format gives for free: by the third turn the tower NO LONGER FITS. Its top is cut off
+  against the chat and simply fades out of the frame. That is the argument — 16:9 has to state it
+  with a number, portrait can show it.
+
+  The frame is never empty (the 2026-08-17 lesson): your chat is the anchor and the tower is the
+  visitor, so the tower LEAVING is the point instead of a hole.
+
+  b0  "Between two messages it holds nothing."   the pile carried in from s1 falls away; your chat stays
+  b1  "Every time you hit send, the whole        three turns: send → the whole chat falls → read →
+       conversation goes back in and is read      one page returns → the tower goes. The last one holds.
+       again from scratch…"
+
+  Silent + deterministic; one paused, seek-driven GSAP timeline.
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1080},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1920},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":325},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":10.83}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="cws-whole-chat.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="cws-whole-chat" data-start="0" data-width="1080" data-height="1920">
+      <div id="world" class="fx-world">
+        <!-- the anchor: your chat, on screen for the whole scene -->
+        <div class="phone" id="phone">
+          <div class="threadclip" id="threadclip"><div class="thread" id="thread"></div></div>
+        </div>
+        <div class="chip fx-chip" id="chip"></div>
+
+        <!-- the copy of the whole conversation, in transit downward -->
+        <div class="ghost" id="ghost"></div>
+
+        <!-- the tower it lands as. Clipped at the top: by turn three it does not fit. -->
+        <div class="towerclip" id="towerclip">
+          <div class="towerhost" id="towerhost"></div>
+          <!-- the read bar shares the clip, so on the turn that overflows it stops where the tower does -->
+          <div class="sweephost" id="sweephost"></div>
+        </div>
+        <div class="flyer" id="flyer"></div>
+        <div class="impact" id="impact"></div>
+        <div class="floor" id="floor"></div>
+      </div>
+    </div>
+    <script src="cws-whole-chat.js"></script>
+  </body>
+</html>

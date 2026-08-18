@@ -105,6 +105,10 @@ templates/hyperframes/**/capture/
 templates/hyperframes/package-lock.json
 templates/hyperframes/.bin/
 templates/hyperframes/*.log
+# disposable render entries: _lib/make-entry.mjs regenerates one per geometry on every render, so
+# tracking them is pure churn (72 files, all stale the moment a scene's duration changes).
+# The scene sources and vendor/ ARE tracked on purpose — a clone has to be able to render.
+templates/hyperframes/**/compositions/
 
 # ── Python ────────────────────────────────────────────────────────────────
 __pycache__/
