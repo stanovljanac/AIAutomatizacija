@@ -101,3 +101,4 @@ Before drawing another one, check it is a distinct angle, not a re-tread.
 - [The agent — the gold node that JUDGES (vs the scraper that reports)](agent.md)
 - [The source document — the flat page the work comes from (receipt · invoice · email · ToS · filing)](source-document.md)
 - [The spreadsheet — rows, green checks, and the ONE gold flag](spreadsheet.md)
+- [A frame from our own video is rarely a thumbnail — it must say "AI" and name the mechanism without narration](../lessons/2026-08-19-a-thumbnail-must-say-ai-at-a-glance.md)

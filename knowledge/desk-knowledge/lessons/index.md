@@ -27,4 +27,5 @@ lesson with no evidence stays `draft` forever.
 - [A 3D test clip is not a scene — four things that must change before it can carry a beat](2026-08-17-a-3d-test-clip-is-not-a-scene.md) — lesson, stable
 - [A repeating mechanism must move the object, never delete it — and in 9:16 it must fill the frame](2026-08-17-a-cycle-must-never-empty-the-frame.md) — lesson, stable
 - [A clip that plays perfectly is not necessarily a clip the compositor can SEEK — normalise it](2026-08-18-a-rendered-clip-is-not-a-seekable-clip.md) — lesson, stable
+- [A frame from our own video is rarely a thumbnail — it must say "AI" and name the mechanism without narration](2026-08-19-a-thumbnail-must-say-ai-at-a-glance.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

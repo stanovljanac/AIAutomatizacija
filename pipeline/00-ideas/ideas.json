@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-16",
+  "updated": "2026-08-18",
   "ideas": [
     {
       "id": "bulk-personalized-emails",
@@ -1031,7 +1031,7 @@
       "archetype": "ideas",
       "angle_hint": "Not 'how much the AI remembers'. Nothing is remembered — every turn the whole conversation is handed back and re-read from scratch, and re-reading degrades with size and with position in the pile.",
       "score": 90,
-      "status": "in-progress",
+      "status": "produced",
       "lane": "desk-notes",
       "value_type": [
         "corrects-misbelief",

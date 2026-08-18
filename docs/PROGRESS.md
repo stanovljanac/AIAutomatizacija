@@ -19,6 +19,51 @@ Format:
 
 ---
 
+## 2026-08-19 — 022 IS LIVE — both cuts published manually; the thumbnail lesson banked
+- who: the **owner uploaded both cuts manually** (D-055) — the long (6:15.45) and the Short (55.5s).
+  The agent sent nothing to YouTube; this entry records reality and the knowledge that came out of it.
+- **the thumbnail shipped from the PROMPT fallback, not from the video.** The owner had rejected all
+  7 extracted candidates *and* the first prompt pair (*"nobody seeing stacked paper thinks AI or
+  context window"*); prompt **A** — a chat panel with four bubbles pouring one endless receipt into a
+  mound far bigger than they could hold — was generated in a free tool and shipped as
+  `images/thumb.jpeg`, headline composited in the reserved left third. The headline carries the
+  **search phrase** ("WHAT IS A CONTEXT WINDOW"), not the drafted thesis line, so title and thumbnail
+  front-load the same query. Recorded in `publish.json.thumbnail` (schema PASS).
+- knowledge: new lesson **`2026-08-19-a-thumbnail-must-say-ai-at-a-glance`** — a scene still works
+  inside the video because narration carries it; on a thumbnail there is none, so an abstract frame
+  shows an object with no subject. Hard number behind it: **14 extracted candidates across 021 + 022,
+  zero shipped**, one of them scoring 110 (the `score-scenes.mjs` score is a legibility floor, never a
+  click predictor). Every concept now needs an AI signifier + the mechanism drawn + a reserved
+  headline zone with the search phrase. Written into `.claude/skills/visual-prompts/SKILL.md`:
+  **concept/explainer → prompts lead, extraction is the alternative**; demo/capture → extraction
+  leads. Plus the two smaller rules the round paid for: re-extract after any re-render (022 offered
+  two v1-hook frames no longer in the cut), and hand-added candidates go through the schema
+  (`source` enum) or `--choose-thumb` throws. `knowledge-lint --fix`: 0 errors.
+- next: **paste the two YouTube ids into `content/022-context-window/publish.json.youtube_video_id`**
+  (long + Short) so `fetch-analytics.mjs` can snapshot — ledger has 022 `published`, analytics due
+  **2026-08-25**. Then the next topic from the idea bank (`desk-lessons-*` lane continues: attention).
+- blockers: none.
+
+## 2026-08-18 — 022 APPROVED at Gate ③ — publish pack built for both cuts (manual upload pending)
+- who: owner approved the long (6:15.45) and the Short (55.5s) v2 cuts; agent built the package.
+- did: promoted `publish.draft.json` → **`publish.json`** (schema PASS) and generated the full pack —
+  14 chapters stamped on real `timeline.json` scene starts and labelled with the line on screen at
+  each stamp, a keyword-first 3-sentence description (chapters + altered-content line appended),
+  a keyword-first chosen title (*The Context Window Is Not Memory. It Re-Reads Everything.*, 57 chars),
+  a one-sentence Short caption ending in `<LONG_URL>`, community post, pinned comment, bridge with a
+  manual checklist, `publish.md` and `medium.md` (708 words). **Publish-stage review panel** (Sonnet,
+  D-053) ran 3 iterations — **6 → 7 → 8**, all hard gates green on every pass, recorded in
+  `publish.review.json`; the 8 is below the 9 threshold with iterations exhausted, and the residual
+  item is one declined stylistic nit. Added thumbnail candidate **#7** from the shipped v2 hook
+  (#1/#4 are v1 frames no longer in the video) and fixed a schema break in `thumb_candidates.json`
+  (`source: "manual-grab"` is not in the enum) that would have made `--choose-thumb` throw on the
+  owner's pick. `reconcile --fix` stamped the ledger (published, analytics due 2026-08-25),
+  idea → `produced`, close-out lesson linked; `brief.status` → `ready`.
+- next: **owner uploads MANUALLY (D-055)** — pick the thumbnail (suggest Test & Compare #7 / #5 / #6),
+  set *Altered content = Yes*, fill `<LONG_URL>`, pin the comment, then paste both video ids into
+  `publish.json.youtube_video_id`.
+- blockers: none. Nothing was sent to YouTube.
+
 ## 2026-08-18 — 022 v2 review round: the compositor dropout found, plus four owner fixes
 - who: owner reviewed `final-v2.mp4` frame by frame; agent diagnosed and fixed.
 - **the "blic" was a COMPOSITOR bug, and the Short's render is what named it.** Five single black

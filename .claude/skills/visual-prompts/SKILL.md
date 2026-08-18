@@ -28,6 +28,27 @@ is small. It handles two things only:
 - Compositing: the agent **only composites** what the owner asks (e.g. tool logos from
   `assets/brand/`) via the Remotion `ThumbComposite` still — **no title unless the owner asks**.
 
+### The one test every concept must pass (2026-08-19, the 021+022 lesson)
+A stranger scrolling has no narration. Our explainer scenes are abstract, so a frame lifted out of
+one shows an **object with no subject** — 14 extracted candidates across 021/022, zero shipped.
+Every concept (extracted **or** prompted) needs all three:
+1. **A subject signifier** — something unmistakably AI in frame (chat panel, machine head). Without
+   it the picture is about paper.
+2. **The mechanism drawn, not the topic named** — the thing the video reframes (022: four chat
+   bubbles pouring one endless receipt into a mound far bigger than they could hold).
+3. **A reserved headline zone carrying the SEARCH PHRASE** (022 shipped *"WHAT IS A CONTEXT
+   WINDOW"*, not the thesis *"IT NEVER REMEMBERED"*) — matching the keyword-first title; the
+   thesis line stays inside the video.
+
+So: **concept/explainer video → write the prompts first** and offer the extracted stills as the
+alternative; demo/screen-capture, where a frame shows a real artefact working → extraction leads.
+The `score-scenes.mjs` score is a legibility floor, never a click predictor — 022's rejected
+candidates scored 110. Two more rules the same round paid for: **re-extract after any re-render**
+(022 offered two frames from the v1 hook that were no longer in the video), and a hand-added
+candidate goes through the schema (`source` must be in the enum, notes go in `note`) — otherwise
+`--choose-thumb` throws and the owner cannot record a pick at all.
+Why, in full: `knowledge/desk-knowledge/lessons/2026-08-19-a-thumbnail-must-say-ai-at-a-glance.md`.
+
 ## 2. Rare concept image (optional, opt-in)
 - Only when code-visual + stock genuinely won't convey an idea. Prefer **free stock**
   (Pexels/Pixabay) first.

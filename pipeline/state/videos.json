@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-08-15",
+  "updated": "2026-08-18",
   "live_from": "020",
   "videos": {
     "002-what-is-ai-automation": {
@@ -238,6 +238,23 @@
       },
       "analytics": {
         "due_at": "2026-08-22",
+        "snapshots": []
+      }
+    },
+    "022-context-window": {
+      "subject": "llm-mental-model",
+      "idea_id": "desk-lessons-context-window",
+      "content_type": "long",
+      "status": "published",
+      "published_at": "2026-08-18",
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "linked",
+        "at": "2026-08-18",
+        "note": "2026-08-18-a-rendered-clip-is-not-a-seekable-clip"
+      },
+      "analytics": {
+        "due_at": "2026-08-25",
         "snapshots": []
       }
     }
