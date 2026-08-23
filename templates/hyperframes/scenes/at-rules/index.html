@@ -1,0 +1,87 @@
+<!doctype html>
+<!--
+  at-rules — 023 long s22 (rule 1) + s23 (rule 2) + s24 (rule 3). One file, three phases, so the
+  three-rule rail is the SAME object across all three scenes and the viewer can see the shape of
+  what is coming (reserved space, never a late shove).
+
+  ph1  rule 1 as a worked before/after: both prompts readable in full, each with its own budget bar,
+       and the answer's slice is visibly larger on the right because there is less to divide it with.
+  ph2  rule 2, where the misconception IS the visual: a second question is added and the viewer
+       expects a second budget. It does not appear. The same bar divides again and both answers come
+       back visibly thinner — two half-answers, both readable.
+  ph3  rule 3: a folder of real named documents is dragged toward the window, stopped, opened, and
+       ONE page is pulled out. The bar re-divides over the single page and the answer fills most of it.
+
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":453},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":15.09}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="at-rules.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="at-rules" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <!-- the rail: all three rules, always on screen, one of them lit -->
+        <div class="rail" id="rail"></div>
+
+        <!-- ph1: before / after -->
+        <div class="ba" id="ba">
+          <div class="col">
+            <div class="ctag" id="baTagL">before</div>
+            <div class="prompt" id="baBefore"></div>
+            <div class="mini"><div class="mtrack"><div class="mfill" id="baFillL"></div></div><span class="mval fx-mono" id="baPctL"></span></div>
+          </div>
+          <div class="col">
+            <div class="ctag good" id="baTagR">after</div>
+            <div class="prompt keep" id="baAfter"></div>
+            <div class="mini"><div class="mtrack"><div class="mfill gold" id="baFillR"></div></div><span class="mval fx-mono gold" id="baPctR"></span></div>
+          </div>
+        </div>
+
+        <!-- ph2: one budget, split -->
+        <div class="two" id="two">
+          <div class="qs" id="qs"></div>
+          <div class="onebar"><div class="obtrack"><div class="obfill a" id="obA"></div><div class="obfill b" id="obB"></div><div class="obedge"></div></div><span class="oblbl" id="oblbl">one budget</span></div>
+          <div class="answers" id="answers"></div>
+        </div>
+
+        <!-- ph3: the folder, and the page -->
+        <div class="folder" id="folder">
+          <div class="files" id="files"></div>
+          <div class="pageout" id="pageout"><span class="polbl" id="polbl"></span></div>
+          <!-- the payoff: the same bar, re-divided over ONE page instead of the whole folder -->
+          <div class="fbar" id="fbar">
+            <div class="fbrow">
+              <span class="fblbl">the whole folder</span>
+              <div class="fbtrack"><div class="fbfill" id="fbFolder"></div></div>
+              <span class="fbval fx-mono" id="fbFolderVal">10.0%</span>
+            </div>
+            <div class="fbrow">
+              <span class="fblbl gold">one page</span>
+              <div class="fbtrack"><div class="fbfill gold" id="fbPage"></div></div>
+              <span class="fbval fx-mono gold" id="fbPageVal">68%</span>
+            </div>
+            <div class="fbnote" id="fbnote">the answer's share of the same fixed total</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="at-rules.js"></script>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<!--
+  at3d-hook — 023 long s1 (HOOK HERO, black+gold, 3D).
+
+  The viewer's own habit, mirrored back and then priced. We open TIGHT on a real prompt box that
+  fills the frame with READABLE pasted text; more paragraphs shove in from below and the box grows
+  past both edges of the shot while the scrollbar thumb shrinks — that is the thing everybody does.
+  The answer comes back and it is visibly THINNER than the one before it, which stays ghosted beside
+  it for the comparison. The myth is named on the flat type layer with a spotlight cone drawn on it,
+  struck, and the cone collapses into THE BUDGET BAR — the spine object of the whole video: one
+  horizontal total, already full, with a hard right edge.
+
+  Words split by role (MOTION_SPEC §11): the pasted text and the answers are IN the room (they are
+  the object), the myth/kicker/bar are flat DOM in the house typography.
+
+  b0  0.0   the box is already too full and gets fuller
+  b1  b1    the answer returns, thinner than the ghost beside it
+  b2  b2    "Everyone calls that losing focus" — the myth plate + spotlight cone
+  b3  b3    the slash; the cone collapses into the full budget bar; the kicker lands
+
+  Seek-driven and deterministic (window.__hfThreeTime + `hf-seek`, HF3.rng seeds, no rAF/Date.now).
+  VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,revealsSeconds[],props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":345},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":11.5}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-three.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="at3d-hook.css" />
+    <script>
+      // rewritten to ../vendor/… by _lib/make-entry.mjs for the generated entry
+      window.__THREE_URL = "./vendor/three.module.min.js";
+    </script>
+  </head>
+  <body>
+    <div id="root" data-composition-id="at3d-hook" data-start="0" data-width="1920" data-height="1080">
+      <canvas id="gl" data-layout-ignore></canvas>
+
+      <div class="scrim" id="scrim"></div>
+
+      <div class="mythwrap" id="mythwrap">
+        <div class="cone" id="cone"></div>
+        <div class="fx-myth" id="myth"></div>
+        <span class="fx-slash" id="slash"></span>
+      </div>
+
+      <!-- THE BUDGET BAR — the spine object. Always full, hard right edge. -->
+      <div class="budget" id="budget">
+        <div class="btrack">
+          <div class="bfill" id="bfill"></div>
+          <div class="bedge"></div>
+        </div>
+        <div class="blbl"><span id="blbltext"></span><span class="bone">1.0000000</span></div>
+      </div>
+
+      <div class="kicker" id="kicker"><span class="fx-gold" id="kickertext"></span></div>
+    </div>
+    <script src="at3d-hook.js"></script>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+/* at-spotlight-vs-budget — s4. Two columns, both live at once: the asymmetry IS the argument, so
+   neither half is ever alone in the frame. */
+
+.col { position: absolute; top: calc(150px * var(--u)); width: calc(830px * var(--u)); }
+.col.left { left: calc(96px * var(--u)); }
+.col.right { right: calc(96px * var(--u)); }
+
+.chead { display: flex; align-items: baseline; gap: calc(16px * var(--u)); margin-bottom: calc(20px * var(--u)); opacity: 0; }
+.ctag {
+  font-size: calc(34px * var(--u)); font-weight: 800; letter-spacing: calc(-0.4px * var(--u));
+  text-transform: uppercase; color: var(--gold-2);
+}
+.cclaim { font-size: calc(25px * var(--u)); font-weight: 600; color: var(--text-2); }
+
+/* ── LEFT: a real page under a beam ──────────────────────────────────────────── */
+.page {
+  position: relative; height: calc(500px * var(--u)); overflow: hidden;
+  padding: calc(26px * var(--u)) calc(28px * var(--u));
+  background: linear-gradient(168deg, #f5f8fb 0%, var(--paper) 48%, #c9d5e2 100%);
+  box-shadow: 0 calc(3px * var(--u)) calc(7px * var(--u)) rgba(0,0,0,0.5),
+              0 calc(24px * var(--u)) calc(60px * var(--u)) rgba(0,0,0,0.45);
+  opacity: 0;
+}
+.pline { font-size: calc(19px * var(--u)); color: #3f5266; line-height: 1.5; margin-bottom: calc(3px * var(--u)); }
+.pline.hit { color: #1b2b3b; font-weight: 700; }
+.beam {
+  position: absolute; left: calc(-60px * var(--u)); right: calc(-60px * var(--u));
+  top: calc(232px * var(--u)); height: calc(112px * var(--u));
+  background: linear-gradient(180deg, rgba(255,214,150,0) 0%, rgba(255,214,150,0.34) 46%, rgba(255,214,150,0) 100%);
+  opacity: 0; mix-blend-mode: screen; z-index: 3;
+}
+.dark { position: absolute; inset: 0; background: rgba(3,6,10,0.82); opacity: 0; z-index: 2; }
+
+.switch {
+  margin-top: calc(24px * var(--u)); display: inline-flex; align-items: center; gap: calc(16px * var(--u));
+  padding: calc(10px * var(--u)) calc(26px * var(--u)) calc(10px * var(--u)) calc(10px * var(--u));
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.4); border-radius: calc(40px * var(--u));
+  background: rgba(255,176,32,0.06); opacity: 0;
+}
+.sknob {
+  width: calc(46px * var(--u)); height: calc(46px * var(--u)); border-radius: 50%;
+  background: linear-gradient(180deg, var(--gold-2), var(--gold)); display: block;
+  box-shadow: 0 0 calc(22px * var(--u)) rgba(255,176,32,0.6);
+}
+.slbl { font-size: calc(26px * var(--u)); font-weight: 800; letter-spacing: calc(2px * var(--u)); text-transform: uppercase; color: var(--text); }
+
+/* ── RIGHT: the bar, and the panel with the missing dial ─────────────────────── */
+.barbox { opacity: 0; }
+.btrack {
+  position: relative; height: calc(58px * var(--u));
+  background: rgba(255,255,255,0.045);
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.3); border-radius: calc(6px * var(--u));
+}
+.slices { position: absolute; inset: 0; display: flex; }
+.slice {
+  height: 100%; border-right: calc(2px * var(--u)) solid rgba(4,8,12,0.55);
+  background: linear-gradient(90deg, #b97c12 0%, var(--gold) 55%, var(--gold-2) 100%);
+}
+.bedge {
+  position: absolute; right: calc(-3px * var(--u)); top: calc(-11px * var(--u)); bottom: calc(-11px * var(--u));
+  width: calc(6px * var(--u)); background: var(--gold-3); box-shadow: 0 0 calc(24px * var(--u)) rgba(255,214,150,0.85);
+}
+.brow { display: flex; justify-content: space-between; align-items: baseline; margin-top: calc(14px * var(--u)); }
+.blbl { font-size: calc(24px * var(--u)); font-weight: 700; letter-spacing: calc(2.4px * var(--u)); text-transform: uppercase; color: var(--text-2); }
+.bsum { font-size: calc(26px * var(--u)); font-weight: 700; color: var(--gold-2); }
+
+.panel {
+  margin-top: calc(46px * var(--u)); display: flex; gap: calc(20px * var(--u));
+  padding: calc(26px * var(--u)) calc(22px * var(--u));
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: calc(2px * var(--u)) solid var(--line); border-radius: calc(10px * var(--u));
+  box-shadow: inset 0 calc(2px * var(--u)) 0 rgba(255,255,255,0.05), 0 calc(20px * var(--u)) calc(46px * var(--u)) rgba(0,0,0,0.5);
+  opacity: 0;
+}
+.dial { position: relative; flex: 1; text-align: center; padding-top: calc(8px * var(--u)); }
+.dknob {
+  display: block; margin: 0 auto calc(14px * var(--u)); width: calc(104px * var(--u)); height: calc(104px * var(--u));
+  border-radius: 50%; background: conic-gradient(from 210deg, var(--gold) 0turn, #6c5a30 0.62turn, #223142 0.62turn);
+  box-shadow: inset 0 0 0 calc(6px * var(--u)) #16232f, 0 calc(6px * var(--u)) calc(16px * var(--u)) rgba(0,0,0,0.55);
+}
+.dial.socket .dknob { display: none; }
+.dial.socket {
+  border: calc(2px * var(--u)) dashed rgba(125,143,163,0.55); border-radius: calc(8px * var(--u));
+  background: repeating-linear-gradient(135deg, rgba(0,0,0,0.5) 0 calc(10px * var(--u)), rgba(0,0,0,0.28) calc(10px * var(--u)) calc(20px * var(--u)));
+}
+.hole {
+  position: absolute; width: calc(16px * var(--u)); height: calc(16px * var(--u)); border-radius: 50%;
+  background: #05080c; box-shadow: inset 0 calc(2px * var(--u)) calc(3px * var(--u)) rgba(0,0,0,0.9), 0 calc(1px * var(--u)) 0 rgba(255,255,255,0.06);
+}
+.hole.a { left: calc(26px * var(--u)); top: calc(26px * var(--u)); }
+.hole.b { right: calc(26px * var(--u)); top: calc(26px * var(--u)); }
+.dlbl { display: block; font-size: calc(22px * var(--u)); font-weight: 700; color: var(--text-2); line-height: 1.25; }
+.dlbl.gone { color: var(--ghost); padding: calc(46px * var(--u)) calc(8px * var(--u)) calc(10px * var(--u)); font-style: italic; }
+
+.verdict {
+  position: absolute; left: 0; right: 0; top: calc(830px * var(--u)); text-align: center;
+  color: var(--text); opacity: 0;
+}
+
+.portrait .col { position: static; width: auto; }
+.portrait .col.left { margin: calc(120px * var(--u)) calc(70px * var(--u)) calc(40px * var(--u)); }
+.portrait .col.right { margin: 0 calc(70px * var(--u)); }
+.portrait .page { height: calc(430px * var(--u)); }
+.portrait .verdict { top: calc(1560px * var(--u)); }

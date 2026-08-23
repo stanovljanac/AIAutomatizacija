@@ -1,0 +1,72 @@
+<!doctype html>
+<!--
+  at-sink-cause — 023 long s11. The causal evidence, run as a controlled experiment on screen.
+
+  Two identical rigs, same note, same tokens, ONE rule different. LEFT keeps the normalisation step
+  in the pipe: the leftover has to go somewhere and the first capsule loads to 53%. RIGHT has that
+  step physically LIFTED OUT — an empty bracket in the pipe, not a greyed-out toggle — so there is no
+  leftover to place and the first capsule stays flat. Both rigs keep running side by side, because a
+  difference you can only see in one frame is a claim, not evidence.
+
+  The bound is on the chip, never in the narration's mouth: models up to 1B.
+
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":554},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":18.47}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="at-sink-cause.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="at-sink-cause" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <div class="rig left" id="rigL">
+          <div class="rhead"><span class="rtag" id="tagL"></span><span class="rrule" id="ruleL"></span></div>
+          <div class="pipe">
+            <span class="stage">scores</span>
+            <span class="arrow">→</span>
+            <span class="stage norm" id="normL">normalise</span>
+            <span class="arrow">→</span>
+            <span class="stage">shares</span>
+          </div>
+          <div class="sumrow"><span class="slab">row sum</span><span class="sval fx-mono" id="sumL">1.0000000</span></div>
+          <div class="toks" id="toksL"></div>
+          <div class="result" id="resL"></div>
+        </div>
+
+        <div class="rig right" id="rigR">
+          <div class="rhead"><span class="rtag" id="tagR"></span><span class="rrule" id="ruleR"></span></div>
+          <div class="pipe">
+            <span class="stage">scores</span>
+            <span class="arrow">→</span>
+            <span class="stage gap" id="normR"><span class="gaplbl">step removed</span></span>
+            <span class="arrow">→</span>
+            <span class="stage">shares</span>
+          </div>
+          <div class="sumrow"><span class="slab">row sum</span><span class="sval fx-mono" id="sumR">0.6412</span></div>
+          <div class="toks" id="toksR"></div>
+          <div class="result" id="resR"></div>
+        </div>
+
+        <span class="fx-chip src" id="src"></span>
+        <div class="verdict fx-h3" id="verdict"></div>
+      </div>
+    </div>
+    <script src="at-sink-cause.js"></script>
+  </body>
+</html>

@@ -69,6 +69,43 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   (`visual-prompts`) is the **fallback** when no scene scores well. The orchestrator runs this
   as the `thumbnails` node automatically.
 
+## Fixing ONE scene — patch, never re-render the cut (D-065, 2026-08-23)
+
+**Once `video/final.mp4` exists, a scene fix costs ~4 minutes, not ~2 hours.** The HyperFrames clips
+are already cached per scene, so the expensive step is the Remotion composite pass — 11,331 frames at
+`--concurrency=1` is about two hours for a 6-minute cut. Re-running all of it to change 11 seconds is
+the single biggest waste in the pipeline, and the owner called it out on 023.
+
+```
+node pipeline/04-render/build-props.mjs <id>            # after editing scene-plan / the HF scene
+node pipeline/04-render/compile-hyperframes.mjs <id>    # re-renders ONLY the changed scene (cached)
+node pipeline/04-render/build-props.mjs <id>            # copies the new clip, sets props.hfSrc
+node pipeline/04-render/patch-scenes.mjs <id> --scenes s1.0 --out v1.1
+node scripts/repair-dropouts.mjs content/<id>/video/final-v1.1.mp4
+```
+
+`patch-scenes.mjs` re-renders only the frames the named scenes own, then splices them into the base
+mp4. Add `--dry-run` to see the plan first; omit `--out` and it refuses (it will not overwrite the
+base render in place). Measured on 023 s1.0: **392 of 11,331 frames = 3.5%**.
+
+Why the splice is safe, and what to keep true if you touch it:
+- **x264 puts an IDR frame on every hard scene cut**, so a scene boundary is already a splice point
+  (023's keyframes at 0/250/392/642/1070 are exactly the compiled `fromFrame` of s2.0/s4.0).
+  `snapToKeyframes` widens outward to the enclosing keyframes, so both cuts are always keyframe cuts.
+- **The untouched part is a STREAM COPY** — verified bit-identical, no generation loss, no seam.
+- **The replacement frames come from Remotion itself** (`--frames=A-B`), not from ffmpeg, so the
+  segment carries the same encoder settings and SPS/PPS as the base and the concat demuxer can run
+  with `-c copy`. Measured PSNR against the original head: 50.9 dB (visually lossless).
+- **The segment is rendered `--muted` and the base's audio stream is re-muxed untouched** — audio MD5
+  identical. Drift is impossible by construction (PRD R11: never slice the audio).
+- The run **verifies the patched file decodes to exactly the base's frame count** and refuses it
+  otherwise; a splice that loses a frame would desync every caption after it.
+- A patched file still needs `repair-dropouts` and `frame-gate` — patching changes which frames were
+  composited, not whether the compositor dropped one.
+
+Fall back to a full render when there is no base file, when `alignment.json` changed (every scene
+window moves), or when the intro/outro/caption layer changed.
+
 ## Engine notes (combo — V6 DONE)
 - In `combo` mode Remotion still owns the one continuous narration, the timeline/sync, captions, and
   intro/outro. A scene tagged `engine:"hyperframes"` + `props.hf_scene:"<scene-dir>"` (declared in

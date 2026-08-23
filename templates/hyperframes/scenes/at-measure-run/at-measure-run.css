@@ -1,0 +1,78 @@
+/* at-measure-run — s6 + s7. A real terminal on the left, the real note on the right. Everything on
+   screen is content: code that runs, output that prints, a page you can read. */
+
+.term {
+  position: absolute; left: calc(104px * var(--u)); top: calc(150px * var(--u));
+  width: calc(1040px * var(--u)); height: calc(690px * var(--u));
+  display: flex; flex-direction: column; overflow: hidden;
+  background: linear-gradient(180deg, #0d151d 0%, #0a1119 100%);
+  border: calc(2px * var(--u)) solid #24384c; border-radius: calc(10px * var(--u));
+  box-shadow: 0 calc(26px * var(--u)) calc(70px * var(--u)) rgba(0,0,0,0.62),
+              inset 0 calc(1px * var(--u)) 0 rgba(255,255,255,0.05);
+  opacity: 0;
+}
+.tbar {
+  display: flex; align-items: center; gap: calc(10px * var(--u));
+  padding: calc(12px * var(--u)) calc(18px * var(--u));
+  background: linear-gradient(180deg, #16232f, #101a24);
+  border-bottom: calc(2px * var(--u)) solid #24384c;
+}
+.dot { width: calc(13px * var(--u)); height: calc(13px * var(--u)); border-radius: 50%; display: block; }
+.dot.r { background: #ff5c5c; } .dot.y { background: #ffb020; } .dot.g { background: #3ddc97; }
+.tname {
+  margin-left: calc(10px * var(--u)); font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(20px * var(--u)); color: var(--text-2); letter-spacing: calc(0.4px * var(--u));
+}
+.tbody { position: relative; flex: 1; padding: calc(20px * var(--u)) calc(24px * var(--u)); overflow: hidden; }
+.code, .out {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(22px * var(--u)); line-height: 1.52; color: #cfe0f2; white-space: pre; margin: 0;
+}
+.code .k { color: #63a8ec; } .code .s { color: #ffd37a; } .code .c { color: #5d6f83; }
+.out { color: #3ddc97; margin-top: calc(10px * var(--u)); }
+
+/* ph2: the 144 rows, scrolling */
+.rows { background: linear-gradient(180deg, #0d151d 0%, #0a1119 100%); position: absolute; left: calc(24px * var(--u)); right: calc(24px * var(--u)); top: calc(20px * var(--u)); bottom: calc(20px * var(--u)); overflow: hidden; opacity: 0; }
+.rowscroll { position: absolute; left: 0; right: 0; top: 0; }
+.row {
+  display: flex; justify-content: space-between;
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(21px * var(--u)); line-height: 1.62; color: #9fb6cd;
+}
+.row .sum { color: var(--gold-2); font-weight: 700; }
+.tfoot {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: calc(14px * var(--u)) calc(22px * var(--u));
+  border-top: calc(2px * var(--u)) solid #24384c; background: rgba(0,0,0,0.3);
+}
+.dev { font-size: calc(24px * var(--u)); font-weight: 700; color: var(--gold-2); opacity: 0; }
+
+/* ── the note ────────────────────────────────────────────────────────────────── */
+.notecol { position: absolute; right: calc(104px * var(--u)); top: calc(150px * var(--u)); width: calc(620px * var(--u)); opacity: 0; }
+.notelbl {
+  font-size: calc(22px * var(--u)); font-weight: 700; letter-spacing: calc(2.6px * var(--u));
+  text-transform: uppercase; color: var(--text-2); margin-bottom: calc(14px * var(--u));
+}
+.note {
+  padding: calc(26px * var(--u)) calc(26px * var(--u)) calc(30px * var(--u));
+  background: linear-gradient(168deg, #f5f8fb 0%, var(--paper) 46%, #cbd7e3 100%);
+  box-shadow: 0 calc(3px * var(--u)) calc(7px * var(--u)) rgba(0,0,0,0.5), 0 calc(22px * var(--u)) calc(56px * var(--u)) rgba(0,0,0,0.45);
+  font-size: calc(25px * var(--u)); line-height: 1.5; color: #2b3d4f;
+}
+.note .fact { background: var(--paper-gold); color: #6d4f0c; font-weight: 800; padding: 0 calc(4px * var(--u)); }
+.toks { display: flex; flex-wrap: wrap; gap: calc(7px * var(--u)); margin-top: calc(22px * var(--u)); }
+.tok {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(19px * var(--u)); color: #cfe0f2; opacity: 0;
+  padding: calc(6px * var(--u)) calc(10px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(99,168,236,0.45); border-radius: calc(5px * var(--u));
+  background: rgba(56,132,208,0.12); white-space: pre;
+}
+.tok.gold { border-color: rgba(255,176,32,0.7); background: rgba(255,176,32,0.16); color: var(--gold-3); }
+
+.verdict { position: absolute; left: calc(104px * var(--u)); right: calc(104px * var(--u)); top: calc(862px * var(--u)); text-align: center; opacity: 0; }
+.vbig { color: var(--text); }
+
+.portrait .term { left: calc(70px * var(--u)); width: calc(940px * var(--u)); top: calc(230px * var(--u)); height: calc(760px * var(--u)); }
+.portrait .notecol { right: auto; left: calc(70px * var(--u)); width: calc(940px * var(--u)); top: calc(1040px * var(--u)); }
+.portrait .verdict { top: calc(1560px * var(--u)); }

@@ -19,6 +19,59 @@ Format:
 
 ---
 
+## 2026-08-23 — 023 s1 rebuilt twice, and a one-scene fix stopped costing two hours
+- who: agent
+- did: Acted on the owner's review of the 023 long cut.
+  1. **`pipeline/04-render/patch-scenes.mjs` (D-065)** — re-renders only the frames a changed scene
+     owns (`--frames=A-B`) and splices them into the existing `video/final.mp4`. Measured on s1.0:
+     **392 of 11,331 frames = 3.5%**, ~4 min instead of ~2 h. Validated by patching s1.0 with ITSELF
+     before trusting it: tail bit-identical (stream copy), head PSNR **50.9 dB**, audio stream MD5
+     identical, 11,331 = 11,331 frames, duration unchanged. Fails closed on a frame-count mismatch.
+  2. **Two complete rebuilds of s1** against the same props contract, swapped on `props.hf_scene`:
+     `at3d-hook-v11` (3D) and `at-hook-v12` (2D). Both fix what the owner named — the hook now
+     ESTABLISHES a recognisable AI chat before the narration attacks, the window's edges never leave
+     frame, one object is lit per beat, every flat word rides an opaque plate, and the struck myth
+     leaves at 0 instead of parking at 0.24. The 2D cut adds a literal MEASURE (a gold rule under
+     each answer at its own length). Both also fix the broken carry: the budget bar now hands over at
+     s2's real geometry (120/196/62), not the old 160/636/56.
+  3. **MOTION_SPEC §13 (the layering law)** — nothing is ever half-visible over anything else; recede
+     by colour or depth, never by alpha; a recessed object must stay legible. **§14** — the ~50/50
+     3D/2D ratio the owner asked for.
+- verify: `npm test` **793 green** (was 768; +25 for patch-scenes). Both patched cuts
+  `repair-dropouts` clean (11,331 frames scanned, no dropouts). `knowledge-lint --fix` 0 errors.
+- deliverables: `content/023-attention/video/final-v1.1.mp4` (3D) and `final-v1.2.mp4` (2D). The base
+  `final.mp4` is untouched; the original s1 clip + scene-plan are preserved in `video/hf/_v1.0/`.
+- catalogued, not fixed: the same layering defect on 10 other scenes (6 × killed-element-left-as-a-
+  smudge, 4 × caption-band/edge collision) — exact list in `content/023-attention/log.md`. Each is a
+  2-4 min patch now; held for the owner's pick per his "s1 first" instruction.
+- next: **owner picks v1.1 or v1.2**, then the catalogued scenes go in one patch run. `scene-plan.json`
+  currently points s1 at `at-hook-v12` (the last one built) — one field flips it.
+- blockers: none. Nothing committed.
+
+## 2026-08-23 — 023 attention: 26 bespoke scenes rendered, both cuts pass every gate
+- who: agent
+- did: Took 023 from an approved script to a watchable pair of cuts. Voice (edge-tts draft, 99/99
+  sentences, 373.7s incl. 10.68s scripted silence) → SEO at approval (`publish.draft.json`) →
+  storyboard as **26 scenes / 18 bespoke HyperFrames scenes, 4 of them real 3D (HF3)** on the beats
+  the owner named (hook, handout, sink, pairs) → render → gates. Spine object: THE BUDGET BAR.
+- verify: frame-gate **26/26** long (medians detail 5.3% / cov 29.9% / box 46.3%; 012's benchmark p25
+  detail is 2.45%) and **5/5** Short; mechanical QA **10/10** on both cuts; `npm test` 768/768;
+  `knowledge-lint --fix` 0 errors; 3 compositor dropouts repaired in the long cut, none in the Short.
+- artifacts: `video/final.mp4` 6:18 (203.8 MB), `short/video/final.mp4` 56.0s 9:16 (30.1 MB),
+  `publish.draft.json`, `visual-prompts.json` (2 prompts — prompts lead), `medium.md`,
+  3 thumbnail candidates (s3 90 / s21 90 / s14 75).
+- lessons this run (in `content/023-attention/log.md`): a 3D camera that travels between two framings
+  can cross empty room and put a near-black second inside the hook — measure luma across the clip, not
+  just at the settled frame; the HF variables cache means a CSS/JS fix does NOT invalidate a clip, so
+  every scene edit needs `--force`; and binding a beat to a fixed sentence index breaks the moment the
+  Short cut has one sentence fewer — bind to the last available beat instead.
+- render note: Remotion died at frame 3064/11331 with `Page crashed!` (Chrome tab OOM over 26
+  OffthreadVideo sources). Stable command is `--concurrency=1
+  --offthread-video-cache-size-in-bytes=134217728 --timeout=180000`.
+- next: **owner GATE ③** — watch both cuts, pick/generate a thumbnail. On approval: Azure final voice
+  + re-align + re-render, then `publish.draft.json` → `publish.json` and the manual-upload package.
+- blockers: none. Nothing committed.
+
 ## 2026-08-19 — 022 IS LIVE — both cuts published manually; the thumbnail lesson banked
 - who: the **owner uploaded both cuts manually** (D-055) — the long (6:15.45) and the Short (55.5s).
   The agent sent nothing to YouTube; this entry records reality and the knowledge that came out of it.
@@ -1109,6 +1162,50 @@ RSS endpoints, and re-registering the weekly run (session-local, expires after 7
 parked at the review hand-off (it will pause for the owner to record the Gmail screen capture).
 
 <!-- New per-session entries below this line, newest on top. -->
+
+## 2026-08-22 — 023 "AI Doesn't Focus. It Spends." scripted (Desk Lessons Ep.4) + the FRAME GATE shipped
+- who: agent (owner commissioned the continuation and chose the visual direction).
+- **023 through Gate ① and the script review.** Desk Lessons Ep.4 = **attention**, the episode 022's
+  own sign-off promises by name. Scaffolded `content/023-attention`, added the `desk-lessons-attention`
+  idea (8.90, owner band), wrote brief + a 26-scene / ~415s script. Angle: attention is **not a
+  spotlight, it is a budget** — the scores over everything you handed it sum to exactly 1, so the
+  total is always fully spent and there is no setting for "none of this is relevant". Rule that falls
+  out: **delete, don't emphasize.**
+- **The numbers are MEASURED, on a real model.** `measure/attention.py` runs GPT-2 small locally on
+  CPU (torch+transformers in a venv on F:, $0) with `output_attentions=True` and reads three things
+  off the real matrix: every row sums to 1.0 (max deviation 6e-7), the first token — the meaningless
+  word "Notes" — takes **53% of the budget averaged over all 12 layers and 75% at its peak**, and the
+  deciding row of a 236-token prompt splits **25.8% sink · 23.6% padding · 10.0% the three tokens that
+  answer the question · 40.6% scaffold**. One meaningless word holds 2.6x more than the answer.
+- **Our own hypothesis was falsified and stayed in the video.** The obvious story ("pad the prompt and
+  the important line gets a smaller share") is not what the instrument returned — the fact's share went
+  **0.078 → 0.100**, UP. Attention is not a pro-rata split. Kept in `measured.json` as
+  `dilution_counterexample` and dramatised as scene s15; the script claims the true thing instead.
+- fact-check: 14 claims, all verified against fetched primaries (Vaswani NeurIPS 2017, Xiao et al.
+  ICLR 2024, Gu et al. ICLR 2025 spotlight, Jain & Wallace NAACL 2019) or the re-runnable local
+  measurement. **One corrected before the gate**: the sigmoid result is bounded at "models up to 1B",
+  so the narration says "across every model they tested" and the chip carries the bound.
+- review panel (Sonnet, D-053): **8/10, all four hard gates green**, band `soft`. Three majors and two
+  minors **fixed before the owner sees it** (s15's announced honesty, s16's text-on-a-plate landing
+  frame, chip persistence across the measurement arc, rule 2 sharpened, the 66.4% aggregation split
+  into sink vs the viewer's own scaffold).
+- **THE FRAME GATE (owner-chosen, code-enforced).** The owner's verdict on 022 was *"očigledno je AI
+  video — scene su previše proste i generičke"* and picked "full frame + real content, plus 3D where a
+  beat earns it" with a gate in code. Built `pipeline/05-qa/lib/ink-coverage.mjs` (pure) +
+  `pipeline/05-qa/frame-gate.mjs` (CLI, same settled/caption-free frame choice as 04b-thumbnails).
+  **The calibration killed the obvious hypothesis:** emptiness is NOT the defect — 022's median ink
+  coverage (17.5%) is HIGHER than the benchmark 012's (15.6%). What separates them is **fine detail
+  density** (readable text/texture/material vs flat fills): 012 median 4.15%, 022 3.92% with a much
+  fatter low tail, 021 **2.04%**. Floors set from 012's p25. Verified end to end: it flags 5/26 scenes
+  in 022 (both inspected frames confirmed by eye — featureless white strips, two blank rectangles) and
+  12/24 in 021, ranking it worst exactly as the owner did. Limits stated in the docs: 012 fails 29% of
+  its own scenes, so it is a per-scene floor detector, never a substitute for Gate ③.
+- verify: `npm test` **768 green** (was 730; +25 new tests across the two modules).
+- docs: `style/MOTION_SPEC.md` **§12** + a new Enforcement row; lesson
+  `2026-08-22-plain-is-detail-not-emptiness.md`; `knowledge-lint --fix` 0 errors.
+- next: **owner GATE ② — read `content/023-attention/script.json`.** On approval: SEO at approval
+  (D-055 flow), then voice → storyboard authored to the new standard → render → frame-gate → QA.
+- blockers: none. Nothing committed.
 
 ## 2026-06-13 — FIRST VIDEO SHIPPED (006 uploaded as private draft)
 - who: agent

@@ -1,0 +1,106 @@
+/* at-budget-bar — s2 + s3. The bar across the top, the documents it is spent on underneath, the
+   next word on the right, and the wires between them. Everything sizes against --u so one file
+   serves 16:9 and 9:16. Content stays in the 5%→85% band (the bottom is the caption zone). */
+
+.motif {
+  position: absolute; left: calc(120px * var(--u)); top: calc(74px * var(--u));
+  opacity: 0;
+}
+
+/* ── THE BUDGET BAR — same geometry the hook handed over ─────────────────────── */
+.budget { position: absolute; left: calc(120px * var(--u)); right: calc(120px * var(--u)); top: calc(196px * var(--u)); z-index: 30; }
+.btrack {
+  position: relative; height: calc(62px * var(--u));
+  background: rgba(255,255,255,0.045);
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.30);
+  border-radius: calc(6px * var(--u));
+}
+.slices { position: absolute; inset: 0; display: flex; }
+.slice {
+  position: relative; height: 100%; transform-origin: 0 50%; transform: scaleX(0);
+  border-right: calc(2px * var(--u)) solid rgba(4,8,12,0.55);
+  background: linear-gradient(90deg, #b97c12 0%, var(--gold) 55%, var(--gold-2) 100%);
+  box-shadow: inset 0 calc(-14px * var(--u)) calc(24px * var(--u)) rgba(0,0,0,0.24);
+}
+.slice .sval {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(24px * var(--u)); font-weight: 800; color: #2a1a03; white-space: nowrap; opacity: 0;
+}
+/* ph2: the comfortable, wrong picture — a total that stops short */
+.ghostfill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 68%;
+  background: repeating-linear-gradient(135deg, rgba(125,143,163,0.34) 0 calc(9px * var(--u)), rgba(125,143,163,0.12) calc(9px * var(--u)) calc(18px * var(--u)));
+  opacity: 0;
+}
+.bedge {
+  position: absolute; right: calc(-3px * var(--u)); top: calc(-12px * var(--u)); bottom: calc(-12px * var(--u));
+  width: calc(6px * var(--u)); background: var(--gold-3);
+  box-shadow: 0 0 calc(26px * var(--u)) rgba(255,214,150,0.85);
+}
+.blbl {
+  display: flex; justify-content: space-between; align-items: baseline; margin-top: calc(16px * var(--u));
+}
+.bterm {
+  font-size: calc(40px * var(--u)); font-weight: 800; letter-spacing: calc(-0.6px * var(--u));
+  background: linear-gradient(180deg, var(--gold-3), var(--gold)); -webkit-background-clip: text;
+  background-clip: text; color: transparent; opacity: 0;
+}
+.bsum { font-size: calc(30px * var(--u)); font-weight: 700; color: var(--gold-2); opacity: 0; }
+.barslash { position: absolute; left: 0; top: calc(30px * var(--u)); width: 68%; transform: scaleX(0); }
+
+/* ── the documents the budget is spent ON ────────────────────────────────────── */
+.docs {
+  position: absolute; left: calc(120px * var(--u)); top: calc(378px * var(--u));
+  width: calc(1240px * var(--u)); display: flex; gap: calc(18px * var(--u)); z-index: 28;
+}
+.doc {
+  position: relative; flex: 1; height: calc(468px * var(--u)); opacity: 0;
+  padding: calc(20px * var(--u)) calc(18px * var(--u));
+  background: linear-gradient(168deg, #f5f8fb 0%, var(--paper) 46%, #cbd7e3 100%);
+  box-shadow: 0 calc(3px * var(--u)) calc(7px * var(--u)) rgba(0,0,0,0.5),
+              0 calc(22px * var(--u)) calc(56px * var(--u)) rgba(0,0,0,0.45);
+}
+.doc.q { background: linear-gradient(168deg, #ffe9bd 0%, var(--paper-gold) 52%, var(--paper-gold-2) 100%); }
+.dtitle {
+  font-size: calc(21px * var(--u)); font-weight: 800; color: #1b2b3b; line-height: 1.16;
+  border-bottom: calc(2px * var(--u)) solid #a7b7c8; padding-bottom: calc(10px * var(--u)); margin-bottom: calc(12px * var(--u));
+}
+.dline { font-size: calc(15px * var(--u)); color: #4a5e73; line-height: 1.42; margin-bottom: calc(4px * var(--u)); }
+.dline.k { color: #7a5a10; font-weight: 700; }
+.dscore {
+  position: absolute; left: 50%; bottom: calc(-46px * var(--u)); transform: translateX(-50%);
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(28px * var(--u)); font-weight: 800; color: var(--gold-2); opacity: 0; white-space: nowrap;
+}
+
+/* ── the word it is about to write ───────────────────────────────────────────── */
+.nextword { position: absolute; right: calc(120px * var(--u)); top: calc(470px * var(--u)); width: calc(400px * var(--u)); text-align: center; opacity: 0; }
+.nwlbl {
+  font-size: calc(22px * var(--u)); font-weight: 700; letter-spacing: calc(2.6px * var(--u));
+  text-transform: uppercase; color: var(--text-2); margin-bottom: calc(14px * var(--u));
+}
+.nwbox {
+  font-size: calc(58px * var(--u)); font-weight: 800; color: var(--text);
+  padding: calc(22px * var(--u)) calc(10px * var(--u));
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.5); border-radius: calc(8px * var(--u));
+  background: rgba(255,176,32,0.07);
+}
+
+.wires { position: absolute; inset: 0; z-index: 26; pointer-events: none; }
+.wires path { fill: none; stroke: rgba(255,176,32,0.75); stroke-width: calc(2.5px * var(--u)); }
+
+/* ── ph2: what is in the window changes; the bar does not ────────────────────── */
+.variant {
+  position: absolute; left: calc(120px * var(--u)); top: calc(330px * var(--u));
+  display: flex; align-items: baseline; gap: calc(16px * var(--u)); opacity: 0;
+}
+.vlbl { font-size: calc(24px * var(--u)); font-weight: 700; letter-spacing: calc(2.4px * var(--u)); text-transform: uppercase; color: var(--text-2); }
+.vval { font-size: calc(46px * var(--u)); font-weight: 800; color: var(--text); }
+
+.portrait .budget { left: calc(70px * var(--u)); right: calc(70px * var(--u)); top: calc(300px * var(--u)); }
+.portrait .docs { left: calc(70px * var(--u)); width: calc(940px * var(--u)); top: calc(560px * var(--u)); }
+.portrait .doc { height: calc(560px * var(--u)); }
+.portrait .nextword { right: auto; left: 50%; margin-left: calc(-200px * var(--u)); top: calc(1240px * var(--u)); }
+.portrait .motif { left: calc(70px * var(--u)); }
+.portrait .variant { left: calc(70px * var(--u)); top: calc(470px * var(--u)); }

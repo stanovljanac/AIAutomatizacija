@@ -1,0 +1,72 @@
+/* ats-budget-spill — 023 Short s1. Portrait-first: the note and its token row carry the middle of
+   the frame, the total sits above them, and the number lands under the swollen first word. */
+
+.budget { position: absolute; left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(300px * var(--u)); z-index: 30; }
+.btrack {
+  position: relative; height: calc(72px * var(--u)); overflow: hidden;
+  background: rgba(255,255,255,0.05); border: calc(2px * var(--u)) solid rgba(255,176,32,0.34);
+  border-radius: calc(6px * var(--u));
+}
+.bfill {
+  position: absolute; inset: 0; transform-origin: 0 50%;
+  background: linear-gradient(90deg, #b97c12 0%, var(--gold) 50%, var(--gold-2) 100%);
+  box-shadow: 0 0 calc(40px * var(--u)) rgba(255,176,32,0.45);
+}
+.bedge {
+  position: absolute; right: 0; top: calc(-10px * var(--u)); bottom: calc(-10px * var(--u));
+  width: calc(7px * var(--u)); background: var(--gold-3); box-shadow: 0 0 calc(26px * var(--u)) rgba(255,214,150,0.9);
+}
+.blbl {
+  display: flex; justify-content: space-between; align-items: baseline; margin-top: calc(14px * var(--u));
+  font-size: calc(26px * var(--u)); font-weight: 700; letter-spacing: calc(2.2px * var(--u));
+  text-transform: uppercase; color: var(--text-2);
+}
+.blbl .fx-mono { color: var(--gold-2); }
+
+/* the note the model was handed — readable, and the thing the viewer recognises */
+.note {
+  position: absolute; left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(470px * var(--u));
+  padding: calc(30px * var(--u)) calc(30px * var(--u)) calc(34px * var(--u));
+  background: linear-gradient(168deg, #f5f8fb 0%, var(--paper) 46%, #cbd7e3 100%);
+  box-shadow: 0 calc(4px * var(--u)) calc(8px * var(--u)) rgba(0,0,0,0.55), 0 calc(26px * var(--u)) calc(64px * var(--u)) rgba(0,0,0,0.5);
+  font-size: calc(34px * var(--u)); line-height: 1.45; color: #2b3d4f; z-index: 26;
+}
+.note .fact { background: var(--paper-gold); color: #6d4f0c; font-weight: 800; padding: 0 calc(5px * var(--u)); }
+
+/* the words, each with the share it took */
+.tokrow {
+  position: absolute; left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(900px * var(--u));
+  display: flex; flex-wrap: wrap; gap: calc(10px * var(--u)) calc(8px * var(--u)); align-items: flex-end; z-index: 26;
+}
+.tw { display: flex; flex-direction: column; align-items: stretch; opacity: 0; }
+.tcap {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(26px * var(--u)); color: #cfe0f2; white-space: pre; text-align: center;
+  padding: calc(10px * var(--u)) calc(12px * var(--u));
+  border: calc(2px * var(--u)) solid rgba(99,168,236,0.4); border-radius: calc(5px * var(--u));
+  background: rgba(56,132,208,0.12);
+}
+.tw.sink .tcap {
+  border-color: rgba(255,176,32,0.9); background: rgba(255,176,32,0.22); color: var(--gold-3); font-weight: 800;
+}
+.tbarwrap { height: calc(300px * var(--u)); margin-top: calc(8px * var(--u)); display: flex; align-items: flex-start; }
+.tbar {
+  width: 100%; height: 100%; transform-origin: 50% 0; transform: scaleY(0);
+  background: linear-gradient(180deg, var(--gold-2), #b97c12);
+}
+.tw.sink .tbar { background: linear-gradient(180deg, #fff2d6, var(--gold)); }
+
+.headline {
+  position: absolute; left: calc(60px * var(--u)); top: calc(1330px * var(--u));
+  display: flex; flex-direction: column; opacity: 0; z-index: 34;
+}
+.hbig { font-size: calc(210px * var(--u)); font-weight: 800; line-height: 0.9; color: var(--gold-2); letter-spacing: calc(-8px * var(--u)); }
+.hlbl { font-size: calc(40px * var(--u)); font-weight: 800; color: var(--text); margin-top: calc(4px * var(--u)); }
+
+.readout {
+  position: absolute; left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(1610px * var(--u));
+  padding: calc(16px * var(--u)) calc(20px * var(--u));
+  border: calc(2px * var(--u)) solid rgba(61,220,151,0.4); border-radius: calc(6px * var(--u));
+  background: rgba(61,220,151,0.08); color: #7ff0be;
+  font-size: calc(24px * var(--u)); line-height: 1.5; white-space: pre; opacity: 0; z-index: 34;
+}

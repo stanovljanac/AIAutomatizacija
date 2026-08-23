@@ -1,0 +1,54 @@
+/* at-whats-left — s12. One bar, one fence, one question asked inside the space that is left. */
+
+.budget { position: absolute; left: calc(110px * var(--u)); right: calc(110px * var(--u)); top: calc(190px * var(--u)); }
+.btrack {
+  position: relative; height: calc(150px * var(--u)); display: flex;
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.32); border-radius: calc(8px * var(--u));
+  background: rgba(255,255,255,0.04); overflow: hidden;
+}
+.spent {
+  position: relative; width: 25.8%; height: 100%;
+  background: repeating-linear-gradient(135deg, rgba(255,176,32,0.85) 0 calc(14px * var(--u)), rgba(185,124,18,0.85) calc(14px * var(--u)) calc(28px * var(--u)));
+  border-right: calc(4px * var(--u)) solid #05080c;
+  display: flex; align-items: center; justify-content: center;
+}
+.spentpct { display: block; font-size: calc(34px * var(--u)); }
+.spentwhat { display: block; }
+.slbl {
+  font-size: calc(26px * var(--u)); font-weight: 800; color: #2a1a03; text-align: center; line-height: 1.2;
+  padding: 0 calc(10px * var(--u));
+}
+.left {
+  position: relative; flex: 1; height: 100%;
+  background: linear-gradient(90deg, rgba(56,132,208,0.16), rgba(56,132,208,0.06));
+  display: flex; align-items: center; justify-content: center;
+}
+.llbl { font-size: calc(30px * var(--u)); font-weight: 700; color: var(--text-2); }
+.bedge {
+  position: absolute; right: 0; top: 0; bottom: 0; width: calc(6px * var(--u));
+  background: var(--gold-3); box-shadow: 0 0 calc(24px * var(--u)) rgba(255,214,150,0.85);
+}
+
+/* the pages waiting to be paid out of what is left */
+.claimants {
+  position: absolute; left: calc(110px * var(--u)); right: calc(110px * var(--u)); top: calc(376px * var(--u));
+  display: flex; gap: calc(16px * var(--u));
+}
+.cl {
+  flex: 1; height: calc(300px * var(--u)); opacity: 0;
+  padding: calc(16px * var(--u)) calc(16px * var(--u));
+  background: linear-gradient(168deg, #f2f6fa 0%, var(--paper) 50%, #c7d4e1 100%);
+  box-shadow: 0 calc(3px * var(--u)) calc(6px * var(--u)) rgba(0,0,0,0.5), 0 calc(18px * var(--u)) calc(44px * var(--u)) rgba(0,0,0,0.42);
+}
+.clt { font-size: calc(19px * var(--u)); font-weight: 800; color: #1b2b3b; margin-bottom: calc(8px * var(--u)); }
+.cll { font-size: calc(14px * var(--u)); color: #4a5e73; line-height: 1.44; }
+
+.question {
+  position: absolute; left: calc(140px * var(--u)); right: calc(140px * var(--u)); top: calc(742px * var(--u));
+  text-align: center; font-size: calc(58px * var(--u)); font-weight: 800; line-height: 1.14;
+  color: var(--text); opacity: 0;
+}
+
+.portrait .budget { left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(420px * var(--u)); }
+.portrait .claimants { left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(640px * var(--u)); }
+.portrait .question { left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(1080px * var(--u)); font-size: calc(56px * var(--u)); }

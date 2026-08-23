@@ -1,0 +1,74 @@
+/* at-wrong-guess — s15. The prediction stays on screen next to the thing that refuted it. */
+
+.hyp {
+  position: absolute; left: calc(96px * var(--u)); top: calc(160px * var(--u)); width: calc(560px * var(--u));
+  padding: calc(24px * var(--u)) calc(26px * var(--u)) calc(28px * var(--u));
+  background: linear-gradient(180deg, rgba(22,35,47,0.94), rgba(16,26,36,0.94));
+  border: calc(2px * var(--u)) solid var(--line); border-radius: calc(10px * var(--u));
+  box-shadow: 0 calc(18px * var(--u)) calc(46px * var(--u)) rgba(0,0,0,0.5);
+  opacity: 0;
+}
+.hlbl {
+  font-size: calc(21px * var(--u)); font-weight: 700; letter-spacing: calc(2.6px * var(--u));
+  text-transform: uppercase; color: var(--text-2); margin-bottom: calc(14px * var(--u));
+}
+.htext { font-size: calc(36px * var(--u)); font-weight: 800; color: var(--text); line-height: 1.2; }
+.hsub { font-size: calc(24px * var(--u)); color: var(--text-2); margin-top: calc(12px * var(--u)); }
+.hslash { position: absolute; left: calc(20px * var(--u)); right: calc(20px * var(--u)); top: 54%; transform: scaleX(0); }
+
+.plot {
+  position: absolute; right: calc(96px * var(--u)); top: calc(150px * var(--u));
+  width: calc(1080px * var(--u)); height: calc(500px * var(--u));
+  opacity: 0;
+}
+.ptitle { font-size: calc(30px * var(--u)); font-weight: 800; color: var(--text); margin-bottom: calc(10px * var(--u)); }
+.psvg { position: absolute; left: 0; right: 0; top: calc(56px * var(--u)); bottom: calc(46px * var(--u)); width: 100%; height: calc(398px * var(--u)); }
+.psvg .grid { stroke: rgba(125,143,163,0.22); stroke-width: 2; fill: none; }
+.psvg .pred { stroke: rgba(125,143,163,0.85); stroke-width: 5; stroke-dasharray: 14 10; fill: none; }
+.psvg .meas { stroke: var(--gold); stroke-width: 7; fill: none; filter: drop-shadow(0 0 calc(10px * var(--u)) rgba(255,176,32,0.55)); }
+
+.pend {
+  position: absolute; font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(30px * var(--u)); font-weight: 800; color: var(--gold-2); opacity: 0; white-space: nowrap;
+}
+.pend.from { left: calc(30px * var(--u)); top: calc(300px * var(--u)); }
+.pend.to { right: calc(10px * var(--u)); top: calc(150px * var(--u)); }
+.axis { position: absolute; font-size: calc(21px * var(--u)); font-weight: 600; color: var(--text-2); }
+.axis.x1 { left: 0; bottom: 0; }
+.axis.x2 { right: 0; bottom: 0; }
+.axis.y { left: 0; top: calc(56px * var(--u)); }
+
+/* the twelve heads: one of them locks on */
+.heads {
+  position: absolute; left: calc(96px * var(--u)); right: calc(96px * var(--u)); top: calc(694px * var(--u));
+  display: flex; gap: calc(10px * var(--u)); opacity: 0;
+}
+.hd {
+  flex: 1; height: calc(84px * var(--u)); position: relative; overflow: hidden;
+  border: calc(2px * var(--u)) solid rgba(125,143,163,0.3); border-radius: calc(6px * var(--u));
+  background: rgba(255,255,255,0.03);
+}
+.hdfill { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; transform-origin: 0 50%; transform: scaleX(0.16);
+  background: linear-gradient(90deg, rgba(99,168,236,0.5), rgba(99,168,236,0.14)); }
+.hd.lock { border-color: rgba(255,176,32,0.85); }
+.hd.lock .hdfill { background: linear-gradient(90deg, var(--gold), rgba(255,176,32,0.3)); }
+.hdlbl {
+  position: absolute; left: calc(8px * var(--u)); bottom: calc(4px * var(--u));
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: calc(16px * var(--u)); color: var(--text-2);
+}
+.hd.lock .hdlbl { color: #2a1a03; font-weight: 800; }
+
+.lesson {
+  position: absolute; left: calc(96px * var(--u)); top: calc(800px * var(--u));
+  font-size: calc(28px * var(--u)); font-weight: 700; color: var(--text-2); opacity: 0;
+}
+.verdict {
+  position: absolute; left: calc(96px * var(--u)); top: calc(600px * var(--u)); width: calc(560px * var(--u));
+  color: var(--gold-2); opacity: 0;
+}
+
+.portrait .hyp { left: calc(60px * var(--u)); width: calc(960px * var(--u)); top: calc(260px * var(--u)); }
+.portrait .plot { right: calc(60px * var(--u)); left: calc(60px * var(--u)); width: auto; top: calc(660px * var(--u)); }
+.portrait .heads { left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(1240px * var(--u)); }
+.portrait .verdict { left: calc(60px * var(--u)); width: calc(960px * var(--u)); top: calc(1400px * var(--u)); }
+.portrait .lesson { left: calc(60px * var(--u)); top: calc(1500px * var(--u)); }

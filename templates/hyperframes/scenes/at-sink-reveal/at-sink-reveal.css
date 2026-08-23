@@ -1,0 +1,119 @@
+/* at-sink-reveal — s8 + s9. ph1 is the payout onto the token row; ph2 is the per-layer chart. Both
+   phases keep the same token row on screen so the two scenes are one continuous object. */
+
+.qline {
+  position: absolute; left: calc(110px * var(--u)); top: calc(78px * var(--u));
+  font-size: calc(34px * var(--u)); font-weight: 700; color: var(--text-2); opacity: 0;
+}
+
+.budget { position: absolute; left: calc(110px * var(--u)); right: calc(110px * var(--u)); top: calc(158px * var(--u)); }
+.btrack {
+  position: relative; height: calc(54px * var(--u));
+  background: rgba(255,255,255,0.045); border: calc(2px * var(--u)) solid rgba(255,176,32,0.3);
+  border-radius: calc(6px * var(--u)); overflow: hidden;
+}
+.bfill {
+  position: absolute; inset: 0; transform-origin: 0 50%;
+  background: linear-gradient(90deg, #b97c12 0%, var(--gold) 55%, var(--gold-2) 100%);
+}
+.bedge {
+  position: absolute; right: 0; top: calc(-10px * var(--u)); bottom: calc(-10px * var(--u));
+  width: calc(6px * var(--u)); background: var(--gold-3); box-shadow: 0 0 calc(22px * var(--u)) rgba(255,214,150,0.8);
+}
+
+/* ── the tokens ──────────────────────────────────────────────────────────────── */
+.tokrow {
+  position: absolute; left: calc(110px * var(--u)); right: calc(110px * var(--u)); top: calc(300px * var(--u));
+  display: flex; flex-wrap: wrap; gap: calc(10px * var(--u)) calc(9px * var(--u));
+}
+.tokwrap { display: flex; flex-direction: column; align-items: stretch; opacity: 0; }
+.tokcap {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(23px * var(--u)); color: #cfe0f2; white-space: pre; text-align: center;
+  padding: calc(9px * var(--u)) calc(12px * var(--u));
+  border: calc(1.5px * var(--u)) solid rgba(99,168,236,0.42); border-radius: calc(5px * var(--u));
+  background: rgba(56,132,208,0.12);
+}
+.tokwrap.sink .tokcap {
+  border-color: rgba(255,176,32,0.85); background: rgba(255,176,32,0.2); color: var(--gold-3);
+  font-weight: 800;
+}
+.tokbarwrap { height: calc(300px * var(--u)); margin-top: calc(8px * var(--u)); display: flex; align-items: flex-start; }
+.tokbar {
+  width: 100%; height: 100%; transform-origin: 50% 0; transform: scaleY(0);
+  background: linear-gradient(180deg, var(--gold-2), #b97c12);
+  border-radius: 0 0 calc(3px * var(--u)) calc(3px * var(--u));
+}
+.tokwrap.sink .tokbarwrap { height: calc(300px * var(--u)); }
+.tokpct {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(18px * var(--u)); color: var(--gold-2); text-align: center; margin-top: calc(6px * var(--u)); opacity: 0;
+}
+
+/* ── the headline number ─────────────────────────────────────────────────────── */
+.headline {
+  position: absolute; right: calc(110px * var(--u)); top: calc(600px * var(--u));
+  display: flex; flex-direction: column; align-items: flex-end; opacity: 0;
+}
+.hbig { font-size: calc(190px * var(--u)); font-weight: 800; line-height: 0.92; color: var(--gold-2); letter-spacing: calc(-6px * var(--u)); }
+.hlbl { font-size: calc(34px * var(--u)); font-weight: 700; color: var(--text); margin-top: calc(6px * var(--u)); }
+
+/* ── ph2: the per-layer chart ────────────────────────────────────────────────── */
+.chart {
+  position: absolute; left: calc(110px * var(--u)); top: calc(150px * var(--u));
+  width: calc(1180px * var(--u)); height: calc(560px * var(--u)); opacity: 0;
+}
+.ctitle {
+  font-size: calc(32px * var(--u)); font-weight: 800; color: var(--text); margin-bottom: calc(14px * var(--u));
+}
+.cbars { position: absolute; left: 0; right: 0; top: calc(70px * var(--u)); bottom: calc(52px * var(--u)); display: flex; align-items: flex-end; gap: calc(14px * var(--u)); }
+.cbar { position: relative; flex: 1; transform-origin: 50% 100%; transform: scaleY(0); border-radius: calc(4px * var(--u)) calc(4px * var(--u)) 0 0;
+  background: linear-gradient(180deg, var(--gold-2) 0%, var(--gold) 55%, #96650f 100%); }
+.cbar.peak { background: linear-gradient(180deg, #fff2d6 0%, var(--gold-3) 45%, var(--gold) 100%); }
+.cval {
+  position: absolute; left: 50%; top: calc(-34px * var(--u)); transform: translateX(-50%);
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(20px * var(--u)); font-weight: 700; color: var(--gold-2); opacity: 0;
+}
+.clbl {
+  position: absolute; left: 50%; bottom: calc(-38px * var(--u)); transform: translateX(-50%);
+  font-size: calc(19px * var(--u)); font-weight: 600; color: var(--text-2); white-space: nowrap;
+}
+.meanline {
+  position: absolute; left: 0; right: 0; height: 0;
+  border-top: calc(3px * var(--u)) dashed rgba(255,214,150,0.85); opacity: 0;
+}
+.mlbl {
+  position: absolute; left: 0; top: calc(-40px * var(--u));
+  font-size: calc(26px * var(--u)); font-weight: 800; color: var(--gold-3);
+}
+.peakflag {
+  position: absolute; padding: calc(6px * var(--u)) calc(12px * var(--u));
+  background: rgba(4,8,12,0.9); border: calc(2px * var(--u)) solid var(--gold);
+  border-radius: calc(5px * var(--u)); font-size: calc(24px * var(--u)); font-weight: 800; color: var(--gold-3);
+  opacity: 0; white-space: nowrap;
+}
+.caxis {
+  position: absolute; left: 0; right: 0; bottom: calc(52px * var(--u)); height: calc(2px * var(--u));
+  background: rgba(125,143,163,0.4);
+}
+
+/* the chips stand OFF the subject, in empty frame */
+.chip { position: absolute; opacity: 0; }
+.tokchip { right: calc(120px * var(--u)); top: calc(232px * var(--u)); }
+.methodchip { right: calc(120px * var(--u)); top: calc(302px * var(--u)); }
+.meaning {
+  position: absolute; left: calc(110px * var(--u)); top: calc(792px * var(--u));
+  font-size: calc(34px * var(--u)); font-weight: 700; color: var(--text); opacity: 0;
+}
+
+.portrait .budget { left: calc(70px * var(--u)); right: calc(70px * var(--u)); top: calc(300px * var(--u)); }
+.portrait .tokrow { left: calc(70px * var(--u)); right: calc(70px * var(--u)); top: calc(560px * var(--u)); }
+.portrait .tokcap { font-size: calc(21px * var(--u)); padding: calc(7px * var(--u)) calc(9px * var(--u)); }
+.portrait .tokbarwrap, .portrait .tokwrap.sink .tokbarwrap { height: calc(200px * var(--u)); }
+.portrait .tokpct { font-size: calc(16px * var(--u)); }
+.portrait .headline { right: calc(70px * var(--u)); top: calc(1120px * var(--u)); }
+.portrait .chart { left: calc(70px * var(--u)); width: calc(940px * var(--u)); top: calc(330px * var(--u)); height: calc(700px * var(--u)); }
+.portrait .chip { right: calc(70px * var(--u)); }
+.portrait .qline { left: calc(70px * var(--u)); top: calc(190px * var(--u)); }
+.portrait .meaning { left: calc(70px * var(--u)); top: calc(1500px * var(--u)); }

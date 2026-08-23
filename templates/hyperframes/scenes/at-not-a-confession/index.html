@@ -1,0 +1,57 @@
+<!doctype html>
+<!--
+  at-not-a-confession — 023 long s20. The precision guard, so the video's own chart cannot be
+  over-read.
+
+  The split from s14 comes back. An arrow labelled "what it used" is placed where a viewer would put
+  it — on the biggest slice — and then the published finding moves it: attention can point one way
+  while what the answer actually leaned on points another. Both arrows stay on screen, disagreeing,
+  with the source chip beside them. The chart is not discredited; it is scoped.
+
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":504},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":16.80}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="at-not-a-confession.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="at-not-a-confession" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <div class="chartwrap">
+          <div class="ctitle" id="ctitle"></div>
+          <div class="cbar" id="cbar"></div>
+          <div class="clegend" id="clegend"></div>
+        </div>
+
+        <div class="pointer guess" id="pGuess"><span class="ptxt" id="pGuessTxt"></span><span class="pstem"></span><span class="phead"></span></div>
+        <div class="pointer real" id="pReal"><span class="ptxt" id="pRealTxt"></span><span class="pstem"></span><span class="phead"></span></div>
+
+        <div class="claimwrap" id="claimwrap">
+          <div class="fx-myth claim" id="claim"></div>
+          <span class="fx-slash cslash" id="cslash"></span>
+        </div>
+
+        <div class="truth" id="truth"></div>
+        <span class="fx-chip src" id="src"></span>
+        <div class="verdict" id="verdict"></div>
+      </div>
+    </div>
+    <script src="at-not-a-confession.js"></script>
+  </body>
+</html>

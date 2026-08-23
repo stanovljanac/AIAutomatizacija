@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+  at-outbid — 023 long s16. The reframe: an auction the viewer never knew they had entered.
+
+  The four claimants stand as bidder cards carrying the real measured numbers, and the budget is
+  knocked down to them in order — your line last and smallest. The comfortable word ("diluted") is
+  written and struck; the narrower, worse version is built in its place one line at a time. Then the
+  results board is turned around: on the viewer's side it is blank, because the split was never
+  visible to them in the first place.
+
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":482},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":16.05}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="at-outbid.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="at-outbid" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <div class="wrongwrap" id="wrongwrap">
+          <div class="fx-myth wrong" id="wrong"></div>
+          <span class="fx-slash wslash" id="wslash"></span>
+        </div>
+
+        <div class="bidders" id="bidders"></div>
+
+        <div class="truth" id="truth"></div>
+
+        <div class="board" id="board">
+          <div class="bfront" id="bfront"></div>
+          <div class="bback" id="bback"><span class="bbacklbl">what you can see of the split</span></div>
+        </div>
+
+        <div class="verdict" id="verdict"></div>
+      </div>
+    </div>
+    <script src="at-outbid.js"></script>
+  </body>
+</html>

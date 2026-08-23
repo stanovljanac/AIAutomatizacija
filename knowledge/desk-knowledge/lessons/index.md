@@ -28,4 +28,6 @@ lesson with no evidence stays `draft` forever.
 - [A repeating mechanism must move the object, never delete it — and in 9:16 it must fill the frame](2026-08-17-a-cycle-must-never-empty-the-frame.md) — lesson, stable
 - [A clip that plays perfectly is not necessarily a clip the compositor can SEEK — normalise it](2026-08-18-a-rendered-clip-is-not-a-seekable-clip.md) — lesson, stable
 - [A frame from our own video is rarely a thumbnail — it must say "AI" and name the mechanism without narration](2026-08-19-a-thumbnail-must-say-ai-at-a-glance.md) — lesson, stable
+- ["Plain" is missing detail, not missing content](2026-08-22-plain-is-detail-not-emptiness.md) — lesson, stable
+- [Fixing one scene is a splice, not a re-render — and the cut points are already there](2026-08-23-patch-the-render-dont-repeat-it.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

@@ -1,0 +1,72 @@
+/* at3d-hook — 023 s1. The frame IS the WebGL canvas; the only DOM is the flat type layer (the myth
+   plate with its spotlight cone, the slash, the budget bar and the kicker), in the house typography
+   from _lib/hf-fx.css so the 3D cut reads as the same channel as the 2D scenes around it. */
+
+#root { background: #04070b; }
+#gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; }
+
+.scrim {
+  position: absolute; inset: 0; z-index: 10; opacity: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 44%, rgba(4,7,11,0.10) 0%, rgba(4,7,11,0.58) 76%);
+}
+
+/* ── the myth, with the picture everyone carries drawn ON it ─────────────────── */
+.mythwrap {
+  position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%);
+  z-index: 30; opacity: 0; will-change: transform, opacity;
+}
+.fx-myth { position: relative; font-size: calc(62px * var(--u)); letter-spacing: calc(-0.6px * var(--u)); }
+/* the searchlight cone: the wrong mental model, drawn so it can be taken away */
+.cone {
+  position: absolute; left: 50%; bottom: calc(100% + 18px * var(--u));
+  width: calc(360px * var(--u)); height: calc(260px * var(--u));
+  margin-left: calc(-180px * var(--u));
+  background: linear-gradient(180deg, rgba(255,176,32,0.30) 0%, rgba(255,176,32,0.05) 70%, transparent 100%);
+  clip-path: polygon(43% 0%, 57% 0%, 100% 100%, 0% 100%);
+  opacity: 0; transform-origin: 50% 0%;
+}
+
+/* ── THE BUDGET BAR — spine object, carried into s2 at this exact geometry ───── */
+.budget {
+  position: absolute; left: calc(160px * var(--u)); right: calc(160px * var(--u));
+  top: calc(636px * var(--u)); z-index: 36; opacity: 0;
+}
+.btrack {
+  position: relative; height: calc(56px * var(--u));
+  background: rgba(255,255,255,0.05);
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.32);
+  border-radius: calc(6px * var(--u)); overflow: hidden;
+}
+.bfill {
+  position: absolute; inset: 0; transform-origin: 0 50%; transform: scaleX(0);
+  background: linear-gradient(90deg, #b97c12 0%, var(--gold) 46%, var(--gold-2) 100%);
+  box-shadow: 0 0 calc(40px * var(--u)) rgba(255,176,32,0.45);
+}
+/* the hard right edge — the whole argument of the video, drawn once */
+.bedge {
+  position: absolute; right: 0; top: calc(-10px * var(--u)); bottom: calc(-10px * var(--u));
+  width: calc(6px * var(--u)); background: var(--gold-3);
+  box-shadow: 0 0 calc(26px * var(--u)) rgba(255,214,150,0.9);
+}
+.blbl {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: calc(14px * var(--u));
+  font-size: calc(26px * var(--u)); font-weight: 700; letter-spacing: calc(2.6px * var(--u));
+  text-transform: uppercase; color: var(--text-2);
+}
+.bone { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; color: var(--gold-2); letter-spacing: calc(1px * var(--u)); }
+
+/* ── the line the scene installs ─────────────────────────────────────────────── */
+.kicker {
+  position: absolute; left: 0; right: 0; top: calc(742px * var(--u));
+  text-align: center; z-index: 40; opacity: 0; will-change: transform, opacity;
+}
+#kickertext {
+  font-size: calc(96px * var(--u)); font-weight: 800; line-height: 1;
+  letter-spacing: calc(-2.6px * var(--u));
+}
+
+.portrait .budget { left: calc(90px * var(--u)); right: calc(90px * var(--u)); top: calc(1120px * var(--u)); }
+.portrait .kicker { top: calc(1250px * var(--u)); }
+.portrait #kickertext { font-size: calc(88px * var(--u)); }
+.portrait .fx-myth { font-size: calc(54px * var(--u)); }

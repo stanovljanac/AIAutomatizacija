@@ -1,0 +1,40 @@
+/* at3d-handout — s5. The frame is the WebGL room; the DOM carries only the flat type layer, in the
+   house typography (a kicker in perspective breaks MOTION_SPEC §5). */
+
+#root { background: #04070b; }
+#gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; }
+
+.mythwrap {
+  position: absolute; left: 50%; top: calc(126px * var(--u)); transform: translateX(-50%);
+  z-index: 30; opacity: 0; will-change: transform, opacity;
+}
+.fx-myth { position: relative; font-size: calc(46px * var(--u)); letter-spacing: calc(-0.3px * var(--u)); white-space: nowrap; }
+
+/* the total, standing OFF the chips in empty frame (a label never sits on a bright subject) */
+.sumchip {
+  position: absolute; right: calc(110px * var(--u)); top: calc(96px * var(--u));
+  display: flex; flex-direction: column; align-items: flex-end; gap: calc(6px * var(--u));
+  z-index: 30; opacity: 0;
+}
+.slbl { font-size: calc(22px * var(--u)); font-weight: 700; letter-spacing: calc(2.6px * var(--u)); text-transform: uppercase; color: var(--text-2); }
+.sval { font-size: calc(44px * var(--u)); font-weight: 800; color: var(--gold-2); }
+
+.wordrow {
+  position: absolute; left: calc(110px * var(--u)); top: calc(104px * var(--u));
+  display: flex; align-items: baseline; gap: calc(14px * var(--u)); z-index: 30; opacity: 0;
+}
+.wlbl { font-size: calc(22px * var(--u)); font-weight: 700; letter-spacing: calc(2.6px * var(--u)); text-transform: uppercase; color: var(--text-2); }
+.wval { font-size: calc(46px * var(--u)); font-weight: 800; color: var(--text); }
+.wcnt { font-size: calc(26px * var(--u)); font-weight: 700; color: var(--gold-2); }
+
+.kicker {
+  position: absolute; left: 0; right: 0; top: calc(818px * var(--u)); text-align: center;
+  z-index: 40; opacity: 0; will-change: transform, opacity;
+}
+#kickertext { font-size: calc(70px * var(--u)); font-weight: 800; line-height: 1; letter-spacing: calc(-2px * var(--u)); }
+
+.portrait .kicker { top: calc(1320px * var(--u)); }
+.portrait #kickertext { font-size: calc(72px * var(--u)); }
+.portrait .sumchip { right: calc(70px * var(--u)); top: calc(300px * var(--u)); }
+.portrait .wordrow { left: calc(70px * var(--u)); top: calc(300px * var(--u)); }
+.portrait .fx-myth { font-size: calc(40px * var(--u)); }

@@ -1,0 +1,63 @@
+<!doctype html>
+<!--
+  at-measure-run — 023 long s6 (phase 1) + s7 (phase 2). The instrument, shown working.
+
+  ph1  a real terminal types the eight lines that do the measurement and RUNS them: the model card
+       loads, the tensor shape prints. Beside it the actual note is on screen as readable paper with
+       the fact highlighted, tokenised into visible capsules (the Ep.2 callback). Nothing here is a
+       diagram of a computer — it is the run.
+  ph2  the same terminal prints the verification: 144 attention rows scrolling past, every one of
+       them reading 1.0000000, with a live max-deviation readout that settles on 6.0e-7. The rows
+       keep scrolling under the designed 2.0s hold, so the frame is alive while the viewer reads.
+
+  One file for both scenes so the terminal and the note cross the boundary as the same objects.
+
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":461},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":15.36}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="at-measure-run.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="at-measure-run" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <!-- the terminal -->
+        <div class="term" id="term">
+          <div class="tbar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tname" id="tname">attention.py — measuring</span></div>
+          <div class="tbody">
+            <pre class="code" id="code"></pre>
+            <pre class="out" id="out"></pre>
+            <div class="rows" id="rowswrap"><div class="rowscroll" id="rows"></div></div>
+          </div>
+          <div class="tfoot"><span class="fx-chip" id="instrument"></span><span class="dev fx-mono" id="dev"></span></div>
+        </div>
+
+        <!-- the note it was handed, and its tokens -->
+        <div class="notecol" id="notecol">
+          <div class="notelbl" id="notelbl">the note it was handed</div>
+          <div class="note" id="note"></div>
+          <div class="toks" id="toks"></div>
+        </div>
+
+        <div class="verdict" id="verdict"><span class="vbig fx-h2" id="vbig"></span></div>
+      </div>
+    </div>
+    <script src="at-measure-run.js"></script>
+  </body>
+</html>

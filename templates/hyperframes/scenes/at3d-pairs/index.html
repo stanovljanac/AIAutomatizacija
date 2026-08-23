@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+  at3d-pairs — 023 long s17 (3D). The per-pair cost, made physical.
+
+  Seven real token blocks stand in a ring in the room with readable text on their faces. The naive
+  picture is staged first — one lookup each, seven wires, cheap — and then every block connects to
+  every other block until the room is full of wire and you cannot see through it. The camera lifts to
+  show the lattice with real depth while the counter ticks 7 → 49.
+
+  Words split by role: the token faces are IN the scene (they are the object); the count and the
+  kicker stay flat DOM in the house typography.
+
+  b0  the ring, already standing
+  b1  per word: seven lookups
+  b2  per pair: every block against every block
+
+  Seek-driven and deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,
+  durationSeconds,revealsSeconds[],props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":381},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":12.69}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-three.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="at3d-pairs.css" />
+    <script>
+      window.__THREE_URL = "./vendor/three.module.min.js";
+    </script>
+  </head>
+  <body>
+    <div id="root" data-composition-id="at3d-pairs" data-start="0" data-width="1920" data-height="1080">
+      <canvas id="gl" data-layout-ignore></canvas>
+
+      <div class="counts" id="counts">
+        <div class="cnt" id="cntWord"><span class="cval fx-mono" id="cwv">7</span><span class="clbl" id="cwl"></span></div>
+        <div class="cnt gold" id="cntPair"><span class="cval fx-mono" id="cpv">0</span><span class="clbl" id="cpl"></span></div>
+      </div>
+
+      <div class="kicker" id="kicker"><span class="fx-gold" id="kickertext"></span></div>
+    </div>
+    <script src="at3d-pairs.js"></script>
+  </body>
+</html>

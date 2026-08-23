@@ -1,0 +1,69 @@
+/* at-sink-cause — s11. Two rigs, one rule apart. Both stay lit for the whole scene. */
+
+.rig {
+  position: absolute; top: calc(140px * var(--u)); width: calc(840px * var(--u));
+  padding: calc(24px * var(--u)) calc(26px * var(--u)) calc(28px * var(--u));
+  background: linear-gradient(180deg, rgba(22,35,47,0.9), rgba(16,26,36,0.9));
+  border: calc(2px * var(--u)) solid var(--line); border-radius: calc(12px * var(--u));
+  box-shadow: 0 calc(20px * var(--u)) calc(52px * var(--u)) rgba(0,0,0,0.5);
+  opacity: 0;
+}
+.rig.left { left: calc(90px * var(--u)); }
+.rig.right { right: calc(90px * var(--u)); }
+
+.rhead { display: flex; align-items: baseline; gap: calc(14px * var(--u)); margin-bottom: calc(20px * var(--u)); }
+.rtag { font-size: calc(34px * var(--u)); font-weight: 800; color: var(--gold-2); white-space: nowrap; }
+.rrule { font-size: calc(22px * var(--u)); font-weight: 600; color: var(--text-2); }
+
+.pipe { display: flex; align-items: center; gap: calc(10px * var(--u)); margin-bottom: calc(18px * var(--u)); }
+.stage {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(21px * var(--u)); color: #cfe0f2; padding: calc(10px * var(--u)) calc(14px * var(--u));
+  border: calc(2px * var(--u)) solid rgba(99,168,236,0.4); border-radius: calc(6px * var(--u));
+  background: rgba(56,132,208,0.12); white-space: nowrap;
+}
+.stage.norm { border-color: rgba(255,176,32,0.7); background: rgba(255,176,32,0.14); color: var(--gold-3); font-weight: 700; }
+.stage.gap {
+  position: relative; border-style: dashed; border-color: rgba(125,143,163,0.5);
+  background: repeating-linear-gradient(135deg, rgba(0,0,0,0.45) 0 calc(8px * var(--u)), rgba(0,0,0,0.2) calc(8px * var(--u)) calc(16px * var(--u)));
+  color: var(--ghost);
+}
+.gaplbl { font-style: italic; }
+.arrow { color: var(--steel); font-size: calc(24px * var(--u)); }
+
+.sumrow { display: flex; align-items: baseline; gap: calc(12px * var(--u)); margin-bottom: calc(18px * var(--u)); }
+.slab { font-size: calc(20px * var(--u)); font-weight: 700; letter-spacing: calc(2.2px * var(--u)); text-transform: uppercase; color: var(--text-2); }
+.sval { font-size: calc(30px * var(--u)); font-weight: 800; color: var(--gold-2); }
+.rig.right .sval { color: var(--steel); }
+
+.toks { display: flex; align-items: flex-end; gap: calc(8px * var(--u)); height: calc(340px * var(--u)); }
+.tk { flex: 1; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; height: 100%; }
+.tkbar {
+  width: 100%; transform-origin: 50% 100%; transform: scaleY(0);
+  background: linear-gradient(180deg, var(--gold-2), #96650f); border-radius: calc(3px * var(--u)) calc(3px * var(--u)) 0 0;
+}
+.tk.sink .tkbar { background: linear-gradient(180deg, #fff2d6, var(--gold)); }
+.tkcap {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(17px * var(--u)); color: #9fb6cd; text-align: center; margin-top: calc(8px * var(--u));
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tk.sink .tkcap { color: var(--gold-3); font-weight: 800; }
+
+.result {
+  margin-top: calc(18px * var(--u)); font-size: calc(30px * var(--u)); font-weight: 800; opacity: 0;
+}
+.rig.left .result { color: var(--gold-2); }
+.rig.right .result { color: var(--green); }
+
+.src { position: absolute; left: 50%; transform: translateX(-50%); top: calc(74px * var(--u)); opacity: 0; }
+.verdict {
+  position: absolute; left: calc(120px * var(--u)); right: calc(120px * var(--u)); top: calc(880px * var(--u));
+  text-align: center; color: var(--text); opacity: 0;
+}
+
+.portrait .rig { position: static; width: auto; margin: 0 calc(60px * var(--u)) calc(28px * var(--u)); }
+.portrait .rig.left { margin-top: calc(300px * var(--u)); }
+.portrait .toks { height: calc(280px * var(--u)); }
+.portrait .verdict { top: calc(1540px * var(--u)); left: calc(60px * var(--u)); right: calc(60px * var(--u)); }
+.portrait .src { top: calc(210px * var(--u)); }

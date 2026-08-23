@@ -1,0 +1,103 @@
+/* at3d-hook-v11 — 023 s1 (V1.1). The frame IS the WebGL canvas; the only DOM is the flat type layer.
+   House typography from _lib/hf-fx.css so the 3D cut reads as the same channel as the 2D scenes.
+
+   THE CONTRAST LAW (MOTION_SPEC §10, tightened after the 023 review): every flat element that prints
+   over the room carries its OWN opaque backing. Nothing in this file relies on the room being dark
+   enough — the room is art direction, the plate is the guarantee. */
+
+#root { background: #04070b; }
+#gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; }
+
+/* A FLAT darkener. The old hook used a radial that only reached 10% opacity in the centre, i.e. it
+   dimmed everything EXCEPT the area the type lands on. This one dims uniformly and is driven from
+   the timeline, so each beat gets the ground it needs. */
+.scrim {
+  position: absolute; inset: 0; z-index: 10; opacity: 0; pointer-events: none;
+  background: #04070b;
+}
+
+/* ── the myth, on an OPAQUE band ─────────────────────────────────────────────── */
+.mythwrap {
+  position: absolute; left: 0; right: 0; top: calc(392px * var(--u));
+  z-index: 30; opacity: 0; will-change: transform, opacity;
+  display: flex; justify-content: center;
+}
+/* the band is the contrast guarantee: 97% opaque, full-bleed, with a gold hairline at the top so it
+   reads as a deliberate plate and not as a hole punched in the picture */
+.mythband {
+  position: relative; padding: calc(30px * var(--u)) calc(64px * var(--u));
+  background: linear-gradient(180deg, rgba(10,15,21,0.97) 0%, rgba(6,10,15,0.98) 100%);
+  border-top: calc(2px * var(--u)) solid rgba(255,176,32,0.34);
+  border-bottom: calc(2px * var(--u)) solid rgba(255,176,32,0.14);
+  box-shadow: 0 calc(28px * var(--u)) calc(70px * var(--u)) rgba(0,0,0,0.72);
+}
+/* .fx-myth ships its own dashed card; here the BAND is the card, so the inner plate goes flat */
+.mythtext {
+  position: relative; border: none; background: none; box-shadow: none; padding: 0;
+  font-size: calc(66px * var(--u)); letter-spacing: calc(-0.8px * var(--u)); color: #b3c4d6;
+}
+/* the searchlight cone: the wrong mental model, drawn so it can be taken away */
+.cone {
+  position: absolute; left: 50%; bottom: calc(100% - 2px * var(--u));
+  width: calc(380px * var(--u)); height: calc(292px * var(--u));
+  margin-left: calc(-190px * var(--u));
+  background: linear-gradient(180deg, rgba(255,176,32,0.34) 0%, rgba(255,176,32,0.06) 72%, transparent 100%);
+  clip-path: polygon(43% 0%, 57% 0%, 100% 100%, 0% 100%);
+  opacity: 0; transform-origin: 50% 0%;
+}
+
+/* ── THE BUDGET BAR — carried into s2 at EXACTLY at-budget-bar's geometry ─────
+   (left/right 120px, top 196px, track 62px). The old hook parked it at 160/636/56 and the promised
+   carry was really a jump cut on the video's spine object. */
+.budget {
+  position: absolute; left: calc(120px * var(--u)); right: calc(120px * var(--u));
+  top: calc(196px * var(--u)); z-index: 36; opacity: 0;
+}
+.btrack {
+  position: relative; height: calc(62px * var(--u));
+  background: rgba(255,255,255,0.045);
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.30);
+  border-radius: calc(6px * var(--u)); overflow: hidden;
+}
+.bfill {
+  position: absolute; inset: 0; transform-origin: 0 50%; transform: scaleX(0);
+  background: linear-gradient(90deg, #b97c12 0%, var(--gold) 55%, var(--gold-2) 100%);
+  box-shadow: inset 0 calc(-14px * var(--u)) calc(24px * var(--u)) rgba(0,0,0,0.24);
+}
+/* the hard right edge — the whole argument of the video, drawn once */
+.bedge {
+  position: absolute; right: 0; top: calc(-12px * var(--u)); bottom: calc(-12px * var(--u));
+  width: calc(6px * var(--u)); background: var(--gold-3);
+  box-shadow: 0 0 calc(26px * var(--u)) rgba(255,214,150,0.85);
+}
+.blbl {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: calc(16px * var(--u));
+  font-size: calc(27px * var(--u)); font-weight: 700; letter-spacing: calc(2.6px * var(--u));
+  text-transform: uppercase; color: var(--text-2);
+  text-shadow: 0 calc(2px * var(--u)) calc(12px * var(--u)) rgba(0,0,0,0.9);
+}
+.bone { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; color: var(--gold-2); letter-spacing: calc(1px * var(--u)); }
+
+/* ── the line the scene installs, on its OWN plate ───────────────────────────── */
+.kicker {
+  position: absolute; left: calc(120px * var(--u)); right: calc(120px * var(--u));
+  top: calc(348px * var(--u));
+  z-index: 40; opacity: 0; will-change: transform, opacity;
+  padding: calc(26px * var(--u)) calc(44px * var(--u));
+  background: linear-gradient(180deg, rgba(8,12,18,0.94) 0%, rgba(5,8,12,0.97) 100%);
+  border-left: calc(6px * var(--u)) solid var(--gold);
+  box-shadow: 0 calc(24px * var(--u)) calc(64px * var(--u)) rgba(0,0,0,0.7);
+  text-align: left;
+}
+#kickertext {
+  font-size: calc(92px * var(--u)); font-weight: 800; line-height: 1.02;
+  letter-spacing: calc(-2.6px * var(--u));
+}
+
+/* ── portrait (the Short reuses the mechanism, not the crop) ─────────────────── */
+.portrait .budget { left: calc(70px * var(--u)); right: calc(70px * var(--u)); top: calc(300px * var(--u)); }
+.portrait .kicker { left: calc(70px * var(--u)); right: calc(70px * var(--u)); top: calc(470px * var(--u)); }
+.portrait #kickertext { font-size: calc(86px * var(--u)); }
+.portrait .mythwrap { top: calc(760px * var(--u)); }
+.portrait .mythtext { font-size: calc(56px * var(--u)); }

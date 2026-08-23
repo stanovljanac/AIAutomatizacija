@@ -1,0 +1,74 @@
+<!doctype html>
+<!--
+  at-budget-bar — 023 long s2 (phase 1) + s3 (phase 2). THE SPINE OBJECT is installed here.
+
+  ph1  the bar carried out of the hook holds its place while the five things you handed the model
+       stand under it as REAL readable documents. The next word to be written scores itself against
+       every one of them; each score comes back and drops into the bar as a slice, and the last slice
+       lands flush with the hard right edge. Nothing is left over, and nothing is missing.
+  ph2  the edge IS the argument: a ghost bar that stops short is drawn and struck ("not up to one"),
+       the real bar slams to the edge ("exactly one"), and then the WINDOW CONTENTS cycle underneath
+       — three lines, forty pages, one word, a whole contract — while the bar does not move a pixel.
+
+  One file for both scenes so the bar, the documents and the slices cross the s2/s3 boundary as the
+  same objects in the same places (transitionOut: carry).
+
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":525},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":17.5}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="at-budget-bar.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="at-budget-bar" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <div class="motif fx-motif" id="motif"></div>
+
+        <!-- the bar -->
+        <div class="budget" id="budget">
+          <div class="btrack" id="btrack">
+            <div class="slices" id="slices"></div>
+            <div class="ghostfill" id="ghostfill"></div>
+            <div class="bedge" id="bedge"></div>
+          </div>
+          <div class="blbl">
+            <span class="bterm" id="bterm"></span>
+            <span class="bsum fx-mono" id="bsum"></span>
+          </div>
+          <span class="fx-slash barslash" id="barslash"></span>
+        </div>
+
+        <!-- what the budget is spent ON: the pile, as real documents -->
+        <div class="docs" id="docs"></div>
+
+        <!-- the word it is about to write -->
+        <div class="nextword" id="nextword">
+          <div class="nwlbl" id="nwlbl">the next word</div>
+          <div class="nwbox fx-mono" id="nwbox"></div>
+        </div>
+
+        <svg class="wires" id="wires" viewBox="0 0 1920 1080" preserveAspectRatio="none"></svg>
+
+        <!-- ph2: whatever is in the window, the total is the same -->
+        <div class="variant" id="variant"><span class="vlbl">in the window:</span><span class="vval" id="vval"></span></div>
+      </div>
+    </div>
+    <script src="at-budget-bar.js"></script>
+  </body>
+</html>

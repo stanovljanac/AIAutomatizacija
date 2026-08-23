@@ -1,0 +1,70 @@
+<!doctype html>
+<!--
+  at-sink-reveal — 023 long s8 (phase 1) + s9 (phase 2). The strangest thing in the video.
+
+  ph1  the 30 tokens of the note stand as a readable row of capsules, each with its own share bar
+       underneath. The budget bar above empties INTO them — and more than half of it slides onto the
+       very first capsule, "Notes", which swells while everything else gets a sliver. The counter
+       runs to 53% only as the share lands. The sink is NOT named here; s10 does that.
+  ph2  the per-layer breakdown: 12 real columns, each labelled and valued, the mean line landing at
+       53% and layer 8 flagged at 75%. The method chip and the token chip stand OFF the subject in
+       empty frame on leader lines — never on the gold (MOTION_SPEC §10). Carries the second designed
+       hold (2.5s) on the finished curve.
+
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":477},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":15.89}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="at-sink-reveal.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="at-sink-reveal" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <div class="qline" id="qline"></div>
+
+        <!-- the budget, emptying into the tokens -->
+        <div class="budget" id="budget">
+          <div class="btrack"><div class="bfill" id="bfill"></div><div class="bedge"></div></div>
+        </div>
+
+        <!-- ph1: the tokens, each with its own share -->
+        <div class="tokrow" id="tokrow"></div>
+
+        <div class="headline" id="headline">
+          <span class="hbig fx-num" id="hbig">0%</span>
+          <span class="hlbl" id="hlbl"></span>
+        </div>
+
+        <!-- ph2: the per-layer curve -->
+        <div class="chart" id="chart">
+          <div class="ctitle" id="ctitle"></div>
+          <div class="cbars" id="cbars"></div>
+          <div class="meanline" id="meanline"><span class="mlbl" id="mlbl"></span></div>
+          <div class="peakflag" id="peakflag"><span id="peaklbl"></span></div>
+          <div class="caxis" id="caxis"></div>
+        </div>
+
+        <span class="fx-chip chip tokchip" id="tokchip"></span>
+        <span class="fx-chip chip methodchip" id="methodchip"></span>
+        <div class="meaning" id="meaning"></div>
+      </div>
+    </div>
+    <script src="at-sink-reveal.js"></script>
+  </body>
+</html>

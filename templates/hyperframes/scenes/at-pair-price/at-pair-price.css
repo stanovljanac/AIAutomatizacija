@@ -1,0 +1,54 @@
+/* at-pair-price — s18 + s19. Two grids at the same cell size; the area is the argument. */
+
+.gridwrap { position: absolute; opacity: 0; }
+.gridwrap.small { left: calc(90px * var(--u)); top: calc(230px * var(--u)); width: calc(280px * var(--u)); }
+.gridwrap.big { left: calc(420px * var(--u)); top: calc(150px * var(--u)); width: calc(700px * var(--u)); }
+
+.glbl {
+  font-size: calc(27px * var(--u)); font-weight: 800; color: var(--text); margin-bottom: calc(12px * var(--u));
+}
+.gcanvas { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+.gridwrap.small .gcanvas { width: calc(280px * var(--u)); height: calc(280px * var(--u)); }
+.gridwrap.big .gcanvas { width: calc(700px * var(--u)); height: calc(700px * var(--u)); }
+.gcount {
+  font-size: calc(58px * var(--u)); font-weight: 800; color: var(--gold-2); margin-top: calc(14px * var(--u));
+}
+.gsub { font-size: calc(22px * var(--u)); color: var(--text-2); margin-top: calc(2px * var(--u)); }
+
+.ratios {
+  position: absolute; right: calc(96px * var(--u)); top: calc(300px * var(--u));
+  display: flex; flex-direction: column; align-items: flex-end; gap: calc(10px * var(--u)); opacity: 0;
+}
+.rt { font-size: calc(56px * var(--u)); font-weight: 800; color: var(--text); white-space: nowrap; }
+.rt.gold { color: var(--gold-2); font-size: calc(72px * var(--u)); }
+.rteq { font-size: calc(34px * var(--u)); color: var(--text-2); }
+
+.arith { position: absolute; right: calc(96px * var(--u)); top: calc(590px * var(--u)); opacity: 0; }
+
+/* ── ph2 ─────────────────────────────────────────────────────────────────────── */
+.mits { position: absolute; right: calc(96px * var(--u)); top: calc(230px * var(--u)); width: calc(600px * var(--u)); }
+.mit {
+  display: flex; align-items: center; gap: calc(14px * var(--u)); margin-bottom: calc(16px * var(--u));
+  padding: calc(14px * var(--u)) calc(18px * var(--u));
+  border: calc(2px * var(--u)) solid var(--line); border-radius: calc(8px * var(--u));
+  background: rgba(22,35,47,0.9); opacity: 0;
+}
+.mitname { font-size: calc(28px * var(--u)); font-weight: 800; color: var(--text); }
+.mitcut { margin-left: auto; font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(24px * var(--u)); color: var(--green); }
+.scope { position: absolute; right: calc(96px * var(--u)); top: calc(560px * var(--u)); opacity: 0; }
+/* the verdict stands OFF the grid, in the empty right column — gold type over a gold surface is
+   unreadable at any plate alpha (MOTION_SPEC §10). */
+.verdict {
+  position: absolute; right: calc(96px * var(--u)); top: calc(660px * var(--u)); width: calc(600px * var(--u));
+  text-align: left; color: var(--text); opacity: 0;
+}
+
+.portrait .gridwrap.small { left: calc(70px * var(--u)); top: calc(300px * var(--u)); width: calc(260px * var(--u)); }
+.portrait .gridwrap.small .gcanvas { width: calc(260px * var(--u)); height: calc(260px * var(--u)); }
+.portrait .gridwrap.big { left: calc(70px * var(--u)); top: calc(700px * var(--u)); width: calc(940px * var(--u)); }
+.portrait .gridwrap.big .gcanvas { width: calc(940px * var(--u)); height: calc(940px * var(--u)); }
+.portrait .ratios { right: calc(70px * var(--u)); top: calc(330px * var(--u)); }
+.portrait .arith { right: calc(70px * var(--u)); top: calc(560px * var(--u)); }
+.portrait .mits { right: calc(70px * var(--u)); left: calc(70px * var(--u)); width: auto; top: calc(300px * var(--u)); }
+.portrait .verdict { top: calc(1620px * var(--u)); }

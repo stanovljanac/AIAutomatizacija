@@ -63,3 +63,4 @@ QA gate).
 - [A 3D test clip is not a scene — four things that must change before it can carry a beat](2026-08-17-a-3d-test-clip-is-not-a-scene.md)
 - [A repeating mechanism must move the object, never delete it — and in 9:16 it must fill the frame](2026-08-17-a-cycle-must-never-empty-the-frame.md)
 - [A frame from our own video is rarely a thumbnail — it must say "AI" and name the mechanism without narration](2026-08-19-a-thumbnail-must-say-ai-at-a-glance.md)
+- ["Plain" is missing detail, not missing content](2026-08-22-plain-is-detail-not-emptiness.md)

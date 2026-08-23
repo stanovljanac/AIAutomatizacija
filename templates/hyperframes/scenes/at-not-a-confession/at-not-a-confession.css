@@ -1,0 +1,64 @@
+/* at-not-a-confession — s20. The same bar as s14, with two arrows that disagree. */
+
+.chartwrap { position: absolute; left: calc(110px * var(--u)); right: calc(110px * var(--u)); top: calc(300px * var(--u)); }
+.ctitle { font-size: calc(26px * var(--u)); font-weight: 700; letter-spacing: calc(2.4px * var(--u)); text-transform: uppercase; color: var(--text-2); margin-bottom: calc(14px * var(--u)); }
+.cbar {
+  position: relative; display: flex; height: calc(120px * var(--u));
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.3); border-radius: calc(8px * var(--u));
+  background: rgba(255,255,255,0.04); overflow: hidden;
+}
+.sl { position: relative; height: 100%; border-right: calc(3px * var(--u)) solid #05080c; }
+.sl.k0 { background: repeating-linear-gradient(135deg, rgba(255,176,32,0.9) 0 calc(14px * var(--u)), rgba(185,124,18,0.9) calc(14px * var(--u)) calc(28px * var(--u))); }
+.sl.k1 { background: linear-gradient(180deg, #4c637a, #35485c); }
+.sl.k2 { background: linear-gradient(180deg, #fff2d6, var(--gold)); }
+.sl.k3 { background: linear-gradient(180deg, #2b3c4e, #1d2c3c); }
+.slpct {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(26px * var(--u)); font-weight: 800; white-space: nowrap;
+}
+.sl.k0 .slpct, .sl.k2 .slpct { color: #2a1a03; }
+.sl.k1 .slpct, .sl.k3 .slpct { color: #dce7f2; }
+.clegend { display: flex; margin-top: calc(12px * var(--u)); }
+.lg { font-size: calc(23px * var(--u)); font-weight: 700; color: var(--text); padding-right: calc(12px * var(--u)); }
+
+/* the two arrows */
+.pointer { position: absolute; display: flex; flex-direction: column; align-items: center; opacity: 0; }
+.ptxt {
+  font-size: calc(26px * var(--u)); font-weight: 800; white-space: nowrap;
+  padding: calc(8px * var(--u)) calc(14px * var(--u)); border-radius: calc(6px * var(--u));
+  background: rgba(4,8,12,0.92); border: calc(2px * var(--u)) solid var(--line);
+}
+.pstem { width: calc(4px * var(--u)); height: calc(62px * var(--u)); }
+.phead {
+  width: 0; height: 0; border-left: calc(13px * var(--u)) solid transparent;
+  border-right: calc(13px * var(--u)) solid transparent;
+}
+.pointer.guess { top: calc(120px * var(--u)); }
+.pointer.guess .ptxt { color: var(--steel); border-color: rgba(125,143,163,0.6); }
+.pointer.guess .pstem { background: var(--steel); }
+.pointer.guess .phead { border-top: calc(18px * var(--u)) solid var(--steel); }
+.pointer.real { top: calc(120px * var(--u)); }
+.pointer.real .ptxt { color: var(--gold-3); border-color: rgba(255,176,32,0.8); }
+.pointer.real .pstem { background: var(--gold); }
+.pointer.real .phead { border-top: calc(18px * var(--u)) solid var(--gold); }
+
+.claimwrap { position: absolute; left: calc(110px * var(--u)); top: calc(600px * var(--u)); opacity: 0; }
+.claim { position: relative; font-size: calc(34px * var(--u)); }
+.cslash { position: absolute; left: calc(10px * var(--u)); right: calc(10px * var(--u)); top: 52%; transform: scaleX(0); }
+
+.truth {
+  position: absolute; left: calc(110px * var(--u)); top: calc(706px * var(--u)); width: calc(1180px * var(--u));
+  font-size: calc(36px * var(--u)); font-weight: 700; color: var(--text); opacity: 0; line-height: 1.28;
+}
+.src { position: absolute; right: calc(110px * var(--u)); top: calc(716px * var(--u)); opacity: 0; }
+.verdict {
+  position: absolute; left: 0; right: 0; top: calc(830px * var(--u)); text-align: center;
+  font-size: calc(74px * var(--u)); font-weight: 800; color: var(--gold-2); letter-spacing: calc(-2px * var(--u)); opacity: 0;
+}
+
+.portrait .chartwrap { left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(520px * var(--u)); }
+.portrait .claimwrap { left: calc(60px * var(--u)); top: calc(900px * var(--u)); }
+.portrait .truth { left: calc(60px * var(--u)); width: calc(960px * var(--u)); top: calc(1010px * var(--u)); }
+.portrait .src { right: calc(60px * var(--u)); top: calc(1240px * var(--u)); }
+.portrait .verdict { top: calc(1420px * var(--u)); font-size: calc(66px * var(--u)); }

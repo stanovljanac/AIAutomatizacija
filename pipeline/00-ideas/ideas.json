@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-18",
+  "updated": "2026-08-22",
   "ideas": [
     {
       "id": "bulk-personalized-emails",
@@ -1043,6 +1043,33 @@
       "value_score": 8.75,
       "value_band": "owner",
       "produced_video_id": "022-context-window",
+      "source": {
+        "origin": "manual"
+      }
+    },
+    {
+      "id": "desk-lessons-attention",
+      "title": "AI Doesn't Focus. It Spends.",
+      "search_term": "what is attention in ai",
+      "task": "other",
+      "sector": "general",
+      "subject": "llm-mental-model",
+      "series": "Desk Lessons",
+      "tool": "None (concept video; GPT-2 used only as the open measuring instrument, as tiktoken was in 021/022)",
+      "archetype": "ideas",
+      "angle_hint": "Not 'it focuses on the important words'. The scores over everything you handed it sum to exactly 1, every time — attention is a fixed budget that must be fully spent, so nothing you add is free and you steer it by deleting, not by emphasising.",
+      "score": 89,
+      "status": "backlog",
+      "lane": "desk-notes",
+      "value_type": [
+        "corrects-misbelief",
+        "teaches-system",
+        "surprising-truth",
+        "saves-time"
+      ],
+      "takeaway": "Attention is a fixed budget, not a spotlight — the model's scores always add up to 1, so every extra page you paste is subtracted from the line that matters. To make an AI focus, delete, don't emphasise.",
+      "value_score": 8.9,
+      "value_band": "owner",
       "source": {
         "origin": "manual"
       }

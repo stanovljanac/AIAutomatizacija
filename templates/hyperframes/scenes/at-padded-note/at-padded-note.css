@@ -1,0 +1,94 @@
+/* at-padded-note — s13 + s14. The page that grows, then the split it produced. */
+
+.pagecol { position: absolute; left: calc(110px * var(--u)); right: calc(110px * var(--u)); top: calc(120px * var(--u)); }
+.ptop { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: calc(16px * var(--u)); }
+.ptitle { font-size: calc(40px * var(--u)); font-weight: 800; color: var(--text); }
+.counter { font-size: calc(38px * var(--u)); font-weight: 800; color: var(--gold-2); }
+
+.page {
+  position: relative; height: calc(660px * var(--u)); overflow: hidden;
+  padding: calc(24px * var(--u)) calc(30px * var(--u));
+  background: linear-gradient(168deg, #f5f8fb 0%, var(--paper) 44%, #c9d5e2 100%);
+  box-shadow: 0 calc(3px * var(--u)) calc(7px * var(--u)) rgba(0,0,0,0.5), 0 calc(24px * var(--u)) calc(60px * var(--u)) rgba(0,0,0,0.45);
+}
+.chline { font-size: calc(21px * var(--u)); color: #55697d; line-height: 1.5; opacity: 0; }
+.factline {
+  font-size: calc(26px * var(--u)); font-weight: 800; color: #6d4f0c; line-height: 1.45;
+  background: var(--paper-gold); display: inline-block; padding: calc(4px * var(--u)) calc(10px * var(--u));
+  margin: calc(10px * var(--u)) 0;
+}
+.idchip { position: absolute; right: 0; bottom: calc(-52px * var(--u)); opacity: 0; }
+
+/* ── ph2: the split ──────────────────────────────────────────────────────────── */
+.split { position: absolute; left: calc(110px * var(--u)); right: calc(110px * var(--u)); top: calc(150px * var(--u)); opacity: 0; }
+.stitle { font-size: calc(44px * var(--u)); font-weight: 800; color: var(--text); margin-bottom: calc(22px * var(--u)); }
+.sbar {
+  position: relative; display: flex; height: calc(132px * var(--u));
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.32); border-radius: calc(8px * var(--u));
+  background: rgba(255,255,255,0.04); overflow: hidden;
+}
+.sl { position: relative; height: 100%; transform-origin: 0 50%; transform: scaleX(0); border-right: calc(3px * var(--u)) solid #05080c; }
+.sl.k0 { background: repeating-linear-gradient(135deg, rgba(255,176,32,0.95) 0 calc(14px * var(--u)), rgba(185,124,18,0.95) calc(14px * var(--u)) calc(28px * var(--u))); }
+.sl.k1 { background: linear-gradient(180deg, #4c637a, #35485c); }
+.sl.k2 { background: linear-gradient(180deg, #fff2d6, var(--gold)); }
+.sl.k3 { background: linear-gradient(180deg, #2b3c4e, #1d2c3c); }
+.slpct {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(30px * var(--u)); font-weight: 800; color: #10192333; opacity: 0; white-space: nowrap;
+}
+.sl.k0 .slpct, .sl.k2 .slpct { color: #2a1a03; }
+.sl.k1 .slpct, .sl.k3 .slpct { color: #dce7f2; }
+
+.slegend { display: flex; margin-top: calc(16px * var(--u)); }
+.lg { position: relative; padding-right: calc(16px * var(--u)); opacity: 0; }
+.lgname { display: block; font-size: calc(25px * var(--u)); font-weight: 800; color: var(--text); }
+.lgpct { display: none; }
+.lgtok { display: block; font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(21px * var(--u)); color: var(--text-2); margin-top: calc(4px * var(--u)); }
+
+.sumrow { display: flex; align-items: center; gap: calc(14px * var(--u)); margin-top: calc(28px * var(--u)); }
+.sumlbl { font-size: calc(22px * var(--u)); font-weight: 700; letter-spacing: calc(2.4px * var(--u)); text-transform: uppercase; color: var(--text-2); }
+.sumchip, .methodchip { opacity: 0; }
+
+/* the two slices lifted out for the comparison */
+.faceoff {
+  display: flex; align-items: stretch; gap: calc(28px * var(--u)); margin-top: calc(34px * var(--u)); opacity: 0;
+}
+.fo {
+  flex: 1; padding: calc(20px * var(--u)) calc(24px * var(--u));
+  border: calc(2px * var(--u)) solid var(--line); border-radius: calc(10px * var(--u));
+  background: linear-gradient(180deg, rgba(22,35,47,0.92), rgba(16,26,36,0.92));
+}
+.fo.sink { border-color: rgba(255,176,32,0.6); }
+.fo.ans { border-color: rgba(255,242,214,0.5); }
+.fopct { display: block; font-size: calc(78px * var(--u)); font-weight: 800; line-height: 1; color: var(--gold-2); }
+.fo.ans .fopct { color: var(--gold-3); }
+.folbl { display: block; font-size: calc(27px * var(--u)); font-weight: 700; color: var(--text); margin-top: calc(6px * var(--u)); }
+.fotok { display: block; font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: calc(22px * var(--u)); color: var(--text-2); margin-top: calc(4px * var(--u)); }
+.foratio {
+  align-self: center; font-size: calc(64px * var(--u)); font-weight: 800; color: var(--gold-3);
+  text-shadow: 0 0 calc(30px * var(--u)) rgba(255,176,32,0.5); opacity: 0; white-space: nowrap;
+}
+
+.portrait .pagecol { left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(260px * var(--u)); }
+.portrait .page { height: calc(900px * var(--u)); }
+.portrait .split { left: calc(60px * var(--u)); right: calc(60px * var(--u)); top: calc(250px * var(--u)); }
+/* a proportional legend needs the width of a 16:9 bar; in 9:16 it becomes a vertical list */
+.portrait .slegend { flex-direction: column; gap: calc(12px * var(--u)); margin-top: calc(22px * var(--u)); }
+.portrait .lg { width: auto; display: flex; align-items: baseline; gap: calc(16px * var(--u)); padding-right: 0; }
+.portrait .lgname { font-size: calc(38px * var(--u)); }
+.portrait .lgtok { margin-top: 0; font-size: calc(28px * var(--u)); }
+.portrait .lgpct { font-size: calc(30px * var(--u)); font-weight: 800; color: var(--gold-2); margin-left: auto; }
+.portrait .faceoff { flex-direction: column; gap: calc(18px * var(--u)); }
+.portrait .foratio { align-self: flex-start; font-size: calc(72px * var(--u)); }
+/* 9:16 hero: the block has to carry 55-65% of frame height, not sit as a strip (MOTION_SPEC §10) */
+.portrait .fopct { font-size: calc(104px * var(--u)); }
+.portrait .fo { padding: calc(28px * var(--u)) calc(30px * var(--u)); }
+.portrait .folbl { font-size: calc(34px * var(--u)); }
+.portrait .fotok { font-size: calc(28px * var(--u)); }
+.portrait .faceoff { gap: calc(26px * var(--u)); margin-top: calc(40px * var(--u)); }
+.portrait .slpct { font-size: calc(34px * var(--u)); }
+.portrait .sumrow { margin-top: calc(34px * var(--u)); }
+.portrait .sbar { height: calc(170px * var(--u)); }
+.portrait .stitle { font-size: calc(58px * var(--u)); margin-bottom: calc(28px * var(--u)); }

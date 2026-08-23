@@ -1,0 +1,68 @@
+<!doctype html>
+<!--
+  at-spotlight-vs-budget — 023 long s4. The picture everyone carries, taken apart beside the one
+  that is true, in the same frame.
+
+  LEFT   a real page of text under a spotlight rig. The beam can be aimed at one paragraph and the
+         rest of the page can be switched OFF — the switch works, and the page goes dark.
+  RIGHT  the same five shares from s2 on the budget bar. Reach for the same switch and there is
+         nothing to flick: the total re-divides and stays full. Then the falsifying object — the
+         control panel where the dial "none of this is relevant" would be is an EMPTY SOCKET with
+         the screw holes still in it. Not greyed out. Not there.
+
+  Silent + deterministic. VARIABLES CONTRACT: fps,width,height,durationFrames,durationSeconds,
+  revealsSeconds[], props{}.
+-->
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"fps","type":"number","label":"Render FPS","default":30},
+    {"id":"width","type":"number","label":"Canvas width (px)","default":1920},
+    {"id":"height","type":"number","label":"Canvas height (px)","default":1080},
+    {"id":"durationFrames","type":"number","label":"Exact output frames","default":409},
+    {"id":"durationSeconds","type":"number","label":"durationFrames / fps","default":13.63}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../../_lib/gsap.min.js"></script>
+    <script src="../../_lib/hf-scene.js"></script>
+    <script src="../../_lib/hf-fx.js"></script>
+    <link rel="stylesheet" href="../../_lib/hf-fx.css" />
+    <link rel="stylesheet" href="at-spotlight-vs-budget.css" />
+  </head>
+  <body>
+    <div id="root" data-composition-id="at-spotlight-vs-budget" data-start="0" data-width="1920" data-height="1080">
+      <div id="world" class="fx-world">
+        <!-- LEFT: the spotlight, and it works -->
+        <div class="col left" id="colL">
+          <div class="chead"><span class="ctag" id="tagL"></span><span class="cclaim" id="claimL"></span></div>
+          <div class="page" id="page">
+            <div class="pagelines" id="pagelines"></div>
+            <div class="beam" id="beam"></div>
+            <div class="dark" id="dark"></div>
+          </div>
+          <div class="switch on" id="switchL"><span class="sknob"></span><span class="slbl" id="slblL"></span></div>
+        </div>
+
+        <!-- RIGHT: the budget, and it does not -->
+        <div class="col right" id="colR">
+          <div class="chead"><span class="ctag" id="tagR"></span><span class="cclaim" id="claimR"></span></div>
+          <div class="barbox">
+            <div class="btrack"><div class="slices" id="slices"></div><div class="bedge"></div></div>
+            <div class="brow"><span class="blbl" id="blblR"></span><span class="bsum fx-mono">1.0000000</span></div>
+          </div>
+          <div class="panel" id="panel">
+            <div class="dial" id="d1"><span class="dknob"></span><span class="dlbl">how much text</span></div>
+            <div class="dial" id="d2"><span class="dknob"></span><span class="dlbl">how long an answer</span></div>
+            <div class="dial socket" id="d3"><span class="hole a"></span><span class="hole b"></span><span class="dlbl gone" id="dlbl3"></span></div>
+          </div>
+        </div>
+
+        <div class="verdict fx-h2" id="verdict"></div>
+      </div>
+    </div>
+    <script src="at-spotlight-vs-budget.js"></script>
+  </body>
+</html>

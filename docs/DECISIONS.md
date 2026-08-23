@@ -653,3 +653,37 @@ old one (don't delete history).
 - **First use:** 022 — 14 scene dirs covering 26 long scenes + 5 Short scenes, all 100% HyperFrames.
 - **Not changed:** existing scenes keep their own stages; this is additive. Determinism is unchanged
   (no `Math.random`/`Date.now` — `FX.rng(seed)` only), and scenes stay silent + seek-driven.
+
+## D-065
+
+**Fixing one scene patches the rendered mp4; it does not re-render the cut.** (2026-08-23, owner —
+*"umesto samo da ponovis render te scene… ti vrtis full novi render svih scena i to traje 2 sata"*.)
+
+- **Context.** The HyperFrames clips are already cached per scene (D-019/D-060), so a scene fix costs
+  about a minute of HF render. The whole cost is the Remotion composite pass: 11,331 frames at
+  `--concurrency=1` — forced by the Chrome tab OOM across 26 `OffthreadVideo` sources — is roughly two
+  hours for a 6-minute cut. Every owner note on a single scene was paying that in full.
+- **Decision.** `pipeline/04-render/patch-scenes.mjs` re-renders only the frames the named scenes own
+  (`--frames=A-B`) and splices them into the existing `video/final.mp4`. Measured on 023 s1.0:
+  **392 of 11,331 frames = 3.5%**, ~4 minutes instead of ~2 hours.
+- **Why the splice is exact, not approximate** (all measured on `content/023-attention/video/final.mp4`):
+  1. x264 emits an IDR frame at every hard scene cut, because a cut *is* a scene change — the base
+     file's keyframes (0, 250, 392, 642, 1070, …) are exactly the compiled `fromFrame` of s2.0/s4.0.
+     `snapToKeyframes` widens outward, so both cuts always land on keyframes.
+  2. The untouched remainder is a **stream copy** — verified bit-identical by decoded-pixel hash from
+     the splice point on. No re-encode, no generation loss, no seam.
+  3. The replacement segment is rendered by **Remotion itself**, not by ffmpeg, so it carries the same
+     encoder and the same SPS/PPS as the base and the concat demuxer runs with `-c copy`. PSNR of the
+     re-rendered head against the original: **50.9 dB avg / 46.1 min** (visually lossless).
+  4. The segment is rendered `--muted` and the base's **audio stream is re-muxed untouched** (MD5
+     identical). Audio drift is impossible by construction, which keeps PRD R11 ("never slice the
+     audio") true through a patch.
+  5. The run fails closed: the patched file must decode to exactly the base's frame count, else it is
+     rejected. A splice off by one frame would desync every caption after it.
+- **Scope / fallbacks.** A patch is valid when only scene CONTENT changed. Re-render the whole cut when
+  there is no base file, when `alignment.json` moved (every scene window shifts), or when the
+  intro/outro/caption layer changed. A patched file still runs `repair-dropouts` and `frame-gate`.
+- **A patched scene's own frames are still fully composited**, so nothing about caption sync, scene
+  windows or transitions is approximated — `affectedFrameRange` reads the same `lib/transitions.mjs`
+  `sceneWindow` the compilers do, and a scene's pixels provably never leave its own window (every
+  blend in this compositor happens inside the INCOMING scene's window).

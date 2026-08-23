@@ -354,6 +354,96 @@ below it — these are the rules that separate a shippable scene from a test cli
 
 ---
 
+## 12. The frame gate — "plain" is now measured, not argued (owner, 2026-08-22)
+
+The owner rejected 021 and then 022 with the same verdict: *"očigledno je AI video — sve su scene
+previše jednostavne, proste i generičke."* Every rule in §0 and §10 already said otherwise. They were
+ignored because nothing checked them, so now something does:
+`node pipeline/05-qa/frame-gate.mjs <id>` measures **every scene's settled frame** and fails the
+render on the ones that are plain, empty, or too small in frame.
+
+**What the calibration found — and the hypothesis it killed.** The obvious theory was that the
+rejected videos have EMPTY frames. Measured over 24 frames per video, that is false:
+
+| | ink coverage (median) | fine detail (median) | detail p25 |
+|---|---|---|---|
+| **012** — the benchmark floor | 15.6% | 4.15% | 2.45% |
+| **022** — rejected | **17.5%** | 3.92% | 1.81% |
+| **021** — rejected ("slideshow") | 17.6% | **2.04%** | 1.45% |
+
+022 is *fuller* than the video the owner locked as the floor. Emptiness is not the defect. What
+separates them is **what is drawn inside the filled area**: 022's pages are blank white bars, its
+cards are an empty rounded rect with a dot and a line, and its 18-model grid reads as a UI loading
+skeleton. So the discriminating measurement is **fine detail density** — readable text, texture and
+material produce small-scale variation; flat fills and smooth gradients do not, however much of the
+frame they cover.
+
+**The three floors** (`lib/ink-coverage.mjs`, per scene role):
+- **detail ≥ 2.4%** of the stage (body scenes) — the primary gate, set at 012's measured p25.
+- **coverage ≥ 8%** and **box ≥ 18%** — the backstop for the genuinely empty frame.
+- `cta`/`outro` get much lower floors: the signature black+gold monolith close is ONE line of big
+  type BY DESIGN and must never be bullied into clutter. `hook` gets higher ones (§2).
+
+**What this means when you author.** A big object does not pass. A *readable* object passes. Give
+every page real synthetic text, every card real content, every surface a material. The gate's own
+message says it: *"blank bars and flat cards score low however big they are."*
+
+**Honest limits — do not oversell this number.** The gate reliably finds plain and empty frames and
+it ranks 021 worst exactly as the owner did (50% of scenes fail, vs 19% for 022). It does **not**
+reproduce the owner's overall preference: 012 fails 29% of its own scenes. It is a per-scene floor
+detector and an authoring forcing function, never a substitute for the owner's verdict at Gate ③.
+
+**Two mechanical traps, both paid for once:**
+- The floors are calibrated at **960×540** (540×960 portrait) and are meaningless at any other size,
+  because a flat shape's detail contribution is its *perimeter* — shrink the frame and every blank
+  fill starts scoring as texture. `ANALYSIS_SIZE` is fixed for this reason.
+- Span must be measured on **trimmed** ink. Untrimmed, a source chip in one corner and the subject in
+  the middle bracket the frame between them and report an 81%-tall subject that covers a third of the
+  height.
+
+---
+
+## 13. The layering law — nothing is ever half-visible over something else (owner, 2026-08-23)
+
+The owner's review of the 023 long cut named one defect three different ways, and all three are the
+same mistake: **an element left at partial opacity over another element.** Gold type printed straight
+onto lit white text with only a 10%-in-the-centre radial scrim under it; a struck-through myth parked
+at `opacity: 0.24`, neither readable nor gone; scenes where a zoom or a slide left two things
+occupying the same square inch. His words: *"nije jasan fokus gde treba gledalac da prati radnju."*
+
+- **Flat type over a scene carries its OWN opaque plate** — ≥ 0.94 alpha, with a rule or hairline so
+  it reads as a deliberate plate and not as a hole. A radial scrim is not a plate: it is darkest at
+  the edges and lightest exactly where the type lands.
+- **What is killed leaves at 0.** A struck myth, a replaced label, a superseded figure: `opacity: 0`,
+  or off the frame. There is no such thing as 0.2 of a dead element.
+- **Recede by COLOUR or DEPTH, never by alpha.** A backgrounded object that drops its alpha lets
+  whatever is behind it print through its own face. Multiply its colour toward the ground
+  (`color.multiplyScalar`, `filter: brightness()`), push it back in Z and let the depth of field do
+  the work, or both — it stays opaque either way.
+- **A recessed object must stay legible.** Measured on this cut: fading the pasted stack to 22% made
+  it vanish against a dark panel and turned the money frame — *you pasted a mountain and got a stub* —
+  into an empty rectangle. If the thing being priced cannot be seen, the point is not on screen.
+  Give a recessive object a palette that survives being stepped back (this family: **paper**).
+- **After a camera move, re-check every pair.** The overlaps the owner caught were not authored; they
+  appeared when a zoom or a slide brought two settled elements into the same space. Judge the frame
+  at the END of the move, not at the start.
+
+## 14. The 3D / 2D ratio (owner, 2026-08-23)
+
+The owner asked for **more Three.js**, at roughly **50/50** across a cut, *"or wherever 3D makes more
+sense, do 3D."* 3D is still opt-in per scene (§11) — this is a target for the plan, not a licence to
+render everything in a room.
+
+- **3D earns a beat when the idea is spatial**: depth, occlusion, something physically arriving,
+  scale you have to look INTO, a stack that shadows what is under it.
+- **2D wins when the beat is a reading task**: dense type, an exact comparison, a number the viewer
+  must take away. Flat DOM keeps type pin-sharp; depth of field softens the one line that matters.
+- **Author both takes against the same props contract** (§11) so a beat can be swapped on
+  `props.hf_scene` alone and compared inside a real render. `at3d-hook-v11` / `at-hook-v12` are the
+  worked pair.
+
+---
+
 ## Enforcement (where each rule is checked, so it can't be skipped)
 
 | Rule | Check |
@@ -365,6 +455,7 @@ below it — these are the rules that separate a shippable scene from a test cli
 | Capture clips silent (§ screen-capture) | `compile-remotion.mjs` strip-at-ingest + `qa-video` silence assert |
 | No paid-SaaS product names (§7) | `qa-video` denylist vs `brief.approvedTools` |
 | Bespoke ratio / no repeated template (§6) | `qa-video` custom-ratio + no-repeat checks |
+| Scene is not plain / empty / too small in frame (§0, §10, §12) | `pipeline/05-qa/frame-gate.mjs` — measures every scene's settled, caption-free frame against the calibrated detail/coverage/box floors in `05-qa/lib/ink-coverage.mjs` (HARD; `--warn-only` to inspect) |
 
 Sources for the numbers above: YouTube retention-editing & 3-second-rule studies (AIR Media-Tech,
 Visla, MotionEdits); hook research (PrePublish, 1of10, OpusClip); transition craft (StudioBinder,

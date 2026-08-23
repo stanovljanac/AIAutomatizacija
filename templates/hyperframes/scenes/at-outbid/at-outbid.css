@@ -1,0 +1,66 @@
+/* at-outbid — s16. Bidder cards with real numbers, then the board that shows you nothing. */
+
+.wrongwrap { position: absolute; left: calc(110px * var(--u)); top: calc(96px * var(--u)); opacity: 0; }
+.wrong { position: relative; font-size: calc(38px * var(--u)); }
+.wslash { position: absolute; left: calc(10px * var(--u)); right: calc(10px * var(--u)); top: 52%; transform: scaleX(0); }
+
+.bidders {
+  position: absolute; left: calc(110px * var(--u)); right: calc(110px * var(--u)); top: calc(238px * var(--u));
+  display: flex; gap: calc(20px * var(--u)); align-items: flex-end;
+}
+.bd {
+  flex: 1; padding: calc(22px * var(--u)) calc(20px * var(--u)) calc(24px * var(--u));
+  border: calc(2px * var(--u)) solid var(--line); border-radius: calc(10px * var(--u));
+  background: linear-gradient(180deg, rgba(22,35,47,0.94), rgba(16,26,36,0.94));
+  box-shadow: 0 calc(16px * var(--u)) calc(42px * var(--u)) rgba(0,0,0,0.5);
+  opacity: 0;
+}
+.bd.you { border-color: rgba(255,242,214,0.55); }
+.bdname { font-size: calc(27px * var(--u)); font-weight: 800; color: var(--text); }
+.bdbid {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace;
+  font-size: calc(66px * var(--u)); font-weight: 800; color: var(--gold-2); line-height: 1.05; margin-top: calc(8px * var(--u));
+}
+.bd.you .bdbid { color: var(--gold-3); }
+.bdbarwrap { height: calc(18px * var(--u)); margin-top: calc(14px * var(--u)); background: rgba(255,255,255,0.06); border-radius: calc(4px * var(--u)); overflow: hidden; }
+.bdbar { height: 100%; transform-origin: 0 50%; transform: scaleX(0);
+  background: linear-gradient(90deg, var(--gold), var(--gold-2)); }
+.bdstamp {
+  display: inline-block; margin-top: calc(14px * var(--u)); padding: calc(4px * var(--u)) calc(12px * var(--u));
+  border: calc(2px * var(--u)) solid rgba(255,176,32,0.7); border-radius: calc(4px * var(--u));
+  font-size: calc(19px * var(--u)); font-weight: 800; letter-spacing: calc(1.6px * var(--u));
+  text-transform: uppercase; color: var(--gold-2); opacity: 0;
+}
+
+.truth { position: absolute; left: calc(110px * var(--u)); top: calc(660px * var(--u)); width: calc(1000px * var(--u)); }
+.tl { display: flex; align-items: baseline; gap: calc(14px * var(--u)); margin-bottom: calc(12px * var(--u)); opacity: 0; }
+.tlnum { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: calc(24px * var(--u)); color: var(--gold-2); }
+.tltext { font-size: calc(32px * var(--u)); font-weight: 700; color: var(--text); }
+
+.board {
+  position: absolute; right: calc(110px * var(--u)); top: calc(640px * var(--u));
+  width: calc(600px * var(--u)); height: calc(230px * var(--u)); perspective: calc(1400px * var(--u));
+}
+.bfront, .bback {
+  position: absolute; inset: 0; backface-visibility: hidden; border-radius: calc(10px * var(--u));
+  border: calc(2px * var(--u)) solid var(--line); display: flex; align-items: center; justify-content: center;
+}
+.bfront { background: linear-gradient(180deg, rgba(22,35,47,0.95), rgba(16,26,36,0.95)); padding: calc(18px * var(--u)); }
+.bback {
+  background: repeating-linear-gradient(135deg, rgba(0,0,0,0.6) 0 calc(12px * var(--u)), rgba(0,0,0,0.35) calc(12px * var(--u)) calc(24px * var(--u)));
+  transform: rotateY(180deg);
+}
+.bbacklbl { font-size: calc(26px * var(--u)); font-weight: 700; color: var(--ghost); font-style: italic; }
+.bfrow { display: flex; justify-content: space-between; width: 100%; font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: calc(23px * var(--u)); color: #cfe0f2; }
+
+.verdict {
+  position: absolute; left: 0; right: 0; top: calc(870px * var(--u)); text-align: center;
+  font-size: calc(78px * var(--u)); font-weight: 800; letter-spacing: calc(-2px * var(--u));
+  color: var(--gold-2); opacity: 0;
+}
+
+.portrait .bidders { flex-wrap: wrap; }
+.portrait .bd { flex: 1 1 40%; }
+.portrait .truth { left: calc(60px * var(--u)); width: calc(960px * var(--u)); top: calc(1080px * var(--u)); }
+.portrait .board { right: calc(60px * var(--u)); left: calc(60px * var(--u)); width: auto; top: calc(1300px * var(--u)); }
+.portrait .verdict { top: calc(1580px * var(--u)); font-size: calc(70px * var(--u)); }
