@@ -21,6 +21,11 @@
  *   4. The segment is rendered `--muted` and the ORIGINAL audio stream is re-muxed untouched. Audio
  *      drift is therefore impossible by construction — we never cut, re-encode or re-time audio.
  *      (PRD R11: never slice the audio.)
+ *   5. EVERY segment is normalised to the BASE FILE'S TIMEBASE before the concat, and the result is
+ *      verified on time, not just on frame count. Learned the hard way on 2026-08-24: Remotion writes
+ *      90000 tbn, our final.mp4 carries 15360, and the concat demuxer keeps the FIRST input's
+ *      timebase without rescaling the rest. Both shipped 023 patches decoded all 11331 frames and
+ *      still died at 1:04. See buildSegmentCutCommand + the verify block in runPatch.
  *
  * Split of responsibilities (same shape as compile-hyperframes.mjs):
  *   - affectedFrameRange()/parseKeyframes()/snapToKeyframes()  PURE: which frames must be redone
@@ -114,25 +119,51 @@ export function buildKeyframeScanCommand({ ffmpeg, base }) {
 }
 
 /**
- * PURE: cut a frame-exact VIDEO-ONLY segment out of `base` by STREAM COPY.
+ * PURE: the muxer flag that pins a track's timebase. Missing/invalid is a HARD ERROR, never a
+ * silent omission — an unpinned timebase is exactly the bug below.
+ */
+function timescaleArgs(timescale) {
+  if (!Number.isInteger(timescale) || timescale <= 0) {
+    throw new Error(`timescale must be a positive integer (got ${timescale}) — every segment of a splice has to share ONE timebase`);
+  }
+  return ["-video_track_timescale", String(timescale)];
+}
+
+/**
+ * PURE: cut a frame-exact VIDEO-ONLY segment out of `base` by STREAM COPY, into `timescale` ticks/s.
  *
  * `-ss` (input seek) lands on the keyframe at or before the timestamp — which is exact here because
  * snapToKeyframes guarantees `fromFrame` IS a keyframe. `-frames:v` then takes the exact count, so
  * the segment can never be a frame long or short (`-t` would round against the packet duration).
+ *
+ * `-video_track_timescale` is not a nicety — it is the fix for the 023 v1.1/v1.2 splice (2026-08-24).
+ * Remotion writes 90000 tbn; the base final.mp4 carries 15360; and the concat demuxer takes the
+ * OUTPUT timebase from its FIRST input WITHOUT rescaling the other files' packets. Patching scene 1
+ * removes the head segment, so the Remotion part comes first, and the tail's 15360-tick stamps were
+ * then read as 90000: the picture ran out at 377.75 / (90000/15360) = 64.5s under 6:17 of audio.
+ * A mid-file patch breaks the other way (the patched scene plays 5.86x slow). Normalising EVERY
+ * segment to one timebase makes the concat demuxer's assumption true by construction.
  */
-export function buildSegmentCutCommand({ ffmpeg, base, fromFrame, toFrame, fps, out }) {
+export function buildSegmentCutCommand({ ffmpeg, base, fromFrame, toFrame, fps, timescale, out }) {
   const args = ["-hide_banner", "-v", "error"];
   if (fromFrame > 0) args.push("-ss", (fromFrame / fps).toFixed(6));
-  args.push("-i", base, "-map", "0:v", "-c", "copy", "-frames:v", String(toFrame - fromFrame), "-y", out);
+  args.push("-i", base, "-map", "0:v", "-c", "copy", "-frames:v", String(toFrame - fromFrame),
+    ...timescaleArgs(timescale), "-y", out);
   return { cmd: ffmpeg, args };
 }
 
-/** PURE: concat the segments with the demuxer, stream copy (all parts share one encoder's SPS/PPS). */
-export function buildConcatCommand({ ffmpeg, listFile, out }) {
+/**
+ * PURE: concat the segments with the demuxer, stream copy — all parts share one encoder's SPS/PPS
+ * and, because buildSegmentCutCommand normalised them, one timebase (see the note there); pinning
+ * it again here keeps the output's tbn true even if a part ever arrives unnormalised.
+ * (The old `-fflags +genpts` sat AFTER `-i`, i.e. on the OUTPUT, where genpts is a no-op — it never
+ * generated a timestamp, so it could not have papered over the mismatch. Dropped.)
+ */
+export function buildConcatCommand({ ffmpeg, listFile, timescale, out }) {
   return {
     cmd: ffmpeg,
     args: ["-hide_banner", "-v", "error", "-f", "concat", "-safe", "0", "-i", listFile,
-      "-map", "0:v", "-c", "copy", "-fflags", "+genpts", "-movflags", "+faststart", "-y", out],
+      "-map", "0:v", "-c", "copy", ...timescaleArgs(timescale), "-movflags", "+faststart", "-y", out],
   };
 }
 
@@ -140,11 +171,12 @@ export function buildConcatCommand({ ffmpeg, listFile, out }) {
  * PURE: mux the spliced video with the ORIGINAL audio stream, copied bit-for-bit from the base file.
  * The audio is never cut, re-encoded or re-timed — that is what makes drift impossible.
  */
-export function buildMuxCommand({ ffmpeg, videoFile, baseFile, out }) {
+export function buildMuxCommand({ ffmpeg, videoFile, baseFile, timescale, out }) {
   return {
     cmd: ffmpeg,
     args: ["-hide_banner", "-v", "error", "-i", videoFile, "-i", baseFile,
-      "-map", "0:v:0", "-map", "1:a:0", "-c", "copy", "-movflags", "+faststart", "-y", out],
+      "-map", "0:v:0", "-map", "1:a:0", "-c", "copy", ...timescaleArgs(timescale),
+      "-movflags", "+faststart", "-y", out],
   };
 }
 
@@ -204,6 +236,30 @@ export function parseDecodedFrames(log) {
   return all.length ? Number(all[all.length - 1][1]) : null;
 }
 
+/**
+ * PURE: how many SECONDS of video the run actually played (the last `time=HH:MM:SS.ss`).
+ * This is the number a wrong timebase moves while the frame count stays right — the gate the broken
+ * 023 v1.1/v1.2 splice would have failed.
+ */
+export function parseEncodedSeconds(log) {
+  const all = [...String(log ?? "").matchAll(/time=\s*(\d+):(\d\d):(\d\d(?:\.\d+)?)/g)];
+  if (!all.length) return null;
+  const [, h, m, s] = all[all.length - 1];
+  return Number(h) * 3600 + Number(m) * 60 + Number(s);
+}
+
+/**
+ * PURE: the video track's TIMEBASE (ticks per second) from an ffmpeg `-v info` stream header —
+ * "… 30 fps, 30 tbr, 15360 tbn". ffmpeg abbreviates large values ("90k tbn"), so the k is expanded.
+ * Reads the FIRST video stream line, which is the input's (the base being scanned, or the file being
+ * verified).
+ */
+export function parseVideoTimescale(log) {
+  const m = /Stream #\d+:\d+[^\n]*: Video:[^\n]*?\b(\d+(?:\.\d+)?)(k?) tbn/.exec(String(log ?? ""));
+  if (!m) return null;
+  return Math.round(Number(m[1]) * (m[2] === "k" ? 1000 : 1));
+}
+
 /** The vendored ffmpeg the rest of the pipeline uses, falling back to one on PATH. */
 export function ffmpegBin(root) {
   const vendored = join(root, "templates", "hyperframes", ".bin", process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg");
@@ -214,8 +270,10 @@ export function ffmpegBin(root) {
 
 /**
  * Side-effecting: execute a plan. Spawns ffmpeg for the scan/cuts/concat/mux and Remotion for the
- * replacement frames, then VERIFIES the result has exactly `totalFrames` video frames before it is
- * accepted — a splice that silently loses or gains a frame would desync every caption after it.
+ * replacement frames, then VERIFIES the result — frame count, played duration AND timebase — before
+ * it is accepted. A splice that silently loses or gains a frame would desync every caption after it;
+ * one that changes the timebase (the 023 v1.1/v1.2 bug) keeps every frame and still ships a video
+ * that stops dead a minute in.
  *
  * @param {object} args
  * @param {string} args.root      repo root
@@ -223,12 +281,13 @@ export function ffmpegBin(root) {
  * @param {string} args.outId     flat artifact id (props/<outId>.json)
  * @param {object} args.plan      from planPatch
  * @param {number} args.fps
+ * @param {number} args.timescale the BASE file's video timebase; every segment is normalised to it
  * @param {string} args.base      the already-rendered mp4 to patch
  * @param {string} args.out       destination mp4
  * @param {Function} [args.spawn] spawnSync-compatible injection point
- * @returns {{ out:string, frames:number }}
+ * @returns {{ out:string, frames:number, seconds:number, timescale:number }}
  */
-export function runPatch({ root, cdir, outId, plan, fps, base, out, spawn = spawnSync }) {
+export function runPatch({ root, cdir, outId, plan, fps, timescale, base, out, spawn = spawnSync }) {
   const ffmpeg = ffmpegBin(root);
   const remotionDir = join(root, "templates", "remotion");
   const work = join(cdir, "video", ".patch");
@@ -271,10 +330,10 @@ export function runPatch({ root, cdir, outId, plan, fps, base, out, spawn = spaw
         });
       }
       if (!existsSync(produced)) throw new Error(`remotion reported success but ${produced} was not produced`);
-      run("segment normalise", buildSegmentCutCommand({ ffmpeg, base: produced, fromFrame: 0, toFrame: seg.toFrame - seg.fromFrame, fps, out: file }));
+      run("segment normalise", buildSegmentCutCommand({ ffmpeg, base: produced, fromFrame: 0, toFrame: seg.toFrame - seg.fromFrame, fps, timescale, out: file }));
     } else {
       console.log(`COPY  frames ${seg.fromFrame}-${seg.toFrame - 1} (${seg.name}, stream copy — no re-encode)`);
-      run(`cut ${seg.name}`, buildSegmentCutCommand({ ffmpeg, base, fromFrame: seg.fromFrame, toFrame: seg.toFrame, fps, out: file }));
+      run(`cut ${seg.name}`, buildSegmentCutCommand({ ffmpeg, base, fromFrame: seg.fromFrame, toFrame: seg.toFrame, fps, timescale, out: file }));
     }
     parts.push(file);
   }
@@ -282,19 +341,33 @@ export function runPatch({ root, cdir, outId, plan, fps, base, out, spawn = spaw
   const listFile = join(work, "concat.txt");
   writeFileSync(listFile, concatListBody(parts));
   const splicedV = join(work, "spliced-video.mp4");
-  run("concat", buildConcatCommand({ ffmpeg, listFile, out: splicedV }));
+  run("concat", buildConcatCommand({ ffmpeg, listFile, timescale, out: splicedV }));
 
   console.log("MUX   original audio stream (copied, never re-timed)");
-  run("mux", buildMuxCommand({ ffmpeg, videoFile: splicedV, baseFile: base, out }));
+  run("mux", buildMuxCommand({ ffmpeg, videoFile: splicedV, baseFile: base, timescale, out }));
 
-  // VERIFY: the patched file must decode to exactly as many video frames as the base did.
+  // VERIFY. Frame count alone is NOT enough, and saying so cost a shipped file: the broken 023
+  // v1.1/v1.2 splices decoded 11331/11331 frames and passed, while the video track ran out after
+  // 1:04 of a 6:17 cut. A wrong timebase moves TIME, not frames — so the gate measures time too,
+  // and the timebase itself. (The container's Duration is no help either: it reports the audio's
+  // 6:17 and hides the truncated picture.)
   const log = run("verify", { cmd: ffmpeg, args: ["-hide_banner", "-v", "info", "-i", out, "-map", "0:v", "-f", "null", "-"] });
   const frames = parseDecodedFrames(log);
-  if (frames !== plan.totalFrames) {
-    throw new Error(`SPLICE VERIFY FAILED: ${out} decodes ${frames} video frames, expected ${plan.totalFrames}. Left in place for inspection; do NOT ship it.`);
+  const seconds = parseEncodedSeconds(log);
+  const tbn = parseVideoTimescale(log);
+  const expected = plan.totalFrames / fps;
+  const show = (s) => (typeof s === "number" ? `${s.toFixed(2)}s` : "an unreadable duration");
+  const bad = [];
+  if (frames !== plan.totalFrames) bad.push(`decodes ${frames} video frames, expected ${plan.totalFrames}`);
+  if (seconds === null || Math.abs(seconds - expected) > 2 / fps) {
+    bad.push(`plays ${show(seconds)} of video, expected ${show(expected)} (${plan.totalFrames} frames @ ${fps}fps) — a timebase mismatch between the spliced segments`);
+  }
+  if (tbn !== timescale) bad.push(`carries ${tbn} tbn, expected the base file's ${timescale}`);
+  if (bad.length) {
+    throw new Error(`SPLICE VERIFY FAILED: ${out} ${bad.join("; ")}. Left in place for inspection; do NOT ship it.`);
   }
   rmSync(work, { recursive: true, force: true });
-  return { out, frames };
+  return { out, frames, seconds, timescale: tbn };
 }
 
 // ── standalone CLI ───────────────────────────────────────────────────────────────────────────────
@@ -328,14 +401,20 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
 
   const ffmpeg = ffmpegBin(ROOT);
   const scan = spawnSync(ffmpeg, buildKeyframeScanCommand({ ffmpeg, base }).args, { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
-  const keyframes = parseKeyframes(`${scan.stdout ?? ""}${scan.stderr ?? ""}`);
+  const scanLog = `${scan.stdout ?? ""}${scan.stderr ?? ""}`;
+  const keyframes = parseKeyframes(scanLog);
   if (!keyframes.length) { console.error(`could not read any keyframes from ${base}`); process.exit(1); }
+  // The base file's timebase is the one every segment gets normalised to — Remotion's own segments
+  // come out at 90000 tbn and would otherwise poison the concat (see buildSegmentCutCommand).
+  const timescale = parseVideoTimescale(scanLog);
+  if (!timescale) { console.error(`could not read the video timebase (tbn) of ${base} — refusing to splice blind`); process.exit(1); }
 
   const plan = planPatch({ timeline, sceneIds: scenes, keyframes, totalFrames: props.totalFrames });
   const pct = ((plan.patchedFrames / plan.totalFrames) * 100).toFixed(1);
   console.log(`PATCH ${id} scenes [${scenes.join(", ")}]`);
   console.log(`   base       ${base}`);
   console.log(`   keyframes  ${keyframes.length} in the base file`);
+  console.log(`   timebase   ${timescale} tbn — every segment is normalised to it before the concat`);
   console.log(`   re-render  frames ${plan.startFrame}-${plan.endFrame - 1}  (${plan.patchedFrames} of ${plan.totalFrames} = ${pct}%, ~${(plan.patchedFrames / fps).toFixed(1)}s)`);
   console.log(`   stream-copy ${plan.copiedFrames} frames untouched (no re-encode, no generation loss)`);
   console.log(`   out        ${out}`);
@@ -345,7 +424,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     process.exit(1);
   }
 
-  const { frames } = runPatch({ root: ROOT, cdir, outId, plan, fps, base, out });
-  console.log(`OK ${out} — ${frames} frames verified (base had ${plan.totalFrames})`);
+  const { frames, seconds } = runPatch({ root: ROOT, cdir, outId, plan, fps, timescale, base, out });
+  console.log(`OK ${out} — ${frames} frames / ${seconds.toFixed(2)}s of video at ${timescale} tbn verified (base had ${plan.totalFrames})`);
   console.log(`   next: node scripts/repair-dropouts.mjs ${out}`);
 }

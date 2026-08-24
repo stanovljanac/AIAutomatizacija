@@ -2,15 +2,16 @@
 type: lesson
 status: stable
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-25
 related: [2026-08-18-a-rendered-clip-is-not-a-seekable-clip.md, 2026-08-16-the-stage-is-built-once.md, ../../../docs/DECISIONS.md, ../../../style/MOTION_SPEC.md]
 depends_on: []
 ---
 # Fixing one scene is a splice, not a re-render — and the cut points are already there
 
 **Purpose:** this file exists so nobody ever again pays a two-hour composite pass to change eleven
-seconds of a video, and so the safety argument for the splice is traceable to measurements rather
-than to confidence.
+seconds of a video, so the safety argument for the splice is traceable to measurements rather than to
+confidence, and — after the 2026-08-24 incident below — so a splice is never again checked on frame
+count alone.
 **When to read:** read before re-rendering a cut that already has a `video/final.mp4`, and before
 changing anything in `pipeline/04-render/patch-scenes.mjs`.
 **Do not duplicate:** if writing about partial renders, mp4 splicing or render cost, extend this file.
@@ -56,14 +57,61 @@ same picture, different bits. That is why the check is PSNR, not a hash.
 - **Render `--muted` and re-mux the base's audio.** Not an optimisation — the correctness guarantee.
   Nothing cuts, re-times or re-encodes audio anywhere in the patch, so drift is impossible by
   construction and PRD R11 ("never slice the audio") stays true through a patch.
-- **Verify the frame count and fail closed.** A splice one frame short would desync every caption
-  after it, silently. The run rejects any output whose decoded frame count differs from the base.
+- **Normalise every segment to the base file's timebase** (`-video_track_timescale`), because the
+  concat demuxer will not. See "The frame count is not the guarantee" below — this one was learned by
+  shipping two broken files.
+- **Verify frames AND played time AND the timebase, then fail closed.** A splice one frame short would
+  desync every caption after it, silently; a splice with a mixed timebase keeps every frame and still
+  ends the picture a minute in. The run rejects any output that differs from the base on any of the
+  three.
 - **A scene's pixels never leave its own window.** The obvious guess — that a transition makes a scene
   bleed into its neighbours — is wrong for this compositor: `sceneWindow` pulls the INCOMING scene back
   over its predecessor, the intro is extended forward INTO scene 0's window, and the outro is pulled
   back INTO the last scene's. So the patched range is exactly `[fromFrame, fromFrame + durFrames)`,
   with no widening. `affectedFrameRange` calls the same `lib/transitions.mjs` the compilers call, so
   this cannot drift apart from the render.
+
+## The frame count is not the guarantee — the timebase is (incident, 2026-08-24)
+
+**Both patched 023 files that went to the owner were broken, and the verify gate passed them both.**
+The picture froze at about 1:05 under a 6:17 narration. Nothing was wrong with the audio, the scenes,
+the props or the Remotion render — the mp4 timestamps were.
+
+**Mechanism.** An mp4 stores time in *ticks*, at a per-track rate (`tbn`). Remotion writes **90000**;
+our `final.mp4` carries **15360**. The concat demuxer takes the output timebase from its **FIRST**
+input and passes the other files' packets through **without rescaling them**. Patching scene 1 starts
+at frame 0, so `planPatch` emits no head segment and the Remotion part is first — and the tail's
+15360-tick stamps were then read as 90000. The ratio is exactly `90000 / 15360 = 5.859375`, so the
+picture ran out at `377.75 s / 5.859375 = 64.5 s`. A patch in the MIDDLE of a cut breaks the other
+way: head first, so the timebase is right and the patched scene plays 5.86× slow (measured: 1462
+frames rendered as 2:32.68 instead of 48.73 s). Every one of the 26 scenes was exposed.
+
+**Why the gate passed it.** The old check compared decoded frame counts: 11331 = 11331. All three
+manual checks made when the tool was built — bit-identical tail, head PSNR, audio MD5 — look at
+**pixels and samples**. Not one of them looked at **time**. The container's `Duration` is no help
+either: it reports the longest track, so the intact 6:17 audio hid the truncated 6:17→1:04 video.
+
+| File | Decoded frames | Video track plays | tbn |
+|---|---|---|---|
+| `final.mp4` (base) | 11331 | **6:17.70** ✓ | 15360 |
+| `final-v1.1.mp4`, `final-v1.2.mp4` (shipped, broken) | 11331 | **1:04.50** ✗ | 90000 |
+| `final-v1.2-fixed.mp4` (after the fix) | 11331 | **6:17.70** ✓ | 15360 |
+
+**The generalisable rule: verify the property that would break, not the property that is easy to
+count.** A splice moves *time*; the gate measured *quantity*. When a check and a failure mode do not
+name the same physical property, the check is decoration. (The test file said as much out loud —
+"FRAME COUNT IS CONSERVED" — and one of its fixtures even carried `time=00:06:17` and discarded it.)
+
+**Fixed by** pinning every ffmpeg step (`cut`, `concat`, `mux`) to the base file's `tbn`, read off the
+keyframe scan we already run, and by extending the gate to frames + played seconds + timebase — with
+tests that replay this exact log and reject it. A missing timescale is now a hard error, never a
+silent omission. Also removed: `-fflags +genpts` sat AFTER `-i` on the concat, i.e. on the OUTPUT,
+where `genpts` is a no-op; it looked like timestamp insurance and was doing nothing.
+
+**One latent trap left open:** the Remotion segment file is named `<id>-patch-<from>-<to>.mp4`, so two
+variants of the same scene overwrite each other's segment. `v1.1`'s segment was gone by the time the
+bug was found, which is why repairing `v1.2` was free (stream copy, ~1 min) and repairing `v1.1` would
+have cost a re-render. If variants of one scene are ever iterated again, put the variant in the name.
 
 ## When a patch is NOT valid
 

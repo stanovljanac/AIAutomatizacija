@@ -7,10 +7,17 @@
 //   3. BLENDED BOUNDARIES ARE INCLUDED: a dissolve/push neighbour puts this scene's pixels outside
 //      its own window, so the patched range has to cover them. A hard cut must NOT widen.
 //   4. AUDIO IS NEVER TOUCHED: the render is --muted and the mux copies the base's audio stream.
+//   5. ONE TIMEBASE, AND TIME IS VERIFIED: every segment is normalised to the base file's tbn, and
+//      the result is checked on played duration + timebase, not only on frame count. Frame count
+//      alone passed both broken 023 patches on 2026-08-24 (11331 frames, video dead at 1:04).
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import {
   affectedFrameRange, parseKeyframes, snapToKeyframes, planPatch, concatListBody, parseDecodedFrames,
+  parseEncodedSeconds, parseVideoTimescale, runPatch,
   buildSegmentCutCommand, buildConcatCommand, buildMuxCommand, buildRemotionRenderCommand, buildKeyframeScanCommand,
 } from "./patch-scenes.mjs";
 
@@ -180,7 +187,7 @@ test("buildRemotionRenderCommand: an INCLUSIVE --frames range, muted, at concurr
 });
 
 test("buildSegmentCutCommand: a frame-exact video-only STREAM COPY", () => {
-  const { args } = buildSegmentCutCommand({ ffmpeg: "ffmpeg", base: "b.mp4", fromFrame: 392, toFrame: 11331, fps, out: "t.mp4" });
+  const { args } = buildSegmentCutCommand({ ffmpeg: "ffmpeg", base: "b.mp4", fromFrame: 392, toFrame: 11331, fps, timescale: 15360, out: "t.mp4" });
   const i = args.indexOf("-c");
   assert.equal(args[i + 1], "copy", "the untouched part is never re-encoded");
   assert.ok(args.includes("-frames:v"), "an exact frame count, not -t (which rounds against packet duration)");
@@ -190,19 +197,19 @@ test("buildSegmentCutCommand: a frame-exact video-only STREAM COPY", () => {
 });
 
 test("buildSegmentCutCommand: a cut starting at frame 0 needs no seek at all", () => {
-  const { args } = buildSegmentCutCommand({ ffmpeg: "ffmpeg", base: "b.mp4", fromFrame: 0, toFrame: 392, fps, out: "h.mp4" });
+  const { args } = buildSegmentCutCommand({ ffmpeg: "ffmpeg", base: "b.mp4", fromFrame: 0, toFrame: 392, fps, timescale: 15360, out: "h.mp4" });
   assert.ok(!args.includes("-ss"));
 });
 
 test("buildMuxCommand: takes video from the splice and AUDIO FROM THE BASE, both copied", () => {
-  const { args } = buildMuxCommand({ ffmpeg: "ffmpeg", videoFile: "v.mp4", baseFile: "base.mp4", out: "o.mp4" });
+  const { args } = buildMuxCommand({ ffmpeg: "ffmpeg", videoFile: "v.mp4", baseFile: "base.mp4", timescale: 15360, out: "o.mp4" });
   assert.equal(args[args.indexOf("-i") + 1], "v.mp4");
   assert.ok(args.includes("0:v:0") && args.includes("1:a:0"), "video from input 0 (spliced), audio from input 1 (base)");
   assert.equal(args[args.indexOf("-c") + 1], "copy", "audio is copied, never re-encoded or re-timed");
 });
 
 test("buildConcatCommand / buildKeyframeScanCommand: demuxer concat with copy; scan writes no file", () => {
-  const concat = buildConcatCommand({ ffmpeg: "ffmpeg", listFile: "l.txt", out: "o.mp4" });
+  const concat = buildConcatCommand({ ffmpeg: "ffmpeg", listFile: "l.txt", timescale: 15360, out: "o.mp4" });
   assert.ok(concat.args.includes("concat") && concat.args.includes("copy"));
   const scan = buildKeyframeScanCommand({ ffmpeg: "ffmpeg", base: "b.mp4" });
   assert.ok(scan.args.includes("showinfo"));
@@ -219,4 +226,125 @@ test("concatListBody: forward slashes and escaped quotes, one directive per part
 test("parseDecodedFrames: takes the LAST frame= counter ffmpeg reports", () => {
   assert.equal(parseDecodedFrames("frame=  100 fps=0\rframe= 11331 fps=250 time=00:06:17"), 11331);
   assert.equal(parseDecodedFrames("no counters here"), null);
+});
+
+test("parseEncodedSeconds: takes the LAST time= counter, as seconds", () => {
+  assert.equal(parseEncodedSeconds("frame= 100 time=00:00:03.33\rframe=11331 time=00:06:17.70 bitrate=N/A"), 377.7);
+  assert.equal(parseEncodedSeconds("frame=11331 time=00:01:04.50 speed=12x"), 64.5, "the broken 023 splice");
+  assert.equal(parseEncodedSeconds("no counters here"), null);
+});
+
+test("parseVideoTimescale: reads tbn off the VIDEO stream line, expanding ffmpeg's k", () => {
+  const line = (tbn) => `  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p, 1920x1080 [SAR 1:1 DAR 16:9], 4274 kb/s, 30 fps, 30 tbr, ${tbn} tbn (default)`;
+  const audio = "  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 317 kb/s (default)";
+  assert.equal(parseVideoTimescale([line("15360"), audio].join("\n")), 15360, "our final.mp4");
+  assert.equal(parseVideoTimescale([line("90k"), audio].join("\n")), 90000, "what Remotion writes — abbreviated");
+  assert.equal(parseVideoTimescale(audio), null, "an audio-only log pins nothing");
+  assert.equal(parseVideoTimescale(""), null);
+});
+
+// ── ONE TIMEBASE (the 023 v1.1/v1.2 regression) ──────────────────────────────────────────────────
+
+test("every ffmpeg step pins the timebase — the concat demuxer never rescales, so we must", () => {
+  const cut = buildSegmentCutCommand({ ffmpeg: "ffmpeg", base: "b.mp4", fromFrame: 0, toFrame: 392, fps, timescale: 15360, out: "p.mp4" });
+  const concat = buildConcatCommand({ ffmpeg: "ffmpeg", listFile: "l.txt", timescale: 15360, out: "s.mp4" });
+  const mux = buildMuxCommand({ ffmpeg: "ffmpeg", videoFile: "s.mp4", baseFile: "b.mp4", timescale: 15360, out: "o.mp4" });
+  for (const { args } of [cut, concat, mux]) {
+    assert.equal(args[args.indexOf("-video_track_timescale") + 1], "15360");
+  }
+  assert.ok(!concat.args.includes("+genpts"), "genpts sat on the OUTPUT, where it is a no-op — it never fixed anything");
+});
+
+test("a missing or nonsense timescale is a HARD ERROR, never a silently unpinned timebase", () => {
+  for (const timescale of [undefined, null, 0, -1, 1.5, "15360"]) {
+    assert.throws(() => buildSegmentCutCommand({ ffmpeg: "f", base: "b.mp4", fromFrame: 0, toFrame: 9, fps, timescale, out: "o.mp4" }), /timescale must be a positive integer/);
+    assert.throws(() => buildConcatCommand({ ffmpeg: "f", listFile: "l.txt", timescale, out: "o.mp4" }), /timescale must be a positive integer/);
+    assert.throws(() => buildMuxCommand({ ffmpeg: "f", videoFile: "v.mp4", baseFile: "b.mp4", timescale, out: "o.mp4" }), /timescale must be a positive integer/);
+  }
+});
+
+// ── runPatch's verify gate ───────────────────────────────────────────────────────────────────────
+
+/** A repo-shaped tmp dir: props + an already-rendered patch segment + content/<id>/video. */
+function patchFixture() {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "patch-scenes-"));
+  fs.mkdirSync(path.join(root, "templates", "remotion", "props"), { recursive: true });
+  fs.mkdirSync(path.join(root, "templates", "remotion", "out"), { recursive: true });
+  fs.writeFileSync(path.join(root, "templates", "remotion", "props", "vid.json"), "{}");
+  fs.writeFileSync(path.join(root, "templates", "remotion", "out", "vid-patch-0-392.mp4"), "segment");
+  const cdir = path.join(root, "content", "vid");
+  fs.mkdirSync(path.join(cdir, "video"), { recursive: true });
+  return { root, cdir };
+}
+
+/** The 023 shape: scene 1 patched, so there is NO head and the Remotion part is first in the concat. */
+const PLAN_023 = {
+  startFrame: 0, endFrame: 392, totalFrames: 11331, patchedFrames: 392, copiedFrames: 10939,
+  segments: [
+    { name: "patch", fromFrame: 0, toFrame: 392, source: "render" },
+    { name: "tail", fromFrame: 392, toFrame: 11331, source: "base" },
+  ],
+};
+
+/** An ffmpeg `-v info` verify log: what the gate reads back off the finished file. */
+function verifyLog({ frames = 11331, time = "00:06:17.70", tbn = "15360" } = {}) {
+  return [
+    `  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p, 1920x1080, 30 fps, 30 tbr, ${tbn} tbn (default)`,
+    `frame=${frames} fps=250 q=-0.0 Lsize=N/A time=${time} bitrate=N/A speed=8.5x`,
+  ].join("\n");
+}
+
+function spyOn(log) {
+  const calls = [];
+  const spawn = (cmd, args) => { calls.push([cmd, ...args].join(" ")); return { status: 0, stdout: "", stderr: log }; };
+  return { spawn, calls };
+}
+
+function runFixture(log) {
+  const { root, cdir } = patchFixture();
+  const { spawn, calls } = spyOn(log);
+  const out = path.join(cdir, "video", "final-v1.2.mp4");
+  const go = () => runPatch({ root, cdir, outId: "vid", plan: PLAN_023, fps, timescale: 15360, base: path.join(cdir, "video", "final.mp4"), out, spawn });
+  return { go, calls, cdir, out };
+}
+
+test("runPatch: a clean splice reports frames AND seconds AND timebase, and clears its work dir", () => {
+  const { go, calls, cdir } = runFixture(verifyLog());
+  const res = go();
+  assert.equal(res.frames, 11331);
+  assert.equal(res.seconds, 377.7);
+  assert.equal(res.timescale, 15360);
+  assert.equal(fs.existsSync(path.join(cdir, "video", ".patch")), false, "a verified splice cleans up after itself");
+  const pinned = calls.filter((c) => c.includes("-video_track_timescale 15360"));
+  assert.equal(pinned.length, 4, "both segment cuts, the concat and the mux are all pinned to the base timebase");
+});
+
+test("runPatch: REJECTS the 023 regression — every frame present, video dead at 1:04", () => {
+  // The exact file that shipped on 2026-08-23: 11331/11331 frames, so the old frame-count-only gate
+  // passed it, while the tail's 15360-tick stamps were being read as 90000.
+  const { go, cdir } = runFixture(verifyLog({ time: "00:01:04.50", tbn: "90k" }));
+  assert.throws(go, (err) => {
+    assert.match(err.message, /SPLICE VERIFY FAILED/);
+    assert.match(err.message, /plays 64\.50s of video, expected 377\.70s/);
+    assert.match(err.message, /carries 90000 tbn, expected the base file's 15360/);
+    return true;
+  });
+  assert.equal(fs.existsSync(path.join(cdir, "video", ".patch")), true, "a failed splice is LEFT for inspection");
+});
+
+test("runPatch: REJECTS a mid-file patch that plays slow, even at the right tbn", () => {
+  // The other direction of the same bug (head first, patch second): the patched scene runs 5.86x
+  // slow, the frame count is still perfect, and the timebase of the output looks right.
+  const { go } = runFixture(verifyLog({ time: "00:37:07.00" }));
+  assert.throws(go, /plays 2227\.00s of video, expected 377\.70s/);
+});
+
+test("runPatch: an unreadable duration fails the gate — it never assumes the file is fine", () => {
+  const { go } = runFixture("  Stream #0:0: Video: h264, 30 fps, 30 tbr, 15360 tbn\nframe=11331 no time here");
+  assert.throws(go, /an unreadable duration/);
+});
+
+test("runPatch: a lost or gained frame is still a hard failure", () => {
+  const { go } = runFixture(verifyLog({ frames: 11330, time: "00:06:17.67" }));
+  assert.throws(go, /decodes 11330 video frames, expected 11331/);
 });

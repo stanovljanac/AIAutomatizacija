@@ -19,6 +19,37 @@ Format:
 
 ---
 
+## 2026-08-25 — the splice shipped two broken cuts; the gate now measures time, not frames
+- who: agent
+- did: The owner reported 023 `final-v1.1.mp4` freezing ~1:05 in under a full 6:17 narration.
+  1. **Cause — the mp4 timebase, not audio/scenes/render.** Remotion writes **90000 tbn**, our
+     `final.mp4` carries **15360**, and the concat demuxer keeps only its FIRST input's timebase
+     without rescaling the other files' packets. Patching scene 1 leaves no head segment, so the
+     Remotion part is first and the tail's 15360-tick stamps are read as 90000:
+     `377.75 s / 5.859375 = 64.5 s`. Reproduced from scratch on the real inputs (175.63 fps, 90k tbn,
+     `time=00:01:04.50`, byte-for-byte the shipped defect). A MID-file patch breaks the other way —
+     1462 frames playing 2:32.68 instead of 48.73 s — so all 26 scenes were exposed. `final-v1.2.mp4`
+     was broken too.
+  2. **Why it passed.** The verify gate compared frame counts only (11331 = 11331); the three checks
+     made when the tool was built (bit-identical tail, head PSNR, audio MD5) all look at pixels and
+     samples. None looked at time. The container's `Duration` reports the intact audio and hides it.
+  3. **Fix** — `patch-scenes.mjs` pins **every** cut/concat/mux to the base file's tbn
+     (`-video_track_timescale`, read off the keyframe scan we already run; a missing timescale is now
+     a hard error), and the gate verifies **frames + played seconds + tbn**. Also dropped the
+     `-fflags +genpts` that sat after `-i` on the concat, where `genpts` is a no-op.
+  4. **023 rebuilt as `video/final-v1.2-fixed.mp4` with NO re-render** — the v1.2 Remotion segment was
+     still current on disk, so it was a ~1 min stream copy. Verified: 11331 frames, **6:17.70** of
+     video at 15360 tbn, audio MD5 identical to the base, frame 150 identical to the broken v1.2
+     (it IS the v1.2 hook), frame 5000 identical to the base (tail untouched).
+- verify: `npm test` **802 green** (was 790; +12 for the timebase, three of them replaying the exact
+  broken 023 verify logs and rejecting them).
+- next: owner watches `content/023-attention/video/final-v1.2-fixed.mp4`; then his call on deleting
+  the two broken files and on whether `v1.1` is worth a 392-frame re-render (its Remotion segment was
+  overwritten — both variants wrote to the same `023-attention-patch-0-392.mp4`).
+- docs: `docs/DECISIONS.md` D-065 amendment, `.claude/skills/video-render/SKILL.md`,
+  `knowledge/desk-knowledge/lessons/2026-08-23-patch-the-render-dont-repeat-it.md` ("The frame count
+  is not the guarantee"), `content/023-attention/log.md`.
+
 ## 2026-08-23 — 023 s1 rebuilt twice, and a one-scene fix stopped costing two hours
 - who: agent
 - did: Acted on the owner's review of the 023 long cut.

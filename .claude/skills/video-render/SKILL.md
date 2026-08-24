@@ -98,8 +98,14 @@ Why the splice is safe, and what to keep true if you touch it:
   with `-c copy`. Measured PSNR against the original head: 50.9 dB (visually lossless).
 - **The segment is rendered `--muted` and the base's audio stream is re-muxed untouched** — audio MD5
   identical. Drift is impossible by construction (PRD R11: never slice the audio).
-- The run **verifies the patched file decodes to exactly the base's frame count** and refuses it
-  otherwise; a splice that loses a frame would desync every caption after it.
+- **Every segment is normalised to the base file's timebase** (`-video_track_timescale`, read off the
+  keyframe scan). The concat demuxer keeps only its FIRST input's tbn and does not rescale the rest —
+  Remotion writes 90000, our renders carry 15360, and mixing them shipped two broken 023 cuts on
+  2026-08-24 (all 11,331 frames present, picture dead at 1:04 under 6:17 of audio).
+- The run **verifies frames + played seconds + tbn against the base** and refuses the file otherwise;
+  a splice that loses a frame desyncs every caption after it, and one that mixes timebases keeps every
+  frame while ending the picture early. Never judge a patched file by the container's `Duration` — it
+  reports the longest track, so intact audio masks a truncated video.
 - A patched file still needs `repair-dropouts` and `frame-gate` — patching changes which frames were
   composited, not whether the compositor dropped one.
 

@@ -678,8 +678,19 @@ old one (don't delete history).
   4. The segment is rendered `--muted` and the base's **audio stream is re-muxed untouched** (MD5
      identical). Audio drift is impossible by construction, which keeps PRD R11 ("never slice the
      audio") true through a patch.
-  5. The run fails closed: the patched file must decode to exactly the base's frame count, else it is
-     rejected. A splice off by one frame would desync every caption after it.
+  5. Every segment is normalised to the **base file's timebase** (`-video_track_timescale`) before the
+     concat, and the run fails closed on **frames + played seconds + tbn**. See the amendment below.
+- **Amendment (2026-08-25) — the gate measures TIME, not just frames.** As first shipped, item 5
+  checked the decoded frame count only, and it passed two broken files (023 `v1.1`, `v1.2`): the
+  picture stopped at 1:04 under a 6:17 track. Remotion writes 90000 tbn, our `final.mp4` carries
+  15360, and the **concat demuxer keeps the FIRST input's timebase without rescaling the other
+  files' packets** — so patching scene 1 (no head segment ⇒ the Remotion part is first) made the
+  tail's 15360-tick stamps be read as 90000: `377.75 s / (90000/15360) = 64.5 s`. A mid-file patch
+  breaks the other way (that scene plays 5.86× slow). The container's `Duration` hides it, because it
+  reports the intact audio. Fixed by pinning cut/concat/mux to the base's tbn and by verifying frames
+  **and** played seconds **and** tbn. The rule this cost us: *verify the property that would break
+  (time), not the property that is easy to count (frames)*. Full write-up:
+  `knowledge/desk-knowledge/lessons/2026-08-23-patch-the-render-dont-repeat-it.md`.
 - **Scope / fallbacks.** A patch is valid when only scene CONTENT changed. Re-render the whole cut when
   there is no base file, when `alignment.json` moved (every scene window shifts), or when the
   intro/outro/caption layer changed. A patched file still runs `repair-dropouts` and `frame-gate`.
