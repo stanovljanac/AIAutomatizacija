@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-22",
+  "updated": "2026-08-25",
   "ideas": [
     {
       "id": "bulk-personalized-emails",
@@ -1072,7 +1072,8 @@
       "value_band": "owner",
       "source": {
         "origin": "manual"
-      }
+      },
+      "produced_video_id": "023-attention"
     }
   ]
 }

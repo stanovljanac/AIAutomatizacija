@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-08-18",
+  "updated": "2026-08-25",
   "live_from": "020",
   "videos": {
     "002-what-is-ai-automation": {
@@ -255,6 +255,23 @@
       },
       "analytics": {
         "due_at": "2026-08-25",
+        "snapshots": []
+      }
+    },
+    "023-attention": {
+      "subject": "llm-mental-model",
+      "idea_id": "desk-lessons-attention",
+      "content_type": "long",
+      "status": "published",
+      "published_at": "2026-08-25",
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "linked",
+        "at": "2026-08-25",
+        "note": "2026-08-25-restamp-metadata-against-the-rendered-cut"
+      },
+      "analytics": {
+        "due_at": "2026-09-01",
         "snapshots": []
       }
     }

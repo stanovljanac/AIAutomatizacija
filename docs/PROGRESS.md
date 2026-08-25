@@ -19,6 +19,42 @@ Format:
 
 ---
 
+## 2026-08-25 — 023 Gate ③ APPROVED → the publish package is built (owner uploads by hand)
+- who: owner (approved the cut) + agent (built the package).
+- **Gate ③ passed on `content/023-attention/video/finalv2.mp4`** — the rebuilt v1.2 cut (6:17.75 at
+  15360 tbn, 11331 frames, audio MD5 identical to the base). `brief.json.status` → `ready`.
+- **The publish package is complete**: `publish.json` (schema-valid) + `publish.md` (the copy-paste
+  sheet) + `publish.review.json`, alongside the already-written `medium.md` and `visual-prompts.json`.
+  Title `AI Attention: It Doesn't Focus. It Spends.` (42 chars, keyword-first); a 3-sentence
+  answer-first description with every number traced to `claims.json`; 18 chapters; the Short
+  `53% of an AI's Attention Goes to a Meaningless Word` (56.09s, 1080x1920) with a one-sentence
+  cross-post caption; pinned comment, community post, Medium title, and a 7-step manual checklist.
+- **The one real defect the publish step caught: chapter stamps drafted at script approval are always
+  stale.** They had been computed off `alignment.json` (audio time) and never got the **+1.6s intro
+  offset** — a uniform **+1.6 to +2.4s**, every stamp landing early, so each chapter opened inside the
+  previous beat. All 18 are now read off `timeline.json` `start_seconds`, the RENDERED timeline. Carry to 024: *re-stamp chapters from the
+  timeline at publish, never ship the ones drafted at approval.*
+- review panel (Sonnet, D-053, `publish` rubric): **8 → 9/10 over 2 iterations, all three hard gates
+  green**. Iteration 1's MAJOR was a chapter labelled "The three habits" — a summary of an arc, not a
+  line on screen, and a duplicate of the 4:53 chapter; habits 2 and 3 now carry their own verbatim
+  chapters. Three composite labels stitched from props that never share a frame were also replaced.
+  The convention holds for all 18: **a chapter label is the line actually on screen at that stamp**
+  (the same rule 022's review had to install). The description's chapter block is GENERATED from the
+  `chapters` array, so the 022 divergence bug cannot recur.
+- **Thumbnail stays prompt-led** (2026-08-19 rule). Both extracted candidates inspected by eye: dense
+  scene frames of small body text, no AI signifier, no reserved headline zone — the same class that
+  has shipped 0 of 14. The owner generates from `visual-prompts.json` (A: the budget spilled on one
+  word; B: the spotlight that cannot switch off) and composites `WHAT IS ATTENTION IN AI` in the
+  reserved left third.
+- next: **owner uploads MANUALLY (D-055)** — thumbnail first, then Altered content = Yes, fill
+  `<LONG_URL>` in the Short caption / pin / community post / Medium, and work the checklist in
+  `publish.md`. After it is live: `brief.status` → `published`, metrics into `ideas.json`, close-out
+  lesson.
+- blockers: none. Nothing committed, nothing uploaded. `publish.draft.json` is now superseded by
+  `publish.json` and can be deleted on the owner's word.
+
+---
+
 ## 2026-08-25 — the splice shipped two broken cuts; the gate now measures time, not frames
 - who: agent
 - did: The owner reported 023 `final-v1.1.mp4` freezing ~1:05 in under a full 6:17 narration.

@@ -39,6 +39,7 @@ Under the root **AI Decision Automation**, an idea is one of four kinds of decis
 | **020** — Clean the Data First | `execution/data-cleaning` | everyone-asks-ai · desk-notes | Short; "write code → clean the mess underneath" seed; first Execution-branch slot |
 | **021** — AI Can't See the Letters | `llm-mental-model` | Desk Lessons (Ep. 2) · desk-notes | long + Short; deliberate cluster-mate of 019, one rung further in (019 = how the next word is picked → 021 = what a "word" even is to the model). Signs off into Ep. 3, the context window |
 | **022** — AI Has No Memory | `llm-mental-model` | Desk Lessons (Ep. 3) · desk-notes | long + Short; third rung of the same ladder (019 next word → 021 the unit → 022 how many units it re-reads, and what that costs). Signs off into Ep. 4, attention |
+| **023** — AI Attention: It Doesn't Focus. It Spends. | `llm-mental-model` | Desk Lessons (Ep. 4) · desk-notes | long + Short; fourth rung, and the one 022 signs off into by name (019 next word → 021 the unit → 022 how many units it re-reads → 023 how the fixed total is divided across them). Signs off into Ep. 5, frozen weights |
 
 **Open territory** (branches with no video yet): most of Change Detection, all of Failure
 Detection, all of Execution. Bias new ideas here for reach without cannibalizing 011/016.
