@@ -6,7 +6,7 @@
   "scripts": {
     "validate": "node pipeline/shared/validate.js",
     "new-video": "node pipeline/00-ideas/new-video.mjs",
-    "test": "node --test pipeline/ scripts/",
+    "test": "node --test \"pipeline/**/*.test.mjs\" \"scripts/**/*.test.mjs\"",
     "make-video": "node pipeline/shared/orchestrator/run.mjs"
   },
   "dependencies": {

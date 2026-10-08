@@ -1,0 +1,4 @@
+/* fz-close — HUD layout (black + gold). */
+#kick { top: calc(70px * var(--u)); }
+#q { top: calc(70px * var(--u)); font-size: calc(50px * var(--u)); }
+#next { left: calc(84px * var(--u)); top: calc(70px * var(--u)); font-size: calc(28px * var(--u)); }

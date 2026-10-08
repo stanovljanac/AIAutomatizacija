@@ -1,0 +1,8 @@
+/* fz-forge — HUD layout. */
+#term { left: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#term .w { color: var(--gold-2); }
+#tag { left: calc(84px * var(--u)); top: calc(70px * var(--u)); color: var(--gold); }
+#tok { left: calc(84px * var(--u)); top: calc(140px * var(--u)); }
+#cnt { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#src { right: calc(84px * var(--u)); top: calc(250px * var(--u)); }
+#kick { top: calc(70px * var(--u)); }

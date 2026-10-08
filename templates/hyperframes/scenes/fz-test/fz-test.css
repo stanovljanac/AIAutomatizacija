@@ -1,0 +1,11 @@
+/* fz-test — HUD layout. The frame is the lab; these are the instrument readouts. */
+#chip { left: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#cntA, #cntB { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#srcB { right: calc(84px * var(--u)); top: calc(250px * var(--u)); }
+#fp { left: 50%; top: calc(668px * var(--u)); margin-left: calc(-640px * var(--u)); width: calc(1280px * var(--u)); }
+#fp .verdict {
+  margin-top: calc(12px * var(--u)); padding-left: calc(172px * var(--u));
+  font-size: calc(22px * var(--u)); font-weight: 800; letter-spacing: calc(3px * var(--u));
+  text-transform: uppercase; color: #8ff0c2;
+}
+#kick { top: calc(70px * var(--u)); }

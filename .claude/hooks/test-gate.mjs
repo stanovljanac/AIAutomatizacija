@@ -68,7 +68,10 @@ function main() {
   }
 
   if (input.permission_mode === "plan") return allow(); // never gate planning
-  const cwd = input.cwd || process.cwd();
+  // The PROJECT root, not the session's current directory: a session that last cd'ed into a subfolder
+  // (e.g. content/<id>/video) made both gates resolve scripts/ and pipeline/ there and fail on a clean
+  // tree (measured 2026-10-08).
+  const cwd = process.env.CLAUDE_PROJECT_DIR || input.cwd || process.cwd();
 
   if (changedCodeFiles(cwd).length === 0) return allow(); // no code touched
 
@@ -83,7 +86,9 @@ function main() {
     blocks = 0;
   }
 
-  const test = spawnSync(process.execPath, ["--test", "pipeline/"], { cwd, encoding: "utf8" });
+  // A GLOB, not a bare directory: since Node 24 `node --test pipeline/` tries to load the directory as
+  // a module and fails, which would block every finish on a green suite (measured 2026-10-08, v24.21).
+  const test = spawnSync(process.execPath, ["--test", "pipeline/**/*.test.mjs"], { cwd, encoding: "utf8" });
   const passed = test.status === 0;
 
   if (passed) {
@@ -112,7 +117,7 @@ function main() {
   }
   const tail = `${test.stdout || ""}\n${test.stderr || ""}`.trim().slice(-1500);
   block(
-    `build-sprint test gate: \`node --test pipeline/\` is failing while code changed. ` +
+    `build-sprint test gate: \`node --test "pipeline/**/*.test.mjs"\` is failing while code changed. ` +
       `Fix the tests before finishing (or write [skip-tests] in your message to stop intentionally).\n\n${tail}`
   );
 }

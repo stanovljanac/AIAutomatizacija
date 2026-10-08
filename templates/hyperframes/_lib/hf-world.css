@@ -1,0 +1,121 @@
+/* hf-world.css — the flat HUD layer that rides over a fully-3D scene (pairs with hf-world.js).
+ *
+ * The frame is the WebGL canvas. The only DOM is TYPE THE VIEWER MUST READ: the line a beat
+ * installs, a measured number, a source chip, a fingerprint. MOTION_SPEC §13 is the law here:
+ * every flat element carries its OWN opaque plate (≥ 0.94) with a hairline, and what is killed
+ * leaves at 0. Nothing relies on the 3D world being dark enough behind it.
+ *
+ * Load after hf-fx.css (tokens + house font) and before the scene's own stylesheet.
+ * Everything sizes against --u. Content stays above the caption band (bottom ~15%).
+ */
+
+#root { background: #020305; }
+#gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; }
+.hw-hud { position: absolute; inset: 0; z-index: 20; pointer-events: none; }
+
+/* ── the plate every HUD element stands on ─────────────────────────────────── */
+.hw-plate {
+  position: absolute;
+  background: linear-gradient(180deg, rgba(9,14,20,0.97) 0%, rgba(5,8,12,0.98) 100%);
+  border: calc(1.5px * var(--u)) solid rgba(146,178,214,0.22);
+  border-radius: calc(12px * var(--u));
+  box-shadow: 0 calc(18px * var(--u)) calc(60px * var(--u)) rgba(0,0,0,0.65);
+  will-change: transform, opacity;
+}
+.pal-hero .hw-plate { border-color: rgba(255,176,32,0.30); }
+
+/* ── the kicker: the one line a beat installs ──────────────────────────────── */
+.hw-kicker {
+  left: calc(84px * var(--u)); top: calc(70px * var(--u));
+  padding: calc(22px * var(--u)) calc(40px * var(--u)) calc(24px * var(--u)) calc(36px * var(--u));
+  border-left: calc(6px * var(--u)) solid var(--gold);
+  font-size: calc(64px * var(--u)); font-weight: 800; letter-spacing: calc(-1.2px * var(--u));
+  line-height: 1.04; color: var(--text); white-space: nowrap;
+}
+.hw-kicker .g {
+  background: linear-gradient(178deg, var(--gold-3) 0%, var(--gold-2) 34%, var(--gold) 78%, #e08c0d 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hw-kicker.c { left: 50%; transform: translateX(-50%); border-left: none; border-top: calc(4px * var(--u)) solid var(--gold); text-align: center; }
+.hw-kicker.r { left: auto; right: calc(84px * var(--u)); }
+.hw-kicker.sm { font-size: calc(46px * var(--u)); }
+
+/* ── a source chip (D-026): small, opaque, gold dot ────────────────────────── */
+.hw-chip {
+  display: inline-flex; align-items: center; gap: calc(12px * var(--u));
+  padding: calc(10px * var(--u)) calc(20px * var(--u));
+  font-size: calc(22px * var(--u)); font-weight: 600; letter-spacing: calc(0.3px * var(--u));
+  color: #a9bdd1; white-space: nowrap; border-radius: calc(9px * var(--u));
+}
+.hw-chip::before {
+  content: ""; width: calc(9px * var(--u)); height: calc(9px * var(--u)); border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 calc(12px * var(--u)) var(--gold); flex: none;
+}
+.hw-chip b { color: #e6eef6; font-weight: 700; }
+
+/* ── a counter: label over a big tabular number ────────────────────────────── */
+.hw-count {
+  padding: calc(18px * var(--u)) calc(30px * var(--u)) calc(20px * var(--u));
+  min-width: calc(420px * var(--u));
+}
+.hw-count .lbl {
+  font-size: calc(21px * var(--u)); font-weight: 700; letter-spacing: calc(3.5px * var(--u));
+  text-transform: uppercase; color: #8fa8c0; margin-bottom: calc(6px * var(--u));
+}
+.hw-count .num {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-variant-numeric: tabular-nums;
+  font-size: calc(76px * var(--u)); font-weight: 700; letter-spacing: calc(-2px * var(--u)); color: #f3f7fb; line-height: 1;
+}
+.hw-count .num.gold { color: var(--gold-2); text-shadow: 0 0 calc(26px * var(--u)) rgba(255,176,32,0.45); }
+.hw-count .num.ice { color: #bfe6ff; text-shadow: 0 0 calc(26px * var(--u)) rgba(99,168,236,0.55); }
+.hw-count .num.red { color: #ff8d8d; }
+.hw-count .num.green { color: #8ff0c2; text-shadow: 0 0 calc(26px * var(--u)) rgba(61,220,151,0.45); }
+.hw-count .sub { font-size: calc(22px * var(--u)); color: #8fa8c0; margin-top: calc(8px * var(--u)); font-weight: 600; }
+
+/* ── the fingerprint: two SHA-256 rows, character by character ─────────────── */
+.hw-hash { padding: calc(22px * var(--u)) calc(30px * var(--u)); }
+.hw-hash .row { display: flex; align-items: baseline; gap: calc(22px * var(--u)); }
+.hw-hash .row + .row { margin-top: calc(10px * var(--u)); }
+.hw-hash .k {
+  width: calc(150px * var(--u)); flex: none; font-size: calc(20px * var(--u)); font-weight: 700;
+  letter-spacing: calc(3px * var(--u)); text-transform: uppercase; color: #8fa8c0;
+}
+.hw-hash .v {
+  font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: calc(30px * var(--u));
+  font-weight: 600; color: #dfe8f1; letter-spacing: calc(0.5px * var(--u)); white-space: nowrap;
+}
+.hw-hash .v i { font-style: normal; transition: none; }
+.hw-hash .v i.m { color: #8ff0c2; text-shadow: 0 0 calc(14px * var(--u)) rgba(61,220,151,0.6); }
+.hw-hash .v i.x { color: #ffb020; text-shadow: 0 0 calc(14px * var(--u)) rgba(255,176,32,0.6); }
+
+/* ── a stamp: verdict, hard edge, ≤3° flat rotation (MOTION_SPEC §5) ───────── */
+.hw-stamp {
+  position: absolute; padding: calc(14px * var(--u)) calc(30px * var(--u));
+  border: calc(6px * var(--u)) solid currentColor; border-radius: calc(12px * var(--u));
+  font-size: calc(58px * var(--u)); font-weight: 900; letter-spacing: calc(4px * var(--u));
+  text-transform: uppercase; background: rgba(6,8,11,0.96); white-space: nowrap;
+  box-shadow: 0 0 calc(40px * var(--u)) rgba(0,0,0,0.6);
+}
+.hw-stamp.gold { color: var(--gold); }
+.hw-stamp.red { color: #ff5c5c; }
+.hw-stamp.green { color: #3ddc97; }
+.hw-stamp.ice { color: #8fd2ff; }
+
+/* ── a term card: the word + what it means ─────────────────────────────────── */
+.hw-term { padding: calc(24px * var(--u)) calc(38px * var(--u)) calc(26px * var(--u)); border-top: calc(4px * var(--u)) solid var(--gold); }
+.hw-term .w { font-size: calc(92px * var(--u)); font-weight: 800; letter-spacing: calc(-2px * var(--u)); line-height: 1; }
+.hw-term .d { margin-top: calc(10px * var(--u)); font-size: calc(30px * var(--u)); color: #a9bdd1; font-weight: 600; }
+
+/* a small caps tag (layer names, step markers) */
+.hw-tag {
+  padding: calc(8px * var(--u)) calc(16px * var(--u));
+  font-size: calc(22px * var(--u)); font-weight: 800; letter-spacing: calc(3px * var(--u));
+  text-transform: uppercase; color: var(--gold-2); white-space: nowrap; border-radius: calc(8px * var(--u));
+}
+
+/* the question / closing plate */
+.hw-q {
+  left: 50%; transform: translateX(-50%); padding: calc(28px * var(--u)) calc(52px * var(--u));
+  font-size: calc(56px * var(--u)); font-weight: 800; letter-spacing: calc(-1px * var(--u)); text-align: center;
+  border-top: calc(4px * var(--u)) solid var(--gold); white-space: nowrap; color: var(--text);
+}

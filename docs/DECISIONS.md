@@ -698,3 +698,25 @@ old one (don't delete history).
   windows or transitions is approximated — `affectedFrameRange` reads the same `lib/transitions.mjs`
   `sceneWindow` the compilers do, and a scene's pixels provably never leave its own window (every
   blend in this compositor happens inside the INCOMING scene's window).
+
+## D-066 — A fully-3D cut runs on one shared world kit (`_lib/hf-world.*`) (owner brief, 2026-10-08)
+
+- **Context.** The owner asked for a video built from scratch where *"every scene feels like a dynamic
+  3D environment"* — fast-paced, fully animated, 2-3 minutes. D-064 built the shared 2D stage and
+  `hf-three.js` gave one scene depth-of-field + bloom; nine 3D scenes on that would each re-invent the
+  renderer, lights, floor, post chain and objects, and would not read as one world.
+- **Decision.** `templates/hyperframes/_lib/hf-world.js` + `hf-world.css`, loaded after `hf-three.js`:
+  `HW.create` (renderer, palette stage — sky, reflective floor, grid, fog, light rig — and an HDR
+  half-float MSAA post chain: bloom pyramid, ACES, grade, vignette, grain, DOF, **analytic motion blur
+  from the camera path**), `HW.shots` (a shot list; no smear across a hard cut), and builders: the
+  number `lattice` (instanced tiles printing real values, wet-floor reflection, heat / frost / shock /
+  scan / beam / slice / build uniforms), a real `chat` window, `card`, `frameBox`, `beam`, `sparks`,
+  `dust`, `ring`. A 3D scene is a shot list plus its own objects; the props/beats contract is still
+  `hf-scene.js`, the clip is still rendered per scene and composited by Remotion (D-019/D-060).
+- **Why analytic blur.** The HF capture seeks frames in any order, so nothing may depend on the previous
+  frame. The camera is a pure function of time; the smear for frame t is where camera(t) sees the point
+  camera(t−1/fps) was looking at. Deterministic, and free.
+- **Kept / not changed.** `hf-three.js` and every 023 scene are untouched; 2D scenes keep `hf-fx`.
+  The ~50/50 3D/2D target (MOTION_SPEC §14) still holds for normal videos — an all-3D cut is a
+  per-video owner choice. Authoring rules learned on the first use: MOTION_SPEC §15.
+- **First use:** 024 — nine scenes `fz-*`, ~35-65s per clip at standard quality on the GPU path.

@@ -1,0 +1,8 @@
+/* fz-memory — HUD layout. */
+#kick { top: calc(70px * var(--u)); }
+#rd { right: calc(84px * var(--u)); top: calc(70px * var(--u)); color: #8ff0c2; font-size: calc(30px * var(--u)); }
+#nl { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#nl .num { font-size: calc(52px * var(--u)); }
+#src { left: 50%; top: calc(760px * var(--u)); transform: translateX(-50%); font-size: calc(26px * var(--u)); }
+#fut { left: calc(84px * var(--u)); top: calc(70px * var(--u)); color: var(--gold); font-size: calc(28px * var(--u)); }
+#tod { right: calc(84px * var(--u)); top: calc(70px * var(--u)); color: #8fd2ff; font-size: calc(28px * var(--u)); }

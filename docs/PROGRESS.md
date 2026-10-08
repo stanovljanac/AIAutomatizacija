@@ -19,6 +19,41 @@ Format:
 
 ---
 
+## 2026-10-08 — 024 "Correcting Your AI Teaches It Nothing": the first fully-3D video, built from scratch
+- who: agent (owner brief: "create the new video from scratch… every scene a dynamic 3D environment…
+  fast paced full animation… 2-3 minutes… take full control").
+- **Topic:** Desk Lessons Ep.5, the rung 023 promised — the weights were frozen before you typed, so a
+  correction in chat teaches the model nothing. Thesis-first hook, measured proof, one behaviour rule
+  ("fixed it twice? write it down").
+- **Measured, $0, local** (`content/024-frozen/measure/`): GPT-2 small says "The capital of Turkey is
+  Istanbul"; 100 correcting chats → **0 of 124,439,808** weights changed (SHA-256 identical), a fresh chat
+  repeats it; **3 Adam steps** → **123,664,271** changed and it answers Ankara. A falsified sub-hypothesis
+  (a written note beats an argument *in the answer*) stayed in `measured.json` and out of the narration.
+  256 real weights before/after each step are printed on the lattice tiles.
+- **Built:** `_lib/hf-world.js` + `hf-world.css` (D-066) — HDR post chain with analytic camera motion
+  blur, shot lists, the number lattice (wet-floor reflection), a real chat window, cards/beams/sparks/
+  dust/frames — and nine bespoke 3D scenes `fz-hook … fz-close`. New `whoosh` SFX cue (tracked recipe,
+  falling body only). 23 sound cues placed on the visual hits.
+- **Defects found on frames and fixed before the owner sees it:** CA sampling the sharp image under
+  blur (green/magenta tiles), over-fast impact shake, a bubble path behind its own window, blown-out
+  floors/pedestals/shockwaves, a camera orbit inside the block, an illegible tease, a gold reading-beam
+  left on through "not learning", a fogged-out horizon. Full list in `content/024-frozen/log.md`.
+- **Tooling fix (unrelated regression, found by the Stop gate):** Node 24 no longer expands a bare
+  directory passed to `node --test`, so `npm test` and `.claude/hooks/test-gate.mjs` both failed on a
+  green suite. Both now pass globs (`"pipeline/**/*.test.mjs"`). `npm test` **805 green** (802 + 3 new
+  for the whoosh cue / post-shaping). Second gate bug, same session: both Stop hooks ran in the
+  session's CURRENT directory, so a session that ended inside `content/<id>/video` failed the KOS gate
+  on a clean tree; both now resolve `CLAUDE_PROJECT_DIR` first (simulated from the subfolder: pass).
+- docs: DECISIONS D-066, MOTION_SPEC §15, video-render skill (hf-world note), `assets/sfx/README.md`,
+  lesson `2026-10-08-post-effects-must-share-the-blur.md`; `knowledge-lint --fix` 0 errors.
+- **Final cut:** `content/024-frozen/video/final.mp4` — **2:11.9**, 1080p30. frame-gate **9/9** (median
+  fine detail **16.8%** — 012's benchmark is 4.15%), QA **10/10**, 5 compositor dropouts repaired.
+  Reviewed on frames twice; 6 composition fixes (caption band, empty plate, off-frame card, HUD in a
+  whip) went into one re-render. Share copy `video/024-frozen-share.mp4` (112 MB).
+- next: owner **Gate ③** on `content/024-frozen/video/final.mp4`; titles/description/chapters/thumbnail
+  prompts are drafted in `publish.draft.md`. Draft voice is edge-tts (Azure final on approval, as usual).
+- blockers: none. Nothing committed, nothing uploaded.
+
 ## 2026-08-25 — 023 Gate ③ APPROVED → the publish package is built (owner uploads by hand)
 - who: owner (approved the cut) + agent (built the package).
 - **Gate ③ passed on `content/023-attention/video/finalv2.mp4`** — the rebuilt v1.2 cut (6:17.75 at

@@ -1,0 +1,5 @@
+/* fz-read — HUD layout. */
+#chip { left: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#kick { top: calc(70px * var(--u)); }
+#cnt { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#cnt .num { font-size: calc(58px * var(--u)); }

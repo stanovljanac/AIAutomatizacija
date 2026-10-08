@@ -72,7 +72,10 @@ function main() {
   }
 
   if (input.permission_mode === "plan") return allow(); // never gate planning
-  const cwd = input.cwd || process.cwd();
+  // The PROJECT root, not the session's current directory: a session that last cd'ed into a subfolder
+  // (e.g. content/<id>/video) made both gates resolve scripts/ and pipeline/ there and fail on a clean
+  // tree (measured 2026-10-08).
+  const cwd = process.env.CLAUDE_PROJECT_DIR || input.cwd || process.cwd();
 
   if (changedKnowledgeFiles(cwd).length === 0) return allow(); // no KOS note touched
 

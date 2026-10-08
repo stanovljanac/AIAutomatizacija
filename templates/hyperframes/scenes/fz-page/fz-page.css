@@ -1,0 +1,5 @@
+/* fz-page — HUD layout. */
+#kick { top: calc(70px * var(--u)); }
+#ended { left: calc(84px * var(--u)); top: calc(70px * var(--u)); color: #ff8d8d; }
+#cnt { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#cnt .num { font-size: calc(58px * var(--u)); }

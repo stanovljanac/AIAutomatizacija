@@ -56,6 +56,7 @@ Catalogues: **freesound.org** (filter *Creative Commons 0*) · **pixabay.com/sou
 | `riser.mp3` | 11.0s — exponential 120→900 Hz sweep, detuned + octave partials, rising air layer and an accelerating pulse; peaks at 10s and **resolves** over ~1s | generated (`make-sfx.mjs`) | ours — none required |
 | `impact.mp3` | 1.8s — sub dropping 110→45 Hz + a 180 Hz thud (what phone speakers reproduce) + an 18 ms noise transient | generated (`make-sfx.mjs`) | ours — none required |
 | `accent.mp3` | 0.65s — three fast-decaying partials (2100/3150/4200 Hz); bright enough to cut, short enough not to compete | generated (`make-sfx.mjs`) | ours — none required |
+| `whoosh.mp3` | 0.9s — band-limited noise (120–3200 Hz, the `post` shaping) swelling in and out, peak ~0.37s, over a soft **falling** 160→105 Hz body; place it ~0.35s before a whip/cut so the peak lands on it. Falls only — never a rising sweep (no-riser rule) | generated (`make-sfx.mjs`) | ours — none required |
 
 ## What 016 wants
 

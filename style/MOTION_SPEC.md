@@ -442,6 +442,33 @@ render everything in a room.
   `props.hf_scene` alone and compared inside a real render. `at3d-hook-v11` / `at-hook-v12` are the
   worked pair.
 
+## 15. Fully-3D videos — the `hf-world` kit (2026-10-08, first used on 024)
+
+When a whole cut is 3D (owner brief for 024: *"every scene a dynamic 3D environment, fast-paced"*), build
+it on `templates/hyperframes/_lib/hf-world.js` (+ `hf-world.css`), loaded after `hf-three.js`. It owns
+what nine scenes must share so the cut reads as ONE world: the renderer, an HDR (half-float, MSAA) post
+chain — bloom pyramid, ACES, palette grade, vignette, grain — the floor/grid/sky/fog/light stage, and
+the builders (`lattice`, `chat`, `card`, `frameBox`, `beam`, `sparks`, `dust`, `ring`, `label`). A
+scene is then a shot list + its own objects. `hf-three.js` is untouched (the 023 scenes depend on it).
+
+Rules that came out of building it, each paid for once on a frame:
+- **Motion blur comes from the camera path, never from history.** The camera is a pure function of
+  time, so `ctx.render(t, camFn)` projects where the look-point was one frame ago and smears along that
+  vector — deterministic under random seeking. `HW.shots([...])` reports the shot index so a hard cut
+  never smears across the cut.
+- **Chromatic aberration only where the frame is sharp.** Mixing a sharp offset sample into a smeared or
+  defocused pixel splits the channels into green/magenta blocks. Keep it radial and ≤ 2.5px.
+- **A cut is a camera that jumps; a shot is a camera that never stops.** Fast pace = a new shot on
+  most sentences (3-7 per scene) with continuous moves inside each, plus whip-pans whose smear hides
+  the cut between scene clips.
+- **Impact shake is small and slow** (≈34 rad/s, ≤0.2 units). Fast shake turns every frame into smear.
+- **Fog is a distance budget.** Anything the narration names on the horizon must sit inside it (024's
+  "future model" vanished at fog 0.016 / 90 units; it reads at 0.0085 / 45 units).
+- **Read every claim's highlight against the line it lands under.** A gold reading-beam left on through
+  "not learning" made the unchanged block look changed. Light ends where the sentence does.
+- **Real content on every surface still applies** (§12): the lattice prints real model weights, chat
+  windows carry real model output, pages carry real synthetic text.
+
 ---
 
 ## Enforcement (where each rule is checked, so it can't be skipped)

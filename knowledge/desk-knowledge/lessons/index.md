@@ -31,4 +31,5 @@ lesson with no evidence stays `draft` forever.
 - ["Plain" is missing detail, not missing content](2026-08-22-plain-is-detail-not-emptiness.md) — lesson, stable
 - [Fixing one scene is a splice, not a re-render — and the cut points are already there](2026-08-23-patch-the-render-dont-repeat-it.md) — lesson, stable
 - [Publish metadata drafted at script approval is stale — re-stamp it against the rendered cut](2026-08-25-restamp-metadata-against-the-rendered-cut.md) — lesson, stable
+- [A post effect must sample the same image the frame shows](2026-10-08-post-effects-must-share-the-blur.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

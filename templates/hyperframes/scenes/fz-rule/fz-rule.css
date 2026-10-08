@@ -1,0 +1,9 @@
+/* fz-rule — HUD layout. */
+#x2 { left: calc(720px * var(--u)); top: calc(150px * var(--u)); font-size: calc(48px * var(--u)); }
+#stop { left: calc(1180px * var(--u)); top: calc(190px * var(--u)); font-size: calc(76px * var(--u)); }
+#stamp { left: calc(1220px * var(--u)); top: calc(170px * var(--u)); }
+#kick { top: calc(70px * var(--u)); }
+.hw-list { right: calc(84px * var(--u)); top: calc(250px * var(--u)); padding: calc(20px * var(--u)) calc(30px * var(--u)) calc(22px * var(--u)); border-top: calc(4px * var(--u)) solid var(--gold); min-width: calc(520px * var(--u)); }
+.hw-list .h { font-size: calc(22px * var(--u)); font-weight: 800; letter-spacing: calc(4px * var(--u)); text-transform: uppercase; color: var(--gold); margin-bottom: calc(10px * var(--u)); }
+.hw-list .it { display: flex; align-items: center; gap: calc(16px * var(--u)); font-size: calc(38px * var(--u)); font-weight: 700; color: #eef4fa; padding: calc(8px * var(--u)) 0; }
+.hw-list .n { display: inline-flex; align-items: center; justify-content: center; width: calc(46px * var(--u)); height: calc(46px * var(--u)); border-radius: 50%; background: var(--gold); color: #120d05; font-weight: 900; font-size: calc(26px * var(--u)); flex: none; }

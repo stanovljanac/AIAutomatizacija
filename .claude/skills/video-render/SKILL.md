@@ -139,6 +139,13 @@ window moves), or when the intro/outro/caption layer changed.
   `readVars`, the fps/W/H/FRAMES/D derivation, `props`/`beats` normalisation, the `data-duration`
   write, the `portrait` class, the `--u` unit, `cl`/`beatAt`, and `HF.register`. A scene declares its
   contract in two lines (see `_lib/hf-scene.js` header) and spends the rest on art direction.
+- **Fully-3D cuts use `_lib/hf-world.js` + `hf-world.css`** (024, 2026-10-08): the shared HDR post
+  chain (bloom pyramid, ACES, grade, grain, analytic camera motion blur), the stage, and the builders
+  (number `lattice` with wet-floor reflection, real `chat` window, `card`, `frameBox`, `beam`,
+  `sparks`, `dust`, `ring`). A scene = `HW.create` + `HW.shots([...])` + its own objects; each 3D scene
+  dir carries its own `vendor/three.*.min.js` (the file server roots at the scene). Rules learned
+  building it: MOTION_SPEC §15. Measured cost: ~35–65s per 11–19s clip at `--quality standard`,
+  ~1 min each at `high`, on the GPU path (`browserGpuMode → hardware`).
 - **Reference `_lib` as `../../_lib/…` — never `../_lib/…`, and never let `make-entry.mjs` rewrite it.**
   The render entry is disposable and lives in `<scene>/compositions/`, and the HF file server roots at
   the **scene** dir, so a browser-relative `../_lib` escapes the root and 404s. What makes it work is the

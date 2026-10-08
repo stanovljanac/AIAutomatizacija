@@ -1,0 +1,4 @@
+/* fz-hook — HUD layout (black + gold hero). */
+#chip { left: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#stamp { left: calc(1140px * var(--u)); top: calc(210px * var(--u)); }
+#kick { top: calc(70px * var(--u)); }

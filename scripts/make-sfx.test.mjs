@@ -46,6 +46,18 @@ test("filterGraph escapes the expression and fades out at the end, not past it",
   assert.ok(graph.includes("alimiter"), "the limiter is the guarantee a cue never clips");
 });
 
+test("a cue's post-shaping sits between the source and the limiter, unescaped", () => {
+  const graph = filterGraph({ duration: 1, fadeOut: 0.05, expr: "sin(t)", post: "highpass=f=120,lowpass=f=3200" });
+  const src = graph.indexOf("aevalsrc="), shape = graph.indexOf(",highpass=f=120,lowpass=f=3200,"), lim = graph.indexOf("alimiter");
+  assert.ok(src === 0 && shape > src && lim > shape, `order must be source → shape → limiter: ${graph}`);
+  assert.ok(!filterGraph({ duration: 1, fadeOut: 0.05, expr: "sin(t)" }).includes("highpass"), "no post, no shaping");
+});
+
+test("the whoosh body falls, never rises (no-riser rule)", () => {
+  assert.ok(CUES.whoosh, "the whoosh exists");
+  assert.match(CUES.whoosh.expr, /160\*t-30\*t\*t/, "the body's phase is 160t - 30t^2: frequency 160 - 60t, falling");
+});
+
 test("ffmpegArgs encodes mp3 to the given path and overwrites without prompting", () => {
   const args = ffmpegArgs(CUES.accent, "/tmp/accent.mp3");
   assert.ok(args.includes("-y"), "ffmpeg must not block on a prompt");
@@ -53,7 +65,7 @@ test("ffmpegArgs encodes mp3 to the given path and overwrites without prompting"
 });
 
 test("generateCue rejects a name that isn't in the library", () => {
-  assert.throws(() => generateCue({ name: "whoosh", outDir: os.tmpdir(), ffmpeg: "ffmpeg" }), /unknown cue/);
+  assert.throws(() => generateCue({ name: "kazoo", outDir: os.tmpdir(), ffmpeg: "ffmpeg" }), /unknown cue/);
 });
 
 test("generateCue writes the cue, then keeps it until --force", { skip: !FFMPEG }, () => {
@@ -85,5 +97,21 @@ test("the accent really decays — its head is louder than its tail", { skip: !F
   const tail = meanDb(0.5, 0.1);
   assert.ok(head > tail + 20, `a ping must be front-loaded (head ${head} dB vs tail ${tail} dB)`);
   assert.ok(head < 0, "and it must not clip");
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test("the whoosh swells — its middle is louder than both its head and its tail", { skip: !FFMPEG }, () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "make-sfx-"));
+  const { path: mp3 } = generateCue({ name: "whoosh", outDir: dir, ffmpeg: FFMPEG });
+  const meanDb = (ss, t) => {
+    const res = spawnSync(FFMPEG, ["-hide_banner", "-ss", String(ss), "-t", String(t), "-i", mp3, "-af", "volumedetect", "-f", "null", "-"], { encoding: "utf8" });
+    const m = (res.stderr || "").match(/mean_volume:\s*(-?[\d.]+) dB/);
+    assert.ok(m, `volumedetect gave nothing: ${res.stderr}`);
+    return Number(m[1]);
+  };
+  const head = meanDb(0, 0.08), mid = meanDb(0.3, 0.12), tail = meanDb(0.74, 0.1);
+  assert.ok(mid > head + 10, `a swell, not a hit: mid ${mid} dB vs head ${head} dB`);
+  assert.ok(mid > tail + 10, `and it dies away: mid ${mid} dB vs tail ${tail} dB`);
+  assert.ok(mid < 0, "and it must not clip");
   fs.rmSync(dir, { recursive: true, force: true });
 });

@@ -82,6 +82,22 @@ export const CUES = {
       "+0.13*exp(-t/0.035)*sin(2*PI*4200*t))",
     ].join(""),
   },
+
+  // An air swish for whip-pans and objects flying past the camera (024, the first fully-3D cut).
+  // Noise alone is hiss; band-limiting it (`post`) is what makes it read as moving air. The swell
+  // peaks ~0.37s in, so a cue placed ~0.35s before a cut lands its loudest moment ON the cut, and a
+  // soft falling body (160 -> ~105 Hz) gives it weight on a phone speaker. Never a rising sweep —
+  // the owner hears pitch rises as a siren (no-riser rule); this one only falls.
+  whoosh: {
+    duration: 0.9,
+    fadeOut: 0.06,
+    post: "highpass=f=120,lowpass=f=3200",
+    expr: [
+      "pow(sin(PI*min(t/0.75,1)),2.2)", // swell in, swell out
+      "*(0.62*(random(1)*2-1)",
+      "+0.22*sin(2*PI*(160*t-30*t*t)))", // falling body
+    ].join(""),
+  },
 };
 
 /**
@@ -93,11 +109,16 @@ export function escapeExpr(expr) {
   return expr.replace(/\s+/g, "").replace(/[,:\\']/g, (c) => `\\${c}`);
 }
 
-/** The one-line filtergraph for a cue: generate → limit (safety, never clips) → fade the tail out. */
+/**
+ * The one-line filtergraph for a cue: generate → optional shaping (`post`, real filter syntax, NOT
+ * escaped — e.g. a band-limit that turns noise into air) → limit (safety, never clips) → fade the
+ * tail out.
+ */
 export function filterGraph(cue) {
   const src = `aevalsrc=${escapeExpr(cue.expr)}:d=${cue.duration}:s=${SAMPLE_RATE}:c=mono`;
   const fadeStart = (cue.duration - cue.fadeOut).toFixed(4);
-  return `${src},alimiter=limit=0.92:level=disabled,afade=t=out:st=${fadeStart}:d=${cue.fadeOut}`;
+  const shape = cue.post ? `,${cue.post}` : "";
+  return `${src}${shape},alimiter=limit=0.92:level=disabled,afade=t=out:st=${fadeStart}:d=${cue.fadeOut}`;
 }
 
 export function ffmpegArgs(cue, outPath) {
