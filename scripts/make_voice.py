@@ -21,6 +21,14 @@ in SEGMENTS split at each pause, splice real silence between them, and shift eve
 by the silence we inserted. A scene window still runs from one sentence start to the next, so the
 silence simply widens the beat it sits in. The track stays ONE continuous file — we are lengthening
 it, never cutting it.
+
+KEY TAKES (optional). A scene may mark the lines the viewer must remember:
+
+    "key_takes": [0]
+
+...(indexes into that scene's `sentences`). They are spoken at `brief.voice_rate_key` instead of
+`brief.voice_rate`, so the take has time to land. A rate change starts a new segment, exactly like
+a pause does (one edge-tts request carries one rate).
 """
 import asyncio
 import json
@@ -117,6 +125,80 @@ def pause_map(scenes):
     return out
 
 
+# MEASURED 2026-10-09 (Andrew, edge-tts 7.2.8): edge-tts pads a short request to ~1.87s, so a key take
+# synthesized on its own ("Not one had moved.") carries ~1s of trailing silence — a pause nobody asked
+# for. A RATE-CHANGE boundary must sound like an ordinary sentence break (median 0.389s on 024's long
+# track = tail + the next segment's ~0.1s lead-in), so its tail is cut back to this.
+RATE_BOUNDARY_TAIL = 0.30
+
+
+def trim_tail(audio: bytes, last_word_end: float, keep: float = RATE_BOUNDARY_TAIL) -> bytes:
+    """Drop whole MP3 frames after `last_word_end + keep` seconds. Only TRAILING frames are ever
+    dropped (MP3's bit reservoir makes a frame depend on the ones before it, never after), and a
+    segment that already ends sooner is returned untouched."""
+    frames = mp3_frames(audio)
+    want = math.ceil((last_word_end + keep) / MP3_FRAME_SECONDS)
+    return audio if want >= len(frames) else b"".join(frames[:max(want, 1)])
+
+
+def key_take_set(scenes):
+    """Flat sentence indexes a scene marks as KEY TAKES (`"key_takes": [sentence idx, ...]`).
+
+    A key take is the line the viewer must remember; it is spoken at `brief.voice_rate_key` (slower
+    than the rest) so it has time to land. Out-of-range indexes fail loud, like pause_map.
+    """
+    out = set()
+    flat = 0
+    for scene in scenes:
+        n = len(scene["sentences"])
+        for idx in scene.get("key_takes", []):
+            idx = int(idx)
+            if not 0 <= idx < n:
+                raise SystemExit(f"FAIL  {scene['id']}.key_takes[{idx}] is out of range (scene has {n} sentences).")
+            out.add(flat + idx)
+        flat += n
+    return out
+
+
+def plan_segments(n, pauses, keys, rate, key_rate=None):
+    """Group sentences 0..n-1 into synthesis segments: [(indexes, rate, pause_after_seconds)].
+
+    A segment ends after every scripted pause AND wherever the speaking rate changes (a key take
+    starts or ends), because one edge-tts request carries one rate. With no pauses and no key takes
+    this is the single segment the track has always been.
+    """
+    segs = []
+    cur, cur_rate = [], None
+    for i in range(n):
+        r = key_rate if (key_rate and i in keys) else rate
+        if cur and r != cur_rate:
+            segs.append((cur, cur_rate, 0.0))
+            cur = []
+        cur.append(i)
+        cur_rate = r
+        if i in pauses:
+            segs.append((cur, cur_rate, pauses[i]))
+            cur, cur_rate = [], None
+    if cur:
+        segs.append((cur, cur_rate, 0.0))
+    return segs
+
+
+def read_pacing(cdir: Path, rate: str):
+    """(voice_rate, voice_rate_key) from the nearest brief.json — the video's own, else its parent's
+    (a nested Short inherits the long brief unless it carries one). The FIRST brief found wins, so a
+    Short with its own brief never mixes in the long video's pace."""
+    for bdir in (cdir, cdir.parent):
+        bpath = bdir / "brief.json"
+        if bpath.exists():
+            b = json.loads(bpath.read_text(encoding="utf-8"))
+            vr, vk = b.get("voice_rate"), b.get("voice_rate_key")
+            base = vr.strip() if isinstance(vr, str) and vr.strip() else rate
+            key = vk.strip() if isinstance(vk, str) and vk.strip() else None
+            return base, key
+    return rate, None
+
+
 def norm(tok: str) -> str:
     return tok.strip(string.punctuation + "—-").lower()
 
@@ -166,16 +248,9 @@ async def main(cid: str):
     cdir = ROOT / "content" / cid
     cfg = json.loads((ROOT / "pipeline" / "shared" / "config.json").read_text(encoding="utf-8"))
     voice = cfg["voice"]["edge_tts"]["voice"]
-    rate = cfg["voice"]["edge_tts"].get("rate", "+0%")
-    # Per-video pacing override: brief.json.voice_rate (this video only; the Short inherits the
-    # parent brief). Keeps the global default intact while letting one video run slower/faster.
-    for bdir in (cdir, cdir.parent):
-        bpath = bdir / "brief.json"
-        if bpath.exists():
-            vr = json.loads(bpath.read_text(encoding="utf-8")).get("voice_rate")
-            if isinstance(vr, str) and vr.strip():
-                rate = vr.strip()
-            break
+    # Per-video pacing override: brief.json.voice_rate (+ voice_rate_key for key takes). Keeps the
+    # global default intact while letting one video run slower/faster.
+    rate, key_rate = read_pacing(cdir, cfg["voice"]["edge_tts"].get("rate", "+0%"))
 
     script = json.loads((cdir / "script.json").read_text(encoding="utf-8"))
 
@@ -185,17 +260,10 @@ async def main(cid: str):
         for s in sc["sentences"]:
             sents.append({"scene": sc["id"], "text": s, "tok": tokens_of(s)})
 
-    # One segment per run of sentences between scripted pauses (usually exactly one segment).
+    # One segment per run of sentences between scripted pauses / rate changes (usually exactly one).
     pauses = pause_map(script["scenes"])
-    segments = []
-    cur = []
-    for i, s in enumerate(sents):
-        cur.append(s)
-        if i in pauses:
-            segments.append((cur, pauses[i]))
-            cur = []
-    if cur:
-        segments.append((cur, 0.0))
+    keys = key_take_set(script["scenes"])
+    segments = [([sents[i] for i in idx], r, p) for idx, r, p in plan_segments(len(sents), pauses, keys, rate, key_rate)]
 
     # synthesize: collect audio + word boundaries, shifting each segment by everything before it
     (cdir / "voice").mkdir(parents=True, exist_ok=True)
@@ -204,24 +272,30 @@ async def main(cid: str):
     wbs = []  # {w, start, end}
     offset = 0.0
     inserted = 0.0
-    for seg_sents, pause_seconds in segments:
+    for si_seg, (seg_sents, seg_rate, pause_seconds) in enumerate(segments):
         text = " ".join(s["text"] for s in seg_sents)
         # edge-tts >= 7 defaults to boundary="SentenceBoundary" — with that default the stream emits
         # NO WordBoundary events at all and every word below silently lands at 0.0s, i.e. a valid-looking
         # alignment.json with a completely dead clock. Ask for word boundaries explicitly (older releases
         # have no such kwarg and always emitted them, hence the fallback).
         try:
-            comm = edge_tts.Communicate(text, voice, rate=rate, boundary="WordBoundary")
+            comm = edge_tts.Communicate(text, voice, rate=seg_rate, boundary="WordBoundary")
         except TypeError:
-            comm = edge_tts.Communicate(text, voice, rate=rate)
+            comm = edge_tts.Communicate(text, voice, rate=seg_rate)
         seg_audio = bytearray()
+        seg_last = 0.0
         async for ch in comm.stream():
             if ch["type"] == "audio":
                 seg_audio += ch["data"]
             elif ch["type"] == "WordBoundary":
                 start = offset + ch["offset"] / 1e7
                 end = offset + (ch["offset"] + ch["duration"]) / 1e7
+                seg_last = max(seg_last, (ch["offset"] + ch["duration"]) / 1e7)
                 wbs.append({"w": ch["text"], "start": round(start, 3), "end": round(end, 3)})
+        # a segment that ends only because the RATE changes (no pause, not the last) is cut back to an
+        # ordinary sentence break — see RATE_BOUNDARY_TAIL. Pause boundaries keep their behaviour.
+        if pause_seconds <= 0 and si_seg + 1 < len(segments):
+            seg_audio = bytearray(trim_tail(bytes(seg_audio), seg_last))
         # the segment's TRUE length (frame count), not its last word — the tail after the final word
         # belongs to the track, and guessing it here would drift every later timestamp.
         offset += audio_seconds(bytes(seg_audio))
@@ -290,7 +364,7 @@ async def main(cid: str):
 
     print(f"OK  voice/narration.mp3  ({len(audio)//1024} KB)")
     print(f"OK  alignment.json  ({len(sentences_out)} sentences, {len(words_out)} words, {duration:.1f}s)")
-    print(f"voice={voice} rate={rate}")
+    print(f"voice={voice} rate={rate}" + (f" key_rate={key_rate} ({len(keys)} key takes)" if key_rate and keys else ""))
     if inserted > 0:
         print(f"    {len(segments)} segments, {inserted:.2f}s of scripted silence spliced in")
 

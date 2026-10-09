@@ -22,6 +22,7 @@ export function deriveRenderTimings(fmt, { fps, vertical }) {
       maxWords: fmt.captions.max_words,
       gapSeconds: fmt.captions.gap_seconds,
       tailSeconds: fmt.captions.tail_seconds,
+      sentenceBreaks: fmt.captions.sentence_breaks === true,
     },
     shortLen: {
       min: fmt.length.short.min,

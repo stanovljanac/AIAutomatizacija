@@ -471,6 +471,53 @@ Rules that came out of building it, each paid for once on a frame:
 
 ---
 
+## 16. Pace and the motion budget — the knobs the owner tunes (024 Short, 2026-10-09)
+
+Owner on the 024 long cut: *"okay but it is too fast paced… Motion doesn't need to be constantly
+moving something in the background or anywhere in the scene. It is too much to focus on and it's
+losing focus to the important stuff."* The 024 Short is the test case: **10% slower, key takes a
+further 5% slower, no intro, 10% less motion, settle on every key take.** What the owner prefers there
+goes into the next video, so every one of those is a NUMBER on a knob, not a feel:
+
+| Knob | Where | 024 long | 024 Short |
+|---|---|---|---|
+| speaking pace | `brief.voice_rate` | `+3%` | `-6%` (measured **1.10×** speech time) |
+| key-take pace | `scenes[].key_takes` + `brief.voice_rate_key` | — | `-11%` (measured **1.166×**) |
+| scripted holds | `scenes[].pause_after` | 0.35–0.6s | ×1.10, ×1.155 before a take |
+| intro bumper | `brief.format_recipe.intro.short_seconds` | 1.5s | **0** — the hook owns frame 0 |
+| motion | `props.motion.scale` (`HW.motion`) | 1 | **0.9** |
+| settle on a take | `props.motion.focus` / `focusScale` | — | key-take windows at **0.35×** |
+| captions | key takes / `format.captions.sentence_breaks` | greedy 7-word chunks | a take is its own caption; sentence breaks, even chunks |
+
+What the budget does (`HW.motion` in `_lib/hf-world.js`):
+- **Camera travel × scale, anchored on where the shot was composed to LAND.** The camera path splits
+  into runs at hard cuts; inside a run the camera covers `scale` of its path and still lands on the
+  end framing. A `keep: true` shot is story motion (the camera chasing the subject) and is left alone.
+- **Ambient clock × scale** — dust drift, tile twinkle, idle bobbing, a storm's fall, a port's spin
+  all read `M.amb(t)`, so "less moving in the background" is one number.
+- **Focus windows settle the room on a key take:** inside one, the camera clock and the ambient clock
+  run at `focusScale`, dust dims by half, and the frame edges darken a little — the take's line (a
+  `.hw-take` plate with a gold rule sweeping under it) is the one thing that moves. Impact kicks are
+  added at real time, so a hit still lands on its word.
+- **Fewer simultaneous movers, by authoring.** The Short cut the long's busiest devices (the apology
+  spiral, the barrage, the tracking shot along six chats) rather than slowing them down.
+
+**Measured on the 024 Short** (`content/024-frozen/short/motion.json`; motion energy = mean absolute
+luma change between consecutive frames, equal pixel budgets):
+- **The Short moves 26% less than the long cut** (7.52 vs 10.19; per matched scene 0.62–0.96).
+- **The budget knob alone is only ~3% of that** (A/B of each scene with and without it: 0.971 overall;
+  inside the key-take windows 0.68–0.91). Camera travel and the ambient clock are a small share of what
+  moves on screen — the cards, sparks, typing and colour changes are story motion the knob does not
+  touch — and a slower camera blurs less, so its sharper frames give back part of the gain.
+- **What actually calmed it was AUTHORING:** cutting the busiest devices, the 10% slower pace (the same
+  events spread over more time), and holds on the takes. The one scene that stayed busy (s3, 0.96) is
+  dominated by a whole-block colour change (blue → molten gold), which the metric counts as motion.
+- **So set a motion target as a MEASURED ratio, not a knob value.** "10% less motion" = motion energy
+  ≈ 0.90 of the reference cut, checked with `motion-ab.mjs`; `scale` is one of the tools, not the
+  definition.
+
+---
+
 ## Enforcement (where each rule is checked, so it can't be skipped)
 
 | Rule | Check |

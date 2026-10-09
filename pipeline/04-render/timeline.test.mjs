@@ -203,3 +203,84 @@ test("buildTimeline upper-cases a standalone 'ai' token in caption copy only", (
   const t = buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "x" });
   assert.equal(t.captions[0].words[0].w, "AI", "'ai' is displayed as AI in captions");
 });
+
+// 024 Short (2026-10-09): with no intro bumper the first scene must own frame 0. Snapping it to the first
+// WORD would leave the few frames of edge-tts lead-in as an empty background before the hook appears.
+test("buildTimeline with intro 0: the first scene starts at frame 0, the rest still snap to their words", () => {
+  const script = readFixture("script.json");
+  const plan = readFixture("scene-plan.json");
+  // a real edge-tts track has ~0.1s of lead-in before the first word; the fixture's starts at 0
+  const raw = readFixture("alignment.json");
+  const shift = (o) => ({ ...o, start: o.start + 0.1, end: o.end + 0.1 });
+  const alignment = { ...raw, duration: raw.duration + 0.1, sentences: raw.sentences.map(shift), words: (raw.words ?? []).map(shift) };
+  const fmt = resolveFormat({ archetype: script.archetype, format_recipe: { intro: { long_seconds: 0 } } });
+  const timings = deriveRenderTimings(fmt, { fps, vertical: false });
+  assert.equal(timings.introFrames, 0);
+  const t = buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: timings.crossfadeFrames, dims: { width: 1920, height: 1080 }, outId: "_FIXTURE" });
+  assert.ok(alignment.sentences[0].start > 0, "precondition: the fixture's first word is not at 0");
+  assert.equal(t.scenes[0].start_seconds, 0, "the hook is on screen from the first frame");
+  assert.equal(t.audio.start_seconds, 0, "narration starts at 0 too — it is never shifted");
+  assert.equal(t.scenes[1].start_seconds, Math.round(t.scenes[1].start_seconds * fps) / fps);
+  const tIntro = buildTimeline({ script, plan, alignment, fmt: resolveFormat({ archetype: script.archetype }), timings: deriveRenderTimings(resolveFormat({ archetype: script.archetype }), { fps, vertical: false }), fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "_FIXTURE" });
+  assert.equal(tIntro.scenes[0].start_seconds, (45 + Math.round(0.1 * fps)) / fps, "with an intro, scene 0 still snaps to its first word (unchanged)");
+});
+
+// 024 Short (2026-10-09): a key take must be its OWN caption — "chat finally said ankara learning /
+// rewrites the" split the take across two chunks and glued it to the line before. Key takes always break
+// at their sentence edges; format.captions.sentence_breaks breaks at every sentence (default off).
+function captionTimeline({ keyTakes, sentenceBreaks }) {
+  const script = {
+    id: "x", archetype: "ideas", scenes: [{ id: "s1", template: "hook-card", sentences: ["one two three.", "four five.", "six seven."], ...(keyTakes ? { key_takes: keyTakes } : {}) }],
+  };
+  const ws = ["one", "two", "three", "four", "five", "six", "seven"];
+  const words = ws.map((w, i) => ({ scene: "s1", w, start: 0.1 + i * 0.4 + (i >= 3 ? 0.1 : 0) + (i >= 5 ? 0.1 : 0), end: 0.4 + i * 0.4 + (i >= 3 ? 0.1 : 0) + (i >= 5 ? 0.1 : 0) }));
+  const alignment = {
+    duration: 3.5, words,
+    sentences: [
+      { scene: "s1", index: 0, text: "one two three.", start: words[0].start, end: words[2].end },
+      { scene: "s1", index: 1, text: "four five.", start: words[3].start, end: words[4].end },
+      { scene: "s1", index: 2, text: "six seven.", start: words[5].start, end: words[6].end },
+    ],
+  };
+  const plan = { scenes: [{ scene_id: "s1", template: "hook-card", props: { title: "T" } }] };
+  const fmt = resolveFormat({ archetype: "ideas", format_recipe: sentenceBreaks ? { captions: { sentence_breaks: true } } : undefined });
+  const timings = deriveRenderTimings(fmt, { fps, vertical: false });
+  return buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "x" });
+}
+const chunks = (t) => t.captions.map((c) => c.words.map((w) => w.w).join(" "));
+
+test("captions: without key takes or the knob, chunks still span sentences (unchanged behaviour)", () => {
+  assert.deepEqual(chunks(captionTimeline({})), ["one two three four five six seven"]);
+});
+
+test("captions: a key take is its own chunk — it breaks before and after the take", () => {
+  assert.deepEqual(chunks(captionTimeline({ keyTakes: [1] })), ["one two three", "four five", "six seven"]);
+});
+
+test("captions: format.captions.sentence_breaks breaks at every sentence", () => {
+  assert.deepEqual(chunks(captionTimeline({ sentenceBreaks: true })), ["one two three", "four five", "six seven"]);
+});
+
+test("captions: with sentence edges, a long sentence splits into EVEN chunks — never a one-word orphan", () => {
+  const ws = "it will never remember what you told it".split(" ");
+  const words = ws.map((w, i) => ({ scene: "s1", w, start: 0.1 + i * 0.3, end: 0.35 + i * 0.3 }));
+  const script = { id: "x", archetype: "ideas", scenes: [{ id: "s1", template: "hook-card", sentences: [ws.join(" ") + "."], key_takes: [0] }] };
+  const alignment = { duration: 3, words, sentences: [{ scene: "s1", index: 0, text: "x", start: words[0].start, end: words.at(-1).end }] };
+  const fmt = resolveFormat({ archetype: "ideas" });
+  const timings = deriveRenderTimings(fmt, { fps, vertical: false });
+  const t = buildTimeline({ script, plan: { scenes: [{ scene_id: "s1", template: "hook-card", props: {} }] }, alignment, fmt, timings, fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "x" });
+  assert.equal(timings.captions.maxWords, 7, "precondition: 8 words would greedily split 7 + 1");
+  assert.deepEqual(chunks(t), ["it will never remember", "what you told it"]);
+});
+
+test("captions: a sentence splits at its own punctuation when one is near the middle", () => {
+  const text = "Fixed the same thing twice? Write it down.";
+  const ws = ["fixed", "the", "same", "thing", "twice", "write", "it", "down"];
+  const words = ws.map((w, i) => ({ scene: "s1", w, start: 0.1 + i * 0.3, end: 0.35 + i * 0.3 }));
+  const script = { id: "x", archetype: "ideas", scenes: [{ id: "s1", template: "hook-card", sentences: [text], key_takes: [0] }] };
+  const alignment = { duration: 3, words, sentences: [{ scene: "s1", index: 0, text, start: words[0].start, end: words.at(-1).end }] };
+  const fmt = resolveFormat({ archetype: "ideas" });
+  const timings = deriveRenderTimings(fmt, { fps, vertical: false });
+  const t = buildTimeline({ script, plan: { scenes: [{ scene_id: "s1", template: "hook-card", props: {} }] }, alignment, fmt, timings, fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "x" });
+  assert.deepEqual(chunks(t), ["fixed the same thing twice", "write it down"]);
+});

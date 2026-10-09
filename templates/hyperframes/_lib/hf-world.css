@@ -119,3 +119,26 @@
   font-size: calc(56px * var(--u)); font-weight: 800; letter-spacing: calc(-1px * var(--u)); text-align: center;
   border-top: calc(4px * var(--u)) solid var(--gold); white-space: nowrap; color: var(--text);
 }
+
+/* ── the KEY TAKE (portrait Shorts + the motion budget, 024 Short 2026-10-09) ─────────────────────
+   The one line a key take installs. Centred by margin (not a transform) so GSAP owns transform
+   freely; wraps instead of overflowing a 1080-wide frame; a gold rule sweeps under it as the take
+   lands (.ul, scaleX 0→1). While it is up, the scene's budget settles everything else. */
+.hw-take {
+  left: 0; right: 0; margin: 0 auto; top: calc(170px * var(--u)); width: calc(950px * var(--u)); box-sizing: border-box;
+  padding: calc(24px * var(--u)) calc(40px * var(--u)) calc(26px * var(--u));
+  border-top: calc(5px * var(--u)) solid var(--gold);
+  font-size: calc(72px * var(--u)); font-weight: 800; letter-spacing: calc(-1.4px * var(--u)); line-height: 1.06;
+  color: var(--text); text-align: center; white-space: normal;
+}
+.hw-take .g {
+  background: linear-gradient(178deg, var(--gold-3) 0%, var(--gold-2) 34%, var(--gold) 78%, #e08c0d 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hw-take .i { color: #9fdcff; }
+.hw-take .ul {
+  display: block; height: calc(6px * var(--u)); width: 62%; margin: calc(16px * var(--u)) auto 0;
+  background: var(--gold); border-radius: calc(3px * var(--u)); transform-origin: 0 50%; transform: scaleX(0);
+  box-shadow: 0 0 calc(18px * var(--u)) rgba(255,176,32,0.6);
+}
+.hw-take .l2 { display: block; margin-top: calc(10px * var(--u)); }

@@ -19,6 +19,28 @@ Format:
 
 ---
 
+## 2026-10-09 — 024 Short: the pacing test (slower, no intro, key takes, calmer) — D-067
+- who: agent (owner, on the 024 long cut: "okay but it is too fast paced" → make the Short 10% slower,
+  no intro, key takes a further 5% slower, 10% less motion, highlight the takes; the long stays as is,
+  the Short is the test case for the next video).
+- **Knobs, all now real fields** (D-067, MOTION_SPEC §16): `brief.voice_rate` (a nested Short may carry
+  its own brief) + new `scenes[].key_takes` / `brief.voice_rate_key`; `brief.format_recipe` (per-video
+  format override; `intro.*_seconds: 0` = no bumper, scene 0 owns frame 0); `HW.motion` budget in
+  `_lib/hf-world.js` (camera travel + ambient clock × scale, focus windows settle each key take; identity
+  when absent); `format.captions.sentence_breaks` + key takes always their own caption chunk.
+- **Latent bugs fixed on the way:** the Azure final voice silently dropped every `pause_after` (now
+  SSML `<break>`s, same segment plan as the draft); edge-tts pads a lone short line to ~1.87s (rate
+  boundaries are trimmed back to a sentence break); the brief's object `format` override was dead code
+  (the schema makes `format` a string).
+- **Built:** `content/024-frozen/short/` — 6 portrait 3D scenes `fzs-*` (the long's `fz-*` untouched),
+  58.4s. frame-gate **6/6**, QA **10/10**. Measured: speech **1.10×** / key takes **1.166×** the long's
+  pace; motion **0.74×** the long cut — and only ~3% of that is the knob (the rest: cut devices, slower
+  pace, held takes) → rule: a motion target is a measured ratio (lessons
+  `2026-10-09-a-rate-string-is-not-a-pace.md`, `2026-10-09-a-motion-knob-is-not-a-motion-measurement.md`).
+- `npm test` **834 green** (805 + 29 new); `knowledge-lint --fix` 0 errors.
+- next: owner watches the Short against the long and picks what carries into the next video.
+- blockers: none. Not uploaded. Voice is the edge-tts draft.
+
 ## 2026-10-08 — 024 "Correcting Your AI Teaches It Nothing": the first fully-3D video, built from scratch
 - who: agent (owner brief: "create the new video from scratch… every scene a dynamic 3D environment…
   fast paced full animation… 2-3 minutes… take full control").

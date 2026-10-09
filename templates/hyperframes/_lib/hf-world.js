@@ -101,16 +101,122 @@
    * sorted by t. Each shot runs from its t to the next shot's t (the last to `end`); `p` is the local
    * 0..1 progress, `d` the shot length. Returns camFn(t) that also reports `shot` (index) so the
    * renderer knows a hard cut is not a whip and never smears across it.
+   * o (optional) = { motion: HW.motion(...) budget, kick: function(t) → [x,y,z] impact offset at real time }.
+   * Without o this is exactly the plain shot list it always was.
    */
-  function shots(list, end) {
-    return function (t) {
-      var i = 0;
-      for (var k = 0; k < list.length; k++) if (t >= list[k].t) i = k;
+  function shots(list, end, o) {
+    function shotAt(t) { var i = 0; for (var k = 0; k < list.length; k++) if (t >= list[k].t) i = k; return i; }
+    function evalShot(i, p) {
+      var a = list[i].t, b = i + 1 < list.length ? list[i + 1].t : end;
+      var d = Math.max(b - a, 1e-3);
+      var s = list[i].cam(p, a + p * d, d);
+      s.shot = i;
+      return s;
+    }
+    var raw = function (t) {
+      var i = shotAt(t);
       var a = list[i].t, b = i + 1 < list.length ? list[i + 1].t : end;
       var d = Math.max(b - a, 1e-3);
       var s = list[i].cam(clamp((t - a) / d, 0, 1), t, d);
       s.shot = i;
       return s;
+    };
+    var M = o && o.motion, kick = o && o.kick;
+    if ((!M || M.identity) && !kick) return raw;
+    if (!M || M.identity) return function (t) { var s = raw(t); s.pos = add3(s.pos, kick(t)); return s; };
+
+    /* THE MOTION BUDGET on the camera (see motion() below). The camera path is split into RUNS — the
+       stretches it moves through without a jump; a run ends at a hard cut. Inside a run:
+         · TRAVEL × k about the run's END pose: the camera covers k of its path (velocity × k) and still
+           lands on the framing the shot was composed for. Continuous inside the run; a cut needs none.
+         · FOCUS windows slow the camera's own clock to focusScale (the key take holds still); the lag
+           this builds resets at the next cut, so no later shot is ever delayed past its cut.
+       Impact kicks (o.kick) are added at REAL time after that, × k, so a hit still lands on its word. */
+    var k = M.k, runStart = null, anchors = {};
+    function jump(A, B) {
+      var dp = Math.hypot(A.pos[0] - B.pos[0], A.pos[1] - B.pos[1], A.pos[2] - B.pos[2]);
+      var dl = Math.hypot(A.look[0] - B.look[0], A.look[1] - B.look[1], A.look[2] - B.look[2]);
+      return dp + dl > 0.05 || Math.abs((A.fov || 0) - (B.fov || 0)) > 0.5;
+    }
+    function runs() {
+      if (runStart) return;
+      runStart = [];
+      for (var i = 0, rs = 0; i < list.length; i++) {
+        if (i > 0 && jump(evalShot(i - 1, 1), evalShot(i, 0))) rs = i;
+        runStart[i] = rs;
+      }
+    }
+    function runEnd(i) { var j = i; while (j + 1 < list.length && runStart[j + 1] === runStart[i]) j++; return j; }
+    /* a run with a `keep: true` shot is STORY motion (the camera chasing the subject it frames) and is
+       left exactly as authored — scaling it would slide the subject off its mark */
+    function kept(i) { for (var j = runStart[i]; j <= runEnd(i); j++) if (list[j].keep) return true; return false; }
+    function anchor(j) { return anchors[j] || (anchors[j] = evalShot(j, 1)); }
+    function sc(a, v) { return a + k * (v - a); }
+    return function (t) {
+      runs();
+      var i = shotAt(t), r0 = list[runStart[i]].t;
+      if (kept(i)) { var sk = raw(t); if (kick) { var k0 = kick(t); sk.pos = [sk.pos[0] + k0[0] * k, sk.pos[1] + k0[1] * k, sk.pos[2] + k0[2] * k]; } return sk; }
+      var s = raw(r0 + (M.slow(t) - M.slow(r0)));
+      var an = anchor(runEnd(i));
+      var out = {
+        pos: [sc(an.pos[0], s.pos[0]), sc(an.pos[1], s.pos[1]), sc(an.pos[2], s.pos[2])],
+        look: [sc(an.look[0], s.look[0]), sc(an.look[1], s.look[1]), sc(an.look[2], s.look[2])],
+        fov: s.fov == null || an.fov == null ? s.fov : sc(an.fov, s.fov),
+        roll: s.roll == null ? s.roll : sc(an.roll || 0, s.roll),
+        focus: s.focus, shot: s.shot,
+      };
+      if (kick) { var kk = kick(t); out.pos = [out.pos[0] + kk[0] * k, out.pos[1] + kk[1] * k, out.pos[2] + kk[2] * k]; }
+      return out;
+    };
+  }
+
+  /* ── THE MOTION BUDGET ─────────────────────────────────────────────────────── */
+  /**
+   * One knob for HOW MUCH a scene moves, plus FOCUS windows where it settles so the key take is the
+   * only thing on screen that moves (024 Short, 2026-10-09 — owner: "it is too much to focus on and
+   * it's losing focus to the important stuff").
+   *
+   * @param {object} spec  { scale: 0.9, focus: [[t0, t1], ...] (scene-local s), focusScale: 0.35, ease: 0.4 }
+   *   scale       camera travel AND the ambient clock (dust drift, tile twinkle, idle bobbing) × scale
+   *   focus       key-take windows; inside one the camera clock and the ambient clock run at focusScale
+   *   ease        seconds to settle into / out of a focus window (smoothstep edges, before t0 / after t1)
+   * @param {number} D     scene length (the clocks are integrated over [0, D + 1])
+   * @returns M { identity, k, focus(t) 0..1, slow(t) camera clock, amb(t) ambient clock, speed(t) }
+   *   Absent spec (or scale 1 + no focus) → IDENTITY: every clock is t, so scenes that never pass a
+   *   spec render exactly as before. Pass M to HW.create({ motion: M }) and HW.shots(list, D, { motion: M }).
+   */
+  var IDENTITY = { identity: true, k: 1, focus: function () { return 0; }, slow: function (t) { return t; }, amb: function (t) { return t; }, speed: function () { return 1; } };
+  function motion(spec, D) {
+    spec = spec || {};
+    var wins = (spec.focus || []).filter(function (w) { return w && isFinite(w[0]) && isFinite(w[1]) && w[1] > w[0]; });
+    var k = spec.scale == null ? 1 : Number(spec.scale);
+    if (k === 1 && !wins.length) return IDENTITY;
+    var fs = spec.focusScale == null ? 0.35 : Number(spec.focusScale);
+    var ed = spec.ease == null ? 0.4 : Number(spec.ease);
+    function sm(p) { return p * p * (3 - 2 * p); }
+    function focus(t) {
+      var w = 0;
+      for (var i = 0; i < wins.length; i++) {
+        var up = ed > 0 ? sm(span(t, wins[i][0] - ed, wins[i][0])) : (t >= wins[i][0] ? 1 : 0);
+        var dn = ed > 0 ? 1 - sm(span(t, wins[i][1], wins[i][1] + ed)) : (t <= wins[i][1] ? 1 : 0);
+        w = Math.max(w, Math.min(up, dn));
+      }
+      return w;
+    }
+    function rate(t) { return 1 - (1 - fs) * focus(t); }
+    /* the slowed clock, integrated once at a fixed step (midpoint rule) so it is a pure function of t */
+    var STEP = 1 / 240, N = Math.ceil(((D || 60) + 1) / STEP) + 1, G = new Float64Array(N);
+    for (var i = 1; i < N; i++) G[i] = G[i - 1] + STEP * rate((i - 0.5) * STEP);
+    function slow(t) {
+      if (t <= 0) return t;
+      var x = t / STEP, j = Math.floor(x);
+      if (j >= N - 1) return G[N - 1] + (t - (N - 1) * STEP);
+      return G[j] + (G[j + 1] - G[j]) * (x - j);
+    }
+    return {
+      identity: false, k: k, focusScale: fs, focus: focus, slow: slow,
+      amb: function (t) { return k * slow(t); },
+      speed: function (t) { return k * rate(t); },
     };
   }
 
@@ -281,7 +387,7 @@
    * Build the world every scene of a 3D video shares.
    * @param {object} THREE
    * @param {object} o  { W, H, fps, palette:'hero'|'body', fov, near, far, floorY, grid:true, seed,
-   *                      bloom, bloomWide, maxCoc, range, exposure }
+   *                      bloom, bloomWide, maxCoc, range, exposure, motion (HW.motion budget, optional) }
    * @returns ctx  { THREE, renderer, scene, camera, post, pal, W, H, render(t, camFn, extra) }
    */
   function create(THREE, o) {
@@ -425,6 +531,9 @@
         if (o.noBloom) { pp.uniforms.uBloom.value = 0; pp.uniforms.uBloomWide.value = 0; }
         pp.uniforms.uFade.value = fx.fade || 0;
         if (fx.exposure != null) pp.uniforms.uExposure.value = fx.exposure;
+        /* motion budget: inside a key-take focus window the frame edges darken a little, pulling the
+           eye to the centre while everything else settles (identity budget → untouched) */
+        if (o.motion && !o.motion.identity) pp.uniforms.uVig.value = 0.55 + 0.18 * o.motion.focus(t);
         pp.render(scene, camera);
         return s;
       },
@@ -1106,7 +1215,7 @@
   }
 
   global.HW = {
-    E: E, ramp: ramp, pulse: pulse, keys: keys, wob: wob, shake: shake, kick: kick, add3: add3, orbit: orbit,
+    E: E, ramp: ramp, pulse: pulse, keys: keys, wob: wob, shake: shake, kick: kick, add3: add3, orbit: orbit, motion: motion,
     PAL: PAL, STYLES: STYLES, SANS: SANS, MONO: MONO,
     create: create, post: post, shots: shots, atlas: atlas, lattice: lattice, card: card, chat: chat, frameBox: frameBox, beam: beam, dust: dust, sparks: sparks,
     ring: ring, label: label, fmt: fmt, count: count, fromTo: fromTo, wrapText: wrapText,

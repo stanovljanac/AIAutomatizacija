@@ -1,0 +1,2 @@
+/* fzs-close — portrait HUD (black + gold). The pointer to the long video sits above the caption band. */
+#next { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(1420px * var(--u)); font-size: calc(30px * var(--u)); }

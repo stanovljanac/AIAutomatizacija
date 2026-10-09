@@ -1,0 +1,2 @@
+/* fzs-hook — portrait HUD. The take sits in the top band; the stamp lands where the take was. */
+#stamp { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(230px * var(--u)); font-size: calc(64px * var(--u)); }

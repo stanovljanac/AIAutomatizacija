@@ -29,6 +29,9 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   while its words are spoken** — never dump a whole long sentence at once (that caused 3-6
   line blocks and text appearing before it was said). `build-props.mjs` builds the chunks;
   `CaptionsTrack` renders one chunk at a time. Large, high-contrast, current-word highlight.
+  **Key takes** (`scenes[].key_takes`) are always their own chunk; `format.captions.sentence_breaks`
+  breaks at every sentence and splits a long one into even chunks at its punctuation (no one-word
+  orphans). Without either, the legacy greedy chunking is unchanged (`lib/timeline.mjs`).
 - **Layout safe-zone (hard rule):** captions live in the bottom band; **scene content and any
   bottom-anchored elements (cards, captions inside custom scenes) must stay above it** so
   captions never cover the graphics. On 16:9 the `Frame` reserves a bottom pad and custom
@@ -38,6 +41,10 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   Short by the last path segment and hard-fails outside that range — fix the Short script,
   don't ship 30s. Render it with `build-props.mjs <id>/short` (artifacts use a flat id, e.g.
   `<id>-short`).
+- **No intro (opt-in, 024 Short 2026-10-09):** a video's own `brief.json` may carry
+  `format_recipe: { intro: { short_seconds: 0 } }` (or `long_seconds: 0`). Then there is no bumper at all —
+  `Main.tsx` skips the Intro sequence (not even the xf blend), scene 0 starts at **frame 0** instead of
+  its first word (`lib/timeline.mjs`) and has no fade-in (`lib/transitions.mjs`). The hook owns frame 0.
 - **capture-segment scenes:** play `captures/<capture_id>.mp4` inside the scene window. **Never flat:**
   by default the clip gets a cinematic **push-in** (scale 1.0→1.20 over 2.5s, origin upper-centre) so the
   demo always has motion. For a **precise** zoom (punch into a cell/button when the narration names it, a
@@ -146,6 +153,10 @@ window moves), or when the intro/outro/caption layer changed.
   dir carries its own `vendor/three.*.min.js` (the file server roots at the scene). Rules learned
   building it: MOTION_SPEC §15. Measured cost: ~35–65s per 11–19s clip at `--quality standard`,
   ~1 min each at `high`, on the GPU path (`browserGpuMode → hardware`).
+- **The motion budget (`HW.motion`, MOTION_SPEC §16, 024 Short):** a scene that reads
+  `props.motion = { scale, focus:[[t0,t1]], focusScale }` and passes it to `HW.create({ motion })` and
+  `HW.shots(list, D, { motion, kick })` gets camera travel and its ambient clock scaled, and settles
+  on each key-take window. No `props.motion` → identity: the scene renders exactly as before.
 - **Reference `_lib` as `../../_lib/…` — never `../_lib/…`, and never let `make-entry.mjs` rewrite it.**
   The render entry is disposable and lives in `<scene>/compositions/`, and the HF file server roots at
   the **scene** dir, so a browser-relative `../_lib` escapes the root and 404s. What makes it work is the

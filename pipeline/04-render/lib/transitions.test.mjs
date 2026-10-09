@@ -169,3 +169,15 @@ test("sceneWindow is pure — it never mutates the timeline", () => {
   tl.scenes.forEach((_, k) => sceneWindow(tl, k));
   assert.equal(JSON.stringify(tl), snapshot);
 });
+
+// 024 Short (2026-10-09): a Short can run with NO intro bumper (format.intro.short_seconds = 0). Then
+// there is nothing for scene 0 to blend out of — a fade-in would open the Short on a dark frame.
+test("sceneWindow k=0 with no intro: a hard start (fadeIn 0), nothing to blend out of", () => {
+  const tl = timelineOf(["cut", "cut", "cut", "cut"]);
+  tl.intro = { ...tl.intro, duration_seconds: 0 };
+  tl.scenes[0] = { ...tl.scenes[0], start_seconds: 0 };
+  const w = sceneWindow(tl, 0);
+  assert.equal(w.fromFrame, 0);
+  assert.equal(w.fadeIn, 0, "frame 0 is the scene at full strength");
+  assert.equal(sceneWindow(timelineOf(["cut", "cut", "cut", "cut"]), 0).fadeIn, XF, "with an intro, unchanged");
+});

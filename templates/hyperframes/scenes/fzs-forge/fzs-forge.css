@@ -1,0 +1,2 @@
+/* fzs-forge — portrait HUD. */
+#tag { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(200px * var(--u)); color: var(--gold); font-size: calc(30px * var(--u)); }

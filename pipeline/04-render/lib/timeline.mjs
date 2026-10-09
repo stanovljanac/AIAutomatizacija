@@ -19,6 +19,22 @@ import { resolveCueWindowSeconds } from "./focal.mjs";
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9']/g, "");
 
 /**
+ * For each spoken token of a sentence (split exactly like make_voice.py's tokens_of: whitespace, then
+ * hyphens/dashes), whether a pause-bearing mark follows it (`, . ; : ? !` or a dash). The alignment's
+ * words carry no punctuation, so this is how a caption chunk finds the sentence's natural cut points.
+ */
+function punctFlags(text) {
+  const out = [];
+  for (const raw of String(text ?? "").split(/\s+/)) {
+    const core = raw.replace(/^[!-/:-@[-`{-~—–]+|[!-/:-@[-`{-~—–]+$/g, "");
+    if (!core) continue;
+    const parts = core.split(/[-–—]/).filter((p) => p.replace(/[!-/:-@[-`{-~]/g, ""));
+    parts.forEach((_, i) => out.push(i === parts.length - 1 && /[,.;:?!—–][”"'’)]*$/.test(raw)));
+  }
+  return out;
+}
+
+/**
  * @param {object} args
  * @param {object} args.script      script.json
  * @param {object} args.plan        scene-plan.json
@@ -76,7 +92,9 @@ export function buildTimeline({ script, plan, alignment, fmt, timings, fps, cros
   }
 
   const scenes = beats.map((bt, k) => {
-    const startSeconds = snap(bt.sents[0].start);
+    // With no intro bumper the first scene owns frame 0: snapping it to its first WORD would open the
+    // video on the few frames of TTS lead-in with nothing on screen (024 Short, 2026-10-09).
+    const startSeconds = k === 0 && introFrames === 0 ? 0 : snap(bt.sents[0].start);
     const endSeconds = k + 1 < beats.length ? snap(beats[k + 1].sents[0].start) : audioEndSeconds;
     const props = { ...bt.props };
 
@@ -140,13 +158,59 @@ export function buildTimeline({ script, plan, alignment, fmt, timings, fps, cros
   const words = (alignment.words ?? []).filter((w) => w && w.w).slice().sort((a, b) => a.start - b.start);
   const MAX_WORDS = timings.captions.maxWords;
   const GAP = timings.captions.gapSeconds;
+  // Sentence edges (024 Short, 2026-10-09): a KEY TAKE (script scenes[].key_takes) is always its own
+  // chunk, and format.captions.sentence_breaks breaks at every sentence. Each word's sentence is the
+  // last one (in its scene) that started at or before it.
+  const sentsSorted = (alignment.sentences ?? []).slice().sort((a, b) => a.start - b.start);
+  const sentOf = (w) => { let k = -1; for (let j = 0; j < sentsSorted.length; j++) if (sentsSorted[j].scene === w.scene && sentsSorted[j].start <= w.start + 1e-6) k = j; return k; };
+  const keySents = new Set();
+  for (const sc of script.scenes) for (const ki of sc.key_takes ?? []) { const s = (sentByScene[sc.id] ?? [])[ki]; if (s) keySents.add(sentsSorted.indexOf(s)); }
+  const sentenceEdge = (a, b) => { const sa = sentOf(a), sb = sentOf(b); return sa !== sb && (timings.captions.sentenceBreaks || keySents.has(sa) || keySents.has(sb)); };
   const groups = [];
-  let cur = [];
-  for (let i = 0; i < words.length; i++) {
-    cur.push(words[i]);
-    const next = words[i + 1];
-    const boundary = !next || cur.length >= MAX_WORDS || next.scene !== words[i].scene || (next.start - words[i].end) > GAP;
-    if (boundary) { groups.push(cur); cur = []; }
+  if (!timings.captions.sentenceBreaks && keySents.size === 0) {
+    // legacy greedy chunking — unchanged for every video that uses neither key takes nor the knob
+    let cur = [];
+    for (let i = 0; i < words.length; i++) {
+      cur.push(words[i]);
+      const next = words[i + 1];
+      const boundary = !next || cur.length >= MAX_WORDS || next.scene !== words[i].scene || (next.start - words[i].end) > GAP;
+      if (boundary) { groups.push(cur); cur = []; }
+    }
+  } else {
+    // sentence-aware: cut into runs at every hard edge (scene, pause, sentence edge), then split each
+    // run into EVEN chunks of <= MAX_WORDS — greedy filling left one-word orphans ("…what you told | it")
+    // — preferring a cut right after the sentence's own punctuation when one sits within 2 words of the
+    // even point ("fixed the same thing twice? | write it down", not "…thing | twice write it down").
+    const punctAfter = new Set();
+    sentsSorted.forEach((s, j) => {
+      const flags = punctFlags(s.text);
+      const sw = words.filter((w) => sentOf(w) === j);
+      if (flags.length === sw.length) sw.forEach((w, k) => { if (flags[k]) punctAfter.add(w); });
+    });
+    const splitRun = (run) => {
+      let n = Math.ceil(run.length / MAX_WORDS), start = 0;
+      while (n > 1) {
+        const rem = run.length - start, ideal = rem / n;
+        const lo = Math.max(1, rem - (n - 1) * MAX_WORDS), hi = Math.min(MAX_WORDS, rem - (n - 1));
+        let best = Math.min(Math.max(Math.ceil(ideal), lo), hi), bestD = Infinity;
+        for (let s = lo; s <= hi; s++) {
+          const d = Math.abs(s - ideal);
+          if (punctAfter.has(run[start + s - 1]) && d <= 2 && d < bestD) { bestD = d; best = s; }
+        }
+        groups.push(run.slice(start, start + best));
+        start += best; n--;
+      }
+      groups.push(run.slice(start));
+    };
+    let run = [];
+    for (let i = 0; i < words.length; i++) {
+      run.push(words[i]);
+      const next = words[i + 1];
+      if (!next || next.scene !== words[i].scene || (next.start - words[i].end) > GAP || sentenceEdge(words[i], next)) {
+        splitRun(run);
+        run = [];
+      }
+    }
   }
   // Captions are NOT snapped (unlike the sync-critical scene cuts/reveals above, which ARE). A caption's
   // frame timing — cue.fromFrame and each word's relFrom/relDur — is computed in the compiler from

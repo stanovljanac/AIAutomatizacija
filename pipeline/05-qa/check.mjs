@@ -26,7 +26,7 @@ const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));
 const al = readJson(join(cdir, "alignment.json"));
 const script = readJson(join(cdir, "script.json"));
 const brief = existsSync(join(cdir, "brief.json")) ? readJson(join(cdir, "brief.json")) : {};
-const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
+const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
 
 const seg = id.split(/[\\/]/).pop();
 const vertical = seg === "short" || seg.endsWith("-short");

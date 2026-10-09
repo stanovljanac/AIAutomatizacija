@@ -263,3 +263,17 @@ test("schema: invalid transition.style enum value is rejected", () => {
 test("schema: invalid default_engine enum value is rejected", () => {
   assert.equal(validate({ name: "test", motion: { default_engine: "adobe" } }, "format").valid, false);
 });
+
+// brief.format is the long/short STRING in brief.json; the per-video recipe override is format_recipe
+// (024 Short, 2026-10-09: a Short with no intro bumper — intro.short_seconds 0 — for this Short only).
+test("resolveFormat: brief.format_recipe overrides the recipe; the string brief.format is ignored", () => {
+  const fmt = resolveFormat({ archetype: "ideas", format: "short", format_recipe: { intro: { short_seconds: 0 } } });
+  assert.equal(fmt.intro.short_seconds, 0, "the Short's intro is gone");
+  assert.equal(fmt.intro.long_seconds, 1.5, "deep merge — the untouched long intro keeps its default");
+  assert.equal(resolveFormat({ archetype: "ideas", format: "long" }).intro.short_seconds, 1.2, "no recipe → default");
+});
+
+test("resolveFormat: format_recipe wins over a legacy object brief.format", () => {
+  const fmt = resolveFormat({ format: { intro: { short_seconds: 2 } }, format_recipe: { intro: { short_seconds: 0 } } });
+  assert.equal(fmt.intro.short_seconds, 0);
+});

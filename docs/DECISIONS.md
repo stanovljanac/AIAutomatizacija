@@ -720,3 +720,43 @@ old one (don't delete history).
   The ~50/50 3D/2D target (MOTION_SPEC §14) still holds for normal videos — an all-3D cut is a
   per-video owner choice. Authoring rules learned on the first use: MOTION_SPEC §15.
 - **First use:** 024 — nine scenes `fz-*`, ~35-65s per clip at standard quality on the GPU path.
+
+## D-067 — Pace, key takes, intro and motion are knobs; the 024 Short is the test case (owner, 2026-10-09)
+
+- **Context.** Owner on the 024 long cut: *"It is okay but it is too fast paced."* Asked for the Short
+  on the same topic **10% slower**, **no intro** (straight to the topic), the **important takes a
+  further 5% slower** to let them sink in, and **10% less motion** — *"Motion doesn't need to be
+  constantly moving something in the background or anywhere in the scene… it's losing focus to the
+  important stuff"* — with the important takes highlighted. The long cut stays as it is; whatever the
+  owner prefers in the Short goes into the next video, *"until we get the perfect blend"*.
+- **Decision.** Each of those is a number on a knob, so the next tuning step is a one-line change:
+  1. **Pace** — `brief.voice_rate` (already existed). A nested Short may now carry its own
+     `short/brief.json` (the first brief found wins), so the long cut's pace is untouched.
+  2. **Key takes** — `script.json` `scenes[].key_takes` (sentence indexes) spoken at
+     `brief.voice_rate_key`. `make_voice.py` splits segments at a rate change (as it already did at a
+     pause) and trims the padded tail at that boundary to an ordinary sentence break
+     (`RATE_BOUNDARY_TAIL` 0.30s — edge-tts pads a short request to ~1.87s); `make_voice_azure.py`
+     builds the same segment plan as SSML `<prosody>` + `<break>` (fixing a latent bug: the Azure final
+     dropped every `pause_after`).
+  3. **Intro** — `brief.format_recipe` is the per-video format override (`brief.format` is the
+     long/short string, so the old object path was dead). `intro.*_seconds: 0` = no bumper: Remotion
+     skips the Intro sequence, scene 0 owns frame 0 and has no fade-in.
+  4. **Motion** — `HW.motion({ scale, focus, focusScale })` in `_lib/hf-world.js` (MOTION_SPEC §16):
+     camera travel and the ambient clock × scale; focus windows on key takes slow both to focusScale,
+     dim the dust and pull the vignette in. Opt-in: no `props.motion` = identity, every existing scene
+     (the long 024 cut included) renders exactly as before.
+  5. **Captions follow the takes** — a key take is always its own caption chunk, and
+     `format.captions.sentence_breaks` (default off) breaks at every sentence; in that mode a long
+     sentence splits into EVEN chunks at its own punctuation, never leaving a one-word orphan. Found on
+     the Short's first cut: "chat finally said ankara learning / rewrites the" split the take in two.
+     Videos with neither key takes nor the knob keep the legacy greedy chunking byte-for-byte.
+- **Measured, not assumed.** edge-tts is not repeatable run to run, so the pace is measured against a
+  reference synthesis of the same text at the long cut's rate (`short/pace.json`), and motion by an
+  A/B render of each scene with and without its budget plus a scene-for-scene comparison with the long
+  cut (`short/motion.json`). Result: speech **1.10×** (normal) / **1.166×** (key takes); motion
+  **0.738×** the long cut — of which the budget knob itself is only ~3%; the rest is authoring (cut
+  devices, slower pace, held takes). Hence MOTION_SPEC §16's rule: a motion target is a measured ratio,
+  not a knob value.
+- **Scope.** Six portrait scenes `fzs-*` (clones of the long's `fz-*`, recomposed for 9:16 — the long
+  scene files are untouched). Defaults everywhere else are unchanged; adopting any of these for the
+  next video is the owner's call after watching the Short.

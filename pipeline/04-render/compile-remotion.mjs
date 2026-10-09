@@ -219,7 +219,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const timeline = JSON.parse(readFileSync(join(cdir, "timeline.json"), "utf8"));
   const script = JSON.parse(readFileSync(join(cdir, "script.json"), "utf8"));
   const brief = existsSync(join(cdir, "brief.json")) ? JSON.parse(readFileSync(join(cdir, "brief.json"), "utf8")) : {};
-  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
+  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
   const timings = deriveRenderTimings(fmt, { fps: timeline.format.fps, vertical });
 
   const props = compileTimeline(timeline, { leadFrames: timings.leadFrames, tailSeconds: timings.captions.tailSeconds });

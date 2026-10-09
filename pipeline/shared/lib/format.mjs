@@ -4,7 +4,7 @@
 // hardcoded constants (build-props/anim/theme).
 //
 // Resolution order (later wins, deep-merged):
-//   formats/default.json  <-  formats/<series>.json  <-  formats/<archetype>.json  <-  brief.format
+//   formats/default.json  <-  formats/<series>.json  <-  formats/<archetype>.json  <-  brief.format_recipe
 // Override files are PARTIAL (omit sections), so only the MERGED result is validated against
 // format.schema.json — never validate an override standalone.
 import fs from "node:fs";
@@ -72,7 +72,10 @@ export function resolveFormat(brief = {}, opts = {}) {
     const ov = loadFormat(name, dir);
     if (ov) merged = deepMerge(merged, ov);
   }
-  if (isObj(brief?.format)) merged = deepMerge(merged, brief.format);
+  // brief.format_recipe is the per-video override; brief.format is the long/short STRING in brief.json,
+  // so an object there is honoured only for callers that predate format_recipe.
+  const override = isObj(brief?.format_recipe) ? brief.format_recipe : brief?.format;
+  if (isObj(override)) merged = deepMerge(merged, override);
 
   const { valid, errors } = validate(merged, "format");
   if (!valid) throw new Error(`format: resolved recipe invalid: ${formatErrors(errors)}`);

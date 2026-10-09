@@ -173,6 +173,9 @@ as the Short's first scene (the long hook is dropped from the Short).
 `id`, `role` (hook|intro|point|demo|transition|cta|outro), **`template`** (pick from
 the scene vocabulary in `style/VISUAL_IDENTITY.md` §5), `narration`, `sentences`
 (split), optional `on_screen_text` (≤6 words), `capture_id` (only for `capture-segment`).
+Optional `pause_after` (a designed hold) and `key_takes` (sentence indexes of the lines the viewer
+must remember — spoken at `brief.voice_rate_key`, and a 3D scene settles its motion on them; one per
+scene at most, or they stop being key — see the voice-synthesis skill and MOTION_SPEC §16).
 
 Guideline: 1–4 sentences / ~5–20s per scene; never a 60s wall of narration.
 

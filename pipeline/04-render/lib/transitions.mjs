@@ -55,7 +55,9 @@ export function sceneWindow(timeline, k) {
   const fromFrame = F(sc.start_seconds) - pullback;
   const durFrames = Math.max(F(sc.end_seconds) - fromFrame, 1);
 
-  const fadeIn = k === 0 ? xf : pullback;
+  // k=0 blends out of the intro bumper — unless there is none (a Short with intro 0): then a hard start.
+  const hasIntro = (timeline.intro?.duration_seconds ?? 0) > 0;
+  const fadeIn = k === 0 ? (hasIntro ? xf : 0) : pullback;
   const fadeOut = k === scenes.length - 1 ? xf : overlapFrames(styleOut, xf);
 
   return { fromFrame, durFrames, fadeIn, fadeOut, styleIn, styleOut };

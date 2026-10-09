@@ -1,0 +1,15 @@
+/* fzs-learn — portrait HUD. */
+#tag { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(200px * var(--u)); color: var(--gold); font-size: calc(28px * var(--u)); }
+#cnt { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(170px * var(--u)); text-align: center; }
+#cnt .num { font-size: calc(92px * var(--u)); }
+#cnt .sub { font-size: calc(24px * var(--u)); }
+#take { font-size: calc(54px * var(--u)); white-space: nowrap; padding-left: calc(20px * var(--u)); padding-right: calc(20px * var(--u)); }
+.hw-side { top: calc(1330px * var(--u)); width: calc(440px * var(--u)); box-sizing: border-box; padding: calc(16px * var(--u)) calc(20px * var(--u)); text-align: center; }
+.hw-side .h { font-size: calc(24px * var(--u)); font-weight: 800; letter-spacing: calc(4px * var(--u)); text-transform: uppercase; }
+.hw-side .b { margin-top: calc(6px * var(--u)); font-size: calc(34px * var(--u)); font-weight: 700; color: #e6eef6; line-height: 1.2; }
+.hw-side.ice { left: calc(70px * var(--u)); border-top: calc(4px * var(--u)) solid #63a8ec; }
+.hw-side.ice .h { color: #8fd2ff; }
+.hw-side.ice b { color: #bfe6ff; }
+.hw-side.gold { right: calc(70px * var(--u)); border-top: calc(4px * var(--u)) solid var(--gold); }
+.hw-side.gold .h { color: var(--gold); }
+.hw-side.gold b { color: var(--gold-2); }

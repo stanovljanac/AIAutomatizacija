@@ -69,7 +69,8 @@
         "max_words": { "type": "integer", "minimum": 1, "description": "Words per caption chunk (keeps it <= max_lines at the caption font size)." },
         "gap_seconds": { "type": "number", "minimum": 0, "description": "Start a fresh chunk after a pause this long." },
         "tail_seconds": { "type": "number", "minimum": 0, "description": "Keep a chunk on screen this long after its last word." },
-        "max_lines": { "type": "integer", "minimum": 1 }
+        "max_lines": { "type": "integer", "minimum": 1 },
+        "sentence_breaks": { "type": "boolean", "description": "Start a fresh chunk at every sentence end (default off: chunks may span a sentence break). Key takes (script scenes[].key_takes) always break at their edges either way (024 Short, 2026-10-09)." }
       }
     },
     "length": {

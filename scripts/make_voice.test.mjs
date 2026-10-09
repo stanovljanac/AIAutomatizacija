@@ -121,3 +121,102 @@ test("make_silence rounds a sub-frame request up to one whole frame", { skip: !h
   const out = py("print(json.dumps({'frames': len(mv.mp3_frames(mv.make_silence(0.001)))}))");
   assert.equal(out.frames, 1);
 });
+
+// ── key takes (024 Short, 2026-10-09): the lines the viewer must remember are spoken slower ──────
+
+test("key_take_set flattens per-scene key takes into track-wide sentence indexes", { skip: !havePython }, () => {
+  const scenes = JSON.stringify([
+    { id: "s1", sentences: ["a", "b"], key_takes: [0] },
+    { id: "s2", sentences: ["c", "d", "e"], key_takes: [2] },
+  ]);
+  const out = py(`print(json.dumps(sorted(mv.key_take_set(json.loads('''${scenes}''')))))`);
+  assert.deepEqual(out, [0, 4], "s2's sentence 2 is the 5th sentence of the track");
+});
+
+test("key_take_set rejects an out-of-range index instead of silently ignoring it", { skip: !havePython }, () => {
+  const scenes = JSON.stringify([{ id: "s1", sentences: ["a"], key_takes: [3] }]);
+  assert.throws(() => py(`mv.key_take_set(json.loads('''${scenes}'''))`), /out of range|python failed/i);
+});
+
+test("plan_segments: no pauses and no key takes is the one segment the track always was", { skip: !havePython }, () => {
+  const out = py("print(json.dumps(mv.plan_segments(4, {}, set(), '+3%', '-11%')))");
+  assert.deepEqual(out, [[[0, 1, 2, 3], "+3%", 0.0]]);
+});
+
+test("plan_segments: a key take mid-run gets its own segment at the key rate", { skip: !havePython }, () => {
+  const out = py("print(json.dumps(mv.plan_segments(5, {}, {2}, '-6%', '-11%')))");
+  assert.deepEqual(out, [[[0, 1], "-6%", 0.0], [[2], "-11%", 0.0], [[3, 4], "-6%", 0.0]]);
+});
+
+test("plan_segments: adjacent key takes share one segment; a pause still ends it", { skip: !havePython }, () => {
+  const out = py("print(json.dumps(mv.plan_segments(4, {2: 0.5}, {1, 2}, '-6%', '-11%')))");
+  assert.deepEqual(out, [[[0], "-6%", 0.0], [[1, 2], "-11%", 0.5], [[3], "-6%", 0.0]]);
+});
+
+test("plan_segments: without a key rate, key takes change nothing (back-compatible)", { skip: !havePython }, () => {
+  const out = py("print(json.dumps(mv.plan_segments(3, {0: 0.4}, {1}, '+3%', None)))");
+  assert.deepEqual(out, [[[0], "+3%", 0.4], [[1, 2], "+3%", 0.0]]);
+});
+
+test("read_pacing: the video's own brief wins, else the parent's; the key rate is optional", { skip: !havePython }, () => {
+  const out = py(
+    "import tempfile,pathlib\n" +
+      "d=pathlib.Path(tempfile.mkdtemp()); s=d/'short'; s.mkdir()\n" +
+      "(d/'brief.json').write_text(json.dumps({'voice_rate':'+3%'}))\n" +
+      "a=mv.read_pacing(s,'+0%')\n" +
+      "(s/'brief.json').write_text(json.dumps({'voice_rate':'-6%','voice_rate_key':'-11%'}))\n" +
+      "b=mv.read_pacing(s,'+0%')\n" +
+      "(s/'brief.json').write_text(json.dumps({'title_working':'x'}))\n" +
+      "c=mv.read_pacing(s,'+0%')\n" +
+      "print(json.dumps([a,b,c]))",
+  );
+  assert.deepEqual(out[0], ["+3%", null], "no own brief → inherit the parent's pace");
+  assert.deepEqual(out[1], ["-6%", "-11%"]);
+  assert.deepEqual(out[2], ["+0%", null], "the first brief found wins even when it sets no pace");
+});
+
+/** Run a snippet with make_voice_azure.py's helpers in scope (as `az`). */
+function pyAzure(snippet) {
+  return py(
+    [
+      `spec2=importlib.util.spec_from_file_location("az", r"${path.join(ROOT, "scripts", "make_voice_azure.py")}")`,
+      "az=importlib.util.module_from_spec(spec2); spec2.loader.exec_module(az)",
+      snippet,
+    ].join("\n"),
+  );
+}
+
+test("azure build_ssml: no pauses / key takes → the single prosody it always sent", { skip: !havePython }, () => {
+  const scenes = JSON.stringify([{ id: "s1", sentences: ["One.", "Two & three."] }]);
+  const out = pyAzure(`print(json.dumps(az.build_ssml(json.loads('''${scenes}'''), 'V', '+3%')))`);
+  assert.equal(out, "<speak version='1.0' xml:lang='en-US'><voice name='V'><prosody rate='+3%'>One. Two &amp; three.</prosody></voice></speak>");
+});
+
+test("azure build_ssml keeps the draft's pauses as <break>s (split at Azure's 5s cap) and slows key takes", { skip: !havePython }, () => {
+  const scenes = JSON.stringify([{ id: "s1", sentences: ["A.", "B.", "C."], key_takes: [1], pause_after: [{ after_sentence: 1, seconds: 6.2 }] }]);
+  const out = pyAzure(`print(json.dumps(az.build_ssml(json.loads('''${scenes}'''), 'V', '-6%', '-11%')))`);
+  assert.match(out, /<prosody rate='-6%'>A\.<\/prosody><prosody rate='-11%'>B\.<\/prosody><break time='5000ms'\/><break time='1200ms'\/><prosody rate='-6%'>C\.<\/prosody>/);
+});
+
+// MEASURED 2026-10-09: edge-tts pads a short request to ~1.87s, so a lone key take carries ~1s of
+// trailing silence. trim_tail cuts a rate-change boundary back to an ordinary sentence break.
+test("trim_tail drops whole trailing frames after last word + keep, never leading ones", { skip: !havePython }, () => {
+  const out = py(
+    "frame=bytes([0xFF,0xF3,0x64,0xC4])+bytes(140)\n" +
+      "a=frame*78\n" + // 78 × 24ms = 1.872s, the measured padded length
+      "t=mv.trim_tail(a, 0.857, 0.30)\n" + // 'Not one had moved.' at -11%: last word ends 0.857s in
+      "print(json.dumps({'frames': len(mv.mp3_frames(t)), 'secs': round(mv.audio_seconds(t),3), 'prefix': t == a[:len(t)]}))",
+  );
+  assert.equal(out.frames, 49, "ceil((0.857 + 0.30) / 0.024) = 49 frames");
+  assert.ok(out.secs >= 0.857 + 0.3 && out.secs < 0.857 + 0.3 + 0.024);
+  assert.equal(out.prefix, true, "only the tail is cut — the kept audio is byte-identical");
+});
+
+test("trim_tail leaves a segment that already ends soon enough untouched", { skip: !havePython }, () => {
+  const out = py(
+    "frame=bytes([0xFF,0xF3,0x64,0xC4])+bytes(140)\n" +
+      "a=frame*20\n" +
+      "print(json.dumps({'same': mv.trim_tail(a, 0.4, 0.3) == a}))",
+  );
+  assert.equal(out.same, true, "0.48s of audio, want 0.70s → nothing to trim");
+});

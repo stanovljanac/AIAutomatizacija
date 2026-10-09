@@ -36,6 +36,22 @@ captions are positioned in time to match it.
 - Silence is generated with the repo's vendored ffmpeg (`templates/hyperframes/.bin`). Use it
   sparingly — one held beat per video is a device; three is a pacing problem.
 
+## Pace knobs and key takes (024 Short, 2026-10-09)
+- **Pace** = `brief.voice_rate` (e.g. `"-6%"`). A nested Short with its own `short/brief.json` uses its
+  own; without one it inherits the long brief's. The **first** brief found wins.
+- **Key takes** = the lines the viewer must remember: `"key_takes": [sentence idx]` on a script scene,
+  spoken at `brief.voice_rate_key` (slower than `voice_rate`). A rate change starts a new segment, like a
+  pause does. Both `make_voice.py` and `make_voice_azure.py` honour it (Azure: one `<prosody>` per
+  segment, and pauses become `<break>`s — before 2026-10-09 the Azure final silently dropped every
+  `pause_after`).
+- **edge-tts pads a short request to ~1.87s** (measured), so a lone key take would trail ~1s of silence.
+  A segment that ends only because the RATE changes is cut back to `RATE_BOUNDARY_TAIL` (0.30s after its
+  last word ≈ an ordinary 0.39s sentence break). Pause boundaries are untouched.
+- **A rate string is a request, not a measurement.** edge-tts is not repeatable run to run (the same
+  `-6%` request gave 20.88s and 20.11s). When a pace target matters, measure it against a reference
+  synthesis of the same text (024: `content/024-frozen/render/short_pace.py` → `short/pace.json`).
+  Measured on Andrew: long `+3%` → `-6%` = **1.10×** speech time, `-11%` = **1.166×**.
+
 ## Alignment
 - Per-word timing comes from **edge-tts's own WordBoundary events** — no separate aligner.
   `make_voice.py` writes `voice/narration.mp3` and `alignment.json` in the same pass.

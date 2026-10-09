@@ -141,12 +141,16 @@ export const Main: React.FC<MainProps> = (p) => {
         </Sequence>
       ))}
 
-      {/* brand bumpers, not scene cuts — they always cross-blend with the body by xf (D-060) */}
-      <Sequence from={0} durationInFrames={p.introFrames + xf} name="Intro">
-        <SceneWrapper durFrames={p.introFrames + xf} fadeIn={xf} fadeOut={xf}>
-          <Intro wordmark={p.intro.wordmark} tagline={p.intro.tagline} />
-        </SceneWrapper>
-      </Sequence>
+      {/* brand bumpers, not scene cuts — they always cross-blend with the body by xf (D-060).
+          introFrames 0 = no intro at all (a Short that opens on its topic): no bumper, not even the
+          xf blend, so frame 0 is the first scene. */}
+      {p.introFrames > 0 && (
+        <Sequence from={0} durationInFrames={p.introFrames + xf} name="Intro">
+          <SceneWrapper durFrames={p.introFrames + xf} fadeIn={xf} fadeOut={xf}>
+            <Intro wordmark={p.intro.wordmark} tagline={p.intro.tagline} />
+          </SceneWrapper>
+        </Sequence>
+      )}
 
       {/* scenes/beats placed in time from the alignment; each boundary obeys its authored
           transitionOut (default: a hard cut landing ON the narration beat) — D-060. The `?? xf`

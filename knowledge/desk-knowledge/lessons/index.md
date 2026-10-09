@@ -32,4 +32,6 @@ lesson with no evidence stays `draft` forever.
 - [Fixing one scene is a splice, not a re-render — and the cut points are already there](2026-08-23-patch-the-render-dont-repeat-it.md) — lesson, stable
 - [Publish metadata drafted at script approval is stale — re-stamp it against the rendered cut](2026-08-25-restamp-metadata-against-the-rendered-cut.md) — lesson, stable
 - [A post effect must sample the same image the frame shows](2026-10-08-post-effects-must-share-the-blur.md) — lesson, stable
+- [A motion knob is not a motion measurement — "10% less motion" is a measured ratio](2026-10-09-a-motion-knob-is-not-a-motion-measurement.md) — lesson, stable
+- [A TTS rate string is a request, not a pace — measure the pace you promise](2026-10-09-a-rate-string-is-not-a-pace.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

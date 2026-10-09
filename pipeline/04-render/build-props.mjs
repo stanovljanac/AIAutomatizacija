@@ -36,7 +36,7 @@ const al = JSON.parse(readFileSync(join(cdir, "alignment.json"), "utf8"));
 // (intro/outro, crossfade, caption density, length, motion). brief.json carries archetype/series and
 // any per-video override; fall back to the script's archetype.
 const brief = existsSync(join(cdir, "brief.json")) ? JSON.parse(readFileSync(join(cdir, "brief.json"), "utf8")) : {};
-const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
+const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
 
 const fps = cfg.render?.fps ?? 30;
 // Short detection by the LAST path segment, so both schemes work:

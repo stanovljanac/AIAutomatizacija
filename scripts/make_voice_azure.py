@@ -17,6 +17,25 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from make_voice import key_take_set, pause_map, plan_segments, read_pacing  # noqa: E402  (same segment plan as the draft)
+
+AZURE_MAX_BREAK_MS = 5000  # Azure caps one <break> at 5s; a longer hold is several in a row
+
+
+def build_ssml(scenes, voice: str, rate: str, key_rate=None) -> str:
+    """The narration as SSML, segmented exactly like the edge-tts draft: one <prosody> per segment
+    (key takes at `key_rate`) and a real <break> for every scripted pause, so the final voice keeps
+    the draft's pacing. With no pauses and no key takes this is the single prosody it always was."""
+    sents = [s for sc in scenes for s in sc["sentences"]]
+    parts = []
+    for idx, seg_rate, pause in plan_segments(len(sents), pause_map(scenes), key_take_set(scenes), rate, key_rate):
+        parts.append(f"<prosody rate='{seg_rate}'>{escape(' '.join(sents[i] for i in idx))}</prosody>")
+        ms = round(pause * 1000)
+        while ms > 0:
+            parts.append(f"<break time='{min(ms, AZURE_MAX_BREAK_MS)}ms'/>")
+            ms -= AZURE_MAX_BREAK_MS
+    return f"<speak version='1.0' xml:lang='en-US'><voice name='{voice}'>{''.join(parts)}</voice></speak>"
 
 
 def load_env(root: Path):
@@ -43,21 +62,10 @@ def main(cid: str):
     script = json.loads((cdir / "script.json").read_text(encoding="utf-8"))
     text = " ".join(s for sc in script["scenes"] for s in sc["sentences"])
     voice = az.get("voice", "en-US-AndrewMultilingualNeural")
-    rate = az.get("rate", "+0%")
-    # Per-video pacing override (brief.json.voice_rate) — matches the draft so the final voice keeps
-    # the same pace. The Short inherits the parent brief.
-    for bdir in (cdir, cdir.parent):
-        bpath = bdir / "brief.json"
-        if bpath.exists():
-            vr = json.loads(bpath.read_text(encoding="utf-8")).get("voice_rate")
-            if isinstance(vr, str) and vr.strip():
-                rate = vr.strip()
-            break
-
-    ssml = (
-        f"<speak version='1.0' xml:lang='en-US'>"
-        f"<voice name='{voice}'><prosody rate='{rate}'>{escape(text)}</prosody></voice></speak>"
-    )
+    # Per-video pacing override (brief.json.voice_rate / voice_rate_key) — matches the draft so the
+    # final voice keeps the same pace. A Short without its own brief inherits the parent's.
+    rate, key_rate = read_pacing(cdir, az.get("rate", "+0%"))
+    ssml = build_ssml(script["scenes"], voice, rate, key_rate)
 
     url = f"https://{region}.tts.speech.microsoft.com/cognitiveservices/v1"
     req = urllib.request.Request(url, data=ssml.encode("utf-8"), method="POST", headers={
