@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-08-25",
+  "updated": "2026-10-09",
   "live_from": "020",
   "videos": {
     "002-what-is-ai-automation": {
@@ -272,6 +272,23 @@
       },
       "analytics": {
         "due_at": "2026-09-01",
+        "snapshots": []
+      }
+    },
+    "024-frozen": {
+      "subject": "llm-mental-model",
+      "idea_id": "desk-lessons-frozen-weights",
+      "content_type": "long",
+      "status": "published",
+      "published_at": "2026-10-09",
+      "youtube_video_id": "rKTadKQ4CYU",
+      "lesson": {
+        "state": "linked",
+        "at": "2026-10-09",
+        "note": "2026-10-09-constant-background-motion-buries-the-point"
+      },
+      "analytics": {
+        "due_at": "2026-10-16",
         "snapshots": []
       }
     }

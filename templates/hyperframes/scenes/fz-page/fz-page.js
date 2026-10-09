@@ -16,9 +16,13 @@
  */
 var S = HF.scene({ id: "fz-page", width: 1920, height: 1080, frames: 383, beatLo: 0.0, beatHi: 0.1 });
 var D = S.D, W = S.W, H = S.H, props = S.props;
+/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice (the Azure
+   final) re-reads them into props.offsets — absent, every mark is exactly the typed value */
+var OFF = props.offsets || {};
+function off(k, v) { return typeof OFF[k] === "number" ? OFF[k] : v; }
 var b1 = S.beatAt(1, 0.128), b2 = S.beatAt(2, 0.371), b3 = S.beatAt(3, 0.533);
-var tPile = b1 + 0.24, tPage = b1 + 1.76, tRead = b1 + 2.33, tSticks = b2 + 0.35, tChat = b2 + 1.25;
-var tEnds = b3 + 0.64, tThrown = b3 + 1.98, tAway = b3 + 2.32, tStarts = b3 + 3.79, tFrozen = b3 + 4.69, tNumbers = b3 + 5.05;
+var tPile = b1 + off("Pile", 0.24), tPage = b1 + off("Page", 1.76), tRead = b1 + off("Read", 2.33), tSticks = b2 + off("Sticks", 0.35), tChat = b2 + off("Chat", 1.25);
+var tEnds = b3 + off("Ends", 0.64), tThrown = b3 + off("Thrown", 1.98), tAway = b3 + off("Away", 2.32), tStarts = b3 + off("Starts", 3.79), tFrozen = b3 + off("Frozen", 4.69), tNumbers = b3 + off("Numbers", 5.05);
 var tE = tAway + 0.45;
 var E = HW.E;
 

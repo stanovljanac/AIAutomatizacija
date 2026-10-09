@@ -21,9 +21,13 @@
  */
 var S = HF.scene({ id: "fz-memory", width: 1920, height: 1080, frames: 499, beatLo: 0.0, beatHi: 0.1 });
 var D = S.D, W = S.W, H = S.H, props = S.props;
+/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice (the Azure
+   final) re-reads them into props.offsets — absent, every mark is exactly the typed value */
+var OFF = props.offsets || {};
+function off(k, v) { return typeof OFF[k] === "number" ? OFF[k] : v; }
 var b1 = S.beatAt(1, 0.136), b2 = S.beatAt(2, 0.459), b3 = S.beatAt(3, 0.525), b4 = S.beatAt(4, 0.583), b5 = S.beatAt(5, 0.828);
-var tMemory = 0.57, tSaves = b1 + 1.95, tNote = b1 + 2.26, tReads = b1 + 3.63, tChat = b1 + 4.60;
-var tTrain = b4 + 0.72, tChats = b4 + 1.18, tFeed = b4 + 2.18, tFuture = b4 + 2.78, tToday = b5 + 0.83, tNever = b5 + 1.54;
+var tMemory = off("Memory", 0.57), tSaves = b1 + off("Saves", 1.95), tNote = b1 + off("Note", 2.26), tReads = b1 + off("Reads", 3.63), tChat = b1 + off("Chat", 4.60);
+var tTrain = b4 + off("Train", 0.72), tChats = b4 + off("Chats", 1.18), tFeed = b4 + off("Feed", 2.18), tFuture = b4 + off("Future", 2.78), tToday = b5 + off("Today", 0.83), tNever = b5 + off("Never", 1.54);
 var E = HW.E;
 
 document.getElementById("hud").innerHTML =

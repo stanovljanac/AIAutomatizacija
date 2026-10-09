@@ -15,8 +15,12 @@
  */
 var S = HF.scene({ id: "fz-close", width: 1920, height: 1080, frames: 391, beatLo: 0.0, beatHi: 0.1 });
 var D = S.D, W = S.W, H = S.H, props = S.props;
+/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice (the Azure
+   final) re-reads them into props.offsets — absent, every mark is exactly the typed value */
+var OFF = props.offsets || {};
+function off(k, v) { return typeof OFF[k] === "number" ? OFF[k] : v; }
 var b1 = S.beatAt(1, 0.146), b2 = S.beatAt(2, 0.294), b3 = S.beatAt(3, 0.532);
-var tRemember = 0.55, tRead = b1 + 0.67, tTwice = b2 + 2.04, tNever = b3 + 1.57, tQuestion = b3 + 3.54, tDifferent = b3 + 4.11, tTime = b3 + 5.19;
+var tRemember = off("Remember", 0.55), tRead = b1 + off("Read", 0.67), tTwice = b2 + off("Twice", 2.04), tNever = b3 + off("Never", 1.57), tQuestion = b3 + off("Question", 3.54), tDifferent = b3 + off("Different", 4.11), tTime = b3 + off("Time", 5.19);
 var E = HW.E;
 
 document.getElementById("hud").innerHTML =

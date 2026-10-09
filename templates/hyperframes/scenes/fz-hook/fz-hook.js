@@ -17,8 +17,12 @@
  */
 var S = HF.scene({ id: "fz-hook", width: 1920, height: 1080, frames: 337, beatLo: 0.0, beatHi: 0.1 });
 var D = S.D, W = S.W, H = S.H, props = S.props;
+/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice (the Azure
+   final) re-reads them into props.offsets — absent, every mark is exactly the typed value */
+var OFF = props.offsets || {};
+function off(k, v) { return typeof OFF[k] === "number" ? OFF[k] : v; }
 var b1 = S.beatAt(1, 0.234), b2 = S.beatAt(2, 0.374), b3 = S.beatAt(3, 0.659);
-var tNothing = 1.88, tWrong = b1 + 0.78, tRight = b2 + 0.98, tChat = b3 + 0.63, tMistake = b3 + 1.77, tBack = b3 + 2.61;
+var tNothing = off("Nothing", 1.88), tWrong = b1 + off("Wrong", 0.78), tRight = b2 + off("Right", 0.98), tChat = b3 + off("Chat", 0.63), tMistake = b3 + off("Mistake", 1.77), tBack = b3 + off("Back", 2.61);
 var tPull = Math.min(b3 + 2.95, D - 0.75);
 var E = HW.E;
 var Q = props.question || "What's the capital of Turkey?";

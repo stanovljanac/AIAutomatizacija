@@ -19,8 +19,12 @@
  */
 var S = HF.scene({ id: "fz-learn", width: 1920, height: 1080, frames: 472, beatLo: 0.0, beatHi: 0.1 });
 var D = S.D, W = S.W, H = S.H, props = S.props;
+/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice (the Azure
+   final) re-reads them into props.offsets — absent, every mark is exactly the typed value */
+var OFF = props.offsets || {};
+function off(k, v) { return typeof OFF[k] === "number" ? OFF[k] : v; }
 var b1 = S.beatAt(1, 0.127), b2 = S.beatAt(2, 0.286), b3 = S.beatAt(3, 0.379), b4 = S.beatAt(4, 0.608), b5 = S.beatAt(5, 0.778), b6 = S.beatAt(6, 0.907);
-var tAnswer = b1 + 1.60, tStep = [b2 + 0.0, b2 + 0.22, b2 + 0.51], tMillion = b3 + 1.88, tChanged = b3 + 2.61, tAnkara = b4 + 1.78, tRewrites = b5 + 0.35, tNever = b6 + 0.30;
+var tAnswer = b1 + off("Answer", 1.60), tStep = [b2 + 0.0, b2 + 0.22, b2 + 0.51], tMillion = b3 + off("Million", 1.88), tChanged = b3 + off("Changed", 2.61), tAnkara = b4 + off("Ankara", 1.78), tRewrites = b5 + off("Rewrites", 0.35), tNever = b6 + off("Never", 0.30);
 var M = props.measured || {};
 var LOSS = M.trainLoss || [3.3202, 2.7817, 2.1032];
 var E = HW.E;

@@ -18,9 +18,13 @@
  */
 var S = HF.scene({ id: "fz-test", width: 1920, height: 1080, frames: 437, beatLo: 0.0, beatHi: 0.1 });
 var D = S.D, W = S.W, H = S.H, props = S.props;
+/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice (the Azure
+   final) re-reads them into props.offsets — absent, every mark is exactly the typed value */
+var OFF = props.offsets || {};
+function off(k, v) { return typeof OFF[k] === "number" ? OFF[k] : v; }
 var b1 = S.beatAt(1, 0.078), b2 = S.beatAt(2, 0.37), b3 = S.beatAt(3, 0.45), b4 = S.beatAt(4, 0.58), b5 = S.beatAt(5, 0.74), b6 = S.beatAt(6, 0.876);
 /* word cues: offset of the word inside its sentence, read off alignment.json */
-var tIstanbul = b1 + 3.15, tAnkara = b2 + 0.23, tEvery = b4 + 0.81, tMillion = b5 + 1.03, tMoved = b6 + 0.38;
+var tIstanbul = b1 + off("Istanbul", 3.15), tAnkara = b2 + off("Ankara", 0.23), tEvery = b4 + off("Every", 0.81), tMillion = b5 + off("Million", 1.03), tMoved = b6 + off("Moved", 0.38);
 var M = props.measured || { params: 124439808, corrections: 100, fpBefore: "e563ffe10e2eefeaf9d9a869d4cb43369cdddbe6875789caec4e1abd7c6adfd9", fpAfterChats: "e563ffe10e2eefeaf9d9a869d4cb43369cdddbe6875789caec4e1abd7c6adfd9", measuredOn: "2026-10-08" };
 var E = HW.E;
 

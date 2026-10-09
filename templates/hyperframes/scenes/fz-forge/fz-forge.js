@@ -18,9 +18,13 @@
  */
 var S = HF.scene({ id: "fz-forge", width: 1920, height: 1080, frames: 560, beatLo: 0.0, beatHi: 0.1 });
 var D = S.D, W = S.W, H = S.H, props = S.props;
+/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice (the Azure
+   final) re-reads them into props.offsets — absent, every mark is exactly the typed value */
+var OFF = props.offsets || {};
+function off(k, v) { return typeof OFF[k] === "number" ? OFF[k] : v; }
 var b1 = S.beatAt(1, 0.046), b2 = S.beatAt(2, 0.225), b3 = S.beatAt(3, 0.29), b4 = S.beatAt(4, 0.566), b5 = S.beatAt(5, 0.855);
-var tNumbers = b1 + 2.39, tWeights = b2 + 0.30, tOnce = b3 + 0.45, tTraining = b3 + 1.25, tTrillions = b3 + 3.47;
-var tThirty = b4 + 3.0, tHours = b4 + 4.49, tEnds = b5 + 0.17, tFrozen = b5 + 1.31;
+var tNumbers = b1 + off("Numbers", 2.39), tWeights = b2 + off("Weights", 0.30), tOnce = b3 + off("Once", 0.45), tTraining = b3 + off("Training", 1.25), tTrillions = b3 + off("Trillions", 3.47);
+var tThirty = b4 + off("Thirty", 3.0), tHours = b4 + off("Hours", 4.49), tEnds = b5 + off("Ends", 0.17), tFrozen = b5 + off("Frozen", 1.31);
 var E = HW.E;
 
 /* ── HUD ───────────────────────────────────────────────────────────────────── */

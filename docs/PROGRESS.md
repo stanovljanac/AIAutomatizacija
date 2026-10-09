@@ -19,6 +19,22 @@ Format:
 
 ---
 
+## 2026-10-10 — 024 shipped to the owner: Azure final, re-render, publish package (long + Short)
+- who: agent (owner: "continue the publish process for both videos — Short and long").
+- did: Azure final voice for both (drafts preserved in `_draft-edge/`), re-aligned, re-rendered (the long
+  now has no intro — D-068), dropouts repaired, frame-gate 9/9 + 6/6, QA 10/10 both. The re-voice moved
+  word offsets up to 0.37s → the `fz-*` scenes' 76 typed word marks now go through `off("Name", x)` and the
+  plan warps them (and the SFX) from the draft alignment (lesson `2026-10-10-a-re-voice-moves-every-word.md`,
+  video-render skill). Package: `publish.json`/`publish.md`, `medium.md`, `visual-prompts.json`; review
+  panel 8.3 → 8.7 → 8.9 over 3 iterations (gates green, below the 9.0 bar — surfaced to the owner). Ledger
+  reconciled (024 = published-by-approval, analytics due 2026-10-16), CHANNEL_MAP row added.
+- **PUBLISHED 2026-10-09 (owner, by hand):** long https://youtu.be/rKTadKQ4CYU ("“You're Absolutely
+  Right!” — Why AI Never Learns From You"), Short https://youtube.com/shorts/uCDpkEJ9Pdg — verified via the
+  Data API (read-only); ids in `publish.json` + the ledger (analytics due 2026-10-16).
+- open: 020–023 never got their `youtube_video_id` (ledger null → the analytics loop skips them); the ids
+  are readable from the channel the same way.
+- next: Ep.6 (sampling — same numbers, different answers) on the D-068 calibration.
+
 ## 2026-10-09 — The house calibration: no intro, 5% slower, background only now and then — D-068
 - who: agent (owner, on the 024 Short: "okay but still not good enough" → every video without an intro,
   straight into the topic with a real catch; pace, animations and transitions another 5% slower; no

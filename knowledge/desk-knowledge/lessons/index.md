@@ -35,4 +35,5 @@ lesson with no evidence stays `draft` forever.
 - [A motion knob is not a motion measurement — "10% less motion" is a measured ratio](2026-10-09-a-motion-knob-is-not-a-motion-measurement.md) — lesson, stable
 - [A TTS rate string is a request, not a pace — measure the pace you promise](2026-10-09-a-rate-string-is-not-a-pace.md) — lesson, stable
 - [Constant background motion buries the point — the background moves only now and then](2026-10-09-constant-background-motion-buries-the-point.md) — lesson, stable
+- [A re-voice moves every word — a typed word offset is stale the moment the final voice lands](2026-10-10-a-re-voice-moves-every-word.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

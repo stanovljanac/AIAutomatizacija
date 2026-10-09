@@ -13,8 +13,12 @@
  */
 var S = HF.scene({ id: "fz-read", width: 1920, height: 1080, frames: 330, beatLo: 0.0, beatHi: 0.1 });
 var D = S.D, W = S.W, H = S.H, props = S.props;
+/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice (the Azure
+   final) re-reads them into props.offsets — absent, every mark is exactly the typed value */
+var OFF = props.offsets || {};
+function off(k, v) { return typeof OFF[k] === "number" ? OFF[k] : v; }
 var b1 = S.beatAt(1, 0.224), b2 = S.beatAt(2, 0.603);
-var tWindow = b1 + 1.20, tPile = b1 + 2.05, tAgo = b1 + 3.37, tReads = b2 + 0.15, tNext = b2 + 1.98, tWord = b2 + 2.27, tWrites = b2 + 3.08, tNothing = b2 + 3.33, tBack = b2 + 3.57;
+var tWindow = b1 + off("Window", 1.20), tPile = b1 + off("Pile", 2.05), tAgo = b1 + off("Ago", 3.37), tReads = b2 + off("Reads", 0.15), tNext = b2 + off("Next", 1.98), tWord = b2 + off("Word", 2.27), tWrites = b2 + off("Writes", 3.08), tNothing = b2 + off("Nothing", 3.33), tBack = b2 + off("Back", 3.57);
 var E = HW.E;
 
 document.getElementById("hud").innerHTML =

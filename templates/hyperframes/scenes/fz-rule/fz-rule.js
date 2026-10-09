@@ -16,9 +16,13 @@
  */
 var S = HF.scene({ id: "fz-rule", width: 1920, height: 1080, frames: 424, beatLo: 0.0, beatHi: 0.1 });
 var D = S.D, W = S.W, H = S.H, props = S.props;
+/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice (the Azure
+   final) re-reads them into props.offsets — absent, every mark is exactly the typed value */
+var OFF = props.offsets || {};
+function off(k, v) { return typeof OFF[k] === "number" ? OFF[k] : v; }
 var b1 = S.beatAt(1, 0.09), b2 = S.beatAt(2, 0.186), b3 = S.beatAt(3, 0.453), b4 = S.beatAt(4, 0.533);
-var tStop = 0.13, tCorrecting = 0.39, tWriting = b1 + 0.28, tDown = b1 + 0.63, tTwice = b2 + 1.16, tCorrection = b2 + 2.45, tInstruction = b3 + 0.16;
-var tEvery = b4 + 1.27, tTime = b4 + 1.97, tSaved = b4 + 3.29, tFile = b4 + 4.66, tPrompt = b4 + 5.74;
+var tStop = off("Stop", 0.13), tCorrecting = off("Correcting", 0.39), tWriting = b1 + off("Writing", 0.28), tDown = b1 + off("Down", 0.63), tTwice = b2 + off("Twice", 1.16), tCorrection = b2 + off("Correction", 2.45), tInstruction = b3 + off("Instruction", 0.16);
+var tEvery = b4 + off("Every", 1.27), tTime = b4 + off("Time", 1.97), tSaved = b4 + off("Saved", 3.29), tFile = b4 + off("File", 4.66), tPrompt = b4 + off("Prompt", 5.74);
 var E = HW.E;
 
 document.getElementById("hud").innerHTML =
