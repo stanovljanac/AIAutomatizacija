@@ -14,11 +14,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FIXTURE = path.resolve(__dirname, "..", "..", "content", "_FIXTURE");
 const FPS = 30;
 
-test("long-form timings reproduce the old hardcoded build-props constants", () => {
+// D-068 (owner, 2026-10-09) changed the defaults on purpose: no intro bumper, the dissolve 9 → 10
+// frames (5% slower, rounded up to a whole frame). The pre-D-068 numbers live on in content/_FIXTURE.
+test("long-form timings from the default recipe (D-068: no intro, 10-frame dissolve)", () => {
   const t = deriveRenderTimings(resolveFormat({}), { fps: FPS, vertical: false });
-  assert.equal(t.introFrames, 45); // was Math.round(1.5*30)
-  assert.equal(t.outroFrames, 75); // was Math.round(2.5*30)
-  assert.equal(t.crossfadeFrames, 9);
+  assert.equal(t.introFrames, 0); // no bumper — the hook owns frame 0
+  assert.equal(t.outroFrames, 75); // Math.round(2.5*30)
+  assert.equal(t.crossfadeFrames, 10);
   assert.equal(t.leadFrames, 7); // was Math.round(0.22*30) = round(6.6)
   assert.equal(t.captions.maxWords, 7);
   assert.equal(t.captions.gapSeconds, 0.7);
@@ -26,10 +28,10 @@ test("long-form timings reproduce the old hardcoded build-props constants", () =
   assert.deepEqual(t.shortLen, { min: 45, max: 120, target: 55 });
 });
 
-test("Short (vertical) intro/outro reproduce the old 1.2s band", () => {
+test("Short (vertical): no intro, the 1.2s outro band", () => {
   const t = deriveRenderTimings(resolveFormat({}), { fps: FPS, vertical: true });
-  assert.equal(t.introFrames, 36); // was Math.round(1.2*30)
-  assert.equal(t.outroFrames, 36);
+  assert.equal(t.introFrames, 0);
+  assert.equal(t.outroFrames, 36); // Math.round(1.2*30)
 });
 
 test("a brief.format knob flip propagates into the derived timings", () => {
@@ -49,7 +51,7 @@ test("crossfade comes from the format when config has no override", () => {
 
 test("a different fps scales frame counts with the same rounding", () => {
   const t = deriveRenderTimings(resolveFormat({}), { fps: 60, vertical: false });
-  assert.equal(t.introFrames, 90); // 1.5 * 60
+  assert.equal(t.outroFrames, 150); // 2.5 * 60
   assert.equal(t.leadFrames, 13); // round(0.22*60) = round(13.2)
 });
 
@@ -64,6 +66,7 @@ test("the real _FIXTURE brief resolves through build-props' format path", () => 
     archetype: brief.archetype ?? script.archetype,
     series: brief.series,
     format: brief.format,
+    format_recipe: brief.format_recipe,
   });
   assert.ok(fmt.name, "resolved format has a name");
   const t = deriveRenderTimings(fmt, { fps: FPS, vertical: false });
@@ -77,10 +80,9 @@ test("[verifier] crossfadeFrames is FPS-independent (specified in frames, not se
   const fmt = resolveFormat({});
   const t30 = deriveRenderTimings(fmt, { fps: 30, vertical: false });
   const t60 = deriveRenderTimings(fmt, { fps: 60, vertical: false });
-  assert.equal(t30.crossfadeFrames, 9);
-  assert.equal(t60.crossfadeFrames, 9, "crossfadeFrames must not scale with fps");
-  // intro/outro DO scale — confirm the pair is correct
-  assert.equal(t60.introFrames, 90);
+  assert.equal(t30.crossfadeFrames, 10);
+  assert.equal(t60.crossfadeFrames, 10, "crossfadeFrames must not scale with fps");
+  // the outro DOES scale
   assert.equal(t60.outroFrames, 150);
 });
 
@@ -124,5 +126,6 @@ test("[verifier] brief without brief.json (no-brief path) resolves from script.a
   const fmt = resolveFormat({ archetype: undefined ?? scriptArchetype, series: undefined, format: undefined });
   assert.ok(fmt.name, "no-brief path must resolve a valid format");
   const t = deriveRenderTimings(fmt, { fps: FPS, vertical: false });
-  assert.equal(t.introFrames, 45, "no-brief path must yield the default intro band");
+  assert.equal(t.introFrames, 0, "no-brief path must yield the default (no intro, D-068)");
+  assert.equal(t.outroFrames, 75, "…and the default outro band");
 });

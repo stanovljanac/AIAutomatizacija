@@ -130,7 +130,7 @@ On approval → `status: "script_approved"`.
 2. Scenes are placed in time from `alignment.json` (scene i = first sentence start →
    last sentence end). Captures play inside `capture-segment` scenes with auto-zoom/
    highlight. Subtitles use the same timings (burned-in, animated, English).
-3. Add the reusable **intro/outro** (no music on long-form). Render via the selected
+3. Add the reusable **outro** (no music on long-form; **no intro** — the hook owns frame 0, D-068). Render via the selected
    `render.engine` (Remotion / hyperframes / combo).
 4. Build the **Short** (1–2 key beats; light music allowed).
 5. **Thumbnail candidates (04b, D-056):** `node pipeline/04b-thumbnails/extract.mjs <id>`

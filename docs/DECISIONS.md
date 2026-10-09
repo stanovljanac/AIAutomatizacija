@@ -760,3 +760,40 @@ old one (don't delete history).
 - **Scope.** Six portrait scenes `fzs-*` (clones of the long's `fz-*`, recomposed for 9:16 — the long
   scene files are untouched). Defaults everywhere else are unchanged; adopting any of these for the
   next video is the owner's call after watching the Short.
+
+## D-068 — No intro; pace, animation and transitions 5% slower; background motion only now and then (owner, 2026-10-09)
+
+- **Context.** Owner on the 024 Short (the D-067 pacing test): *"Okay, but still not good enough."*
+  Write down that every video is made **without an intro**, going straight to the topic with a catch
+  that actually holds the viewer. The pace is fine in places but **still too fast elsewhere → another
+  5% slower**. And *"constantly in the background some animation or transition is running, like the
+  shimmering of these numbers. It's fine in some situations, but constantly through the whole video it
+  loses the point"* → background animation **only now and then, and 10% calmer**. The training sweep
+  over the numbers (`fzs-learn`) was also too fast. *"The rest is okay"* — key takes, take plates,
+  sentence captions stay.
+- **Decision — defaults for every video, in `pipeline/shared/formats/default.json`** (relative to the
+  024 Short; MOTION_SPEC §17 has the table):
+  1. **No intro:** `intro.long_seconds` / `short_seconds` **0**. Frame 0 is the topic, sentence 1 is the
+     hook (script-writing, script-review, STYLE_GUIDE §5, MOTION_SPEC §2). A bumper comes back only
+     through one video's `brief.format_recipe`.
+  2. **Pace 5% slower:** new `voice { rate "-11%", rate_key "-15%" }` (the Short: `-6%` / `-11%`, measured
+     1.10× / 1.166× the long cut's speech time; targets now ≈ 1.155× / 1.22×). `make_voice.py` and
+     `make_voice_azure.py` read it (`recipe_pacing`); a brief's own `voice_rate` still overrides, and then
+     keeps its own key rate (or none). Scripted holds ×1.05 of the Short's.
+  3. **Animations and transitions 5% slower:** camera travel `motion.budget.scale` **0.855** (0.9 × 0.95);
+     compositor dissolve **10 frames** (9 × 1.05 = 9.45 is not a frame — rounded up, so +11%), 0.33s;
+     authored tween/transition durations ×1.05 against the MOTION_SPEC §3 / §5 baselines.
+  4. **Background only now and then, 10% calmer:** `motion.budget.ambient` **`[]`** (the background clock
+     stands still) and `ambient_scale` **0.81** (0.9 × 0.9) inside the windows a scene opens.
+     `HW.motion` gained `ambientScale` + `ambient` windows (absent = runs throughout, so existing scenes
+     are unchanged); `compile-hyperframes` hands `motion.budget` to every HF scene with no `props.motion`
+     of its own. `motion.ambient` false; `FX.ambient` (2D kit) is opt-in, no longer mandatory.
+  5. **Sentence captions** (`captions.sentence_breaks` true) — the Short's captions, which the owner kept.
+- **What a 5% tempo cannot do.** The sweep the owner flagged crosses the block in ~0.58s per ring
+  (30 units/s over ~17 units); ×1.05 is ~0.61s, which no one will see. A device that is far too fast is
+  re-timed in its own scene (MOTION_SPEC §17).
+- **Scope.** New videos get all of it by default. Already-authored `props.motion` (the 024 Short) wins
+  untouched, and the 024 long's `fz-*` scenes never read the budget. 024's own briefs pin their pace
+  (`+3%` long, `-6%`/`-11%` Short), so on 024's final render only the no-intro default (the long loses its
+  1.5s bumper), the 10-frame dissolve and sentence captions apply. `content/_FIXTURE` pins the pre-D-068
+  recipe so its golden props stay a regression snapshot.

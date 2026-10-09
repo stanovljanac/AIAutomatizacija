@@ -18,7 +18,7 @@ from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from make_voice import key_take_set, pause_map, plan_segments, read_pacing  # noqa: E402  (same segment plan as the draft)
+from make_voice import key_take_set, pause_map, plan_segments, read_pacing, recipe_pacing  # noqa: E402  (same segment plan as the draft)
 
 AZURE_MAX_BREAK_MS = 5000  # Azure caps one <break> at 5s; a longer hold is several in a row
 
@@ -62,9 +62,9 @@ def main(cid: str):
     script = json.loads((cdir / "script.json").read_text(encoding="utf-8"))
     text = " ".join(s for sc in script["scenes"] for s in sc["sentences"])
     voice = az.get("voice", "en-US-AndrewMultilingualNeural")
-    # Per-video pacing override (brief.json.voice_rate / voice_rate_key) — matches the draft so the
-    # final voice keeps the same pace. A Short without its own brief inherits the parent's.
-    rate, key_rate = read_pacing(cdir, az.get("rate", "+0%"))
+    # Same pace as the draft: the format recipe's `voice` (D-068), overridden by brief.json voice_rate /
+    # voice_rate_key. A Short without its own brief inherits the parent's.
+    rate, key_rate = read_pacing(cdir, *recipe_pacing(az.get("rate", "+0%")))
     ssml = build_ssml(script["scenes"], voice, rate, key_rate)
 
     url = f"https://{region}.tts.speech.microsoft.com/cognitiveservices/v1"

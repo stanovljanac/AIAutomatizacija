@@ -242,6 +242,9 @@ export function buildTimeline({ script, plan, alignment, fmt, timings, fps, cros
       : {}),
   };
 
+  // motion.budget is the HyperFrames scenes' HW.motion default (D-068) — compile-hyperframes reads it
+  // from the format itself; the Remotion props never carried it.
+  const { budget: _hfBudget, ...motion } = fmt.motion ?? {};
   return {
     version: 1,
     out_id: outId,
@@ -254,7 +257,7 @@ export function buildTimeline({ script, plan, alignment, fmt, timings, fps, cros
     intro: { duration_seconds: introSeconds, wordmark: "The Automation Desk", tagline: "automate the boring stuff" },
     outro: { duration_seconds: outroSeconds, cta: "@TheAutomationDesk", brand: "" },
     crossfade_seconds: crossfadeFrames / fps,
-    motion: fmt.motion,
+    motion,
     scenes,
     captions,
   };

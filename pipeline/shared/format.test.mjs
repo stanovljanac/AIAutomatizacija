@@ -43,16 +43,23 @@ test("default.json is COMPLETE — has every section the resolver/build-props re
   }
 });
 
-test("seeded knobs mirror the constants build-props uses today (behavior-preserving V1)", () => {
+// The seeded V1 knobs mirrored the old build-props constants; D-068 (owner, 2026-10-09) then changed
+// four of them on purpose — no intro, a 10-frame dissolve, sentence captions, the pace and the motion
+// budget. The pre-D-068 numbers live on in content/_FIXTURE's format_recipe.
+test("default knobs: the V1 constants, as changed by D-068", () => {
   const f = resolveFormat({});
   assert.equal(f.captions.max_words, 7);
   assert.equal(f.captions.gap_seconds, 0.7);
   assert.equal(f.captions.tail_seconds, 0.4);
-  assert.equal(f.intro.long_seconds, 1.5);
-  assert.equal(f.intro.short_seconds, 1.2);
+  assert.equal(f.captions.sentence_breaks, true);
+  assert.equal(f.intro.long_seconds, 0);
+  assert.equal(f.intro.short_seconds, 0);
   assert.equal(f.outro.long_seconds, 2.5);
   assert.equal(f.outro.short_seconds, 1.2);
-  assert.equal(f.transition_frames.crossfade, 9);
+  assert.equal(f.transition_frames.crossfade, 10);
+  assert.deepEqual(f.voice, { rate: "-11%", rate_key: "-15%" });
+  assert.deepEqual(f.motion.budget, { scale: 0.855, ambient_scale: 0.81, ambient: [], focus_scale: 0.35, ease: 0.4 });
+  assert.equal(f.motion.ambient, false);
   assert.equal(f.reveals.lead_seconds, 0.22);
   assert.equal(f.length.short.min, 45);
   assert.equal(f.length.short.max, 120);
@@ -267,10 +274,10 @@ test("schema: invalid default_engine enum value is rejected", () => {
 // brief.format is the long/short STRING in brief.json; the per-video recipe override is format_recipe
 // (024 Short, 2026-10-09: a Short with no intro bumper — intro.short_seconds 0 — for this Short only).
 test("resolveFormat: brief.format_recipe overrides the recipe; the string brief.format is ignored", () => {
-  const fmt = resolveFormat({ archetype: "ideas", format: "short", format_recipe: { intro: { short_seconds: 0 } } });
-  assert.equal(fmt.intro.short_seconds, 0, "the Short's intro is gone");
-  assert.equal(fmt.intro.long_seconds, 1.5, "deep merge — the untouched long intro keeps its default");
-  assert.equal(resolveFormat({ archetype: "ideas", format: "long" }).intro.short_seconds, 1.2, "no recipe → default");
+  const fmt = resolveFormat({ archetype: "ideas", format: "short", format_recipe: { intro: { short_seconds: 1.2 } } });
+  assert.equal(fmt.intro.short_seconds, 1.2, "a video can bring the bumper back");
+  assert.equal(fmt.intro.long_seconds, 0, "deep merge — the untouched long intro keeps its default");
+  assert.equal(resolveFormat({ archetype: "ideas", format: "long" }).intro.short_seconds, 0, "no recipe → default");
 });
 
 test("resolveFormat: format_recipe wins over a legacy object brief.format", () => {

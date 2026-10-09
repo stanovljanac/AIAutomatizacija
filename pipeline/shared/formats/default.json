@@ -14,11 +14,13 @@
   "motion": {
     "intensity": "standard",
     "max_moving_elements": 3,
-    "ambient": true,
+    "ambient": false,
     "emphasis": true,
-    "transition": { "style": "crossfade", "duration_seconds": 0.3 },
-    "default_engine": "remotion"
+    "transition": { "style": "crossfade", "duration_seconds": 0.33 },
+    "default_engine": "remotion",
+    "budget": { "scale": 0.855, "ambient_scale": 0.81, "ambient": [], "focus_scale": 0.35, "ease": 0.4 }
   },
+  "voice": { "rate": "-11%", "rate_key": "-15%" },
   "reveals": { "lead_seconds": 0.22 },
   "pacing": {
     "beat_seconds": { "min": 3, "max": 9 },
@@ -29,15 +31,16 @@
     "max_words": 7,
     "gap_seconds": 0.7,
     "tail_seconds": 0.4,
-    "max_lines": 2
+    "max_lines": 2,
+    "sentence_breaks": true
   },
   "length": {
     "long": { "target": 360, "min": 60, "max": 1800 },
     "short": { "target": 55, "min": 45, "max": 120 }
   },
-  "intro": { "long_seconds": 1.5, "short_seconds": 1.2 },
+  "intro": { "long_seconds": 0, "short_seconds": 0 },
   "outro": { "long_seconds": 2.5, "short_seconds": 1.2 },
-  "transition_frames": { "crossfade": 9 },
+  "transition_frames": { "crossfade": 10 },
   "scene_set": {
     "custom_ratio_min": 0.25,
     "broll": { "enabled": false },

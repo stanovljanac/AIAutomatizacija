@@ -19,6 +19,21 @@ Format:
 
 ---
 
+## 2026-10-09 — The house calibration: no intro, 5% slower, background only now and then — D-068
+- who: agent (owner, on the 024 Short: "okay but still not good enough" → every video without an intro,
+  straight into the topic with a real catch; pace, animations and transitions another 5% slower; no
+  constant background animation — only now and then, and 10% calmer; the rest of the Short is okay).
+- **Now the defaults** (`formats/default.json`, MOTION_SPEC §17): `intro` 0/0; `voice { rate -11%,
+  rate_key -15% }` read by `make_voice.py` / `make_voice_azure.py`; `motion.budget { scale 0.855,
+  ambient_scale 0.81, ambient [] }` handed by `compile-hyperframes` to every HF scene without its own
+  `props.motion`; `HW.motion` gained `ambientScale` + `ambient` windows; dissolve 10 frames;
+  `captions.sentence_breaks` true; `FX.ambient` opt-in. Docs: STYLE_GUIDE §5, VISUAL_IDENTITY §7,
+  WORKFLOW, script-writing / script-review / voice-synthesis / video-render skills; lesson
+  `2026-10-09-constant-background-motion-buries-the-point.md`.
+- Honest limit: the training sweep the owner flagged is ~0.58s/ring; 5% is ~0.03s → re-time per scene.
+- `npm test` **842 green**; `content/_FIXTURE` pins the pre-D-068 recipe (golden unchanged).
+- next: 024 final (Azure voice) + publish package for long and Short.
+
 ## 2026-10-09 — 024 Short: the pacing test (slower, no intro, key takes, calmer) — D-067
 - who: agent (owner, on the 024 long cut: "okay but it is too fast paced" → make the Short 10% slower,
   no intro, key takes a further 5% slower, 10% less motion, highlight the takes; the long stays as is,

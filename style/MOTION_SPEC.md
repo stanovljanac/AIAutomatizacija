@@ -12,8 +12,10 @@
 > `pipeline/shared/formats/default.json` (the knobs). When this file gives a number and the format
 > recipe has a matching knob, the knob wins at render time and should mirror this file.
 
-Reference benchmark for craft (not style): **Kurzgesagt** — continuous secondary motion, one idea
-on screen at a time, beat-synced reveals. Emulate the *technique*, keep our cleaner dev aesthetic.
+Reference benchmark for craft (not style): **Kurzgesagt** — secondary motion where it carries the
+beat, one idea on screen at a time, beat-synced reveals. Emulate the *technique*, keep our cleaner dev
+aesthetic. **The house calibration (D-068, §17) overrides any number below it contradicts:** no intro,
+pace and every animation/transition 5% slower than the 024 Short, background motion only now and then.
 
 ---
 
@@ -56,7 +58,8 @@ What made it good — the checklist every scene is now held to:
 - **Strategic premise.** It earns its place with one sharp idea (here: empathy/recognition), not a
   decorated title. State that premise in the component's top comment, as `HookFeedHype` does.
 - **Instant legibility.** The viewer "gets it" in <1s, mobile-legible, no reading required.
-- **Full of motivated motion.** Constant secondary motion tied to the meaning and **keyed to the
+- **Full of motivated motion.** Secondary motion tied to the meaning (in the background only now and
+  then — §17) and **keyed to the
   narration beats** (§1, §2), never tic-motion for its own sake.
 - **Sets up the next beat.** Each scene hands off to the one after it; the video is a line of
   dominoes, not a slideshow.
@@ -107,8 +110,11 @@ Tiered cadence (vary it; don't apply one rigid value):
 
 ## 2. The hook (0–30s) — earn the watch
 
-The steepest drop is between **second 10 and 20** (inflection ~15s). Intro branding **≤5s** (or
-none). A pattern interrupt in the first 5s is worth ~+20% retention.
+The steepest drop is between **second 10 and 20** (inflection ~15s). **No intro bumper — ever
+(owner, D-068):** frame 0 is already the topic and the first sentence is the catch that holds the
+viewer — the claim, the contradiction or the question that makes leaving cost something. No logo, no
+channel name, no "in this video", no warm-up line. A pattern interrupt in the first 5s is worth ~+20%
+retention.
 
 Author the hook in three phases:
 - **0–5s — pattern interrupt:** a bold visual / specific claim / one-line question that out-competes
@@ -135,12 +141,14 @@ Banned (amateur tells): star/heart wipes, page curls, cube spins, cross-zoom fla
 everywhere, and — worst — *relying on transitions instead of cuts*.
 
 Durations: graphic-to-graphic push/slide/wipe/morph **200–500ms** (default **~300ms**); whip/smear
-**150–300ms**; dissolves **rarely**, soft mood beats only (**0.5–1s**).
+**150–300ms**; dissolves **rarely**, soft mood beats only (**0.5–1s**). **Author each of these ×1.05
+since D-068** (default push ~315ms; the compositor dissolve is 10 frames — §17); the ranges here are
+the research baseline.
 
 **The default is mechanized (D-060).** Every scene boundary obeys the outgoing scene's `transitionOut`
 in `scene-plan.json`, and an unauthored boundary is a **hard cut** that lands *on* the narration beat.
-The **9 frames (~300ms) is the DISSOLVE/PUSH blend duration and the intro/outro bumper** — it is **not**
-a per-scene default. (Until D-060 it was: every scene was wrapped in an unconditional 9-frame crossfade
+The **10 frames (~333ms; 9 before D-068) is the DISSOLVE/PUSH blend duration and the outro bumper's
+blend** — it is **not** a per-scene default. (Until D-060 it was: every scene was wrapped in an unconditional 9-frame crossfade
 that also *pre-rolled* the scene, ghosting the previous one into every line of narration — the spec said
 "default to a hard cut" and the renderer did the opposite.)
 
@@ -170,7 +178,7 @@ Always **ease** (never linear). Use **anticipation** (a 2–3px counter-move bef
 **overshoot/follow-through** (`back.out`; secondary elements settle a beat after the primary), and
 **staging** (one focal change at a time — **1–2 moving graphics per scene max**).
 
-Canonical durations (author to these):
+Canonical durations (the research baseline — **author them ×1.05 since D-068**, §17):
 
 | Use | Duration |
 |---|---|
@@ -257,7 +265,7 @@ life. Clearing §1–§6 is not enough if the frame itself is unproduced.
 var S = HF.scene({ id: "my-scene", width: 1920, height: 1080, frames: 400 });
 FX.init(S, { palette: "body" });      // stage layers + palette + dust
 var tl = gsap.timeline({ paused: true });
-FX.ambient(tl);                       // the always-on secondary motion
+FX.ambient(tl);                       // background life — opt-in per scene since D-068 (§17)
 ```
 
 What that buys, for free, in every scene: a **six-layer stage** (depth ground · masked blueprint grid ·
@@ -267,8 +275,11 @@ vignette · caption band), a **camera rig** (`FX.camera`), **physical paper** (`
 source chips, quote/myth plates, the gold slash (`FX.strike`) and counters (`FX.count`).
 
 Authoring rules that come with it:
-- **`FX.ambient(tl)` is not optional.** It is what makes §1 ("every ~3s something moves forward") true
-  underneath whatever the scene stages on top. A scene that drives its own camera passes `{push:false}`.
+- **`FX.ambient(tl)` is opt-in (D-068 — it used to be mandatory).** It drifts bloom, light shafts, grid
+  and dust under the WHOLE scene, which is exactly the constant background motion the owner rejected on
+  the 024 Short. Call it only in a scene whose beat needs the room alive (an arrival, a mood beat); §1's
+  "every ~3s something moves forward" is carried by the story on top, not by the background. A scene
+  that drives its own camera passes `{push:false}`.
 - **Use `FX.fromTo(tl, target, from, to, at)`, never `gsap.fromTo`, for any beat later than 0.** fromTo
   defaults to `immediateRender:true` and applies its `from` values at *build* time — a page meant to
   fade in at 12s sits at opacity 0.2 from frame 0. Never "fix" this with a global
@@ -518,11 +529,58 @@ luma change between consecutive frames, equal pixel budgets):
 
 ---
 
+## 17. The house calibration — no intro, 5% slower, background only now and then (owner, D-068, 2026-10-09)
+
+Owner on the 024 Short (the §16 test): *"Okay, but still not good enough."* Kept from the Short: no
+intro, the key takes and their plates, sentence captions (*"the rest is okay"*). Changed: *"in some
+parts it is still too fast"* → **another 5% slower**; and *"constantly in the background some
+animation or transition is running, like the shimmering of these numbers — fine in some situations,
+but constantly through the whole video it loses the point"* → **background motion only now and then,
+and 10% calmer when it runs.** These are the **defaults for every video** now (format recipe), each
+relative to the 024 Short:
+
+| Knob | Where | 024 Short | **Default from D-068** |
+|---|---|---|---|
+| intro bumper | `intro.long_seconds` / `short_seconds` | 0 (that Short only) | **0, every video** |
+| speaking pace | `voice.rate` (a brief's `voice_rate` overrides) | `-6%` = 1.10× the long | **`-11%`** (target ≈ 1.155×) |
+| key-take pace | `voice.rate_key` (brief `voice_rate_key`) | `-11%` = 1.166× | **`-15%`** (target ≈ 1.22×) |
+| scripted holds | `scenes[].pause_after` | ×1.10 the long's | **×1.155** (×1.21 before a take) |
+| camera travel | `motion.budget.scale` → `HW.motion` `scale` | 0.9 | **0.855** (0.9 × 0.95) |
+| background clock | `motion.budget.ambient_scale` → `ambientScale` | 0.9 | **0.81** (0.9 × 0.9) |
+| background on | `motion.budget.ambient` → `ambient` windows | always | **`[]` — still unless a scene opens a window** |
+| settle on a take | `motion.budget.focus_scale` | 0.35 | 0.35 |
+| compositor dissolve | `transition_frames.crossfade` | 9 frames | **10** (9.45 is not a frame — rounded up) |
+| authored tween / transition durations | the §3 / §5 baselines | as authored | **× 1.05** |
+| captions | `captions.sentence_breaks` | true (that Short only) | **true** |
+
+How it reaches a scene:
+- **Voice:** `make_voice.py` / `make_voice_azure.py` take `voice.rate` / `rate_key` from
+  `formats/default.json` when the brief sets no `voice_rate`; a brief with its own `voice_rate` keeps its
+  own key rate (or none). Still measure the result when the target matters (§16 — edge-tts drifts run to run).
+- **Motion:** `compile-hyperframes` hands `motion.budget` (camelCased) to every HF scene whose props carry
+  **no `motion` of their own**. A scene that authors `props.motion` (focus windows on its takes, an ambient
+  window) writes the FULL spec — start from the budget numbers. The `hf-world` kit reads it through
+  `HW.motion(props.motion, D)`; a 2D `hf-fx` scene follows the same rule by authoring (`FX.ambient` is
+  opt-in, §9).
+- **"Now and then" = a window marks a BEAT, not a scene.** The background wakes for an arrival, a reveal or
+  a change of mood — `ambient: [[t0, t1]]`, eased in and out over `ease` — and goes still again. Outside a
+  window the dust hangs, the tiles stop shimmering, idle bobbing stops. The STORY (the subject, the camera
+  on it, the take) still moves; this governs only what moves behind it.
+- **A 5% tempo cannot fix one device that is far too fast.** The owner flagged the gold training sweep
+  (`fzs-learn`): each ring crosses the 44-row monolith in **~0.58s** (30 units/s over ~17 units), three
+  rings in ~1.2s. ×1.05 makes that ~0.61s — not visible. A device the owner calls too fast is re-timed in
+  its own scene, not through the global tempo.
+
+---
+
 ## Enforcement (where each rule is checked, so it can't be skipped)
 
 | Rule | Check |
 |---|---|
 | Hook-class scene w/ motion in first 30s (§2) | `lib/policy.mjs` + `qa-video` (HARD) |
+| No intro bumper (§2, §17) | `formats/default.json` `intro` 0 → `lib/timeline.mjs` (scene 0 owns frame 0, no fade-in); Remotion skips the Intro sequence |
+| Pace 5% slower (§17) | `formats/default.json` `voice` → `make_voice.py` / `make_voice_azure.py` `recipe_pacing` |
+| Background still unless a scene opens a window (§17) | `compile-hyperframes` hands `motion.budget` to every HF scene without `props.motion`; `HW.motion` `ambient` / `ambientScale` (`hf-world-motion.test.mjs`) |
 | No long static hold (§1) | `build-props` warn + `qa-video` (HARD), `format.pacing.max_static_hold_seconds` |
 | Sequential reveals in order (§1/§4) | `lib/timeline.mjs` monotonic clamp |
 | Hard cut is the default; the boundary honors `transitionOut` (§3) | `lib/transitions.mjs` `sceneWindow` — the ONE copy of the window math (both engine compilers + 04b-thumbnails call it); `SceneWrapper` obeys `fadeIn`/`fadeOut`; a bogus style is rejected by `scene-plan.schema.json`; the last scene's ignored `transitionOut` warns in `build-props` |

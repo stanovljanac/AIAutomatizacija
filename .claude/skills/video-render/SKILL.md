@@ -41,10 +41,14 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   Short by the last path segment and hard-fails outside that range — fix the Short script,
   don't ship 30s. Render it with `build-props.mjs <id>/short` (artifacts use a flat id, e.g.
   `<id>-short`).
-- **No intro (opt-in, 024 Short 2026-10-09):** a video's own `brief.json` may carry
-  `format_recipe: { intro: { short_seconds: 0 } }` (or `long_seconds: 0`). Then there is no bumper at all —
-  `Main.tsx` skips the Intro sequence (not even the xf blend), scene 0 starts at **frame 0** instead of
-  its first word (`lib/timeline.mjs`) and has no fade-in (`lib/transitions.mjs`). The hook owns frame 0.
+- **No intro — the default since D-068 (owner, 2026-10-09; first tried on the 024 Short):**
+  `formats/default.json` `intro` is 0 for long and Short. There is no bumper at all — `Main.tsx` skips the
+  Intro sequence (not even the xf blend), scene 0 starts at **frame 0** instead of its first word
+  (`lib/timeline.mjs`) and has no fade-in (`lib/transitions.mjs`). The hook owns frame 0. Only a video's own
+  `brief.format_recipe: { intro: { long_seconds: 1.5 } }` brings a bumper back.
+- **The motion budget is a default too (D-068):** `compile-hyperframes` hands `format.motion.budget`
+  (camera 0.855, background 0.81 and still unless a window opens it, takes at 0.35) to every HF scene
+  whose props carry no `motion`. MOTION_SPEC §17.
 - **capture-segment scenes:** play `captures/<capture_id>.mp4` inside the scene window. **Never flat:**
   by default the clip gets a cinematic **push-in** (scale 1.0→1.20 over 2.5s, origin upper-centre) so the
   demo always has motion. For a **precise** zoom (punch into a cell/button when the narration names it, a
@@ -52,7 +56,7 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   takes over (the push-in auto-disables so they don't compound). Use bold zooms **selectively** (owner:
   video-dependent, not every capture). `props.kenBurns:false` opts a scene out of the push-in entirely;
   `props.zoomOrigin` re-aims it (owner never edits the footage).
-- **Intro/outro:** reusable, **no music on long-form** (sound-design hit only).
+- **Outro:** reusable, **no music on long-form** (sound-design hit only). No intro (above).
 - **Motion:** per VISUAL_IDENTITY §4; visual change every ~3–7s, snapped to sentences.
 
 ## Outputs

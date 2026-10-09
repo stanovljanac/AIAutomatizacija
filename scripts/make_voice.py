@@ -184,19 +184,29 @@ def plan_segments(n, pauses, keys, rate, key_rate=None):
     return segs
 
 
-def read_pacing(cdir: Path, rate: str):
+def recipe_pacing(fallback: str):
+    """(rate, rate_key) — the default pace from the format recipe (pipeline/shared/formats/default.json
+    `voice`, D-068), else `fallback` (the config rate) with no key rate."""
+    fpath = ROOT / "pipeline" / "shared" / "formats" / "default.json"
+    v = json.loads(fpath.read_text(encoding="utf-8")).get("voice", {}) if fpath.exists() else {}
+    return v.get("rate") or fallback, v.get("rate_key")
+
+
+def read_pacing(cdir: Path, rate: str, key_rate=None):
     """(voice_rate, voice_rate_key) from the nearest brief.json — the video's own, else its parent's
     (a nested Short inherits the long brief unless it carries one). The FIRST brief found wins, so a
-    Short with its own brief never mixes in the long video's pace."""
+    Short with its own brief never mixes in the long video's pace. `rate`/`key_rate` are the defaults;
+    the default key rate applies only when that brief sets no voice_rate of its own."""
     for bdir in (cdir, cdir.parent):
         bpath = bdir / "brief.json"
         if bpath.exists():
             b = json.loads(bpath.read_text(encoding="utf-8"))
             vr, vk = b.get("voice_rate"), b.get("voice_rate_key")
-            base = vr.strip() if isinstance(vr, str) and vr.strip() else rate
-            key = vk.strip() if isinstance(vk, str) and vk.strip() else None
+            own = isinstance(vr, str) and vr.strip()
+            base = vr.strip() if own else rate
+            key = vk.strip() if isinstance(vk, str) and vk.strip() else (None if own else key_rate)
             return base, key
-    return rate, None
+    return rate, key_rate
 
 
 def norm(tok: str) -> str:
@@ -248,9 +258,9 @@ async def main(cid: str):
     cdir = ROOT / "content" / cid
     cfg = json.loads((ROOT / "pipeline" / "shared" / "config.json").read_text(encoding="utf-8"))
     voice = cfg["voice"]["edge_tts"]["voice"]
-    # Per-video pacing override: brief.json.voice_rate (+ voice_rate_key for key takes). Keeps the
-    # global default intact while letting one video run slower/faster.
-    rate, key_rate = read_pacing(cdir, cfg["voice"]["edge_tts"].get("rate", "+0%"))
+    # Default pace = the format recipe's `voice` (D-068); a brief's voice_rate (+ voice_rate_key for
+    # key takes) overrides it for one video.
+    rate, key_rate = read_pacing(cdir, *recipe_pacing(cfg["voice"]["edge_tts"].get("rate", "+0%")))
 
     script = json.loads((cdir / "script.json").read_text(encoding="utf-8"))
 

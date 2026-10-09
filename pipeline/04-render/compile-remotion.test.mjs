@@ -17,13 +17,16 @@ import { buildTimeline } from "./lib/timeline.mjs";
 import { compileTimeline, stripAudioCommand, copyCaptureSilent, copyRemotionAssets } from "./compile-remotion.mjs";
 
 const fps = 30;
+// The FP-boundary tests below are about the frame math under a 1.5s intro and a 9-frame dissolve —
+// the pre-D-068 defaults — so they pin those numbers instead of following the default recipe.
+const LEGACY_RECIPE = { intro: { long_seconds: 1.5, short_seconds: 1.2 }, transition_frames: { crossfade: 9 } };
 
 function fixtureCompile() {
   const script = readFixture("script.json");
   const plan = readFixture("scene-plan.json");
   const alignment = readFixture("alignment.json");
   const brief = readFixture("brief.json");
-  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
+  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
   const timings = deriveRenderTimings(fmt, { fps, vertical: false });
   const timeline = buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: timings.crossfadeFrames, dims: { width: 1920, height: 1080 }, outId: "_FIXTURE" });
   const props = compileTimeline(timeline, { leadFrames: timings.leadFrames, tailSeconds: timings.captions.tailSeconds });
@@ -74,7 +77,7 @@ test("[CACHE BOUNDARY] mutating only `direction` leaves buildTimeline output byt
     const plan = readFixture("scene-plan.json");
     const alignment = readFixture("alignment.json");
     const brief = readFixture("brief.json");
-    const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
+    const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
     const timings = deriveRenderTimings(fmt, { fps, vertical: false });
     return { script, plan, alignment, fmt, timings };
   };
@@ -256,7 +259,7 @@ function adversarialPipeline({ s1Start, s2Start, revealStarts, duration }) {
       ...revealStarts.map((st, i) => ({ scene: "s2", w: `i${i}`, start: st, end: revealStarts[i + 1] ?? duration })),
     ],
   };
-  const fmt = resolveFormat({ archetype: "ideas" });
+  const fmt = resolveFormat({ archetype: "ideas", format_recipe: LEGACY_RECIPE });
   const timings = deriveRenderTimings(fmt, { fps, vertical: false });
   const timeline = buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: timings.crossfadeFrames, dims: { width: 1920, height: 1080 }, outId: "adv" });
   const props = compileTimeline(timeline, { leadFrames: LEAD, tailSeconds: timings.captions.tailSeconds });
@@ -350,7 +353,7 @@ test("[verifier-re] caption timing behaviour at FP boundaries is bounded and doc
       { scene: "s1", w: "later",  start: 1.0,  end: 1.5 },
     ],
   };
-  const fmt = resolveFormat({ archetype: "ideas" });
+  const fmt = resolveFormat({ archetype: "ideas", format_recipe: LEGACY_RECIPE });
   const timings = deriveRenderTimings(fmt, { fps, vertical: false });
   const timeline = buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "x" });
   const props = compileTimeline(timeline, { leadFrames: 0, tailSeconds: timings.captions.tailSeconds });

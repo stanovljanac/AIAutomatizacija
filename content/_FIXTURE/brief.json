@@ -10,5 +10,11 @@
   "task": "outbound-comms",
   "tool": "Claude",
   "score": 70,
+  "format_recipe": {
+    "intro": { "long_seconds": 1.5, "short_seconds": 1.2 },
+    "transition_frames": { "crossfade": 9 },
+    "captions": { "sentence_breaks": false },
+    "motion": { "ambient": true, "transition": { "duration_seconds": 0.3 } }
+  },
   "status": "scripted"
 }

@@ -176,10 +176,14 @@
    * only thing on screen that moves (024 Short, 2026-10-09 — owner: "it is too much to focus on and
    * it's losing focus to the important stuff").
    *
-   * @param {object} spec  { scale: 0.9, focus: [[t0, t1], ...] (scene-local s), focusScale: 0.35, ease: 0.4 }
-   *   scale       camera travel AND the ambient clock (dust drift, tile twinkle, idle bobbing) × scale
-   *   focus       key-take windows; inside one the camera clock and the ambient clock run at focusScale
-   *   ease        seconds to settle into / out of a focus window (smoothstep edges, before t0 / after t1)
+   * @param {object} spec  { scale: 0.9, focus: [[t0, t1], ...] (scene-local s), focusScale: 0.35, ease: 0.4,
+   *                         ambientScale, ambient: [[t0, t1], ...] }
+   *   scale        camera travel × scale (and the ambient clock too, unless ambientScale is given)
+   *   focus        key-take windows; inside one the camera clock and the ambient clock run at focusScale
+   *   ease         seconds to settle into / out of a window (smoothstep edges, before t0 / after t1)
+   *   ambientScale the ambient clock (dust drift, tile twinkle, idle bobbing) × ambientScale (D-068)
+   *   ambient      windows where the background is ALLOWED to move; outside them its clock holds still.
+   *                [] = a still background for the whole scene; absent = it runs throughout (pre-D-068)
    * @param {number} D     scene length (the clocks are integrated over [0, D + 1])
    * @returns M { identity, k, focus(t) 0..1, slow(t) camera clock, amb(t) ambient clock, speed(t) }
    *   Absent spec (or scale 1 + no focus) → IDENTITY: every clock is t, so scenes that never pass a
@@ -188,34 +192,46 @@
   var IDENTITY = { identity: true, k: 1, focus: function () { return 0; }, slow: function (t) { return t; }, amb: function (t) { return t; }, speed: function () { return 1; } };
   function motion(spec, D) {
     spec = spec || {};
-    var wins = (spec.focus || []).filter(function (w) { return w && isFinite(w[0]) && isFinite(w[1]) && w[1] > w[0]; });
+    function valid(list) { return (list || []).filter(function (w) { return w && isFinite(w[0]) && isFinite(w[1]) && w[1] > w[0]; }); }
+    var wins = valid(spec.focus);
+    var awins = Array.isArray(spec.ambient) ? valid(spec.ambient) : null;   // null = the background runs throughout
     var k = spec.scale == null ? 1 : Number(spec.scale);
-    if (k === 1 && !wins.length) return IDENTITY;
+    var ka = spec.ambientScale == null ? k : Number(spec.ambientScale);
+    if (k === 1 && ka === 1 && !wins.length && !awins) return IDENTITY;
     var fs = spec.focusScale == null ? 0.35 : Number(spec.focusScale);
     var ed = spec.ease == null ? 0.4 : Number(spec.ease);
     function sm(p) { return p * p * (3 - 2 * p); }
-    function focus(t) {
+    function inside(list, t) {
       var w = 0;
-      for (var i = 0; i < wins.length; i++) {
-        var up = ed > 0 ? sm(span(t, wins[i][0] - ed, wins[i][0])) : (t >= wins[i][0] ? 1 : 0);
-        var dn = ed > 0 ? 1 - sm(span(t, wins[i][1], wins[i][1] + ed)) : (t <= wins[i][1] ? 1 : 0);
+      for (var i = 0; i < list.length; i++) {
+        var up = ed > 0 ? sm(span(t, list[i][0] - ed, list[i][0])) : (t >= list[i][0] ? 1 : 0);
+        var dn = ed > 0 ? 1 - sm(span(t, list[i][1], list[i][1] + ed)) : (t <= list[i][1] ? 1 : 0);
         w = Math.max(w, Math.min(up, dn));
       }
       return w;
     }
+    function focus(t) { return inside(wins, t); }
+    function on(t) { return awins ? inside(awins, t) : 1; }
     function rate(t) { return 1 - (1 - fs) * focus(t); }
-    /* the slowed clock, integrated once at a fixed step (midpoint rule) so it is a pure function of t */
-    var STEP = 1 / 240, N = Math.ceil(((D || 60) + 1) / STEP) + 1, G = new Float64Array(N);
-    for (var i = 1; i < N; i++) G[i] = G[i - 1] + STEP * rate((i - 0.5) * STEP);
-    function slow(t) {
-      if (t <= 0) return t;
-      var x = t / STEP, j = Math.floor(x);
-      if (j >= N - 1) return G[N - 1] + (t - (N - 1) * STEP);
-      return G[j] + (G[j + 1] - G[j]) * (x - j);
+    /* the slowed clocks, integrated once at a fixed step (midpoint rule) so each is a pure function of t */
+    var STEP = 1 / 240, N = Math.ceil(((D || 60) + 1) / STEP) + 1, G = new Float64Array(N), A = new Float64Array(N);
+    for (var i = 1; i < N; i++) {
+      var m = (i - 0.5) * STEP;
+      G[i] = G[i - 1] + STEP * rate(m);
+      A[i] = A[i - 1] + STEP * rate(m) * on(m);
     }
+    function clock(C, tail) {
+      return function (t) {
+        if (t <= 0) return t * tail;
+        var x = t / STEP, j = Math.floor(x);
+        if (j >= N - 1) return C[N - 1] + (t - (N - 1) * STEP) * tail;
+        return C[j] + (C[j + 1] - C[j]) * (x - j);
+      };
+    }
+    var slow = clock(G, 1), still = clock(A, awins ? 0 : 1);
     return {
       identity: false, k: k, focusScale: fs, focus: focus, slow: slow,
-      amb: function (t) { return k * slow(t); },
+      amb: function (t) { return ka * still(t); },
       speed: function (t) { return k * rate(t); },
     };
   }

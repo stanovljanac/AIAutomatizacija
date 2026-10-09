@@ -118,6 +118,23 @@ test("job/variables shape: the fixed contract, props WITHOUT hf_scene, empty rev
   assert.equal(jobVariables(job).durationSeconds, job.durationFrames / fps);
 });
 
+// D-068 (owner, 2026-10-09): the format recipe's motion budget reaches every HF scene that did not
+// author its own — so "5% calmer, background only now and then" is a default, not a per-video memory.
+test("motion budget: a scene without props.motion gets the recipe's, camelCased for HW.motion", () => {
+  const budget = { scale: 0.855, ambient_scale: 0.81, ambient: [], focus_scale: 0.35, ease: 0.4 };
+  const { jobs } = buildHyperframesJobs(syntheticTimeline(), { motion: budget });
+  assert.deepEqual(jobs[0].props.motion, { scale: 0.855, ambientScale: 0.81, ambient: [], focusScale: 0.35, ease: 0.4 });
+});
+
+test("motion budget: an authored props.motion wins untouched (the 024 Short's scenes are unchanged)", () => {
+  const timeline = syntheticTimeline();
+  const own = { scale: 0.9, focus: [[1, 2]], focusScale: 0.35, ease: 0.4 };
+  timeline.scenes[1].props.motion = own;
+  const { jobs } = buildHyperframesJobs(timeline, { motion: { scale: 0.855, ambient_scale: 0.81, ambient: [] } });
+  assert.deepEqual(jobs[0].props.motion, own);
+  assert.deepEqual(buildHyperframesJobs(syntheticTimeline()).jobs[0].props.motion, undefined, "no budget → props untouched");
+});
+
 test("buildHyperframesJobs is pure — does not mutate the timeline", () => {
   const timeline = syntheticTimeline();
   const snapshot = JSON.stringify(timeline);

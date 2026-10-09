@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -173,6 +173,31 @@ test("read_pacing: the video's own brief wins, else the parent's; the key rate i
   assert.deepEqual(out[0], ["+3%", null], "no own brief → inherit the parent's pace");
   assert.deepEqual(out[1], ["-6%", "-11%"]);
   assert.deepEqual(out[2], ["+0%", null], "the first brief found wins even when it sets no pace");
+});
+
+// D-068 (owner, 2026-10-09): the default pace lives in the format recipe. A brief that sets no pace
+// takes BOTH recipe rates; a brief that sets its own voice_rate keeps its old meaning (key takes at
+// its own key rate, or at voice_rate) — so 024's briefs voice exactly as before.
+test("read_pacing: the recipe's key rate applies only when the brief sets no pace of its own", { skip: !havePython }, () => {
+  const out = py(
+    "import tempfile,pathlib\n" +
+      "d=pathlib.Path(tempfile.mkdtemp())\n" +
+      "a=mv.read_pacing(d,'-11%','-15%')\n" +
+      "(d/'brief.json').write_text(json.dumps({'title_working':'x'}))\n" +
+      "b=mv.read_pacing(d,'-11%','-15%')\n" +
+      "(d/'brief.json').write_text(json.dumps({'voice_rate':'+3%'}))\n" +
+      "c=mv.read_pacing(d,'-11%','-15%')\n" +
+      "print(json.dumps([a,b,c]))",
+  );
+  assert.deepEqual(out[0], ["-11%", "-15%"], "no brief → the recipe");
+  assert.deepEqual(out[1], ["-11%", "-15%"], "a brief with no pace → the recipe");
+  assert.deepEqual(out[2], ["+3%", null], "a brief's own pace is not mixed with the recipe's key rate");
+});
+
+test("recipe_pacing: formats/default.json voice wins over the config rate", { skip: !havePython }, () => {
+  const out = py("print(json.dumps(mv.recipe_pacing('+0%')))");
+  const recipe = JSON.parse(readFileSync(path.join(ROOT, "pipeline", "shared", "formats", "default.json"), "utf8")).voice;
+  assert.deepEqual(out, [recipe.rate, recipe.rate_key]);
 });
 
 /** Run a snippet with make_voice_azure.py's helpers in scope (as `az`). */

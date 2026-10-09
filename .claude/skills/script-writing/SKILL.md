@@ -99,6 +99,13 @@ polish sentences.
    **synthetic data**; pure-conceptual claims are framed as ideas, not tested fact.
 4. **One idea per sentence** (sentences are timing units).
 5. Hook lands in ≤ 10s; one subtle CTA (subscribe); short branded outro.
+   **No intro, ever (D-068, owner 2026-10-09):** there is no bumper — sentence 1 is heard over frame 0,
+   so sentence 1 IS the hook. Write it as the catch that holds the viewer: the claim, contradiction or
+   question that makes leaving cost something ("Correcting your AI teaches it nothing."). Never open on
+   a greeting, the channel, "in this video" or a warm-up line, and plan scene 1 so the topic is on
+   screen from its first frame. Pace is set for you (format recipe `voice`, 5% slower than the 024
+   Short) — write `pause_after` holds ×1.155 of the old 0.35–0.6s and mark the lines that must land
+   as `key_takes` (MOTION_SPEC §17).
 5b. **End on ONE topical closing question (Phase 1.3).** Set top-level `closing_question` — a single
    specific question tied to the video's topic ("Which hour would you hand over first?"), voiced in
    the final beat. Optionally author `pinned_comment` (the answer + re-ask: "Mine was copy-paste.

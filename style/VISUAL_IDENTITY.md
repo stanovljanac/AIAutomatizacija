@@ -140,12 +140,13 @@ Plus the always-on: `Intro` / `IntroShort`, `Outro` / `OutroShort`, `Subtitles`,
 > `BrandBackdrop` aurora). (Thumbnails remain owner-generated; `ThumbnailTemplate` is unused per the
 > visual-prompts rule.)
 
-- **Intro (long):** the gold desk mark lands over a black+gold aurora, the wordmark rises, a gold
-  rule sweeps, tagline fades in (~1.5s), then straight into the hook. **No music** (sound-design hit only).
-  Built in `components/Intro.tsx` + `components/BrandBackdrop.tsx`.
+- **Intro: RETIRED (D-068, owner 2026-10-09)** — every video opens on the hook at frame 0
+  (`formats/default.json` `intro` 0). The component stays for a video that brings it back through its
+  own `brief.format_recipe`: the gold desk mark lands over a black+gold aurora, the wordmark rises, a gold
+  rule sweeps, tagline fades in (~1.5s). Built in `components/Intro.tsx` + `components/BrandBackdrop.tsx`.
 - **Outro (long):** gold mark + channel handle + "subscribe" over the same aurora (~2.5s). **No music.**
   Built in `components/Outro.tsx`.
-- **Short variants:** tighter, vertical, ≤ 1.5s intro, minimal outro; **light music ok**.
+- **Short variants:** tighter, vertical, no intro (D-068), minimal outro; **light music ok**.
 
 ## 8. Music & audio aesthetic
 

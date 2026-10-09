@@ -33,7 +33,7 @@
       "properties": {
         "intensity": { "type": "string", "enum": ["calm", "standard", "lively"], "description": "Global motion budget. calm = hold where the narration carries it; lively = more movement." },
         "max_moving_elements": { "type": "integer", "minimum": 0, "description": "Cap on simultaneously-animating elements so motion stays purposeful, not constant." },
-        "ambient": { "type": "boolean", "description": "Subtle continuous background drift." },
+        "ambient": { "type": "boolean", "description": "Subtle continuous background drift. false since D-068 (owner, 2026-10-09): background motion is occasional, never constant — the 3D kit enforces it through motion.budget.ambient." },
         "emphasis": { "type": "boolean", "description": "Pop / underline on emphasized words or beats." },
         "transition": {
           "type": "object",
@@ -43,7 +43,28 @@
             "duration_seconds": { "type": "number", "minimum": 0 }
           }
         },
-        "default_engine": { "type": "string", "enum": ["remotion", "hyperframes"], "description": "Per-scene engine default; a scene may override. HyperFrames only for 1-3 hero beats." }
+        "default_engine": { "type": "string", "enum": ["remotion", "hyperframes"], "description": "Per-scene engine default; a scene may override. HyperFrames only for 1-3 hero beats." },
+        "budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "The HW.motion budget (templates/hyperframes/_lib/hf-world.js, MOTION_SPEC §16) that compile-hyperframes hands every HyperFrames scene whose props carry no `motion` of their own (D-068). Relative to the 024 long cut = 1.",
+          "properties": {
+            "scale": { "type": "number", "minimum": 0, "description": "Camera travel × scale." },
+            "ambient_scale": { "type": "number", "minimum": 0, "description": "The background clock (dust drift, tile twinkle, idle bobbing) × ambient_scale." },
+            "ambient": { "type": "array", "items": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }, "description": "Scene-local [t0, t1] windows where the background may move; [] = still background. A scene that wants a window authors its own props.motion." },
+            "focus_scale": { "type": "number", "minimum": 0, "description": "Camera + background clock inside a key-take focus window." },
+            "ease": { "type": "number", "minimum": 0, "description": "Seconds to settle into / out of a window." }
+          }
+        }
+      }
+    },
+    "voice": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Default narration pace (D-068). A brief's voice_rate / voice_rate_key override it; scripts/make_voice.py and make_voice_azure.py read it from formats/default.json.",
+      "properties": {
+        "rate": { "type": "string", "pattern": "^[+-]\\d+%$", "description": "Speaking rate (edge-tts / Azure prosody)." },
+        "rate_key": { "type": "string", "pattern": "^[+-]\\d+%$", "description": "Rate for the script's key takes (scenes[].key_takes)." }
       }
     },
     "reveals": {

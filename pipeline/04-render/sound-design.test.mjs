@@ -20,7 +20,7 @@ function build(planPatch) {
   const plan = { ...readFixture("scene-plan.json"), ...planPatch };
   const alignment = readFixture("alignment.json");
   const brief = readFixture("brief.json");
-  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
+  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
   const timings = deriveRenderTimings(fmt, { fps, vertical: false });
   return buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: timings.crossfadeFrames, dims: { width: 1920, height: 1080 }, outId: "_FIXTURE" });
 }

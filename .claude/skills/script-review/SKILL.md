@@ -29,6 +29,8 @@ write `script.review.json` with `pass: true|false` + a list of issues.
 - [ ] **Original human angle present** and surfaces in/after the hook (HARD — D-018).
 - [ ] Hook lands within `format.hook.target_seconds` (default ~12s) and promises a payoff; the
       planned opening scene is **hook-class** (a `hook-card` or custom `hook-*`).
+- [ ] **No intro (D-068):** sentence 1 is the catch itself — no greeting, channel name, "in this
+      video" or warm-up line — because there is no bumper and it plays over frame 0.
 - [ ] **Accuracy by archetype:** comparison/stats claims trace to sources — **delegate to
       `claims.json`** (the `fact-check` skill's scorecard): every HIGH/MED claim is
       `verified`/`corrected` with a fetched `source_url`, none left `unverified`. Demo steps use

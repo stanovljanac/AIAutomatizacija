@@ -61,9 +61,12 @@ the viewer's time."
 
 ## 5. Structure for retention (per archetype)
 
-Every archetype: **hook in ≤ 10s** (the payoff/promise or a sharp question), no long
-intro, end with **one subtle CTA (subscribe)** + a short branded outro. The original
-angle should surface early (in or right after the hook).
+Every archetype: **hook in ≤ 10s** (the payoff/promise or a sharp question), **no intro at
+all (D-068, owner 2026-10-09)** — no bumper, no "in this video", no warm-up line: the first
+frame is the topic and the first sentence is the catch that makes leaving cost something. End
+with **one subtle CTA (subscribe)** + a short branded outro. The original angle should surface
+early (in or right after the hook). Pace: the narration runs at the format recipe's `voice`
+rate (5% slower than the 024 Short), key takes slower still (MOTION_SPEC §17).
 
 **Open on the idea, not the anecdote (owner rule, 2026-07-12).** When the video carries a
 reframe, the **thesis/reversal is the hook** — lead with it so the curiosity gap opens on

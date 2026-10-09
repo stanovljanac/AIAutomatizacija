@@ -37,8 +37,14 @@ captions are positioned in time to match it.
   sparingly — one held beat per video is a device; three is a pacing problem.
 
 ## Pace knobs and key takes (024 Short, 2026-10-09)
-- **Pace** = `brief.voice_rate` (e.g. `"-6%"`). A nested Short with its own `short/brief.json` uses its
-  own; without one it inherits the long brief's. The **first** brief found wins.
+- **Default pace (D-068)** = the format recipe's `voice` in `pipeline/shared/formats/default.json`:
+  `rate "-11%"`, `rate_key "-15%"` — 5% slower than the 024 Short (whose `-6%` / `-11%` measured
+  1.10× / 1.166× the long cut's speech time). Both `make_voice.py` and `make_voice_azure.py` read it
+  (`recipe_pacing`); `config.json`'s `rate` is only the fallback when the recipe has none.
+- **Per-video pace** = `brief.voice_rate` (e.g. `"-6%"`) overrides the recipe. A brief that sets its own
+  `voice_rate` keeps its own `voice_rate_key` (or none) — the recipe's key rate never mixes in. A nested
+  Short with its own `short/brief.json` uses its own; without one it inherits the long brief's. The
+  **first** brief found wins.
 - **Key takes** = the lines the viewer must remember: `"key_takes": [sentence idx]` on a script scene,
   spoken at `brief.voice_rate_key` (slower than `voice_rate`). A rate change starts a new segment, like a
   pause does. Both `make_voice.py` and `make_voice_azure.py` honour it (Azure: one `<prosody>` per

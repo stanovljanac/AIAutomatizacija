@@ -14,7 +14,7 @@ function fixtureTimeline() {
   const plan = readFixture("scene-plan.json");
   const alignment = readFixture("alignment.json");
   const brief = readFixture("brief.json");
-  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
+  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
   const timings = deriveRenderTimings(fmt, { fps, vertical: false });
   return buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: timings.crossfadeFrames, dims: { width: 1920, height: 1080 }, outId: "_FIXTURE" });
 }
@@ -77,7 +77,7 @@ test("buildTimeline: revealOn 'sentences' yields one reveal per sentence even wi
   assert.ok(target, "fixture has a no-list, multi-sentence scene to mark revealOn:sentences");
   target.revealOn = "sentences";
   const sc = script.scenes.find((s) => s.id === target.scene_id);
-  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format });
+  const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
   const timings = deriveRenderTimings(fmt, { fps, vertical: false });
   const t = buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: timings.crossfadeFrames, dims: { width: 1920, height: 1080 }, outId: "_FIXTURE" });
   const built = t.scenes.find((s) => s.scene_id === `${target.scene_id}.0`);
@@ -221,7 +221,8 @@ test("buildTimeline with intro 0: the first scene starts at frame 0, the rest st
   assert.equal(t.scenes[0].start_seconds, 0, "the hook is on screen from the first frame");
   assert.equal(t.audio.start_seconds, 0, "narration starts at 0 too — it is never shifted");
   assert.equal(t.scenes[1].start_seconds, Math.round(t.scenes[1].start_seconds * fps) / fps);
-  const tIntro = buildTimeline({ script, plan, alignment, fmt: resolveFormat({ archetype: script.archetype }), timings: deriveRenderTimings(resolveFormat({ archetype: script.archetype }), { fps, vertical: false }), fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "_FIXTURE" });
+  const withIntro = resolveFormat({ archetype: script.archetype, format_recipe: { intro: { long_seconds: 1.5 } } });
+  const tIntro = buildTimeline({ script, plan, alignment, fmt: withIntro, timings: deriveRenderTimings(withIntro, { fps, vertical: false }), fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "_FIXTURE" });
   assert.equal(tIntro.scenes[0].start_seconds, (45 + Math.round(0.1 * fps)) / fps, "with an intro, scene 0 still snaps to its first word (unchanged)");
 });
 
@@ -243,7 +244,8 @@ function captionTimeline({ keyTakes, sentenceBreaks }) {
     ],
   };
   const plan = { scenes: [{ scene_id: "s1", template: "hook-card", props: { title: "T" } }] };
-  const fmt = resolveFormat({ archetype: "ideas", format_recipe: sentenceBreaks ? { captions: { sentence_breaks: true } } : undefined });
+  // explicit either way: the default flipped to true at D-068
+  const fmt = resolveFormat({ archetype: "ideas", format_recipe: { captions: { sentence_breaks: !!sentenceBreaks } } });
   const timings = deriveRenderTimings(fmt, { fps, vertical: false });
   return buildTimeline({ script, plan, alignment, fmt, timings, fps, crossfadeFrames: 9, dims: { width: 1920, height: 1080 }, outId: "x" });
 }

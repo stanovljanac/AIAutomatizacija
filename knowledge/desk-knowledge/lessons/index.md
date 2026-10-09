@@ -34,4 +34,5 @@ lesson with no evidence stays `draft` forever.
 - [A post effect must sample the same image the frame shows](2026-10-08-post-effects-must-share-the-blur.md) — lesson, stable
 - [A motion knob is not a motion measurement — "10% less motion" is a measured ratio](2026-10-09-a-motion-knob-is-not-a-motion-measurement.md) — lesson, stable
 - [A TTS rate string is a request, not a pace — measure the pace you promise](2026-10-09-a-rate-string-is-not-a-pace.md) — lesson, stable
+- [Constant background motion buries the point — the background moves only now and then](2026-10-09-constant-background-motion-buries-the-point.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

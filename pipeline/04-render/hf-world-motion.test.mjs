@@ -97,6 +97,40 @@ test("the ambient clock runs at scale × focusScale inside a window and is conti
   assert.ok(near(M.amb(3.999), M.amb(4.001), 0.01), "no jump at the window edge");
 });
 
+// D-068 (owner, 2026-10-09, on the 024 Short): "no constant animation in the background through the
+// whole video — only now and then, and 10% calmer". So the ambient clock gets its own scale and its
+// own windows; outside a window the background holds still.
+test("ambientScale: the background clock has its own scale, the camera keeps `scale`", () => {
+  const M = HW.motion({ scale: 0.855, ambientScale: 0.81 }, 10);
+  assert.equal(M.identity, false);
+  assert.ok(near(M.amb(2) - M.amb(1), 0.81, 1e-6), "0.81 s of drift per second");
+  assert.ok(near(M.speed(3), 0.855, 1e-9), "the camera runs at scale");
+  assert.ok(near(HW.motion({ scale: 0.9 }, 10).amb(2) - HW.motion({ scale: 0.9 }, 10).amb(1), 0.9, 1e-6), "absent → ambientScale = scale (the 024 Short's scenes are unchanged)");
+});
+
+test("ambient: [] freezes the background for the whole scene — even at scale 1 it is not the identity", () => {
+  const M = HW.motion({ ambient: [] }, 10);
+  assert.equal(M.identity, false);
+  for (const t of [0, 1, 4.2, 10]) assert.equal(M.amb(t), 0);
+  assert.ok(near(M.slow(4.2), 4.2, 1e-9), "the camera is untouched");
+});
+
+test("ambient windows: the background drifts only inside them, eases in and out, never jumps or runs back", () => {
+  const M = HW.motion({ ambientScale: 0.81, ambient: [[2, 4]], ease: 0.4 }, 10);
+  assert.ok(near(M.amb(1.5), 0, 1e-9), "still before the window's soft edge");
+  assert.ok(near(M.amb(3.5) - M.amb(2.5), 0.81, 1e-6), "settled inside: 0.81 s per second");
+  const held = M.amb(4.5);
+  assert.ok(near(M.amb(9), held, 1e-9), "after the window the background holds where it stopped");
+  let prev = -1;
+  for (let t = 0; t <= 10; t += 0.01) { const a = M.amb(t); assert.ok(a >= prev - 1e-12); prev = a; }
+  assert.ok(near(M.amb(1.999), M.amb(2.001), 0.01) && near(M.amb(3.999), M.amb(4.001), 0.01), "no jump at the edges");
+});
+
+test("an ambient window inside a focus window runs at ambientScale × focusScale", () => {
+  const M = HW.motion({ scale: 0.855, ambientScale: 0.81, ambient: [[0, 10]], focus: [[4, 6]], focusScale: 0.35, ease: 0.4 }, 12);
+  assert.ok(near(M.amb(5.5) - M.amb(4.5), 0.81 * 0.35, 1e-6));
+});
+
 test("kicks are added at REAL time (× scale), so an impact stays on its word even inside a focus window", () => {
   const M = HW.motion({ scale: 0.9, focus: [[0, 10]], focusScale: 0.2, ease: 0 }, 10);
   const kick = (t) => (t >= 5 && t < 5.5 ? [1, 0, 0] : [0, 0, 0]);

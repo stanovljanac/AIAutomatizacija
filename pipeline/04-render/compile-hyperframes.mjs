@@ -44,9 +44,15 @@ import { sceneWindow } from "./lib/transitions.mjs";
  * @param {object} timeline             a timeline.json object
  * @param {object} opts
  * @param {number} opts.leadFrames      start each reveal this many frames early (same as Remotion)
+ * @param {object} [opts.motion]        format.motion.budget — handed (camelCased for HW.motion) to every
+ *                                      scene whose props carry no `motion` of their own (D-068)
  * @returns {{ jobs: object[], warnings: string[] }}
  */
-export function buildHyperframesJobs(timeline, { leadFrames = 0 } = {}) {
+export function buildHyperframesJobs(timeline, { leadFrames = 0, motion } = {}) {
+  const budget = motion && {
+    scale: motion.scale, ambientScale: motion.ambient_scale, ambient: motion.ambient,
+    focusScale: motion.focus_scale, ease: motion.ease,
+  };
   const fps = timeline.format.fps;
   const F = (s) => Math.round(s * fps);
   const jobs = [];
@@ -57,6 +63,7 @@ export function buildHyperframesJobs(timeline, { leadFrames = 0 } = {}) {
     // window math — the SAME function compile-remotion.mjs calls (k indexes the FULL scene list)
     const { fromFrame, durFrames: durationFrames } = sceneWindow(timeline, k);
     const { hf_scene: hfScene, ...props } = sc.props ?? {};
+    if (budget && props.motion == null) props.motion = budget;
     if (!hfScene) {
       warnings.push(`hyperframes scene ${sc.scene_id} has no props.hf_scene (the templates/hyperframes/scenes/<name> to render) — skipped`);
       return;
@@ -323,7 +330,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
   const timings = deriveRenderTimings(fmt, { fps: timeline.format.fps, vertical });
 
-  const { jobs, warnings } = buildHyperframesJobs(timeline, { leadFrames: timings.leadFrames });
+  const { jobs, warnings } = buildHyperframesJobs(timeline, { leadFrames: timings.leadFrames, motion: fmt.motion.budget });
   for (const w of warnings) console.warn(w);
   if (!jobs.length) {
     console.log(`No engine:"hyperframes" scenes in ${id}/timeline.json — nothing to render.`);
