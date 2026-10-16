@@ -37,8 +37,17 @@ proportions. It is a **vocabulary as input to this section — never a selector.
 note and pick a metaphor off it; that is the template failure §0 exists to ban. Read it so your
 fresh answer is informed, and so a rejected metaphor isn't re-invented a fourth time.
 
-**The whole-video floor (owner, 2026-07-10): video 012 `studio-reveal` is the MINIMUM benchmark
-for visuals, animation, and transitions — every future video meets or beats it, never below.**
+**The whole-video floor (owner, 2026-10-16): video 025 `always-on-agents` is the MINIMUM benchmark —
+every future video meets or beats it, never below** (*"može ovaj video da bude novi 'sample' kako bi
+trebalo da izgleda minimalno dobro svaki sledeći video. Od ovoga može samo bolje"*). What earned it: one
+physical spine object with parts, every scene that object doing something on the narration's words, a
+visible run of the mechanism as the proof, the camera square to it (§18), a measured experiment behind
+every number. **The next step up, named in the same review:** more than one scene set — 2–4 distinct
+environments / backdrops joined by bespoke transitions (§3), so the background is not identical for the
+whole video; 025 got away without it only because its single machine carried the whole story.
+
+*The previous floor (owner, 2026-07-10), kept because its craft rules still hold: video 012
+`studio-reveal`.*
 What earned it: per-scene icons, and a visual flow *conceived to follow the script itself* (each
 beat drawn as its own bespoke HF scene: territory fields, a flowing token, a self-building scene).
 Layout craft it also pinned down: any element that appears later in a scene (badge, CTA, tag)
@@ -606,6 +615,13 @@ stays untouched). A video's own object is a second file on top of it (025: `hf-m
 - `HM.Part` — a part knows its HOME pose and named AWAY poses; `place(k, away)` runs assembly and
   disassembly as the same function. `HM.integral(rate)` turns a speed into a position that never jumps.
 - `HM.clock(S)` — beats (`K.b`), word marks from `props.marks` (`K.m`), and the dev-range clock.
+
+**Never stop everything to show "stopping"** (owner, 2026-10-16). 025 s8 braked the whole machine to a
+standstill on "stopping it doesn't undo what it already did", with the camera easing to rest: three
+seconds without a moving pixel read as the PLAYER freezing, not as a stop. Something always moves — the
+mechanism, a part, or a slow camera drift (§16's focus windows slow motion to 0.35, never to 0). A
+deliberate still (a "pause and copy" card) keeps a slow readable drift too. Check a cut with
+`ffmpeg … -vf "scale=480:-1,freezedetect=n=0.004:d=1.2"`: every hit must be a choice you can name.
 
 **Numbers that were each paid for on a frame:**
 - **Metal square to the lens mirrors the wall behind the camera.** Dark room → dead-black parts; bright

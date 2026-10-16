@@ -5,14 +5,15 @@
  * clock takes its place. The launches are the CORE changing: the cartridge ejects and another seats, three
  * times, each under its own name plate, and the machine around it never changes — the tool is modular,
  * the job is the same. "When your computer is off" is the room going dark while the train keeps turning.
- * The last beat is OpenAI's own sentence acted out: one envelope leaves, THEN the train is stopped, and the
- * envelope is still gone. Every claim wears its source.
+ * The last beat is OpenAI's own sentence over a machine that keeps running: one envelope has already left,
+ * and it stays gone. (A version that STOPPED the train on "undo" read as the video freezing — owner,
+ * 2026-10-16 — so nothing in this scene ever stands still.) Every claim wears its source.
  *
  * SHOTS:  A 0    barrel: the crank comes off, the clock seats     "…agents have stopped waiting for you."
  *         B b1   the core: first cartridge + name plate            "On September twenty-ninth, OpenAI launched Dots."
  *         C b2   wide, the lights go down, it keeps running        "…keep working when your computer is off."
  *         D b3   two more cartridges; the clock                    "Claude's routines and Cursor's automations already run on a schedule."
- *         E b4   one leaves; the train is stopped; still gone      "…stopping it doesn't undo what it already did."
+ *         E b4   one leaves; the machine runs on; still gone       "…stopping it doesn't undo what it already did."
  */
 var S = HF.scene({ id: "mv-now", width: 1920, height: 1080, frames: 776, beatLo: 0, beatHi: 0.1 });
 var W = S.W, H = S.H, props = S.props, K = HM.clock(S), D = K.D;
@@ -28,11 +29,10 @@ document.getElementById("hud").innerHTML =
   chip("c1", "OpenAI <b>Dots</b> · launched <b>29 Sep 2026</b> · TechCrunch, NBC News") +
   chip("c2", "“It can keep working even when your computer is off.” · <b>OpenAI docs</b>") +
   chip("c3", "“…all without stopping for approval” · <b>Claude Code docs, Routines</b>") +
-  '<div class="hw-plate hm-tag blue" id="stopped">stopped</div>' +
   '<div class="hw-plate hm-tag red" id="gone">already sent</div>' +
   '<div class="hw-plate hm-quote" id="quote"><div class="q">“Your dot can make mistakes, and stopping a task <span class="g">doesn\'t undo actions it has already completed.</span>”</div><div class="src"><b>OpenAI</b> · Meet dots · learn.chatgpt.com/docs/dots</div></div>';
 var tl = gsap.timeline({ paused: true });
-gsap.set(["#k1", "#c1", "#c2", "#c3", "#stopped", "#gone", "#quote"], { opacity: 0 });
+gsap.set(["#k1", "#c1", "#c2", "#c3", "#gone", "#quote"], { opacity: 0 });
 HW.fromTo(tl, "#k1", { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: 0.34, ease: "back.out(1.5)" }, tStopped + 0.25);
 tl.to("#k1", { opacity: 0, y: -18, duration: 0.2, ease: "power2.in" }, tDots - 0.95);
 function chipIn(id, t0, t1) { HW.fromTo(tl, id, { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, t0); tl.to(id, { opacity: 0, x: 24, duration: 0.2, ease: "power2.in" }, t1); }
@@ -41,7 +41,6 @@ chipIn("#c2", b2 + 1.15, b3 - 0.1);
 chipIn("#c3", tRoutines + 0.2, b4 - 0.1);
 HW.fromTo(tl, "#quote", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.36, ease: "back.out(1.4)" }, b5 - 0.25);
 HW.fromTo(tl, "#gone", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.28, ease: "back.out(1.6)" }, tMistakes + 0.85);
-HW.fromTo(tl, "#stopped", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.28, ease: "back.out(1.6)" }, tUndo - 0.35);
 tl.to({}, { duration: 0.01 }, D - 0.01);
 K.register("mv-now", tl);
 
@@ -73,9 +72,8 @@ HF3.boot(function (THREE) {
   list.push({ inv: M.INVOICES[4], t0: tStray - 1.9, fate: "send", pre: "due", stray: true, to: "Linden Dental" });
   var job = M.job(list, { feed: 0.75, read: 0.45, move: 0.45, flip: 0.25, fly: 0.55 });
 
-  /* the train: cranked, then self-starting, then STOPPED on "undo" */
-  var tBrake = tUndo - 0.7;
-  var rate = function (t) { return 0.8 * (1 - E.out2(span(t, tBrake, tBrake + 0.3))); };
+  /* the train: cranked, then self-starting, and it never stops */
+  var rate = function () { return 0.8; };
   var th = HM.integral(rate, D), tk = HM.integral(function (t) { return 5 * (rate(t) / 0.8); }, D);
   var tCrankOff = tStopped - 0.55, tWhenIn = tCrankOff + 0.25;
   function night(t) { return Math.min(E.inOut(span(t, tOff - 0.9, tOff - 0.2)), 1 - E.inOut(span(t, b3 - 0.25, b3 + 0.45))); }
@@ -92,7 +90,7 @@ HF3.boot(function (THREE) {
     { t: b3 + 0.95, v: [-1.6, 2.0, 14.6, 0, 0, 0], e: "inOut" },
     { t: b4 - 0.2, v: [-1.6, 2.0, 14.4, 0, 0, 0] },
     { t: b4 + 1.05, v: [1.2, -0.5, 24.5, 0, 0, 0], e: "inOut" },
-    { t: D, v: [1.2, -0.5, 24.2, 0, 0, 0], e: "out2" },
+    { t: D, v: [2.0, -0.6, 22.6, 0, 0, 0], e: "sine" },
   ]);
 
   function pose(t) {

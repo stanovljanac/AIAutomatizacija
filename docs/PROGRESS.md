@@ -19,6 +19,18 @@ Format:
 
 ---
 
+## 2026-10-16 — 025 owner review: the new floor, no impact thud, no frozen frames — D-070
+- who: agent (owner reviewed the 025 draft cut: flow approved, two defects, two rules).
+- did: committed the 025 build (`fdfd70b`). Removed all ten `impact.mp3` cues (the "dum" — 28 cues left,
+  accent + whoosh) and retired the file from scene-plans (storyboard skill, `assets/sfx/README.md`).
+  s8 no longer brakes the machine on "stopping a task" (it read as the player freezing); s3's tail and
+  s10's two holds got a slow dolly after `freezedetect` flagged them. Re-rendered s3/s8/s10 and the full
+  composite (the audio layer changed). 025 is now the minimum benchmark (MOTION_SPEC §0, replaces 012); next
+  step up = 2–4 scene sets joined by transitions. MOTION_SPEC §18 "never stop everything", D-070, KOS lesson
+  extended, memories `025-minimum-benchmark` + `no-riser-sfx` updated.
+- next: owner re-watch → approval of the Short. Still owed for publish: Azure final voice → re-align →
+  `render/plan.mjs` → re-render, then the publish package.
+
 ## 2026-10-10 — 025 "AI Agents Make Mistakes. One Line Makes Them Undoable.": the first mechanical, face-on video — D-069
 - who: agent (owner brief: a non-Desk-Lessons video on a practical novelty, the agent picks the topic; far
   more custom animation; camera at 90° unless depth is the only way to show a key idea; "all out").

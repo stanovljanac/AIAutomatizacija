@@ -153,7 +153,7 @@ track, never cut): a quiet looped bed, and one-shot cues placed on the narration
 "audio": {
   "bed": { "src": "bed-low-pulse.mp3", "gain": 0.06 },
   "sfx": [
-    { "src": "impact.mp3", "atSeconds": 196.9, "gain": 0.7 }
+    { "src": "accent.mp3", "atSeconds": 196.9, "gain": 0.4 }
   ]
 }
 ```
@@ -162,14 +162,17 @@ track, never cut): a quiet looped bed, and one-shot cues placed on the narration
 > read as a **siren** over the closing beat: "totalno je nepotreban i neuskladjen sa videom. nemoj da
 > ga dodajes vise ikada." A rising pitch sweep is a trailer device; this channel's register is a desk,
 > not a countdown. The file stays in `assets/sfx/` for the record, but no scene-plan may reference it.
-> A peak beat gets **one impact** and nothing else.
+> **NEVER use `impact.mp3` either (owner rule, 2026-10-16).** On 025 the low 45/180 Hz thud, placed on
+> ten visual hits, read as *"glup i tup zvuk koji se ponavlja sa vremena na vreme na random pauzi… nešto
+> kao dum"* — a dull thud at random pauses, not emphasis. The file stays for the record; no scene-plan
+> may reference it. Cues are `accent.mp3` and `whoosh.mp3` only.
 
 - `atSeconds` uses the **narration clock** — read the number straight off `alignment.json`. It is
   frame-snapped, so a cue lands exactly on the beat it was written for.
 - Files come from the shared `assets/sfx/` library (**CC0 only** — see its README). A missing file
   warns and drops the cue; sound design never kills a render.
-- **Be sparing.** One riser + one impact on the video's single peak beat. Cues under ordinary scene
-  changes turn into a nervous tic, and the bed above ~0.10 gain fights the voice (nothing is
+- **Be sparing.** Each cue sits on a visible event (a part lands, a thing leaves the frame); cues under
+  ordinary scene changes turn into a nervous tic, and the bed above ~0.10 gain fights the voice (nothing is
   side-chain ducked, deliberately).
 - The sibling feature, **scripted silence**, is declared on the *script* (`pause_after`), not here —
   see the `voice-synthesis` skill.

@@ -49,6 +49,10 @@ file without `--force`, so your file wins. Keep it **CC0 / public-domain only** 
 Catalogues: **freesound.org** (filter *Creative Commons 0*) · **pixabay.com/sound-effects** ·
 **mixkit.co/free-sound-effects** · **incompetech.com** (CC-BY — attribution required, so prefer CC0).
 
+> **Retired from scene-plans (owner rules):** `riser.mp3` (2026-08-17 — heard as a siren) and
+> `impact.mp3` (2026-10-16 — heard as a dull random "dum"). The files and recipes stay for the record;
+> plans use `accent.mp3` and `whoosh.mp3` only. See the storyboard skill.
+
 ## Inventory
 
 | File | What it is | Source | Licence |

@@ -826,3 +826,20 @@ old one (don't delete history).
 - **Cost.** $0. Eleven scenes render in 15 minutes at 6 sub-frames (8.5 fps at 1080p on the owner's GPU).
 - **Rules:** MOTION_SPEC §18. **Lesson:** `lessons/2026-10-10-angle-variety-is-not-motion-design.md`.
   **Tests:** `pipeline/04-render/hf-mech.test.mjs`.
+
+## D-070 — 025 is the new floor; no impact thud; never stop everything (owner review of 025, 2026-10-16)
+- **Context.** The owner watched the 025 draft cut. Flow approved, with two defects: a low "dum" at what
+  felt like random pauses, and the scene where the video seemed to freeze on "stopping a task".
+- **Decision.**
+  1. **025 replaces 012 as the minimum benchmark** for every future video (*"od ovoga može samo bolje"*);
+     MOTION_SPEC §0. The named next step up: 2–4 scene sets joined by bespoke transitions, so the
+     backdrop is not identical for the whole video (025 did not need it — its one machine carried the story).
+  2. **`impact.mp3` is retired from scene-plans**, like `riser.mp3` before it. The "dum" was the impact's
+     45/180 Hz thud, placed on ten visual hits — also against the storyboard skill's own "be sparing".
+     Plans use `accent.mp3` and `whoosh.mp3` only (storyboard skill, `assets/sfx/README.md`).
+  3. **A scene never stops all motion** to illustrate a stop. 025 s8 braked the whole machine and eased the
+     camera to rest for ~3 s; on a player that is indistinguishable from a freeze. Holds keep a slow drift;
+     `freezedetect` is the check (MOTION_SPEC §18).
+- **Applied to 025:** s8's machine runs to the end of the scene, the STOPPED tag is gone; s3's tail and
+  s10's card / rules holds got a slow dolly; all ten impact cues removed (28 cues remain: 17 accent,
+  11 whoosh). The pre-fix cut is kept as `video/_v1/final-v1.mp4`.
