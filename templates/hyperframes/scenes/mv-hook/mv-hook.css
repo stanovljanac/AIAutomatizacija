@@ -1,0 +1,4 @@
+/* mv-hook — HUD layout (black + gold hero). Plates come from _lib/hf-world.css + hf-mech.css. */
+#chip { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#k1, #k2 { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#meter { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }

@@ -1,0 +1,7 @@
+/* mv-slip — HUD layout. Plates come from _lib/hf-world.css + hf-mech.css. */
+#chip { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#runs { left: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#meter { left: calc(84px * var(--u)); top: calc(140px * var(--u)); }
+#owes { left: calc(1010px * var(--u)); top: calc(250px * var(--u)); }
+#wrong { left: calc(1190px * var(--u)); top: calc(250px * var(--u)); }
+#quote { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }

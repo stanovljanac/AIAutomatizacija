@@ -1,0 +1,7 @@
+/* mv-oneline — HUD layout. Plates come from _lib/hf-world.css + hf-mech.css. */
+#chip { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#demo { right: calc(84px * var(--u)); top: calc(128px * var(--u)); }
+#whole { left: calc(1130px * var(--u)); top: calc(600px * var(--u)); }
+#meter { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#runs { left: calc(84px * var(--u)); top: calc(330px * var(--u)); }
+#held { left: calc(420px * var(--u)); top: calc(560px * var(--u)); }

@@ -36,4 +36,5 @@ lesson with no evidence stays `draft` forever.
 - [A TTS rate string is a request, not a pace — measure the pace you promise](2026-10-09-a-rate-string-is-not-a-pace.md) — lesson, stable
 - [Constant background motion buries the point — the background moves only now and then](2026-10-09-constant-background-motion-buries-the-point.md) — lesson, stable
 - [A re-voice moves every word — a typed word offset is stale the moment the final voice lands](2026-10-10-a-re-voice-moves-every-word.md) — lesson, stable
+- [Angle variety is not motion design — hold the camera square and move the OBJECT](2026-10-10-angle-variety-is-not-motion-design.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

@@ -1,0 +1,3 @@
+/* mv-card — HUD layout. The card itself is the object; the HUD only carries sources. */
+#c1, #c2 { right: calc(84px * var(--u)); top: calc(46px * var(--u)); font-size: calc(24px * var(--u)); }
+#you { left: calc(1150px * var(--u)); top: calc(230px * var(--u)); }

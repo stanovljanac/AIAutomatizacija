@@ -797,3 +797,32 @@ old one (don't delete history).
   (`+3%` long, `-6%`/`-11%` Short), so on 024's final render only the no-intro default (the long loses its
   1.5s bumper), the 10-frame dissolve and sentence captions apply. `content/_FIXTURE` pins the pre-D-068
   recipe so its golden props stay a regression snapshot.
+
+## D-069 — The camera is square to the subject, and the subject is an object with parts (owner, 2026-10-10)
+- **Context.** Commissioning 025 (the first video outside the Desk Lessons playlist; the agent picks the
+  topic), the owner named what the 3D run of 021–024 had turned into: *"ne želim toliko uglova kamera od
+  45/65/75 stepeni u odnosu na objekat… drži se 90 osim kad baš želimo 3D dubinu i prikažemo neku ključnu
+  ideju koja ne može da stane u samu scenu"*, and *"drugi modeli prave brutalne promo materijale gde se
+  rastavljaju svakakvi delovi automobila… a mi pravimo 3D chatove teksta sa LLM modelom. Hoću da ideš all
+  out."* Depth and a moving camera had been standing in for motion design; the thing on screen was still text.
+- **Decision.**
+  1. **Face-on by default.** Camera yaw/pitch 0; dolly and truck carry the pace. At most ONE oblique shot
+     per video, for an idea that is about depth itself. This **supersedes the "~50/50 3D" target** of
+     2026-08-23 (MOTION_SPEC §14) and extends the no-tilt rule from cards (2026-07-12) to the camera.
+  2. **A video's spine is an object with parts**, picked before the storyboard; scenes are that object
+     assembling, running, or changing because one part arrived. Chat windows and text panels floating in
+     3D are out as a scene's subject.
+  3. **A third 3D kit, `_lib/hf-mech.js`** (+ `hf-mech.css`), beside `hf-three` and `hf-world`, which stay
+     byte-for-byte (023 and 024 depend on them): a studio environment for metal, a spot + rake light rig,
+     object motion blur by sub-frame accumulation, bevelled machined geometry (`HM.G`), and `HM.Part`
+     (home + named away poses, so assembly and disassembly are one function). The video's own object is a
+     second file on top (025: `_lib/hf-movement.js`, THE MOVEMENT).
+  4. **Word marks and SFX come from the alignment, not from typing** — `render/plan.mjs` derives
+     `props.marks` and every cue on the scene's own clock; scenes read `K.m(name, fallback)`. This is the
+     024 re-voice lesson applied up front instead of repaired afterwards.
+- **Why a new file and not an option on `hf-world`.** The briefs are opposites: a room the camera flies
+  through, lit for emissive text tiles, with motion blur taken from the camera path; versus one object,
+  studio-lit, held still, where the parts move. Sharing a renderer would have meant a flag on every line.
+- **Cost.** $0. Eleven scenes render in 15 minutes at 6 sub-frames (8.5 fps at 1080p on the owner's GPU).
+- **Rules:** MOTION_SPEC §18. **Lesson:** `lessons/2026-10-10-angle-variety-is-not-motion-design.md`.
+  **Tests:** `pipeline/04-render/hf-mech.test.mjs`.

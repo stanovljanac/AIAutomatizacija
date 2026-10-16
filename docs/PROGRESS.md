@@ -19,6 +19,36 @@ Format:
 
 ---
 
+## 2026-10-10 — 025 "AI Agents Make Mistakes. One Line Makes Them Undoable.": the first mechanical, face-on video — D-069
+- who: agent (owner brief: a non-Desk-Lessons video on a practical novelty, the agent picks the topic; far
+  more custom animation; camera at 90° unless depth is the only way to show a key idea; "all out").
+- did: **Topic** = unattended / always-on agents (OpenAI Dots launched 29 Sep 2026; Claude routines;
+  Cursor automations), subject `execution/actions`, lane `desk-loops`. **Measured, not argued** —
+  `content/025-always-on-agents/measure/`: one agent (Claude Haiku 5.5, headless, neutral system prompt,
+  synthetic invoices), 30 unattended runs where only the job text changes. One line → sent in 10 of 10,
+  73 emails, a stray email in 2 runs; the same line + "Never send an email: save drafts only." → 0 sent in
+  10 of 10; a five-line job card → 0 sent, a stray DRAFT in 3 runs, each flagged in its report. The data
+  overturned the expected story (the agent avoided every planted trap; the failure was authorisation), so
+  the angle became "you can't stop the mistakes; one line decides where they land". Gate ① 8.3/8.9/8.2
+  (band owner; topic was delegated), script review 8.4/8.4/8.5 (cap reached, no major open), fact-check
+  24/24. **New 3D kit `_lib/hf-mech.js`** (studio environment for metal, spot + rake lights, object motion
+  blur by 6-sub-frame accumulation, bevelled machined geometry, `HM.Part` assemble/explode) and the spine
+  object **`_lib/hf-movement.js`** (THE MOVEMENT: a ~150-part clockwork job engine; blue steel = the agent,
+  five gold bolt-on modules = what you write). Eleven bespoke scenes `mv-hook … mv-close`, face-on, ONE
+  oblique shot (s5). Word marks and all 38 SFX cues are derived from `alignment.json` in `render/plan.mjs`
+  (nothing typed in seconds). `pipeline/04-render/hf-mech.test.mjs` (+8 tests). Docs: D-069, MOTION_SPEC
+  §18 (§14 marked superseded), CHANNEL_MAP row, `produced_subjects.json`, KOS lesson
+  `2026-10-10-angle-variety-is-not-motion-design.md`, memory `face-on-camera-mechanical-motion`.
+  **Unrelated flake fixed on the way out:** `06-publish/auth.test.mjs` asserted that the two-letter fake
+  tokens `AT` / `RT` never appear in logs that, by design, contain the token file's path — and that path
+  sits in a random `mkdtemp` dir whose name sometimes contains those letters. It failed the Stop gate once;
+  reproduced by putting `AT` in `TEMP`, fixed by judging the leak on everything except the temp dir's name.
+- next: owner Gate ③ on `content/025-always-on-agents/video/final.mp4` (draft voice: edge-tts). On
+  approval: Azure final voice → re-align → `render/plan.mjs` → re-render (marks and cues re-time
+  themselves) → publish package from `publish.draft.md`; then the Short.
+- blockers: none. Two owner calls are listed in `publish.draft.md` (products named as news in s8; the
+  "assembled by an agent" line in s11).
+
 ## 2026-10-10 — 024 shipped to the owner: Azure final, re-render, publish package (long + Short)
 - who: agent (owner: "continue the publish process for both videos — Short and long").
 - did: Azure final voice for both (drafts preserved in `_draft-edge/`), re-aligned, re-rendered (the long

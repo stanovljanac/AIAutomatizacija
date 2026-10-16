@@ -1,0 +1,6 @@
+/* mv-close — HUD layout (black + gold hero). Plates come from _lib/hf-world.css + hf-mech.css. */
+#made, #sub { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#mine { left: calc(1290px * var(--u)); top: calc(250px * var(--u)); }
+#take { top: calc(60px * var(--u)); }
+#q { top: calc(56px * var(--u)); font-size: calc(50px * var(--u)); width: calc(1000px * var(--u)); white-space: normal; line-height: 1.12; }
+#take { width: calc(900px * var(--u)); }

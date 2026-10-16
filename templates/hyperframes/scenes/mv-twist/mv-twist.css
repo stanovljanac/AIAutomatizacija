@@ -1,0 +1,14 @@
+/* mv-twist — HUD layout. Plates come from _lib/hf-world.css + hf-mech.css. */
+#chip { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+/* the five tags stand just off their modules in the wide shot (lens at 27, looking at y -0.55) */
+#tRead { left: calc(150px * var(--u)); top: calc(96px * var(--u)); }
+#tWhen { left: calc(400px * var(--u)); top: calc(40px * var(--u)); }
+#tDo { left: calc(730px * var(--u)); top: calc(40px * var(--u)); }
+#tStop { left: calc(1270px * var(--u)); top: calc(130px * var(--u)); }
+#tRep { left: calc(1560px * var(--u)); top: calc(560px * var(--u)); }
+#runs { left: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#meter { left: calc(84px * var(--u)); top: calc(140px * var(--u)); }
+#addr { left: calc(1160px * var(--u)); top: calc(300px * var(--u)); }
+#landed { left: calc(1160px * var(--u)); top: calc(380px * var(--u)); }
+#quote { left: calc(84px * var(--u)); top: calc(64px * var(--u)); max-width: calc(880px * var(--u)); }
+#quote .q { font-size: calc(40px * var(--u)); }

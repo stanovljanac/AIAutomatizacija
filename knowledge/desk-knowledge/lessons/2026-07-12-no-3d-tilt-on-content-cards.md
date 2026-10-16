@@ -47,3 +47,4 @@ approved as transient moves; small flat Z-rotation (≤3°) fine; environmental 
 - [Failure — the silent one is the villain; the loud one is the hero](../concepts/failure.md)
 - [The source document — the flat page the work comes from (receipt · invoice · email · ToS · filing)](../concepts/source-document.md)
 - [The spreadsheet — rows, green checks, and the ONE gold flag](../concepts/spreadsheet.md)
+- [Angle variety is not motion design — hold the camera square and move the OBJECT](2026-10-10-angle-variety-is-not-motion-design.md)

@@ -1,0 +1,10 @@
+/* mv-twins — HUD layout. Plates come from _lib/hf-world.css + hf-mech.css. */
+#chip { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#k1 { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+/* the pairs build as a column: each row is the caption of the pass that just landed */
+#p0, #p1, #p2, #p3 { left: calc(84px * var(--u)); }
+#p0 { top: calc(64px * var(--u)); }
+#p1 { top: calc(146px * var(--u)); }
+#p2 { top: calc(228px * var(--u)); }
+#p3 { top: calc(310px * var(--u)); }
+#ask { left: calc(1240px * var(--u)); top: calc(250px * var(--u)); }

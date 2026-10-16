@@ -1,0 +1,7 @@
+/* mv-now — HUD layout. Plates come from _lib/hf-world.css + hf-mech.css. */
+#k1 { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+.src { right: calc(84px * var(--u)); top: calc(70px * var(--u)); font-size: calc(24px * var(--u)); }
+#stopped { left: calc(380px * var(--u)); top: calc(540px * var(--u)); }
+#gone { left: calc(1480px * var(--u)); top: calc(300px * var(--u)); }
+#quote { left: calc(84px * var(--u)); top: calc(64px * var(--u)); max-width: calc(1180px * var(--u)); }
+#quote .q { font-size: calc(42px * var(--u)); }

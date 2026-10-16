@@ -1,0 +1,6 @@
+/* mv-stop — HUD layout. Plates come from _lib/hf-world.css + hf-mech.css. */
+#chip { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#gap { left: calc(1050px * var(--u)); top: calc(170px * var(--u)); }
+#k1 { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#runs { left: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#meter { left: calc(84px * var(--u)); top: calc(140px * var(--u)); }

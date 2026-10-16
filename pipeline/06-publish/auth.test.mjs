@@ -237,9 +237,13 @@ test("[verifier] runConsent does not log tokens or the auth code — only the fi
       onReady: (port) => http.get(`http://127.0.0.1:${port}/?code=secret_code`, (r) => r.resume()),
     });
     const allLogs = logged.join("\n");
-    assert.ok(!allLogs.includes("AT"), "access_token must not appear in logs");
-    assert.ok(!allLogs.includes("RT"), "refresh_token must not appear in logs");
-    assert.ok(!allLogs.includes("secret_code"), "the auth code must not appear in logs");
+    // The token path is logged on purpose, and it sits in a random temp dir (mkdtemp, mixed case) whose
+    // name can itself contain the two-letter fake tokens — "…\tad-test-xATq1z\token.json" failed this
+    // test about once in a few hundred runs. Judge the leak on everything EXCEPT the temp dir's own name.
+    const leakable = allLogs.split(dir).join("");
+    assert.ok(!leakable.includes("AT"), "access_token must not appear in logs");
+    assert.ok(!leakable.includes("RT"), "refresh_token must not appear in logs");
+    assert.ok(!leakable.includes("secret_code"), "the auth code must not appear in logs");
     // The path IS expected to appear (so the user knows where the file went).
     assert.ok(allLogs.includes(tokenPath), "the token file path should appear in the success log");
   });

@@ -1,0 +1,5 @@
+/* mv-job — HUD layout. Plates come from _lib/hf-world.css + hf-mech.css. */
+#chip { right: calc(84px * var(--u)); top: calc(70px * var(--u)); }
+#k1 { left: calc(84px * var(--u)); top: calc(56px * var(--u)); }
+#k1.hw-kicker { font-size: calc(54px * var(--u)); padding-top: calc(16px * var(--u)); padding-bottom: calc(18px * var(--u)); }
+#note { right: calc(84px * var(--u)); top: calc(128px * var(--u)); }

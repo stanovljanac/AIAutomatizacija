@@ -439,7 +439,10 @@ occupying the same square inch. His words: *"nije jasan fokus gde treba gledalac
   appeared when a zoom or a slide brought two settled elements into the same space. Judge the frame
   at the END of the move, not at the start.
 
-## 14. The 3D / 2D ratio (owner, 2026-08-23)
+## 14. The 3D / 2D ratio (owner, 2026-08-23) — **superseded by §18 on 2026-10-10**
+
+> The "~50/50" target below is history. What replaced it: the camera is square to the subject by
+> default, and 3D is spent on an OBJECT whose parts move, not on depth for its own sake (§18).
 
 The owner asked for **more Three.js**, at roughly **50/50** across a cut, *"or wherever 3D makes more
 sense, do 3D."* 3D is still opt-in per scene (§11) — this is a target for the plan, not a licence to
@@ -570,6 +573,54 @@ How it reaches a scene:
   (`fzs-learn`): each ring crosses the 44-row monolith in **~0.58s** (30 units/s over ~17 units), three
   rings in ~1.2s. ×1.05 makes that ~0.61s — not visible. A device the owner calls too fast is re-timed in
   its own scene, not through the global tempo.
+
+---
+
+## 18. Face-on camera, mechanical objects — the `hf-mech` kit (owner, D-069, 2026-10-10; first used on 025)
+
+Owner, commissioning 025: *"ne želim toliko uglova kamera od 45/65/75 stepeni u odnosu na objekat… drži
+se 90 osim kad baš želimo 3D dubinu i prikažemo neku ključnu ideju koja ne može da stane u samu scenu"*,
+and on what the 3D had been spent on: *"drugi modeli prave brutalne promo materijale gde se rastavljaju
+svakakvi delovi automobila, vraća, izvlači… a mi pravimo 3D chatove teksta sa LLM modelom."*
+
+**The rules:**
+- **The camera is square to the subject.** Yaw and pitch are 0; dolly and truck are free (and are where
+  the pace comes from: 3–6 framings per scene, each landing on a sentence). **At most one oblique shot
+  per video**, and only for an idea that is about depth itself (025 s5: the machine opened along the
+  lens axis). A reveal may start off-square if it resolves square (025 s1).
+- **The subject is an object with parts**, chosen before the storyboard (§9 "one spine object" — now a
+  machine, not a pile). Scenes are that object doing something: assembling, running, one part arriving
+  and changing what it does. Text lives on the object's own engraved plates; the flat HUD carries only
+  what must be read on a phone, on opaque plates (§13).
+- **Chat windows and text panels floating in 3D are out** as a scene's subject.
+
+**The kit** (`templates/hyperframes/_lib/hf-mech.js` + `hf-mech.css`; load after `hf-world.js`, which
+stays untouched). A video's own object is a second file on top of it (025: `hf-movement.js`).
+- `HM.create()` — renderer, a prefiltered **studio environment**, the light rig, a graded backdrop with
+  the house grid, and the post chain (bloom, depth of field, ACES, grade, grain).
+- **Object motion blur by accumulation:** `ctx.render(t, pose, cam)` averages N sub-frames across the
+  shutter (default 6, 180°). `pose(t)` and `cam(t)` must be pure functions of time; a dev render passes
+  `props.mb: 1`.
+- `HM.G` — machined geometry, all bevelled: `gear` (with `HM.mesh()` giving the meshing angle), `wheel`,
+  `plate` (bores + windows), `disc`, `link`, `outline`, `lathe`, `screw`, `spiral`.
+- `HM.Part` — a part knows its HOME pose and named AWAY poses; `place(k, away)` runs assembly and
+  disassembly as the same function. `HM.integral(rate)` turns a speed into a position that never jumps.
+- `HM.clock(S)` — beats (`K.b`), word marks from `props.marks` (`K.m`), and the dev-range clock.
+
+**Numbers that were each paid for on a frame:**
+- **Metal square to the lens mirrors the wall behind the camera.** Dark room → dead-black parts; bright
+  uniform wall → a plastic toy. Give every metal a **diffuse share** (metalness 0.55 plate, 0.8 steel,
+  0.9+ gold): an env-lit mirror shows no cast shadow, and layered shadows are the only depth a face-on
+  object has. Light it with a warm **spot** key (cone 0.42–0.5 rad, penumbra 0.95) whose pool falls off
+  across the object, and a cool **raking** light almost in the object's plane for bevels and teeth.
+- **Finishes tile in world units** (`planarUV`), so separate parts read as the same metal; a round part
+  keeps one concentric tile centred on its axis.
+- **A printed face is not a lamp.** Paper under a 6-stop key blooms: multiply the face down (0.77) and
+  keep emissive ≤ 0.12. The one screenshot frame (025 s10's card) is **unlit** so its ink is exact.
+- **A word mark is looked up, never typed.** The per-video plan derives `props.marks` and every SFX cue
+  from `alignment.json` on the scene's own clock, so a re-voice moves them with the words (§ video-render).
+- **Depth of field stays mild** (max CoC 6 px, range 8): the object is nearly planar, and a heavy blur
+  on the opening exploded frame turned it to mush.
 
 ---
 

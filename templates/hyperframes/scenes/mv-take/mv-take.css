@@ -1,0 +1,6 @@
+/* mv-take — HUD layout (black + gold hero). Plates come from _lib/hf-world.css + hf-mech.css. */
+#same { left: calc(420px * var(--u)); top: calc(150px * var(--u)); }
+#part { left: calc(1260px * var(--u)); top: calc(150px * var(--u)); }
+#mA { left: calc(84px * var(--u)); top: calc(300px * var(--u)); }
+#mB { left: calc(84px * var(--u)); top: calc(500px * var(--u)); }
+#take { top: calc(60px * var(--u)); }
