@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-09",
+  "updated": "2026-10-17",
   "live_from": "020",
   "videos": {
     "002-what-is-ai-automation": {
@@ -289,6 +289,23 @@
       },
       "analytics": {
         "due_at": "2026-10-16",
+        "snapshots": []
+      }
+    },
+    "025-always-on-agents": {
+      "subject": "execution/actions",
+      "idea_id": null,
+      "content_type": "long",
+      "status": "published",
+      "published_at": "2026-10-17",
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "linked",
+        "at": "2026-10-17",
+        "note": "2026-10-10-angle-variety-is-not-motion-design"
+      },
+      "analytics": {
+        "due_at": "2026-10-24",
         "snapshots": []
       }
     }
