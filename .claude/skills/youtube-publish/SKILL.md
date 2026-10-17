@@ -55,6 +55,15 @@ SEO/claims rubric in `pipeline/shared/review/rubric.mjs` (`publish` entry; weigh
   core question with specific facts, then the keyword — this feeds AI overviews.
 - Monetization = ad RPM + views; single CTA = **subscribe → @TheAutomationDesk**.
 
+## Subtitles — `subtitles.srt`, uploaded in Studio (D-072, owner 2026-10-17)
+The picture carries **no captions** (`format.captions.burn_in: false`). Every cut ships an English
+`.srt` instead, built from the rendered timeline (casing and punctuation restored from the script):
+`node pipeline/06-publish/build-srt.mjs <id>` → `video/subtitles.srt`, and `<id>/short` →
+`short/video/subtitles.srt`. `publish.json.subtitles` / `short.subtitles` name the files and
+`publish.md` turns them into an upload step (Studio → Subtitles → English → Add → Upload file →
+**With timing**). The owner uploads them with the video; viewers who want subtitles turn on CC, and
+the file replaces YouTube's auto-captions for search.
+
 ## Short
 - Build the **Short** from the 1–2 key beats (vertical, light music ok), with its own
   short title. Length per **STYLE_GUIDE §7** (canonical) — ~50–60s, hard max 2:00.
@@ -120,7 +129,7 @@ The Medium **post** also needs (owner rule 2026-06-07), stored in `publish.json.
 - **SUSPENDED — D-055 (owner, 2026-07-10): do NOT upload via the API or create YouTube drafts.**
   The owner uploads **manually** (he is testing whether API drafts flipped private→public get
   fewer first-day views). Produce the full package (`publish.json`, `medium.md`, thumbnail,
-  captions) and stop; the owner sets "Altered content = Yes" in Studio himself.
+  `subtitles.srt` for each cut) and stop; the owner sets "Altered content = Yes" in Studio himself.
 - (Pre-D-055 flow, if the owner re-enables it: YouTube Data API v3 as **private/draft** with all
   metadata + thumbnail, plus the Short; uploads are quota-heavy — space them. The owner reviews
   title/description/tags and **clicks publish**.)

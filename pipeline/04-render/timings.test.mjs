@@ -28,6 +28,17 @@ test("long-form timings from the default recipe (D-068: no intro, 10-frame disso
   assert.deepEqual(t.shortLen, { min: 45, max: 120, target: 55 });
 });
 
+// D-072 (owner, 2026-10-17): no captions in the picture by default — they ship as subtitles.srt.
+test("captions are not burned in by default; a recipe can turn them back on; absent = legacy burned in", () => {
+  assert.equal(deriveRenderTimings(resolveFormat({}), { fps: FPS, vertical: false }).captions.burnIn, false);
+  assert.equal(deriveRenderTimings(resolveFormat({}), { fps: FPS, vertical: true }).captions.burnIn, false);
+  const on = resolveFormat({ format_recipe: { captions: { burn_in: true } } });
+  assert.equal(deriveRenderTimings(on, { fps: FPS, vertical: false }).captions.burnIn, true);
+  const legacy = resolveFormat({});
+  delete legacy.captions.burn_in;
+  assert.equal(deriveRenderTimings(legacy, { fps: FPS, vertical: false }).captions.burnIn, true);
+});
+
 test("Short (vertical): no intro, the 1.2s outro band", () => {
   const t = deriveRenderTimings(resolveFormat({}), { fps: FPS, vertical: true });
   assert.equal(t.introFrames, 0);

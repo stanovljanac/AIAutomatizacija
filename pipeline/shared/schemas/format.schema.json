@@ -87,6 +87,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "burn_in": { "type": "boolean", "description": "Draw the caption cues into the picture (CaptionsTrack). Default false since D-072 (owner, 2026-10-17): the video carries no on-screen subtitles; the same cues ship as subtitles.srt (pipeline/06-publish/build-srt.mjs), uploaded in YouTube Studio, so a viewer who wants them turns on CC. Absent = true (legacy recipes)." },
         "max_words": { "type": "integer", "minimum": 1, "description": "Words per caption chunk (keeps it <= max_lines at the caption font size)." },
         "gap_seconds": { "type": "number", "minimum": 0, "description": "Start a fresh chunk after a pause this long." },
         "tail_seconds": { "type": "number", "minimum": 0, "description": "Keep a chunk on screen this long after its last word." },

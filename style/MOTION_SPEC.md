@@ -79,7 +79,9 @@ What made it good — the checklist every scene is now held to:
   gold `#FFB020` in 59/60 scenes, `--u` scaling, the semantic colors — is catalogued in
   [concepts/](../knowledge/desk-knowledge/concepts/index.md)).
 - **Fill the stage (owner rule, 2026-07-07).** Scene content spans the **top 5% → 85% band**
-  (bottom ~15% is the caption band): big type, big icons — never a small cluster floating in
+  (bottom ~15% is the caption band — since D-072 our captions are an uploaded .srt, not in the
+  picture, but YouTube's CC, player bar and Shorts UI land in that same band, so it stays clear of
+  key content): big type, big icons — never a small cluster floating in
   the middle of the frame. On portrait especially, scale content up until the band is used.
   And **transitions never reflow layout**: swap visuals with absolutely-positioned layers moved
   by `transform`/`opacity` (fly-out, slide-up, crossfade) — an element whose *height* collapses

@@ -34,6 +34,24 @@ export function buildChapters(script, alignment, { introOffset = 0 } = {}) {
   return chapters;
 }
 
+/**
+ * PURE: why YouTube would ignore this chapter list, or [] when it is fine. YouTube shows chapters only
+ * when there are ≥ 3, the first is 0:00, they ascend, and each lasts ≥ 10 s — one short chapter
+ * switches off ALL of them, silently (025's draft had a 7 s one). The last chapter's length needs the
+ * video's duration, so it is not checked here.
+ */
+export function chapterProblems(chapters = []) {
+  const secs = chapters.map((c) => String(c.time).split(":").reduce((s, p) => s * 60 + Number(p), 0));
+  const out = [];
+  if (chapters.length < 3) out.push(`only ${chapters.length} chapter(s); YouTube needs at least 3`);
+  if (chapters.length && secs[0] !== 0) out.push(`the first chapter starts at ${chapters[0].time}, not 0:00`);
+  for (let i = 1; i < secs.length; i++) {
+    const len = secs[i] - secs[i - 1];
+    if (len < 10) out.push(`"${chapters[i - 1].label}" (${chapters[i - 1].time}) lasts ${len} s; YouTube needs ≥ 10 s`);
+  }
+  return out;
+}
+
 export function buildTags(brief) {
   const tags = new Set();
   if (brief.task) tags.add(String(brief.task).replace(/-/g, " "));
@@ -126,8 +144,9 @@ export function buildMetadata({ brief, script, alignment, introOffset = 0 }) {
     description: buildDescription(script, brief),
     tags,
     chapters: buildChapters(script, alignment, { introOffset }),
+    subtitles: "video/subtitles.srt", // D-072 — build-srt.mjs writes it
     altered_content: true,
-    short: { title: `${brief.title_working || ""} (Short)`.trim(), tags: tags.slice(0, 8), caption: "" },
+    short: { title: `${brief.title_working || ""} (Short)`.trim(), tags: tags.slice(0, 8), caption: "", subtitles: "short/video/subtitles.srt" },
     youtube_video_id: null,
     status: "draft_pending",
   };
@@ -179,6 +198,8 @@ export function publishMarkdown(publish, { candidates = null } = {}) {
   ];
   if (publish.chapters?.length) {
     lines.push("", "## Chapters", fence(publish.chapters.map((c) => `${c.time} ${c.label}`).join("\n")));
+    const bad = chapterProblems(publish.chapters);
+    if (bad.length) lines.push("", "**⚠ YouTube will show NO chapters until this is fixed:**", ...bad.map((b) => `- ${b}`));
   }
   if (publish.pinned_comment) lines.push("", "## Pinned comment", fence(publish.pinned_comment));
   if (publish.community_post) lines.push("", "## Community post", fence(publish.community_post));
@@ -213,9 +234,13 @@ export function publishMarkdown(publish, { candidates = null } = {}) {
     "",
     "## Upload checklist",
     "- Altered/synthetic content: **Yes** (always — AI voice + visuals, D-025)",
-    `- Status: ${publish.status}`,
-    ""
   );
+  // D-072: the picture carries no captions; the subtitles go up as a file (build-srt.mjs makes it).
+  const srtStep = (file, what) =>
+    `- Subtitles (${what}): Studio → Subtitles → English → Add → **Upload file → With timing** → \`${file}\``;
+  if (publish.subtitles) lines.push(srtStep(publish.subtitles, "long"));
+  if (publish.short?.subtitles) lines.push(srtStep(publish.short.subtitles, "Short"));
+  lines.push(`- Status: ${publish.status}`, "");
   return lines.join("\n");
 }
 

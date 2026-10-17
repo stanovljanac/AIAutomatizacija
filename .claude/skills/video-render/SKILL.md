@@ -1,6 +1,6 @@
 ---
 name: video-render
-description: Use to assemble the final video — building render props from script, alignment, scene-plan, and assets, placing scenes in time from the alignment timestamps, playing capture-segments with auto-zoom, adding burned-in animated English subtitles and the reusable intro/outro, rendering the mp4 + a Short + 3 thumbnail candidate stills via the configured engine (Remotion / HyperFrames / combo). Triggers on "render", "build the video", or Step 4 of the workflow.
+description: Use to assemble the final video — building render props from script, alignment, scene-plan, and assets, placing scenes in time from the alignment timestamps, playing capture-segments with auto-zoom, building the English caption cues (shipped as subtitles.srt, not burned in — D-072) and the reusable intro/outro, rendering the mp4 + a Short + 3 thumbnail candidate stills via the configured engine (Remotion / HyperFrames / combo). Triggers on "render", "build the video", or Step 4 of the workflow.
 ---
 
 # Skill: Video render
@@ -24,7 +24,14 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   `compile-hyperframes.mjs` reads the SAME timeline for `engine:"hyperframes"` scenes.
 
 ## Compose
-- **Captions (hard rules):** burned-in, animated **English**, from `alignment.json` (same
+- **No captions in the picture (D-072, owner 2026-10-17).** `format.captions.burn_in` is **false** by
+  default: `compileTimeline` emits `burnCaptions:false` and `Main` skips `CaptionsTrack`. The cues are
+  still built (same chunking, same timings — QA scans them as the narration text) and ship as
+  **`video/subtitles.srt`** (`node pipeline/06-publish/build-srt.mjs <id>` / `<id>/short`), which the
+  owner uploads in Studio at publish; a viewer who wants subtitles turns on CC. A video approved with
+  captions in the picture is pinned with `brief.format_recipe.captions.burn_in: true` (025). The rules
+  below apply to the cues — and to the picture only when `burn_in` is true.
+- **Captions (hard rules):** animated **English**, from `alignment.json` (same
   timings → always in sync). **Chunked into ≤ ~7-word groups (≤ 2 lines), each shown only
   while its words are spoken** — never dump a whole long sentence at once (that caused 3-6
   line blocks and text appearing before it was said). `build-props.mjs` builds the chunks;
@@ -32,9 +39,10 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   **Key takes** (`scenes[].key_takes`) are always their own chunk; `format.captions.sentence_breaks`
   breaks at every sentence and splits a long one into even chunks at its punctuation (no one-word
   orphans). Without either, the legacy greedy chunking is unchanged (`lib/timeline.mjs`).
-- **Layout safe-zone (hard rule):** captions live in the bottom band; **scene content and any
+- **Layout safe-zone (hard rule):** the bottom band stays clear of key content even without our
+  captions — YouTube's CC and player bar (and on a Short, the Shorts UI) sit there; **scene content and any
   bottom-anchored elements (cards, captions inside custom scenes) must stay above it** so
-  captions never cover the graphics. On 16:9 the `Frame` reserves a bottom pad and custom
+  nothing on top covers the graphics. On 16:9 the `Frame` reserves a bottom pad and custom
   scenes bias their content upward; the vertical Short keeps its own (already-good) layout.
 - **Short length (hard rule — STYLE_GUIDE §7):** the Short (nested `content/<id>/short/`;
   legacy flat `*-short`) runs **45-120s** (target ~50-60s). `build-props.mjs` detects the

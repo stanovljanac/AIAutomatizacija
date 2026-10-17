@@ -148,8 +148,9 @@ On approval → `status: "script_approved"`.
 **Goal:** catch problems *before* you watch.
 
 Use `.claude/skills/qa-video/SKILL.md`. Checks: sync (scene windows match timestamps),
-subtitles (no drift/overlap), no scene change mid-sentence, coverage/no black gaps,
-**caption legibility/contrast**, **demo legibility**, loudness, format (and vertical
+subtitles (no drift/overlap — since D-072 they ship as `subtitles.srt`, not in the picture),
+no scene change mid-sentence, coverage/no black gaps, **caption legibility/contrast** (only
+when `format.captions.burn_in` is on), **demo legibility**, loudness, format (and vertical
 Short).
 
 - **Technical breakage** (no audio / cut-off / missing captions) → **auto-fix and
@@ -175,9 +176,12 @@ You watch `video/final.mp4` (with the digest). Last gate. Approve → `status: "
    **`publish.md`** (copy-paste export). The package passes the **publish review stage**
    (single-Sonnet panel, D-057) before you see it. Pick the thumbnail from the **3
    candidates** (Test & Compare takes all 3); record it with
-   `node pipeline/06-publish/build-metadata.mjs <id> --choose-thumb <#>`.
+   `node pipeline/06-publish/build-metadata.mjs <id> --choose-thumb <#>`. Build the subtitles
+   for each cut (D-072 — the picture carries none): `node pipeline/06-publish/build-srt.mjs <id>`
+   and `<id>/short` → `video/subtitles.srt`.
 2. **You upload manually (D-055 — API drafts suspended)**, copy-pasting from `publish.md`,
-   and set "Altered content = Yes" in Studio.
+   set "Altered content = Yes" in Studio, and upload each cut's `subtitles.srt` (Subtitles →
+   Upload file → With timing).
 3. You review title/description/tags and **click publish**.
 4. Set `status: "published"`. Append outcome to `content/<id>/log.md`,
    `docs/PROGRESS.md`, and the idea's `metrics` (for re-ranking the idea-bank).

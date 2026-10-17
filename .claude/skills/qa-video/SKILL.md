@@ -27,10 +27,13 @@ You catch problems **before** the owner watches (PRD R13–R14), and you produce
 - **Sync:** each scene's visible window matches its sentences' timestamps.
 - **Subtitles (HARD):** caption cues match `alignment.json` (no drift); each cue shows
   **≤ 2 lines** and only while its words are spoken (chunked, never a whole long sentence
-  dumped at once); **legible** (size/contrast ≥ 4.5:1). FAIL if any cue exceeds 2 lines or
-  text appears before it is said.
-- **No overlap (HARD):** captions live in the bottom safe-zone and must **not** cover scene
-  graphics; scene content/bottom-anchored elements stay above the caption band. FAIL on overlap.
+  dumped at once). Since D-072 the cues ship as `video/subtitles.srt` (`build-srt.mjs`), not in
+  the picture: check the .srt exists and its cues are the timeline's. Only when
+  `format.captions.burn_in` is true: **legible** in the picture (size/contrast ≥ 4.5:1). FAIL if
+  any cue exceeds 2 lines or text appears before it is said.
+- **No overlap (HARD):** nothing covers scene graphics; scene content/bottom-anchored elements
+  stay above the bottom band (our captions when burned in; YouTube's CC/player bar either way).
+  FAIL on overlap.
 - **Scene/audio coherence:** no scene change mid-sentence; narration continuous (R11).
 - **Demo legibility (mini-demo):** capture region readable; cursor/zoom land on the action.
 - **Coverage:** every scene rendered; audio length ≈ sum of scenes; no black gaps.

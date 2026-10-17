@@ -61,7 +61,7 @@ if (!valid) { console.error(`timeline.json failed its schema: ${formatErrors(err
 writeFileSync(join(cdir, "timeline.json"), JSON.stringify(timeline, null, 2) + "\n");
 
 // 2) Compile it to Remotion props (frames) + copy this engine's assets into public/.
-const props = compileTimeline(timeline, { leadFrames: timings.leadFrames, tailSeconds: timings.captions.tailSeconds });
+const props = compileTimeline(timeline, { leadFrames: timings.leadFrames, tailSeconds: timings.captions.tailSeconds, burnCaptions: timings.captions.burnIn });
 const warnings = copyRemotionAssets({ root: ROOT, cdir, outId, props, brollEnabled: fmt.scene_set?.broll?.enabled !== false });
 for (const w of warnings) console.warn(w);
 

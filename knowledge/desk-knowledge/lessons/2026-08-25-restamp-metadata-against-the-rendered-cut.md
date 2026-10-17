@@ -2,7 +2,7 @@
 type: lesson
 status: stable
 created: 2026-08-25
-updated: 2026-08-25
+updated: 2026-10-17
 related: [2026-08-19-a-thumbnail-must-say-ai-at-a-glance.md, 2026-08-23-patch-the-render-dont-repeat-it.md, ../../../.claude/skills/youtube-publish/SKILL.md, ../../../docs/DECISIONS.md]
 depends_on: []
 ---
@@ -79,6 +79,16 @@ early output; the stamps are placeholders that the publish step overwrites.
 
 Checks that catch the rest: monotonic, first at `0:00`, every gap ≥ 10 s, last stamp inside the
 runtime, and the description block character-identical to the array.
+
+**The ≥ 10 s gap is the one that fails silently, so it is now in code (2026-10-17).** One chapter
+under 10 s makes YouTube show **no chapters at all**, with no warning in Studio. Writing the check
+down here did not stop it: **025**'s draft gave the 7 s payoff beat s7 ("Not smarter. Undoable.",
+1:41) its own chapter before s8 at 1:48, and the published **021** carries two (`Sarah is 1 chunk.
+Okonkwo is 3.` 9 s, `The part you pay for` 8 s), so 021 has likely shown no chapters since upload.
+`build-metadata.mjs` `chapterProblems()` now checks count ≥ 3, first at `0:00` and every gap ≥ 10 s,
+and `publish.md` prints a ⚠ block above the hand-off when one fails. Fix by folding the short beat
+into a neighbour's chapter (025: "1:41 Undoable, not smarter: why it matters now"). Do not drop the
+beat.
 
 ## Applies to
 

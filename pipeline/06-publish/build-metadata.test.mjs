@@ -8,7 +8,7 @@ import path from "node:path";
 import {
   buildMetadata, buildChapters, buildDescription, buildTags, fmtTime,
   publishMarkdown, writeMarkdownExport, recordThumbnailChoice,
-  buildBridge, buildPinnedComment, LONG_URL_PLACEHOLDER,
+  buildBridge, buildPinnedComment, LONG_URL_PLACEHOLDER, chapterProblems,
 } from "./build-metadata.mjs";
 import { readFixture, assertValid, validate, withTempDir } from "../shared/testkit/index.mjs";
 
@@ -219,6 +219,28 @@ test("publishMarkdown: every publish.json field appears 1:1 (titles, description
   for (const c of pub.chapters) assert.ok(md.includes(`${c.time} ${c.label}`), `chapter ${c.time} missing`);
   assert.ok(md.includes(pub.short.title), "short title missing");
   assert.ok(md.includes("Altered/synthetic content: **Yes**"), "D-025 disclosure reminder missing");
+});
+
+test("chapterProblems: a chapter under 10 s (025's draft, 1:41 → 1:48) and the other YouTube rules", () => {
+  const ch = (...ts) => ts.map((time, i) => ({ time, label: `c${i}` }));
+  assert.deepEqual(chapterProblems(ch("0:00", "0:14", "1:41", "1:48", "2:14")), ['"c2" (1:41) lasts 7 s; YouTube needs ≥ 10 s']);
+  assert.deepEqual(chapterProblems(ch("0:00", "0:10", "1:00:05")), []);
+  assert.equal(chapterProblems(ch("0:00", "0:30")).length, 1);
+  assert.match(chapterProblems(ch("0:05", "0:30", "1:00"))[0], /not 0:00/);
+  const md = publishMarkdown({ id: "x", title_options: ["t"], description: "d", tags: [], status: "draft_pending", chapters: ch("0:00", "0:04", "0:30") });
+  assert.ok(md.includes("YouTube will show NO chapters"));
+});
+
+test("publish package carries the subtitles.srt upload step for the long and the Short (D-072)", () => {
+  const pub = buildMetadata({ brief: brief(), script: script(), alignment: alignment() });
+  assertValid(pub, "publish");
+  assert.equal(pub.subtitles, "video/subtitles.srt");
+  assert.equal(pub.short.subtitles, "short/video/subtitles.srt");
+  const md = publishMarkdown(pub);
+  assert.ok(md.includes("Upload file → With timing** → `video/subtitles.srt`"));
+  assert.ok(md.includes("`short/video/subtitles.srt`"));
+  const bare = publishMarkdown({ ...pub, subtitles: undefined, short: { title: "t" } });
+  assert.ok(!bare.includes("Subtitles ("), "no step when the package names no file");
 });
 
 test("publishMarkdown: thumbnail candidate table appears when candidates exist, with the pick command", () => {

@@ -863,3 +863,25 @@ old one (don't delete history).
   different quality from its master.
 - **Cost.** $0; larger files and a slower composite (PNG capture). Measured on the 025 Short (PROGRESS).
 
+
+## D-072 — No captions in the picture; subtitles ship as an .srt uploaded to YouTube (owner, 2026-10-17)
+- **Context.** Every video so far burned animated captions into the bottom of the frame (`CaptionsTrack`).
+  Owner, after approving the 025 Short: *"u nastavku želimo da izbacimo subtitles koje generišemo na dnu
+  videa, već ćemo da pravimo samo subtitles.srt file koji ćemo da ubacimo u YouTube tokom publisha"* —
+  the picture stays clean, and a viewer who wants subtitles turns them on.
+- **Decision.** From the next video, no captions in the picture. Each cut ships an English
+  `subtitles.srt`, which the owner uploads in Studio with the video (Subtitles → Upload file → With
+  timing). It also replaces YouTube's auto-captions for search and accessibility.
+- **In code.** `format.captions.burn_in` (default **false**; absent = true for legacy recipes) →
+  `deriveRenderTimings` → `compileTimeline(…, { burnCaptions })` emits `burnCaptions:false` → `Main.tsx`
+  skips `CaptionsTrack`. The cues are still built and kept in the props, because QA's paid-SaaS check
+  reads them as the narration text. `pipeline/06-publish/build-srt.mjs <id>[/short]` writes
+  `video/subtitles.srt` from `timeline.json` captions (the rendered clock, the same chunks the track
+  drew), restoring casing and punctuation from the script sentences token by token (a sentence that
+  does not line up falls back to the spoken words); a cue lasts until 0.4 s after its last word, never
+  past the next one; > 42 characters wraps to two lines. `publish.json.subtitles` / `short.subtitles`
+  name the files and `publish.md` turns them into an upload step.
+- **Left as is, on purpose.** The bottom ~15% band stays clear of key content (MOTION_SPEC §0, frame-gate's
+  `captionBandFrac`): YouTube's CC, player bar and the Shorts UI sit there.
+- **025** was approved with captions in the picture, so its briefs pin `format_recipe.captions.burn_in:
+  true` (a re-render keeps the approved look); it still gets both .srt files.

@@ -19,6 +19,30 @@ Format:
 
 ---
 
+## 2026-10-17 — 025 publish package; no captions in the picture, subtitles.srt instead — D-072
+- who: agent (owner approved the 025 Short, waived the Azure final voice — both cuts ship on edge-tts —
+  and set the captions rule).
+- did: **D-072** — from the next video the picture carries no captions; each cut ships
+  `video/subtitles.srt` for the owner to upload in Studio. `format.captions.burn_in` (default false) →
+  `compileTimeline` `burnCaptions:false` → `Main.tsx` skips `CaptionsTrack` (cues stay in the props for
+  QA's narration scan). New `pipeline/06-publish/build-srt.mjs` (rendered clock, casing/punctuation
+  restored token by token from the script; 025: 54 + 20 sentences, 0 fallbacks). `publish.json.subtitles`
+  + `publish.md` upload step. Skills video-render / qa-video / youtube-publish, WORKFLOW, MOTION_SPEC,
+  VISUAL_IDENTITY updated.
+- did: `chapterProblems()` in build-metadata — `publish.md` now warns when YouTube would drop the
+  chapters (< 3, not from 0:00, or a chapter < 10 s). 025's draft had a 7 s chapter (fixed); the
+  published **021** has two (9 s, 8 s), so its chapters are probably not showing (owner can merge them
+  in Studio). Lesson `2026-08-25-restamp-metadata-against-the-rendered-cut` extended.
+- did: **025 package** — `publish.json` + `publish.md` (4 titles, description with the tested stop line +
+  five-line card as the video promises, 10 chapters, 16 tags, Short title/caption, pin, community post,
+  bridge → end screen 013), `medium.md` (682 words), both `subtitles.srt` (96 + 28 cues), 3 fallback
+  stills (prompts lead). Publish review 7.6 → 8.0 → 8.2, all hard gates green, below 9.0 → surfaced (the
+  gap is the title: reviewer prefers the 73-emails line, which is the Short's). 025 briefs pin
+  `burn_in: true` (approved with captions in the picture).
+- next: owner uploads both cuts (thumbnail from `visual-prompts.json`). The long master is still the
+  pre-D-071 v2 (CRF 18) — no re-render planned now that Azure is skipped. Old extra copies still await the
+  owner's OK to delete (024: two phone + one share; 025: one share).
+
 ## 2026-10-17 — 025 Short built; one master file per video at the best quality — D-071
 - who: agent (owner approved the 025 v2 cut, asked for the Short, and ruled out multiple versions).
 - did: **D-071** — every video ships as ONE `final.mp4` at the best quality, no share/phone copies (they were

@@ -141,6 +141,16 @@ test("compileTimeline caption durFrames is clamped by the next cue AND the tail 
   }
 });
 
+test("burnCaptions:false tells Main to draw no captions but keeps the cues (QA scans them as narration)", () => {
+  const { timeline, timings } = fixtureCompile();
+  const off = compileTimeline(timeline, { leadFrames: timings.leadFrames, tailSeconds: timings.captions.tailSeconds, burnCaptions: false });
+  const on = compileTimeline(timeline, { leadFrames: timings.leadFrames, tailSeconds: timings.captions.tailSeconds });
+  assert.equal(off.burnCaptions, false);
+  assert.ok(!("burnCaptions" in on), "a burned-in render keeps the pre-D-072 props shape");
+  assert.deepEqual(off.captions, on.captions);
+  assert.ok(off.captions.length > 0);
+});
+
 // ── CAPTURE AUDIO STRIP (item 2 — screen-recording audio must never leak into the final video) ──────
 
 test("stripAudioCommand drops audio (-an) and remuxes video without re-encoding (-c:v copy)", () => {

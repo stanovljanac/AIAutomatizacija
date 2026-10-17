@@ -98,6 +98,8 @@ export type MainProps = {
   motion?: MotionBudget;
   scenes: Scene[];
   captions: CaptionCue[];
+  /** D-072: false → no captions in the picture (they ship as subtitles.srt). Absent = burned in. */
+  burnCaptions?: boolean;
 };
 
 const renderScene = (template: string, props: any) => {
@@ -170,8 +172,8 @@ export const Main: React.FC<MainProps> = (p) => {
         </Sequence>
       ))}
 
-      {/* burned-in captions (absolute-timed cues) */}
-      <CaptionsTrack cues={p.captions} />
+      {/* burned-in captions (absolute-timed cues) — off by default since D-072 */}
+      {p.burnCaptions !== false && <CaptionsTrack cues={p.captions} />}
 
       <Sequence from={p.totalFrames - p.outroFrames - xf} durationInFrames={p.outroFrames + xf} name="Outro">
         <SceneWrapper durFrames={p.outroFrames + xf} fadeIn={xf} fadeOut={xf}>

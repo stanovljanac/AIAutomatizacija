@@ -29,8 +29,10 @@ import { sceneWindow } from "./lib/transitions.mjs";
  * @param {object} opts
  * @param {number} opts.leadFrames    start each reveal this many frames early so it lands on the cue
  * @param {number} opts.tailSeconds   keep a caption this long after its last word
+ * @param {boolean} opts.burnCaptions false → Main draws no captions (D-072). The cues stay in the props:
+ *                                    QA scans them as the narration text.
  */
-export function compileTimeline(timeline, { leadFrames = 0, tailSeconds = 0 } = {}) {
+export function compileTimeline(timeline, { leadFrames = 0, tailSeconds = 0, burnCaptions = true } = {}) {
   const fps = timeline.format.fps;
   const F = (s) => Math.round(s * fps);
   const introFrames = F(timeline.intro.duration_seconds);
@@ -90,6 +92,8 @@ export function compileTimeline(timeline, { leadFrames = 0, tailSeconds = 0 } = 
     motion: timeline.motion,
     scenes,
     captions,
+    // conditional spread: a burned-in render keeps the exact pre-D-072 props shape
+    ...(burnCaptions ? {} : { burnCaptions: false }),
   };
 }
 
@@ -222,7 +226,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
   const timings = deriveRenderTimings(fmt, { fps: timeline.format.fps, vertical });
 
-  const props = compileTimeline(timeline, { leadFrames: timings.leadFrames, tailSeconds: timings.captions.tailSeconds });
+  const props = compileTimeline(timeline, { leadFrames: timings.leadFrames, tailSeconds: timings.captions.tailSeconds, burnCaptions: timings.captions.burnIn });
   const warnings = copyRemotionAssets({ root: ROOT, cdir, outId, props, brollEnabled: fmt.scene_set?.broll?.enabled !== false });
   for (const w of warnings) console.warn(w);
 

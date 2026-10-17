@@ -28,6 +28,7 @@
     "max_static_hold_seconds": 6
   },
   "captions": {
+    "burn_in": false,
     "max_words": 7,
     "gap_seconds": 0.7,
     "tail_seconds": 0.4,

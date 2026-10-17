@@ -128,7 +128,8 @@ Plus the always-on: `Intro` / `IntroShort`, `Outro` / `OutroShort`, `Subtitles`,
 ## 6. Layout & safe areas
 
 - **Long (16:9):** 1920×1080, 30fps. Text inside 90% safe area.
-- **Short (9:16):** 1080×1920, 30fps. Captions in the middle-upper third.
+- **Short (9:16):** 1080×1920, 30fps. No captions in the picture (D-072 — they ship as
+  `subtitles.srt`); keep the bottom band clear for the Shorts UI.
 - Consistent margins; don't crowd edges.
 
 ## 7. Intro / outro spec  *(finalize in Phase 2)*

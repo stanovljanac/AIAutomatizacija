@@ -19,6 +19,8 @@ export function deriveRenderTimings(fmt, { fps, vertical }) {
     crossfadeFrames: fmt.transition_frames?.crossfade ?? 9,
     leadFrames: sec(fmt.reveals?.lead_seconds ?? 0.22),
     captions: {
+      // D-072: off in the default recipe — the cues ship as subtitles.srt instead. Absent = burned in.
+      burnIn: fmt.captions.burn_in !== false,
       maxWords: fmt.captions.max_words,
       gapSeconds: fmt.captions.gap_seconds,
       tailSeconds: fmt.captions.tail_seconds,

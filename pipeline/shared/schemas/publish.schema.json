@@ -27,6 +27,7 @@
         "template": { "type": "string" }
       }
     },
+    "subtitles": { "type": "string", "description": "Path (relative to the content folder) of the English subtitles.srt the owner uploads in Studio → Subtitles (D-072: the picture carries no captions; viewers turn on CC). Built by pipeline/06-publish/build-srt.mjs." },
     "altered_content": { "type": "boolean", "description": "Always true for us (AI voice + AI visuals) — set 'altered content = yes' at upload (D-025)." },
     "credit_source": { "type": ["string", "null"] },
     "short": {
@@ -34,7 +35,8 @@
       "properties": {
         "title": { "type": "string" },
         "tags": { "type": "array", "items": { "type": "string" } },
-        "caption": { "type": "string", "description": "One-sentence cross-post caption + link to the long video (D-038)." }
+        "caption": { "type": "string", "description": "One-sentence cross-post caption + link to the long video (D-038)." },
+        "subtitles": { "type": "string", "description": "The Short's subtitles.srt, relative to the long's content folder (D-072)." }
       }
     },
     "pinned_comment": { "type": "string", "description": "The pinned comment. Phase 1.3: leads with the answer to the video's closing_question + an invite to reply ('Mine was copy-paste. What's yours?') — a single topical conversation starter, not engagement-begging (STYLE_GUIDE §9). May also carry utility text (the copy-pasteable master prompt / template link) — never in the 3-sentence description." },
