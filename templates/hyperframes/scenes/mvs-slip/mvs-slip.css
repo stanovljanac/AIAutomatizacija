@@ -1,0 +1,13 @@
+/* mvs-slip — portrait HUD. The run strip and the meter own the top band until the quote replaces them. "Owes
+   nothing" is the slot's own engraved plate (PAID · owes $0.00): a HUD tag there sat on the caption line. */
+#runs { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(52px * var(--u)); }
+#runs i { width: calc(30px * var(--u)); height: calc(30px * var(--u)); }
+#runs .lbl { font-size: calc(21px * var(--u)); }
+#meter { left: 0; right: 0; margin: 0 auto; width: calc(700px * var(--u)); box-sizing: border-box; top: calc(124px * var(--u)); }
+#meter .num { font-size: calc(96px * var(--u)); }
+#meter .unit { font-size: calc(32px * var(--u)); }
+#meter .job { font-size: calc(22px * var(--u)); }
+#meter .sub { font-size: calc(26px * var(--u)); }
+#quote { left: 0; right: 0; margin: 0 auto; width: calc(960px * var(--u)); box-sizing: border-box; top: calc(56px * var(--u)); }
+#quote .q { font-size: calc(60px * var(--u)); line-height: 1.08; }
+#quote .src { font-size: calc(23px * var(--u)); }

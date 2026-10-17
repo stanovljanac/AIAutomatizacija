@@ -32,6 +32,7 @@ import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { delimiter, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { MASTER_CRF, MASTER_PRESET } from "../shared/lib/encode.mjs";
 import { resolveFormat } from "../shared/lib/format.mjs";
 import { deriveRenderTimings } from "./lib/timings.mjs";
 import { sceneWindow } from "./lib/transitions.mjs";
@@ -147,7 +148,7 @@ export function buildNormaliseCommand(job, { inFile, outFile }) {
     args: [
       "-v", "error", "-i", inFile,
       "-vf", `tpad=stop_mode=clone:stop_duration=0.25,fps=${job.fps}`,
-      "-c:v", "libx264", "-preset", "veryfast", "-crf", "16",
+      "-c:v", "libx264", "-preset", MASTER_PRESET, "-crf", String(MASTER_CRF),   // an input to the master: no quality below it
       "-pix_fmt", "yuv420p", "-vsync", "cfr", "-an",
       "-movflags", "+faststart", "-y", outFile,
     ],

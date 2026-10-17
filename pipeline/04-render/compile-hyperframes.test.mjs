@@ -19,6 +19,7 @@ import {
   jobVariables,
   renderHyperframesScenes,
 } from "./compile-hyperframes.mjs";
+import { MASTER_CRF } from "../shared/lib/encode.mjs";
 
 const fps = 30;
 
@@ -688,6 +689,7 @@ test("buildNormaliseCommand pads a cloned tail and pins CFR at the job's fps", (
   assert.equal(args[args.indexOf("-i") + 1], "in.mp4");
   assert.equal(args[args.length - 1], "out.mp4");
   assert.ok(args.includes("-an"), "HF clips are silent; the narration lives only in Remotion");
+  assert.equal(args[args.indexOf("-crf") + 1], String(MASTER_CRF), "a clip feeds the master: never encoded below its quality");
 });
 
 test("buildNormaliseCommand follows a non-30 fps job", () => {

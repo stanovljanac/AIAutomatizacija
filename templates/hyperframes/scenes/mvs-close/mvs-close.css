@@ -1,0 +1,6 @@
+/* mvs-close — portrait HUD (black + gold hero). The take, then the question, each with its chip under it, in the
+   top band; the hero plate and the clamp own the middle; captions the bottom. */
+#take { top: calc(70px * var(--u)); width: calc(940px * var(--u)); font-size: calc(78px * var(--u)); }
+#tested { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(262px * var(--u)); font-size: calc(26px * var(--u)); }
+#q { top: calc(60px * var(--u)); width: calc(960px * var(--u)); box-sizing: border-box; font-size: calc(58px * var(--u)); white-space: normal; line-height: 1.1; }
+#next { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(262px * var(--u)); font-size: calc(26px * var(--u)); }

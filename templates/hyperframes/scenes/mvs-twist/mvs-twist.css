@@ -1,0 +1,23 @@
+/* mvs-twist — portrait HUD. The opening wide shot is a band across the middle of the frame, framed by its two
+   labels: the chip above it, the five module names below it (each lights as its module seats). */
+#chip { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(560px * var(--u)); font-size: calc(28px * var(--u)); }
+.hm-mods {
+  left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(1250px * var(--u));
+  display: flex; gap: calc(14px * var(--u)); padding: calc(14px * var(--u)) calc(20px * var(--u)); border-color: rgba(255,176,32,0.4);
+}
+.hm-mods span {
+  display: block; padding: calc(8px * var(--u)) calc(16px * var(--u)); border-radius: calc(8px * var(--u));
+  background: linear-gradient(180deg, #ffc94a 0%, #f0a92e 100%); color: #241503;
+  font-size: calc(30px * var(--u)); font-weight: 900; letter-spacing: calc(2.4px * var(--u)); text-transform: uppercase;
+}
+#runs { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(52px * var(--u)); }
+#runs i { width: calc(30px * var(--u)); height: calc(30px * var(--u)); }
+#meter { left: 0; right: 0; margin: 0 auto; width: calc(640px * var(--u)); box-sizing: border-box; top: calc(118px * var(--u)); }
+#meter .num { font-size: calc(80px * var(--u)); }
+#meter .unit { font-size: calc(32px * var(--u)); }
+#meter .sub { font-size: calc(26px * var(--u)); }
+#landed { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(60px * var(--u)); font-size: calc(38px * var(--u)); text-align: center; }
+#landed small { font-size: calc(24px * var(--u)); }
+#quote { left: 0; right: 0; margin: 0 auto; width: calc(960px * var(--u)); box-sizing: border-box; top: calc(56px * var(--u)); }
+#quote .q { font-size: calc(50px * var(--u)); line-height: 1.1; }
+#quote .src { font-size: calc(23px * var(--u)); }

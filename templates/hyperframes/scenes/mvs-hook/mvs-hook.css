@@ -1,0 +1,9 @@
+/* mvs-hook — portrait HUD (black + gold hero). Everything lives in the top band: the machine owns the middle,
+   the captions own the bottom ~14% of a 1920-tall frame. */
+#meter { left: 0; right: 0; margin: 0 auto; width: calc(760px * var(--u)); box-sizing: border-box; top: calc(70px * var(--u)); text-align: left; }
+#meter .num { font-size: calc(128px * var(--u)); }
+#meter .unit { font-size: calc(34px * var(--u)); line-height: 1.05; }
+#meter .job { font-size: calc(22px * var(--u)); }
+#meter .sub { font-size: calc(28px * var(--u)); }
+#k1 { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(110px * var(--u)); font-size: calc(76px * var(--u)); border-left: none; border-top: calc(5px * var(--u)) solid var(--gold); padding-left: calc(40px * var(--u)); }
+#chip { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(352px * var(--u)); font-size: calc(24px * var(--u)); }

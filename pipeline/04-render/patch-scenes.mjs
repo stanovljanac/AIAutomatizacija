@@ -17,7 +17,10 @@
  *      re-encoded, so there is no generation loss and no visible seam anywhere.
  *   3. The replacement segment is rendered by REMOTION ITSELF (`--frames=A-B`), not by ffmpeg, so it
  *      comes out of the same encoder with the same settings and the same SPS/PPS as the base file.
- *      That is what lets the concat demuxer run with `-c copy`.
+ *      That is what lets the concat demuxer run with `-c copy`. The segment is also rendered at the CRF
+ *      read back out of the base file's own x264 SEI (encode.mjs readX264Crf), so a patched stretch is
+ *      never a different quality from the rest of the master. (Not a decoding requirement: a stream-copy
+ *      concat of a CRF 16 and a CRF 18 x264 part decodes bit-exact with our ffmpeg — measured 2026-10-17.)
  *   4. The segment is rendered `--muted` and the ORIGINAL audio stream is re-muxed untouched. Audio
  *      drift is therefore impossible by construction — we never cut, re-encode or re-time audio.
  *      (PRD R11: never slice the audio.)
@@ -40,6 +43,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { readX264Crf } from "../shared/lib/encode.mjs";
 import { sceneWindow } from "./lib/transitions.mjs";
 
 /**
@@ -188,7 +192,7 @@ export function buildMuxCommand({ ffmpeg, videoFile, baseFile, timescale, out })
  * memory flags mirror the settled 023 render command (a 26-source cut OOMs the Chrome tab at the
  * default concurrency).
  */
-export function buildRemotionRenderCommand({ outId, startFrame, endFrame, out, concurrency = 1 }) {
+export function buildRemotionRenderCommand({ outId, startFrame, endFrame, out, concurrency = 1, crf = null }) {
   return {
     cmd: "npx",
     args: ["remotion", "render", "Main", out,
@@ -197,7 +201,9 @@ export function buildRemotionRenderCommand({ outId, startFrame, endFrame, out, c
       "--muted",
       `--concurrency=${concurrency}`,
       "--offthread-video-cache-size-in-bytes=134217728",
-      "--timeout=180000"],
+      "--timeout=180000",
+      // the BASE file's CRF, when known: the patched stretch matches the quality of the master around it
+      ...(crf == null ? [] : [`--crf=${crf}`])],
   };
 }
 
@@ -284,10 +290,11 @@ export function ffmpegBin(root) {
  * @param {number} args.timescale the BASE file's video timebase; every segment is normalised to it
  * @param {string} args.base      the already-rendered mp4 to patch
  * @param {string} args.out       destination mp4
+ * @param {number|null} [args.crf] the BASE file's x264 CRF; the re-rendered segment is encoded at it
  * @param {Function} [args.spawn] spawnSync-compatible injection point
  * @returns {{ out:string, frames:number, seconds:number, timescale:number }}
  */
-export function runPatch({ root, cdir, outId, plan, fps, timescale, base, out, spawn = spawnSync }) {
+export function runPatch({ root, cdir, outId, plan, fps, timescale, base, out, crf = null, spawn = spawnSync }) {
   const ffmpeg = ffmpegBin(root);
   const remotionDir = join(root, "templates", "remotion");
   const work = join(cdir, "video", ".patch");
@@ -324,7 +331,7 @@ export function runPatch({ root, cdir, outId, plan, fps, timescale, base, out, s
         console.log(`REUSE frames ${seg.fromFrame}-${seg.toFrame - 1} — ${rel} is newer than props/${outId}.json`);
       } else {
         console.log(`RENDER frames ${seg.fromFrame}-${seg.toFrame - 1} (${seg.toFrame - seg.fromFrame} of ${plan.totalFrames}) via Remotion…`);
-        run("remotion render", buildRemotionRenderCommand({ outId, startFrame: seg.fromFrame, endFrame: seg.toFrame, out: rel }), {
+        run("remotion render", buildRemotionRenderCommand({ outId, startFrame: seg.fromFrame, endFrame: seg.toFrame, out: rel, crf }), {
           cwd: remotionDir,
           stdio: ["ignore", "inherit", "pipe"],
         });
@@ -409,12 +416,17 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const timescale = parseVideoTimescale(scanLog);
   if (!timescale) { console.error(`could not read the video timebase (tbn) of ${base} — refusing to splice blind`); process.exit(1); }
 
+  // The base file's CRF (from x264's SEI) — the segment is encoded at it, so the patch matches the master's quality.
+  const crf = readX264Crf(base);
+  if (crf == null) console.warn(`could not read the x264 CRF of ${base} — the segment is encoded at remotion.config.ts's CRF`);
+
   const plan = planPatch({ timeline, sceneIds: scenes, keyframes, totalFrames: props.totalFrames });
   const pct = ((plan.patchedFrames / plan.totalFrames) * 100).toFixed(1);
   console.log(`PATCH ${id} scenes [${scenes.join(", ")}]`);
   console.log(`   base       ${base}`);
   console.log(`   keyframes  ${keyframes.length} in the base file`);
   console.log(`   timebase   ${timescale} tbn — every segment is normalised to it before the concat`);
+  console.log(`   crf        ${crf ?? "unknown (config default)"} — the re-rendered segment is encoded at the base's own CRF`);
   console.log(`   re-render  frames ${plan.startFrame}-${plan.endFrame - 1}  (${plan.patchedFrames} of ${plan.totalFrames} = ${pct}%, ~${(plan.patchedFrames / fps).toFixed(1)}s)`);
   console.log(`   stream-copy ${plan.copiedFrames} frames untouched (no re-encode, no generation loss)`);
   console.log(`   out        ${out}`);
@@ -424,7 +436,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     process.exit(1);
   }
 
-  const { frames, seconds } = runPatch({ root: ROOT, cdir, outId, plan, fps, timescale, base, out });
+  const { frames, seconds } = runPatch({ root: ROOT, cdir, outId, plan, fps, timescale, base, out, crf });
   console.log(`OK ${out} — ${frames} frames / ${seconds.toFixed(2)}s of video at ${timescale} tbn verified (base had ${plan.totalFrames})`);
   console.log(`   next: node scripts/repair-dropouts.mjs ${out}`);
 }

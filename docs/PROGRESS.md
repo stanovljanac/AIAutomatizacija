@@ -19,6 +19,24 @@ Format:
 
 ---
 
+## 2026-10-17 — 025 Short built; one master file per video at the best quality — D-071
+- who: agent (owner approved the 025 v2 cut, asked for the Short, and ruled out multiple versions).
+- did: **D-071** — every video ships as ONE `final.mp4` at the best quality, no share/phone copies (they were
+  an agent habit, no skill asked for them). Quality now set in one place, `pipeline/shared/lib/encode.mjs`
+  (`MASTER_CRF` 12, preset medium): Remotion PNG frames + CRF 12 (`remotion.config.ts`, pinned by
+  `encode.test.mjs`), HF normalise CRF 12 (was 16/veryfast), `repair-dropouts` CRF 12 (was 16).
+  `patch-scenes` renders a segment at the base file's own CRF (read from its x264 SEI) so a patch is never a
+  different quality from its master; measured that a CRF-mismatched stream-copy concat still decodes
+  bit-exact, so this is quality parity, not a decoding fix (lesson `2026-08-23-patch-the-render-dont-repeat-it`
+  extended). video-render skill "Outputs", memory `one-version-max-quality`. `npm test` 857 green.
+- did: **025 Short** — script 7 scenes / 136 words (review 8.3 → 8.8 → 9.0), edge-tts draft 58.7 s (edge-tts
+  7.2.8 → 7.3.1: the old one now gets HTTP 403), seven portrait mechanical scenes `mvs-hook … mvs-close` framed
+  on the machine's tall decision end, plan/dev helpers `render/plan-short.mjs` + `render/dev-short.mjs`.
+  Final 59.9 s, CRF 12, 416 MB (composite 7 min 52 s at PNG/CRF 12; s3 + s4 re-cut by `patch-scenes` in
+  4 min 25 s), frame-gate 7/7, QA 10/10, no freeze.
+- next: owner Gate ③ on the Short; then the Azure final voice for both cuts and the publish package.
+  Owner to OK deleting the old extra copies (024: two phone + one share; 025: one share).
+
 ## 2026-10-16 — 025 owner review: the new floor, no impact thud, no frozen frames — D-070
 - who: agent (owner reviewed the 025 draft cut: flow approved, two defects, two rules).
 - did: committed the 025 build (`fdfd70b`). Removed all ten `impact.mp3` cues (the "dum" — 28 cues left,

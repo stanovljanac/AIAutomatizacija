@@ -843,3 +843,23 @@ old one (don't delete history).
 - **Applied to 025:** s8's machine runs to the end of the scene, the STOPPED tag is gone; s3's tail and
   s10's card / rules holds got a slow dolly; all ten impact cues removed (28 cues remain: 17 accent,
   11 whoosh). The pre-fix cut is kept as `video/_v1/final-v1.mp4`.
+
+## D-071 — One master file per video, at the best quality (owner, 2026-10-16)
+- **Context.** 024 shipped three files (final 814 MB, a 7 Mbps "share" copy, a 25 MB "phone" copy) and 025 a
+  final plus a share copy. No skill asked for them; it was an agent habit. Owner: *"uvek pravi samo jednu
+  najbolju moguću i najkvalitetniju verziju, nebitno koliko prostora zauzima."*
+- **Decision.** Every video and Short is delivered as exactly one file, `final.mp4`, encoded at the best
+  quality the pipeline makes. No share/phone/preview copies. Size is not a constraint.
+- **In code (one place):** `pipeline/shared/lib/encode.mjs` — `MASTER_CRF = 12`, `MASTER_PRESET = medium`.
+  Remotion now captures **PNG** frames (was JPEG at quality 80 — a lossy step before x264) and encodes at
+  CRF 12 (was its default 18); the HF normalise pass encodes at CRF 12 (was 16, veryfast); `repair-dropouts`
+  re-encodes the master at CRF 12 (was 16). `encode.test.mjs` pins `remotion.config.ts` to the constant.
+- **Found on the way.** `repair-dropouts` had been re-encoding every repaired master at CRF 16 while
+  Remotion renders at 18, so a `patch-scenes` splice put an 18-CRF stretch into a 16-CRF file: a patch
+  slightly lower in quality than the cut around it. (Checked whether it could also break decoding — x264
+  ties the PPS init QP to the CRF — and it does not: a stream-copy concat of a CRF 16 and a CRF 18 part
+  decodes bit-exact, PSNR ∞, with the vendored ffmpeg.) `patch-scenes` now reads the base's CRF from its
+  x264 SEI and renders the segment at it (config default when unreadable), so a patch is never a
+  different quality from its master.
+- **Cost.** $0; larger files and a slower composite (PNG capture). Measured on the 025 Short (PROGRESS).
+

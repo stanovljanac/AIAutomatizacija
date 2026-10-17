@@ -1,0 +1,7 @@
+/* mvs-take — portrait HUD (black + gold hero). The two leader tags stand over the core and the lever in the
+   opening frame; the take plate and its footnote own the top band after. */
+#same { left: calc(40px * var(--u)); top: calc(560px * var(--u)); font-size: calc(30px * var(--u)); }
+#same small { font-size: calc(21px * var(--u)); }
+#part { right: calc(40px * var(--u)); top: calc(420px * var(--u)); font-size: calc(30px * var(--u)); }
+#take { top: calc(96px * var(--u)); width: calc(980px * var(--u)); font-size: calc(80px * var(--u)); }
+#chip { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(364px * var(--u)); font-size: calc(26px * var(--u)); }

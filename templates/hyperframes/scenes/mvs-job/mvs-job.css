@@ -1,0 +1,13 @@
+/* mvs-job — portrait HUD. Top band only: the chip, the run strip, then one line at a time below them
+   (the kicker, the HELD tag, the meter — never two at once). Captions own the bottom ~14%. */
+#chip { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(52px * var(--u)); font-size: calc(26px * var(--u)); }
+#runs { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(118px * var(--u)); }
+#runs i { width: calc(30px * var(--u)); height: calc(30px * var(--u)); }
+#k1 { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(116px * var(--u)); font-size: calc(70px * var(--u)); border-left: none; border-top: calc(5px * var(--u)) solid var(--gold); padding-left: calc(40px * var(--u)); }
+#held { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(214px * var(--u)); font-size: calc(34px * var(--u)); text-align: center; }
+#held small { font-size: calc(22px * var(--u)); }
+#meter { left: 0; right: 0; margin: 0 auto; width: calc(760px * var(--u)); box-sizing: border-box; top: calc(214px * var(--u)); }
+#meter .num { font-size: calc(128px * var(--u)); }
+#meter .unit { font-size: calc(34px * var(--u)); line-height: 1.05; }
+#meter .job { font-size: calc(22px * var(--u)); }
+#meter .sub { font-size: calc(28px * var(--u)); }

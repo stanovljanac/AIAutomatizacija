@@ -33,6 +33,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, renameSync, unlinkSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { MASTER_CRF, MASTER_PRESET } from "../pipeline/shared/lib/encode.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -84,6 +85,21 @@ export function repairFilter(frames, fps = 30) {
   return `select='not(${drop})',fps=${fps}`;
 }
 
+/**
+ * PURE: the re-encode that carries the repaired frames. It rewrites the MASTER, so it encodes at the
+ * master quality (encode.mjs) — never below it — and with the same preset Remotion uses, so a repaired
+ * master and a later patch-scenes segment come out of the same encoder settings. Audio is copied, never
+ * re-encoded.
+ */
+export function buildRepairArgs({ file, frames, out, fps = 30 }) {
+  return [
+    "-v", "error", "-i", file,
+    "-vf", repairFilter(frames, fps),
+    "-c:v", "libx264", "-preset", MASTER_PRESET, "-crf", String(MASTER_CRF), "-pix_fmt", "yuv420p",
+    "-c:a", "copy", "-movflags", "+faststart", "-y", out,
+  ];
+}
+
 function scan(bin, file) {
   const r = spawnSync(bin, [
     "-v", "error", "-i", file,
@@ -121,12 +137,7 @@ function main(argv) {
   console.log(`found ${bad.length} dropout(s): ${bad.map((f) => `${f} (${(f / 30).toFixed(2)}s)`).join(", ")}`);
 
   const tmp = `${file}.repair.mp4`;
-  const r = spawnSync(bin, [
-    "-v", "error", "-i", file,
-    "-vf", repairFilter(bad),
-    "-c:v", "libx264", "-preset", "medium", "-crf", "16", "-pix_fmt", "yuv420p",
-    "-c:a", "copy", "-movflags", "+faststart", "-y", tmp,
-  ], { encoding: "utf8", stdio: "inherit" });
+  const r = spawnSync(bin, buildRepairArgs({ file, frames: bad, out: tmp }), { encoding: "utf8", stdio: "inherit" });
   if (r.status !== 0 || !existsSync(tmp)) {
     console.error("ffmpeg repair failed");
     process.exit(1);

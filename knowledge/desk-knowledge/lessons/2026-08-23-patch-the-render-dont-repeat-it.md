@@ -2,7 +2,7 @@
 type: lesson
 status: stable
 created: 2026-08-23
-updated: 2026-08-25
+updated: 2026-10-17
 related: [2026-08-18-a-rendered-clip-is-not-a-seekable-clip.md, 2026-08-16-the-stage-is-built-once.md, ../../../docs/DECISIONS.md, ../../../style/MOTION_SPEC.md]
 depends_on: []
 ---
@@ -112,6 +112,24 @@ where `genpts` is a no-op; it looked like timestamp insurance and was doing noth
 variants of the same scene overwrite each other's segment. `v1.1`'s segment was gone by the time the
 bug was found, which is why repairing `v1.2` was free (stream copy, ~1 min) and repairing `v1.1` would
 have cost a re-render. If variants of one scene are ever iterated again, put the variant in the name.
+
+## The segment must carry the base's CRF, not today's config (2026-10-16/17)
+
+"Same encoder, same settings" stopped being true without anyone touching `patch-scenes`. Since 022,
+`repair-dropouts` re-encodes a master whenever it repairs a dropped frame — at CRF 16 — while Remotion
+renders at its default CRF 18. So every base that had a dropout was a CRF 16 file, and every patch
+spliced a CRF 18 stretch into it: a patch slightly lower in quality than the cut around it.
+- **Not a decoding hazard — measured, not assumed.** x264 ties the PPS init QP to the CRF, so a
+  mismatched concat looked like it could decode the second part against the wrong PPS. It does not: a
+  stream-copy concat of a CRF 16 and a CRF 18 x264 part decodes bit-exact (PSNR ∞ against the part's own
+  clean decode) with the vendored ffmpeg (2026-10-17). The fix below is about quality, nothing else.
+- **Fix (D-071):** `patch-scenes` reads the base's CRF back out of its own x264 SEI
+  (`pipeline/shared/lib/encode.mjs` `readX264Crf`) and renders the segment `--crf=<that>` (config default
+  when unreadable). Every master encode now shares one value (`MASTER_CRF`, 12) and one preset (medium),
+  so new bases and their repairs agree by construction.
+- **Measured on the 025 Short (2026-10-17):** base CRF 12 (PNG frames), s3+s4 patched (533 of 1,796
+  frames, 4.4 min instead of the 7.9 min full composite); the result decodes with zero errors, frames
+  just outside the patch are pixel-identical to the base on a contact sheet, and `crf=12` reads back.
 
 ## When a patch is NOT valid
 

@@ -66,6 +66,12 @@ You assemble the final video deterministically from `script.json` + `alignment.j
 - **Motion:** per VISUAL_IDENTITY §4; visual change every ~3–7s, snapped to sentences.
 
 ## Outputs
+- **ONE file per video, at the best quality — never a second version (owner, 2026-10-16, D-071).** The
+  deliverable is `video/final.mp4` (and `short/video/final.mp4`), nothing else: no `-share.mp4`, no
+  `-phone.mp4`, no "lighter copy", whatever the size. A kept older render is a backup (`video/_v1/`), not a
+  version. Quality is set in code, in one place — `pipeline/shared/lib/encode.mjs` `MASTER_CRF` (12):
+  Remotion composites lossless PNG frames at that CRF (`remotion.config.ts`), the HF clips are normalised at
+  it, and `repair-dropouts` re-encodes at it. Never re-encode the master below it.
 - `video/final.mp4` (long), `short/video/final.mp4` (the nested Short — 1–2 key beats,
   **light music allowed**; length per **STYLE_GUIDE §7** — ~50–60s target, hard max 2:00,
   `config.defaults.short_seconds` / `short_seconds_max`).

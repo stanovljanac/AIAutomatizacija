@@ -1,0 +1,10 @@
+/* mvs-stop — portrait HUD. The chip, then the run strip in its place, and the meter under it: all in the top
+   band, clear of the engraved line and the lever below. */
+#chip { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(52px * var(--u)); font-size: calc(26px * var(--u)); }
+#runs { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(52px * var(--u)); }
+#runs i { width: calc(30px * var(--u)); height: calc(30px * var(--u)); }
+#meter { left: 0; right: 0; margin: 0 auto; width: calc(700px * var(--u)); box-sizing: border-box; top: calc(112px * var(--u)); }
+#meter .num { font-size: calc(110px * var(--u)); }
+#meter .unit { font-size: calc(34px * var(--u)); line-height: 1.05; }
+#meter .job { font-size: calc(22px * var(--u)); }
+#meter .sub { font-size: calc(26px * var(--u)); }

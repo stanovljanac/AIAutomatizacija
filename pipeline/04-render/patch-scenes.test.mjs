@@ -186,6 +186,13 @@ test("buildRemotionRenderCommand: an INCLUSIVE --frames range, muted, at concurr
   assert.ok(args.includes("--concurrency=1"), "26 OffthreadVideo sources OOM the Chrome tab above this");
 });
 
+test("buildRemotionRenderCommand: the segment is encoded at the BASE file's CRF when it is known", () => {
+  const withCrf = buildRemotionRenderCommand({ outId: "x", startFrame: 0, endFrame: 10, out: "o.mp4", crf: 16 }).args;
+  assert.ok(withCrf.includes("--crf=16"), "the patched stretch is encoded at the master's own quality");
+  const without = buildRemotionRenderCommand({ outId: "x", startFrame: 0, endFrame: 10, out: "o.mp4" }).args;
+  assert.ok(!without.some((a) => a.startsWith("--crf")), "no CRF known → remotion.config.ts decides");
+});
+
 test("buildSegmentCutCommand: a frame-exact video-only STREAM COPY", () => {
   const { args } = buildSegmentCutCommand({ ffmpeg: "ffmpeg", base: "b.mp4", fromFrame: 392, toFrame: 11331, fps, timescale: 15360, out: "t.mp4" });
   const i = args.indexOf("-c");

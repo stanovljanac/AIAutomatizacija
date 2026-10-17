@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parseLuma, findDropouts, repairFilter } from "./repair-dropouts.mjs";
+import { parseLuma, findDropouts, repairFilter, buildRepairArgs } from "./repair-dropouts.mjs";
+import { MASTER_CRF, MASTER_PRESET } from "../pipeline/shared/lib/encode.mjs";
 
 /** the exact two-line-per-frame shape `metadata=print` emits */
 function log(values) {
@@ -61,4 +62,13 @@ test("repairFilter drops exactly the listed frames and re-fills with fps", () =>
 
 test("repairFilter honours a non-30 fps", () => {
   assert.match(repairFilter([7], 24), /fps=24$/);
+});
+
+test("buildRepairArgs re-encodes the master AT master quality and copies the audio", () => {
+  const a = buildRepairArgs({ file: "in.mp4", frames: [135], out: "tmp.mp4" });
+  assert.equal(a[a.indexOf("-crf") + 1], String(MASTER_CRF), "a repair must never lower the master's quality");
+  assert.equal(a[a.indexOf("-preset") + 1], MASTER_PRESET, "same preset as the composite, so a later splice shares its SPS/PPS");
+  assert.equal(a[a.indexOf("-c:a") + 1], "copy", "the narration is never re-encoded");
+  assert.equal(a[a.indexOf("-vf") + 1], repairFilter([135], 30));
+  assert.equal(a.at(-1), "tmp.mp4");
 });
