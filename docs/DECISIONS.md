@@ -885,3 +885,39 @@ old one (don't delete history).
   `captionBandFrac`): YouTube's CC, player bar and the Shorts UI sit there.
 - **025** was approved with captions in the picture, so its briefs pin `format_recipe.captions.burn_in:
   true` (a re-render keeps the approved look); it still gets both .srt files.
+
+## D-073 — Growth quadrant 1: the analytics loop runs on the channel itself; every idea needs a real search; every video ships a Test & Compare (owner, 2026-10-17)
+- **Context.** The growth-options doc (Claude Doc "The Automation Desk — opcije za rast i preporuke",
+  2026-10-17) found the channel's limit is reach, not production: long videos have a median of 11 views,
+  95% of views come from Shorts, and the system learned nothing from data — 0 of 68 ideas had metrics,
+  no snapshot was ever taken, and only 4 of 17 ledger records had a `youtube_video_id`. Owner: *"Kreni da
+  implementiraš prvi kvadrant"* — the "do now" quadrant: 1A analytics loop + CTR, 3A package
+  (titles + thumbnails), 3B topics people search, 3E playlists as a test.
+- **Decision 1 (1A).** The analytics loop reads the CHANNEL, not our files. The id only ever reached the
+  ledger when it was typed into a publish.json, and the owner uploads by hand (D-055) and often renames
+  at upload — so the loop never had anything to query. Now `fetch-analytics.mjs` lists every upload from
+  the YouTube Data API into a channel catalog (`pipeline/state/youtube.json`), ties each to its content
+  folder (auto only when the title is certain, else `--map`), binds the ledger once, takes the due
+  snapshots (+7 d, then every 28 d), writes idea metrics and re-ranks. Weekly, via Windows Task
+  Scheduler (durable; CronCreate expires after 7 days).
+- **Decision 2 (1A, CTR).** Impressions + CTR come from the Reporting API report `channel_reach_basic_a1`
+  (the Analytics API refuses `videoThumbnailImpressions` in every query shape — tested). Its reports
+  expire, so every daily row is kept in the catalog. CTR is read as a percentage (the docs' wording; the
+  APIs' other percentage metrics are 0–100) and converted in one place, with a warning if it looks 100×
+  too small. The Reporting API must be enabled in the Cloud project (it was not, 2026-10-17).
+- **Decision 3 (3B).** Every idea carries YouTube-autocomplete evidence that people type its
+  `search_term` (`search-demand.mjs`, free endpoint, re-checked monthly). The seed gate refuses to
+  script a brief whose phrase is unverified, unchecked or changed since the check; the owner can waive
+  with a reason (breaking news; demand seen in Studio → Research). We do not auto-adopt autocomplete's
+  alternatives — re-phrasing changes the topic, so it is a Gate-1 decision. First pass: 14 of 60 verified.
+- **Decision 4 (3A).** Every package carries 2–3 genuinely different titles; `publish.md` lists the Test &
+  Compare variants (titles + thumbnails), warns on a single title, and `build-metadata.mjs --ab-result`
+  records the winner (`publish.json.ab_test`, the winner becomes `chosen_title`). Thumbnails stay the
+  owner's step (prompts lead).
+- **Decision 5 (3E).** All playlists stay; `pipeline/state/playlist-report.md` compares them weekly on the
+  doc's four measures (impressions + CTR, retention, search + suggested views, subs per 1,000 views),
+  long and Shorts apart. The test window opened 2026-10-17; review 2026-12-12 → 2026-12-26, only
+  playlists with ≥ 3 videos.
+- **Not done here, on purpose.** No change to `projectIdeas` (three produced ideas sit at `backlog` —
+  flagged in ROADMAP); no re-wording of the 46 unverified phrases; no regeneration of existing
+  `publish.md` files (025 gets its Test & Compare block when its package is next regenerated).

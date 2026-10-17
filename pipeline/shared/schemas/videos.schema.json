@@ -67,8 +67,22 @@
                 "due_at": { "type": ["string", "null"], "description": "ISO date the next snapshot is due (publish +7d, then +28d). null = never scheduled (backfilled history)." },
                 "snapshots": {
                   "type": "array",
-                  "description": "Append-only dated metric snapshots. Item shape is intentionally open until the analytics thread lands.",
-                  "items": { "type": "object" }
+                  "description": "Append-only dated metric snapshots, copied from the channel catalog (pipeline/state/youtube.json) when due_at arrives (D-073). Lifetime totals as of `at`.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["at"],
+                    "properties": {
+                      "at": { "type": "string", "description": "ISO date the snapshot was taken." },
+                      "views": { "type": "number" },
+                      "watch_minutes": { "type": "number" },
+                      "avg_view_seconds": { "type": "number" },
+                      "retention_pct": { "type": "number", "description": "averageViewPercentage (0..100)." },
+                      "subs_gained": { "type": "number" },
+                      "impressions": { "type": "number", "description": "Thumbnail impressions (Reporting API reach rows)." },
+                      "ctr": { "type": "number", "description": "Impressions click-through rate as a FRACTION (0.05 = 5%)." }
+                    }
+                  }
                 }
               }
             }

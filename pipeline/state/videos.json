@@ -9,7 +9,7 @@
       "content_type": "long",
       "status": "published",
       "published_at": null,
-      "youtube_video_id": null,
+      "youtube_video_id": "0ReClo3IRvI",
       "lesson": {
         "state": "none",
         "at": "2026-07-25",
@@ -26,7 +26,7 @@
       "content_type": "long",
       "status": "published",
       "published_at": null,
-      "youtube_video_id": null,
+      "youtube_video_id": "8leAPqVdC20",
       "lesson": {
         "state": "none",
         "at": "2026-07-25",
@@ -77,7 +77,7 @@
       "content_type": "long",
       "status": "published",
       "published_at": null,
-      "youtube_video_id": null,
+      "youtube_video_id": "smW-2hwz4QM",
       "lesson": {
         "state": "none",
         "at": "2026-07-25",
@@ -111,7 +111,7 @@
       "content_type": "long",
       "status": "published",
       "published_at": null,
-      "youtube_video_id": null,
+      "youtube_video_id": "9W9pWYEzjmM",
       "lesson": {
         "state": "none",
         "at": "2026-07-25",
@@ -128,7 +128,7 @@
       "content_type": "short",
       "status": "published",
       "published_at": null,
-      "youtube_video_id": null,
+      "youtube_video_id": "2Xm-n0K7pIM",
       "lesson": {
         "state": "none",
         "at": "2026-07-25",
@@ -145,7 +145,7 @@
       "content_type": "short",
       "status": "published",
       "published_at": null,
-      "youtube_video_id": null,
+      "youtube_video_id": "ePnW2xZwtEs",
       "lesson": {
         "state": "none",
         "at": "2026-07-25",
@@ -162,7 +162,7 @@
       "content_type": "short",
       "status": "published",
       "published_at": null,
-      "youtube_video_id": null,
+      "youtube_video_id": "qglzqGydJV4",
       "lesson": {
         "state": "none",
         "at": "2026-07-25",
@@ -179,7 +179,7 @@
       "content_type": "long",
       "status": "published",
       "published_at": null,
-      "youtube_video_id": null,
+      "youtube_video_id": "ui7KaKzZso4",
       "lesson": {
         "state": "none",
         "at": "2026-07-25",
@@ -196,7 +196,7 @@
       "content_type": "short",
       "status": "published",
       "published_at": null,
-      "youtube_video_id": null,
+      "youtube_video_id": "xnVng9WfKok",
       "lesson": {
         "state": "none",
         "at": "2026-07-25",
@@ -230,15 +230,24 @@
       "content_type": "long",
       "status": "published",
       "published_at": "2026-08-15",
-      "youtube_video_id": null,
+      "youtube_video_id": "foexgrUcbXI",
       "lesson": {
         "state": "linked",
         "at": "2026-08-15",
         "note": "2026-08-15-word-alignment-is-1to1-with-the-tts-events"
       },
       "analytics": {
-        "due_at": "2026-08-22",
-        "snapshots": []
+        "due_at": "2026-11-14",
+        "snapshots": [
+          {
+            "at": "2026-10-17",
+            "views": 9,
+            "watch_minutes": 8,
+            "avg_view_seconds": 73,
+            "retention_pct": 26.239999999999995,
+            "subs_gained": 0
+          }
+        ]
       }
     },
     "022-context-window": {
@@ -247,15 +256,24 @@
       "content_type": "long",
       "status": "published",
       "published_at": "2026-08-18",
-      "youtube_video_id": null,
+      "youtube_video_id": "rkLKEh6iJnE",
       "lesson": {
         "state": "linked",
         "at": "2026-08-18",
         "note": "2026-08-18-a-rendered-clip-is-not-a-seekable-clip"
       },
       "analytics": {
-        "due_at": "2026-08-25",
-        "snapshots": []
+        "due_at": "2026-11-14",
+        "snapshots": [
+          {
+            "at": "2026-10-17",
+            "views": 2,
+            "watch_minutes": 6,
+            "avg_view_seconds": 375,
+            "retention_pct": 99.87,
+            "subs_gained": 0
+          }
+        ]
       }
     },
     "023-attention": {
@@ -264,15 +282,24 @@
       "content_type": "long",
       "status": "published",
       "published_at": "2026-08-25",
-      "youtube_video_id": null,
+      "youtube_video_id": "DPXmsLBjyyw",
       "lesson": {
         "state": "linked",
         "at": "2026-08-25",
         "note": "2026-08-25-restamp-metadata-against-the-rendered-cut"
       },
       "analytics": {
-        "due_at": "2026-09-01",
-        "snapshots": []
+        "due_at": "2026-11-14",
+        "snapshots": [
+          {
+            "at": "2026-10-17",
+            "views": 17,
+            "watch_minutes": 6,
+            "avg_view_seconds": 189,
+            "retention_pct": 50.1,
+            "subs_gained": 0
+          }
+        ]
       }
     },
     "024-frozen": {
@@ -288,8 +315,17 @@
         "note": "2026-10-09-constant-background-motion-buries-the-point"
       },
       "analytics": {
-        "due_at": "2026-10-16",
-        "snapshots": []
+        "due_at": "2026-11-14",
+        "snapshots": [
+          {
+            "at": "2026-10-17",
+            "views": 12,
+            "watch_minutes": 2,
+            "avg_view_seconds": 127,
+            "retention_pct": 96.64,
+            "subs_gained": 0
+          }
+        ]
       }
     },
     "025-always-on-agents": {
@@ -298,7 +334,7 @@
       "content_type": "long",
       "status": "published",
       "published_at": "2026-10-17",
-      "youtube_video_id": null,
+      "youtube_video_id": "hZ8WbNMAzwc",
       "lesson": {
         "state": "linked",
         "at": "2026-10-17",

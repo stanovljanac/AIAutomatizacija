@@ -33,8 +33,13 @@ SEO/claims rubric in `pipeline/shared/review/rubric.mjs` (`publish` entry; weigh
   filename→schema map only knows `publish.json`, so pass `--schema` until it is renamed).
 
 ## Generate (English, SEO — STYLE_GUIDE §8, CHANNEL §7)
-- **Title:** benefit/curiosity + front-loaded **search keyword** (`brief.search_term`),
-  ≤ ~60 chars, no pure clickbait.
+- **Title:** benefit/curiosity + front-loaded **search keyword** (`brief.search_term` — a phrase
+  people verifiably type, 3B), ≤ ~60 chars, no pure clickbait.
+- **2–3 genuinely different titles, every video (3A, D-073).** `title_options` must hold 2–3
+  different ANGLES (the number, the mistake, the how-to), not one title reworded — they go into
+  Studio **Test & Compare**. Prefer concrete "do X" titles over abstract concepts. `publish.md`'s
+  **Test & Compare** block lists the variants + thumbnails and warns when there is only one title;
+  the publish review's `title_ctr` checks it.
 - **Description — MAX 3 sentences (owner rule 2026-06-07):** exactly up to 3 SEO-dense
   sentences, packed with the keywords people search, that describe what actually happens in
   the video. Then append **chapters** (timestamps from `alignment.json`/scene starts) and the
@@ -135,6 +140,15 @@ The Medium **post** also needs (owner rule 2026-06-07), stored in `publish.json.
   title/description/tags and **clicks publish**.)
 
 ## After publish
-- Set `brief.json.status: "published"`. Append outcome to `content/<id>/log.md`,
-  `docs/PROGRESS.md`, and the idea's `metrics` in `pipeline/00-ideas/ideas.json`
-  (CTR/retention later) so the idea-bank can be **re-ranked** (growth loop).
+- Set `brief.json.status: "published"`. Append outcome to `content/<id>/log.md` and
+  `docs/PROGRESS.md`.
+- **Test & Compare (3A):** the owner runs the `publish.md` variants in Studio; when the test ends
+  (≤ 2 weeks), record it — `node pipeline/06-publish/build-metadata.mjs <id> --ab-result title=<#> [thumb=<#>]`
+  (the winner becomes `chosen_title`; `ab_test` keeps the variants for the learning loop).
+- **Numbers are automatic (1A, D-073).** The weekly run (`pipeline/06-publish/fetch-analytics.mjs`,
+  Windows Task Scheduler) lists every upload on the channel into `pipeline/state/youtube.json`, ties
+  each to its content folder by title — the owner often renames at upload, so it asks for
+  `fetch-analytics.mjs --map <youtubeId> <content-key>` (`none` = deliberately no folder) when the
+  title gives no certainty — binds `youtube_video_id` into the ledger, takes the due snapshots,
+  writes the idea's `metrics` (views, retention, impressions, CTR) and re-ranks the bank. Run it by
+  hand after an upload to map the new video at once.

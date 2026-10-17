@@ -63,6 +63,19 @@
         "cover": { "type": "string" }
       }
     },
+    "ab_test": {
+      "type": "object",
+      "description": "3A (D-073): a finished YouTube Studio Test & Compare, recorded with build-metadata.mjs --ab-result. The winning title becomes chosen_title. Kept so the analytics loop can learn which kind of title and thumbnail wins.",
+      "additionalProperties": false,
+      "required": ["decided", "titles", "winner_title"],
+      "properties": {
+        "decided": { "type": "string", "description": "ISO date the result was recorded." },
+        "titles": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "The title variants that were tested, in publish.md order." },
+        "thumbnails": { "type": "array", "items": { "type": "string" }, "description": "The thumbnail variants (paths relative to the content folder), when thumbnails were tested." },
+        "winner_title": { "type": "string" },
+        "winner_thumbnail": { "type": ["string", "null"] }
+      }
+    },
     "youtube_video_id": { "type": ["string", "null"] },
     "status": {
       "type": "string",

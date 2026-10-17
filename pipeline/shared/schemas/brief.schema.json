@@ -15,6 +15,21 @@
     "target_seconds": { "type": "number" },
     "format": { "type": "string", "enum": ["long", "short", "long+short"] },
     "search_term": { "type": "string" },
+    "search_demand": {
+      "type": "object",
+      "description": "3B (D-073): evidence that people type search_term (YouTube autocomplete via pipeline/00-ideas/search-demand.mjs, copied from the idea by pick-next or checked with --brief). Required by seed-gate.mjs before scripting.",
+      "additionalProperties": false,
+      "required": ["phrase", "status", "checked"],
+      "properties": {
+        "phrase": { "type": "string" },
+        "status": { "type": "string", "enum": ["verified", "unverified", "waived"] },
+        "depth": { "type": "number", "minimum": 0 },
+        "alternatives": { "type": "array", "items": { "type": "string" } },
+        "reason": { "type": "string" },
+        "checked": { "type": "string" },
+        "source": { "type": "string" }
+      }
+    },
     "task": { "type": "string", "description": "The painful task being automated (data-entry, invoicing, scheduling, emailing, lookups...)." },
     "sector": { "type": "string", "description": "Optional sector flavor (schools, accounting, hospitality...)." },
     "tool": { "type": "string", "description": "Primary tool shown (Sheets, Excel, Outlook, Notion, Claude...)." },

@@ -9,6 +9,7 @@ import {
   buildMetadata, buildChapters, buildDescription, buildTags, fmtTime,
   publishMarkdown, writeMarkdownExport, recordThumbnailChoice,
   buildBridge, buildPinnedComment, LONG_URL_PLACEHOLDER, chapterProblems,
+  testVariants, packageProblems, recordAbResult, TEST_VARIANTS,
 } from "./build-metadata.mjs";
 import { readFixture, assertValid, validate, withTempDir } from "../shared/testkit/index.mjs";
 
@@ -294,5 +295,63 @@ test("recordThumbnailChoice: exactly one chosen:true (by index or file), schema-
     assert.deepEqual(onDisk.map((c) => c.chosen), [true, false]);
 
     assert.throws(() => recordThumbnailChoice(tmp, "9"), /no thumbnail candidate matches/);
+  });
+});
+
+// ── 3A (D-073): Test & Compare ───────────────────────────────────────────────
+
+const pkg = (over = {}) => ({
+  id: "025-x", title_options: ["AI Agents Make Mistakes. One Line Makes Them Undoable.", "My AI Agent Sent 73 Emails Nobody Approved", "I Ran an AI Agent 30 Times.", "Before You Run an AI Agent: Write the Stop Line"],
+  chosen_title: "My AI Agent Sent 73 Emails Nobody Approved", description: "d", tags: [], status: "published", ...over,
+});
+const cands = [{ file: "images/thumb_candidate_1.png", final: "images/thumb_final_1.png" }, { file: "images/thumb_candidate_2.png", final: "images/thumb_final_2.png" }];
+
+test("testVariants: up to 3 distinct titles, the chosen one first; thumbnail finals from the candidates", () => {
+  const v = testVariants(pkg(), { candidates: cands });
+  assert.equal(TEST_VARIANTS, 3);
+  assert.deepEqual(v.titles, ["My AI Agent Sent 73 Emails Nobody Approved", "AI Agents Make Mistakes. One Line Makes Them Undoable.", "I Ran an AI Agent 30 Times."]);
+  assert.deepEqual(v.thumbnails, ["images/thumb_final_1.png", "images/thumb_final_2.png"]);
+  assert.deepEqual(testVariants({ title_options: ["A", " a ", "B"] }).titles, ["A", "B"], "case/space duplicates collapse");
+});
+
+test("packageProblems: a single title can't be tested", () => {
+  assert.deepEqual(packageProblems(pkg()), []);
+  assert.match(packageProblems(pkg({ title_options: ["One"], chosen_title: "one" }))[0], /only 1 distinct title/);
+});
+
+test("publishMarkdown carries the Test & Compare block: titles, thumbnails, the record command", () => {
+  const md = publishMarkdown(pkg(), { candidates: cands.map((c, i) => ({ ...c, scene: `s${i}`, score: 50, reasons: [] })) });
+  assert.match(md, /## Test & Compare/);
+  assert.match(md, /up to 3 variants, runs up to 2 weeks, YouTube picks the winner by watch time/);
+  assert.match(md, /\*\*Titles:\*\*\n1\. My AI Agent Sent 73 Emails Nobody Approved\n2\. AI Agents Make Mistakes/);
+  assert.match(md, /1\. `images\/thumb_final_1\.png` · 2\. `images\/thumb_final_2\.png`/);
+  assert.match(md, /--ab-result title=<#> \[thumb=<#>\]/);
+  const lone = publishMarkdown(pkg({ title_options: ["One"], chosen_title: null }));
+  assert.match(lone, /Not ready for a test:\*\*\n- only 1 distinct title/);
+  assert.match(lone, /generate 2 from the prompts in `visual-prompts\.json`/);
+});
+
+test("recordAbResult: the winning title becomes chosen_title, the test is kept, a thumbnail winner is recorded", async () => {
+  await withTempDir((dir) => {
+    fs.mkdirSync(path.join(dir, "images"));
+    for (const c of cands) fs.writeFileSync(path.join(dir, c.final), "png");
+    fs.writeFileSync(path.join(dir, "publish.json"), JSON.stringify(pkg()));
+    fs.writeFileSync(path.join(dir, "thumb_candidates.json"), JSON.stringify(cands.map((c, i) => ({ ...c, scene: `s${i}`, template: "hook-card", score: 90 - i, reasons: ["x"], timestamp_s: 10 + i, chosen: false }))));
+    const ab = recordAbResult(dir, { title: 2, thumb: 2, now: new Date("2026-10-31T10:00:00Z") });
+    assert.deepEqual(ab, {
+      decided: "2026-10-31",
+      titles: ["My AI Agent Sent 73 Emails Nobody Approved", "AI Agents Make Mistakes. One Line Makes Them Undoable.", "I Ran an AI Agent 30 Times."],
+      thumbnails: ["images/thumb_final_1.png", "images/thumb_final_2.png"],
+      winner_title: "AI Agents Make Mistakes. One Line Makes Them Undoable.",
+      winner_thumbnail: "images/thumb_final_2.png",
+    });
+    const pub = JSON.parse(fs.readFileSync(path.join(dir, "publish.json"), "utf8"));
+    assertValid(pub, "publish");
+    assert.equal(pub.chosen_title, ab.winner_title);
+    assert.equal(JSON.parse(fs.readFileSync(path.join(dir, "thumb_candidates.json"), "utf8"))[1].chosen, true);
+    assert.ok(fs.existsSync(path.join(dir, "images", "thumb_final.png")));
+    assert.match(fs.readFileSync(path.join(dir, "publish.md"), "utf8"), /\*\*Result \(2026-10-31\):\*\* title "AI Agents Make Mistakes/);
+    assert.throws(() => recordAbResult(dir, { title: 9 }), /no title variant "9"/);
+    assert.throws(() => recordAbResult(dir, { title: 1, thumb: 7 }), /no thumbnail variant "7"/);
   });
 });

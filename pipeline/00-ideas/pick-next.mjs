@@ -101,6 +101,7 @@ export function briefFromIdea(idea) {
     status: "new",
   };
   if (idea.search_term) out.search_term = idea.search_term;
+  if (idea.search_demand) out.search_demand = { ...idea.search_demand }; // 3B evidence → seed-gate
   if (idea.tool) out.tool = idea.tool;
   if (idea.sector) out.sector = idea.sector;
   const score = effectiveScore(idea);
@@ -157,6 +158,14 @@ function loadSubjectRegistry() {
   }
 }
 
+/** 3B: say up front when the picked idea's phrase isn't a real search (seed-gate will stop on it). */
+function warnSearchDemand(idea) {
+  const d = idea?.search_demand;
+  if (d?.status === "verified" || d?.status === "waived") return;
+  const why = !d ? "was never checked" : d.status === "unverified" ? "is not something people type" : `is unchecked (${d.status})`;
+  console.warn(`⚠ search phrase "${idea?.search_term ?? ""}" ${why} — fix it before scripting: node pipeline/00-ideas/search-demand.mjs ${idea?.id} --phrase "…" (3B).`);
+}
+
 /** Print the subject-collision warning for a chosen idea, if any (D-059). */
 function warnSubjectCollision(idea, registry) {
   const hit = subjectCollision(idea, registry);
@@ -180,6 +189,7 @@ function main() {
     const idea = pickNextIdea(ideas, { recent: recentFromBank(ideas) });
     if (!idea) return console.log("empty: no backlog idea to pick.");
     console.log(`would pick [${effectiveScore(idea)}] ${idea.id} — "${idea.title}" (${idea.archetype}${idea.lane ? ", " + idea.lane : ""}).`);
+    warnSearchDemand(idea);
     return warnSubjectCollision(idea, registry);
   }
 
@@ -188,7 +198,9 @@ function main() {
   if (res.empty) return console.log("empty: no backlog idea to pick.");
   fs.writeFileSync(IDEAS_PATH, JSON.stringify(res.ideas, null, 2) + "\n");
   console.log(`picked "${res.ideaId}" → scaffolded content/${res.id}/ (brief seeded). Idea marked in-progress.`);
-  warnSubjectCollision(ideas.ideas.find((i) => i.id === res.ideaId), registry);
+  const picked = ideas.ideas.find((i) => i.id === res.ideaId);
+  warnSearchDemand(picked);
+  warnSubjectCollision(picked, registry);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -238,12 +238,35 @@ Runner / Reviewer / Publisher ports.
   `lesson.state: "pending"` record — the one thing a machine can't produce (D-061 → D-062).
   `docs/CHANNEL_MAP.md` stays human prose; code owns only its machine mirror.
 
-**Growth loop (analytics → re-rank).**
-- `pipeline/06-publish/fetch-analytics.mjs` — pulls each produced video's YouTube Analytics
-  (views / retention / CTR) into its idea's `metrics`, then **re-ranks the bank**: produced ideas blend
-  the predicted `score` → measured `performance`; backlog ideas get a bounded task-cluster nudge.
-  Idempotent (`adjusted_score` re-derived from the immutable `score`; effective rank = `adjusted_score ?? score`).
-  Numbers arrive once the first upload sets `youtube_video_id`.
+**Growth loop (analytics → re-rank) — the weekly run, D-073.**
+- **Channel catalog** `pipeline/state/youtube.json` (`youtube-catalog.mjs`, schema `youtube`): every
+  upload keyed by its YouTube id — title as live, type (Analytics `creatorContentType`; the API refuses
+  `video×creatorContentType`, so one filtered query per type), privacy, playlists, lifetime metrics
+  (one `dimensions=video` query) and traffic sources (one query per upload with views). Each upload is
+  tied to its content folder (`content_key`, the ledger key shape): automatically only when the title
+  is certain (same type, Jaccard ≥ 0.5, ahead of the runner-up by 0.15), else by hand
+  (`fetch-analytics.mjs --map <id> <key|none>`) — the owner renames at upload (D-055), and a wrong tie
+  would put one video's numbers on another idea. Manual and `none` keys are never re-matched.
+- **Reach** (`reach.mjs`): thumbnail impressions + CTR exist only as the Reporting API bulk report
+  `channel_reach_basic_a1` (the Analytics API refuses `videoThumbnailImpressions` in every query
+  shape). The run creates the job once, downloads new daily CSVs oldest-first (a backfill overwrites the
+  day it replaces), and **keeps every row** in `reach_daily` because the reports expire after 30–60 days.
+  CTR is read as a percentage (`CTR_SCALE`), aggregated impression-weighted; `reachWarnings` flags a CTR
+  that looks 100× too small. Disabled API / no report yet = a status line, never a failure.
+- **Ledger** (`reconcile.mjs`): `bindYoutubeIds` sets each mapped record's `youtube_video_id` once
+  (frozen; a different id is reported, not overwritten); `takeDueSnapshots` appends a dated snapshot
+  when `due_at` arrives and reschedules +28 d (backfilled history has `due_at: null` → none).
+- **Ideas** (`fetch-analytics.mjs`): each produced idea takes its folder's long upload (else its Short)
+  as `metrics`, then **re-ranks the bank**: produced ideas blend the predicted `score` → measured
+  `performance`; backlog ideas get a bounded task-cluster nudge. Idempotent (`adjusted_score`
+  re-derived from the immutable `score`; effective rank = `adjusted_score ?? score`).
+- **Playlist test (3E)** (`playlist-report.mjs`) → `pipeline/state/playlist-report.md`: per playlist ×
+  type, impressions + CTR, view-weighted retention, search + suggested views, subs per 1,000 views;
+  review window 8–10 weeks after the first fetch, ≥ 3 videos per playlist.
+- **Schedule:** Windows Task Scheduler `AutomationDesk-WeeklyAnalytics` (`scripts/register-weekly-analytics.ps1`,
+  Mondays 09:30, StartWhenAvailable) — durable, unlike the session-local CronCreate routine.
+- **Search demand (3B)** (`pipeline/00-ideas/search-demand.mjs`): YouTube autocomplete evidence per
+  idea (`search_demand`, re-checked monthly) → idea-pass `audience_fit`, pick-next warning, seed-gate stop.
 
 **Autonomous driver (the hands-off pass).**
 - `pipeline/00-ideas/pick-next.mjs` — auto-pick the top backlog idea by effective score → `scaffoldVideo`

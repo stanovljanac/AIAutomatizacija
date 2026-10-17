@@ -52,6 +52,38 @@ export function chapterProblems(chapters = []) {
   return out;
 }
 
+/** YouTube Studio Test & Compare takes up to 3 variants and runs up to 2 weeks (3A, D-073). */
+export const TEST_VARIANTS = 3;
+
+/**
+ * PURE: what goes into Test & Compare — up to 3 distinct titles (the chosen one first) and up to 3
+ * thumbnail finals from the 04b candidates (the owner may bring their own from the prompts instead).
+ */
+export function testVariants(publish = {}, { candidates = null } = {}) {
+  const seen = new Set();
+  const titles = [];
+  for (const t of [publish.chosen_title, ...(publish.title_options ?? [])]) {
+    const clean = typeof t === "string" ? t.trim() : "";
+    const key = clean.toLowerCase();
+    if (clean && !seen.has(key)) {
+      seen.add(key);
+      titles.push(clean);
+    }
+  }
+  const thumbnails = (candidates ?? []).map((c) => c.final ?? c.file).filter(Boolean);
+  return { titles: titles.slice(0, TEST_VARIANTS), thumbnails: thumbnails.slice(0, TEST_VARIANTS) };
+}
+
+/**
+ * PURE: why this package can't run a real Test & Compare, or [] when it can. Every video ships 2–3
+ * genuinely different titles (3A); thumbnails are the owner's step, so they are only named in
+ * publish.md, never blocked on here.
+ */
+export function packageProblems(publish = {}) {
+  const n = testVariants(publish).titles.length;
+  return n >= 2 ? [] : [`only ${n} distinct title(s) — Test & Compare needs 2–3 genuinely different ones`];
+}
+
 export function buildTags(brief) {
   const tags = new Set();
   if (brief.task) tags.add(String(brief.task).replace(/-/g, " "));
@@ -230,6 +262,7 @@ export function publishMarkdown(publish, { candidates = null } = {}) {
       "`node pipeline/06-publish/build-metadata.mjs <id> --choose-thumb <#>`"
     );
   }
+  lines.push("", ...testAndCompareSection(publish, { candidates }));
   lines.push(
     "",
     "## Upload checklist",
@@ -242,6 +275,64 @@ export function publishMarkdown(publish, { candidates = null } = {}) {
   if (publish.short?.subtitles) lines.push(srtStep(publish.short.subtitles, "Short"));
   lines.push(`- Status: ${publish.status}`, "");
   return lines.join("\n");
+}
+
+/** The publish.md block for 3A: what to test, how, and how to record the winner. Pure. */
+export function testAndCompareSection(publish, { candidates = null } = {}) {
+  const { titles, thumbnails } = testVariants(publish, { candidates });
+  const out = [
+    "## Test & Compare",
+    "",
+    "Studio → this video → **Test & Compare** (desktop; needs advanced features): up to 3 variants, runs up to 2 weeks, YouTube picks the winner by watch time.",
+    "",
+    "**Titles:**",
+    ...titles.map((t, i) => `${i + 1}. ${t}`),
+    "",
+    thumbnails.length
+      ? `**Thumbnails:** ${thumbnails.map((t, i) => `${i + 1}. \`${t}\``).join(" · ")} — or the two you generate from \`visual-prompts.json\`.`
+      : "**Thumbnails:** generate 2 from the prompts in `visual-prompts.json` (the owner's step).",
+  ];
+  const ab = publish.ab_test;
+  if (ab?.winner_title) {
+    out.push("", `**Result (${ab.decided}):** title "${ab.winner_title}"${ab.winner_thumbnail ? ` · thumbnail \`${ab.winner_thumbnail}\`` : ""}.`);
+  } else {
+    out.push("", "When the test ends, record the winner (it becomes the chosen title):", "`node pipeline/06-publish/build-metadata.mjs <id> --ab-result title=<#> [thumb=<#>]`");
+  }
+  const bad = packageProblems(publish);
+  if (bad.length) out.push("", "**⚠ Not ready for a test:**", ...bad.map((b) => `- ${b}`));
+  return out;
+}
+
+/**
+ * Record a finished Test & Compare (3A): the winning title (1-based, in the order publish.md lists
+ * them) becomes `chosen_title`, `ab_test` keeps the variants and the date, and a winning thumbnail
+ * goes through `recordThumbnailChoice` (chosen:true + the canonical thumb_final.png). The record is
+ * what lets the analytics loop learn which kind of title wins.
+ */
+export function recordAbResult(contentDir, { title, thumb = null, now = new Date() } = {}) {
+  const pubPath = path.join(contentDir, "publish.json");
+  const publish = JSON.parse(fs.readFileSync(pubPath, "utf8"));
+  const candPath = path.join(contentDir, "thumb_candidates.json");
+  const candidates = fs.existsSync(candPath) ? JSON.parse(fs.readFileSync(candPath, "utf8")) : null;
+  const { titles, thumbnails } = testVariants(publish, { candidates });
+  const winner = titles[Number(title) - 1];
+  if (!winner) throw new Error(`no title variant "${title}" (have 1..${titles.length})`);
+  let winnerThumb = null;
+  if (thumb != null) {
+    if (!thumbnails[Number(thumb) - 1]) throw new Error(`no thumbnail variant "${thumb}" (have 1..${thumbnails.length})`);
+    const chosen = recordThumbnailChoice(contentDir, thumb);
+    winnerThumb = chosen.final ?? chosen.file;
+  }
+  const next = {
+    ...publish,
+    chosen_title: winner,
+    ab_test: { decided: now.toISOString().slice(0, 10), titles, thumbnails, winner_title: winner, winner_thumbnail: winnerThumb },
+  };
+  const { valid, errors } = validate(next, "publish");
+  if (!valid) throw new Error(`publish.json invalid after the test result: ${formatErrors(errors)}`);
+  fs.writeFileSync(pubPath, JSON.stringify(next, null, 2) + "\n");
+  writeMarkdownExport(contentDir, next);
+  return next.ab_test;
 }
 
 /**
@@ -284,17 +375,26 @@ export function recordThumbnailChoice(contentDir, pick) {
 //   node pipeline/06-publish/build-metadata.mjs <id>                    build publish.json + publish.md
 //   node pipeline/06-publish/build-metadata.mjs <id> --md-only          regenerate publish.md from the EXISTING publish.json
 //   node pipeline/06-publish/build-metadata.mjs <id> --choose-thumb 2   record the owner's thumbnail pick (chosen:true)
+//   node pipeline/06-publish/build-metadata.mjs <id> --ab-result title=2 [thumb=1]   record a finished Test & Compare
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
   const argv = process.argv.slice(2);
-  const id = argv.find((a) => !a.startsWith("--"));
+  const id = argv.find((a) => !a.startsWith("--") && !/^(title|thumb)=/.test(a));
   if (!id) {
-    console.error("usage: node pipeline/06-publish/build-metadata.mjs <content_id> [--md-only | --choose-thumb <n|file>]");
+    console.error("usage: node pipeline/06-publish/build-metadata.mjs <content_id> [--md-only | --choose-thumb <n|file> | --ab-result title=<n> [thumb=<n>]]");
     process.exit(2);
   }
   const contentDir = path.join(ROOT, "content", id);
   const chooseIx = argv.indexOf("--choose-thumb");
-  if (chooseIx > -1) {
+  if (argv.includes("--ab-result")) {
+    const val = (k) => argv.find((a) => a.startsWith(`${k}=`))?.slice(k.length + 1) ?? null;
+    if (!val("title")) {
+      console.error("--ab-result needs title=<n> (the winning title's number in publish.md's Test & Compare list)");
+      process.exit(2);
+    }
+    const ab = recordAbResult(contentDir, { title: val("title"), thumb: val("thumb") });
+    console.log(`OK Test & Compare winner: "${ab.winner_title}"${ab.winner_thumbnail ? ` + ${ab.winner_thumbnail}` : ""} → publish.json (chosen_title, ab_test) + publish.md`);
+  } else if (chooseIx > -1) {
     const rec = recordThumbnailChoice(contentDir, argv[chooseIx + 1]);
     console.log(`OK chosen: ${rec.final ?? rec.file} (${rec.scene}, score ${rec.score}) → thumb_candidates.json + publish.md updated`);
   } else if (argv.includes("--md-only")) {

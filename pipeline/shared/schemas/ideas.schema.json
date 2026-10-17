@@ -15,6 +15,21 @@
           "id": { "type": "string", "description": "Stable slug, e.g. invoice-emails-sheets." },
           "title": { "type": "string", "description": "Working video title / idea." },
           "search_term": { "type": "string", "description": "The query a viewer would type." },
+          "search_demand": {
+            "type": "object",
+            "description": "3B (D-073): evidence that people type search_term — YouTube autocomplete, checked by pipeline/00-ideas/search-demand.mjs. seed-gate.mjs refuses to script a brief whose phrase is unverified, unchecked, or changed since the check.",
+            "additionalProperties": false,
+            "required": ["phrase", "status", "checked"],
+            "properties": {
+              "phrase": { "type": "string", "description": "The exact phrase checked (must still equal search_term)." },
+              "status": { "type": "string", "enum": ["verified", "unverified", "waived"], "description": "verified = autocomplete offers it or longer searches starting with it · unverified = it offers neither · waived = owner override with a reason." },
+              "depth": { "type": "number", "minimum": 0, "description": "How many of autocomplete's (up to 10) suggestions are the phrase or extend it." },
+              "alternatives": { "type": "array", "items": { "type": "string" }, "description": "What autocomplete offers instead, when unverified — candidate phrases to adopt." },
+              "reason": { "type": "string", "description": "Why the owner waived the check." },
+              "checked": { "type": "string", "description": "ISO date of the check." },
+              "source": { "type": "string", "description": "youtube-autocomplete | owner." }
+            }
+          },
           "task": {
             "type": "string",
             "description": "Painful task cluster.",
@@ -66,9 +81,12 @@
           },
           "metrics": {
             "type": "object",
-            "description": "Filled after publish from the YouTube Analytics API (T5.2); used to re-rank the bank.",
+            "description": "Filled after publish from the channel catalog (pipeline/state/youtube.json — YouTube Analytics + Reporting API, T5.2 / D-073); used to re-rank the bank. Measured on the topic's long video, or its Short when the topic has no long.",
             "properties": {
-              "ctr": { "type": "number", "description": "Click-through rate (fraction), when the API exposes it." },
+              "youtube_video_id": { "type": "string", "description": "Which upload these numbers are from." },
+              "ctr": { "type": "number", "description": "Thumbnail impressions click-through rate (fraction), from the Reporting API reach rows." },
+              "impressions": { "type": "number", "description": "Thumbnail impressions (Reporting API reach rows)." },
+              "subs_gained": { "type": "number" },
               "avg_view_seconds": { "type": "number", "description": "averageViewDuration in seconds." },
               "retention_pct": { "type": "number", "description": "averageViewPercentage (0..100)." },
               "views": { "type": "number" },

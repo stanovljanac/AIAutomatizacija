@@ -43,7 +43,7 @@ export const STAGE_RUBRICS = {
       `- disclosure_set: altered_content is true — AI voice + visuals must be disclosed at upload, every time.`,
     ],
     categoryLines: [
-      `- title_ctr: would the best title option stop the scroll for our audience while staying honest? Specific + curiosity beats generic.`,
+      `- title_ctr: would the best title option stop the scroll for our audience while staying honest? Specific + curiosity beats generic. The options are 2-3 GENUINELY different angles (they go into Test & Compare), not one title reworded.`,
       `- seo_keywords: keyword-first description, search-term coverage in tags, no keyword stuffing.`,
       `- answer_first_description: the description answers the core question in its first sentence(s), <=3 sentences.`,
       `- metadata_consistency: chapters chronological and matching the content; Short title/caption present and consistent; tags coherent with the topic.`,
@@ -68,7 +68,7 @@ export const STAGE_RUBRICS = {
       `- reusable_takeaway: how clear and TRANSFERABLE is the single thing the viewer walks away with? A framework that applies across the viewer's own domains (invoices, email, agents, code — like "Draft -> Check -> Gate") scores high; a practice everyone already knows ("retry on error") or a one-off with nothing to reuse scores low.`,
       `- transformation: does the viewer END the video thinking DIFFERENTLY than they started — a new mental map, a flipped belief, a "wait, what?" beat, a real conflict/contrast (A vs B)? If the hook line and the closing line could swap places, or every beat goes exactly as an average viewer expects, score low. An incident/anecdote is only the symptom — score the PHILOSOPHY behind it (not "an API failed and we retried" but "the dangerous automation is the one that keeps going").`,
       `- packaging: can we write a scroll-stopping title AND one concrete thumbnail concept with real CTR potential? An un-packageable topic scores low.`,
-      `- audience_fit: real search/interest demand + reach potential for our audience (builders/freelancers + curious AI viewers). Broad or timely topics that pull new viewers score well.`,
+      `- audience_fit: real search/interest demand + reach potential for our audience (builders/freelancers + curious AI viewers). Broad or timely topics that pull new viewers score well. Use the idea's search_demand (YouTube autocomplete evidence) when present: "verified" with a high depth = people type it; "unverified" = nobody does — score low unless the topic pulls through the feed (news, a Shorts series) — and name the better phrase from its alternatives in a fix.`,
     ],
   },
 };

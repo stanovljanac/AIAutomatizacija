@@ -19,6 +19,30 @@ Format:
 
 ---
 
+## 2026-10-17 — Growth quadrant 1 built: analytics loop on the channel, CTR, search demand, Test & Compare, playlist test — D-073
+- who: agent (owner: "implement the first quadrant" of the growth-options doc).
+- did: **1A** — new channel catalog `pipeline/state/youtube.json` (`youtube-catalog.mjs`, schema `youtube`):
+  all 33 uploads (14 long, 18 Shorts, 025's two from today), 6 playlists; 22 tied to their folders by
+  title, 11 by `--map` (each checked by title/date/length; 007's second Short marked `none`). Ledger
+  `youtube_video_id` **17/18** (was 4/17; only 020's Short has no upload). First snapshots for 021–024
+  (next 2026-11-14). Idea metrics for **8** produced ideas (was 0) → re-rank. `reach.mjs` = Reporting
+  API `channel_reach_basic_a1` (job, CSV, kept daily rows, impression-weighted CTR) — **the API is not
+  enabled in the Cloud project yet**, so reach reports "api disabled" and the run goes on. Weekly run =
+  Windows Task Scheduler `AutomationDesk-WeeklyAnalytics` (`scripts/register-weekly-analytics.ps1`,
+  Mondays 09:30; registered and run once, exit 0).
+- did: **3B** — `pipeline/00-ideas/search-demand.mjs` (YouTube autocomplete): 60 ideas checked, **14
+  verified, 46 not typed** (alternatives stored). Seed gate now also needs a verified/waived phrase;
+  pick-next carries it into the brief and warns; idea-pass `audience_fit` reads it.
+- did: **3A** — `publish.md` Test & Compare block (2–3 titles + thumbnails), single-title warning,
+  `build-metadata.mjs --ab-result title=<n> [thumb=<n>]` → `publish.json.ab_test`; publish-review
+  `title_ctr` + youtube-publish skill rule. **3E** — `playlist-report.mjs` → `pipeline/state/playlist-report.md`
+  every run (four measures per playlist × type; review 2026-12-12 → 2026-12-26).
+- did: tests 857 → **936**, all green. Docs: ARCHITECTURE §12, WORKFLOW (Gate ①, Step 6), SETUP (Reporting
+  API, the task), ROADMAP (quadrant section), skills script-writing (Step 0.0) + youtube-publish.
+- next: owner enables the Reporting API → next Monday's run creates the job → verify the CTR scale on the
+  first report. Re-word unverified phrases as ideas come up. Decide the three produced-but-`backlog`
+  ideas (ROADMAP). 025's `publish.md` can be regenerated (`--md-only`) to show its Test & Compare block.
+
 ## 2026-10-17 — 025 publish package; no captions in the picture, subtitles.srt instead — D-072
 - who: agent (owner approved the 025 Short, waived the Azure final voice — both cuts ship on edge-tts —
   and set the captions rule).

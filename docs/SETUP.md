@@ -121,13 +121,20 @@ YOUTUBE_CLIENT_SECRET_PATH=C:\secure\client_secret.json
 - **Pixabay API:** https://pixabay.com/api/docs/ → key → `.env`.
 - **YouTube Data API v3 (also unlocks Analytics for the T5.2 loop):**
   1. https://console.cloud.google.com/ → new project.
-  2. Enable **"YouTube Data API v3"** and **"YouTube Analytics API"**.
+  2. Enable **"YouTube Data API v3"**, **"YouTube Analytics API"** and **"YouTube Reporting API"**
+     (the last one is the only source of thumbnail impressions + CTR — D-073; until it is enabled
+     the weekly analytics run skips reach and says so).
   3. Create **OAuth client ID** (Desktop app) → download `client_secret.json` → store
      **outside** the repo; point `YOUTUBE_CLIENT_SECRET_PATH` to it.
   4. Set `YOUTUBE_TOKEN_PATH` in `.env` (a path **outside** the repo, e.g. `C:\secure\token.json`).
   5. Run the one-time consent: `node pipeline/06-publish/auth.mjs`. It prints/opens a Google
      URL; authorize, and it auto-saves `token.json`. After that, uploads + analytics are
      automatic (silent refresh). The single consent covers upload, metadata, and read-only Analytics.
+  6. **Weekly analytics run (D-073):** `powershell -ExecutionPolicy Bypass -File scripts\register-weekly-analytics.ps1`
+     registers `AutomationDesk-WeeklyAnalytics` in Windows Task Scheduler (Mondays 09:30, catches up
+     at the next logon if the PC was off; log `F:\AI\.tmp\weekly-analytics.log`). It runs
+     `pipeline/06-publish/fetch-analytics.mjs`. Remove it with
+     `Unregister-ScheduledTask -TaskName AutomationDesk-WeeklyAnalytics -Confirm:$false`.
 - **Optional (only if you use AI images):** Google Colab (sign in) / Kaggle (API token).
 
 > Security: the agent must never type secrets into code, URLs, or committed files, and

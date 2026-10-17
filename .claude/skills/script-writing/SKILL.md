@@ -16,7 +16,14 @@ Before writing a single sentence, prove this brief earned a script:
    (exit 1) unless `brief.value_band` is `qualify`/`owner` (and not `rejected`). A free-text seed
    that never went through the idea-pass (`pipeline/shared/review/`) **may not be scripted**; route
    it back to the idea-pass first. (015 slipped through exactly this hole.)
-2. **Subject check.** Confirm the brief/idea has a `subject` coordinate and it is a **deliberately
+2. **Search phrase people type (3B, D-073).** The same command also STOPs unless
+   `brief.search_demand` shows the brief's `search_term` is a real YouTube search (autocomplete
+   offers it or longer searches starting with it) — or the owner waived it with a reason (breaking
+   news autocomplete hasn't caught up with; demand seen in Studio → Research). Check or re-check:
+   `node pipeline/00-ideas/search-demand.mjs --brief <id>`. When it says nobody types the phrase,
+   take one of the `alternatives` it lists (or re-angle the idea) — prefer a concrete "do X" search
+   over an abstract concept — then check again. The title leads with that phrase.
+3. **Subject check.** Confirm the brief/idea has a `subject` coordinate and it is a **deliberately
    distinct angle**, not a near-duplicate of an already-claimed subject in
    `pipeline/00-ideas/produced_subjects.json` (see `docs/CHANNEL_MAP.md`). `pick-next.mjs --dry-run`
    prints a ⚠ warning on a collision — a cluster-mate is fine, a re-tread is not.

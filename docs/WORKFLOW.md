@@ -40,6 +40,11 @@ a single takeaway + on-brand). The score bands the gate:
 - **7.5–9.0 (75–90%) → ASK the owner** — the only band where Gate ① pauses.
 - **<7.5 (<75%) → auto-reject** — park the idea; `pickNextIdea` skips `value_band:"reject"`.
 A variety soft-cap nudges off >2 of the same lane/archetype/tool in a row (never hard-blocks).
+**Search demand (3B, D-073):** every idea carries `search_demand` — YouTube autocomplete evidence
+that people type its `search_term` (`node pipeline/00-ideas/search-demand.mjs` checks the bank,
+re-checks monthly; on 2026-10-17 only 14 of 60 phrases were real searches). The idea-pass scores
+`audience_fit` with it, `pick-next` warns on an unverified pick, and the seed gate refuses to script
+one until the phrase is re-worded to a real search (its `alternatives`) or the owner waives it.
 At pick time a **subject-collision warning** (D-059) fires when the idea's `subject` coordinate is
 already claimed in `pipeline/00-ideas/produced_subjects.json` (taxonomy: `docs/CHANNEL_MAP.md`) —
 warn-only, never blocks; it forces the "is this a *distinct* angle?" check.
@@ -55,7 +60,8 @@ that passes the review agent.
 
 > **Seed gate first (HARD STOP — D-059):** `node pipeline/00-ideas/seed-gate.mjs <id>` must pass
 > before a single sentence is written — the brief needs an idea-pass `value_band`
-> (`qualify`/`owner`, not `rejected`). A free-text seed that skipped Gate ① may **not** be
+> (`qualify`/`owner`, not `rejected`) **and a verified or owner-waived `search_demand`** for its
+> current `search_term` (3B). A free-text seed that skipped Gate ① may **not** be
 > scripted; route it back to the idea-pass (script-writing skill, Step 0.0).
 
 1. **Write.** Use `.claude/skills/script-writing/SKILL.md`. Structure by the brief's
@@ -183,8 +189,16 @@ You watch `video/final.mp4` (with the digest). Last gate. Approve → `status: "
    set "Altered content = Yes" in Studio, and upload each cut's `subtitles.srt` (Subtitles →
    Upload file → With timing).
 3. You review title/description/tags and **click publish**.
-4. Set `status: "published"`. Append outcome to `content/<id>/log.md`,
-   `docs/PROGRESS.md`, and the idea's `metrics` (for re-ranking the idea-bank).
+4. **Test & Compare (3A, D-073) — every video.** `publish.md` lists 2–3 genuinely different
+   titles and the thumbnails; run them in Studio → Test & Compare (up to 3 variants, up to 2 weeks,
+   winner by watch time). When it ends, record the winner:
+   `node pipeline/06-publish/build-metadata.mjs <id> --ab-result title=<#> [thumb=<#>]`.
+5. Set `status: "published"`. Append outcome to `content/<id>/log.md` and `docs/PROGRESS.md`.
+   The numbers need no hand work: the **weekly analytics run** (`fetch-analytics.mjs`, Windows Task
+   Scheduler, Mondays) finds the new upload on the channel, ties it to its folder (or lists it for
+   `fetch-analytics.mjs --map <youtubeId> <content-key>` when the title changed at upload), takes
+   the ledger snapshots when due (+7 d, then every 28 d), writes the idea's `metrics` (views,
+   retention, impressions, CTR) and re-ranks the bank.
 
 **Output:** `publish.json`, draft on YouTube.
 

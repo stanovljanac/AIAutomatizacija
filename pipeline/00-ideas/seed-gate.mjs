@@ -10,6 +10,9 @@
  * This does NOT re-run the idea-pass; it only asserts the pass HAPPENED and the verdict allows a
  * script. Pair it with the subject-collision warning in pick-next.mjs (map-level near-dup check).
  *
+ * Second rule (3B, D-073): the brief's `search_term` must be a phrase people actually type — a
+ * `search_demand` record (search-demand.mjs) that is verified or owner-waived, for THIS phrase.
+ *
  *   node pipeline/00-ideas/seed-gate.mjs <id>   # e.g. 016-n8n-inbox-triage; exit 1 + STOP if not gated
  */
 import fs from "node:fs";
@@ -37,7 +40,30 @@ export function seedGate(brief) {
   if (!VALID_BANDS.has(band)) {
     return { ok: false, reason: `value_band "${band}" is not a recognized idea-pass verdict (expected qualify|owner|reject).` };
   }
-  return { ok: true, reason: `value_band "${band}" — idea-pass cleared; ok to script.` };
+  const demand = searchDemandGate(brief);
+  if (!demand.ok) return demand;
+  return { ok: true, reason: `value_band "${band}" — idea-pass cleared; ${demand.reason}; ok to script.` };
+}
+
+/**
+ * 3B: is the brief's search phrase one people type? Pure. Passes a `verified` or `waived` record for
+ * the brief's CURRENT search_term; stops on no phrase, no check, a stale check (the phrase changed),
+ * or an unverified phrase — naming autocomplete's alternatives so the fix is one command away.
+ */
+export function searchDemandGate(brief) {
+  const term = brief?.search_term;
+  const id = brief?.id ?? "<id>";
+  const d = brief?.search_demand;
+  if (!term) return { ok: false, reason: "no search_term — every video needs the phrase people would type to find it (3B)." };
+  if (!d) return { ok: false, reason: `search phrase "${term}" was never checked — run: node pipeline/00-ideas/search-demand.mjs --brief ${id}` };
+  if (d.phrase !== term) return { ok: false, reason: `search_term changed to "${term}" after "${d.phrase}" was checked — re-run search-demand.mjs --brief ${id}` };
+  if (d.status === "verified") return { ok: true, reason: `search phrase "${term}" verified (${d.depth ?? "?"} autocomplete suggestion(s))` };
+  if (d.status === "waived") return { ok: true, reason: `search check waived by the owner (${d.reason ?? "no reason given"})` };
+  const alts = (d.alternatives ?? []).map((a) => `"${a}"`).join(", ");
+  return {
+    ok: false,
+    reason: `nobody types "${term}" (YouTube autocomplete${alts ? `; it offers ${alts}` : ""}). Re-phrase search_term to a real search and re-check, re-angle the idea, or have the owner waive it.`,
+  };
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────

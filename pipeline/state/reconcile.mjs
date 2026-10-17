@@ -46,6 +46,8 @@ export const LESSON_STATES = ["pending", "none", "linked"];
 
 /** First analytics snapshot is due a week after publish (YouTube data is 48–72h delayed). */
 export const FIRST_SNAPSHOT_DAYS = 7;
+/** …then one every four weeks, for as long as the video is up (D-073). */
+export const NEXT_SNAPSHOT_DAYS = 28;
 
 const rank = (status) => (status in STATUS_RANK ? STATUS_RANK[status] : -1);
 
@@ -235,6 +237,67 @@ export function projectPublishStatus(publishJson, record) {
   const status = forwardStatus(publishJson.status, record.status);
   if (status === publishJson.status) return { publishJson, changed: false };
   return { publishJson: { ...publishJson, status }, changed: true };
+}
+
+// ── the channel catalog → ledger (the analytics loop, D-073) ─────────────────
+
+/**
+ * Bind each mapped upload's YouTube id onto its ledger record. Like the publish.json path in
+ * `ingestPublish`, the id is set ONCE and then frozen; a record that already holds a different id is
+ * reported as a conflict and left alone (two uploads claiming one folder is the owner's call).
+ * Uploads whose folder has no ledger record (a Short packaged inside its long's publish.json, a
+ * pre-ledger video with no publish.json) stay in the catalog only.
+ * @returns {{ledger, changed: boolean, bound: Array<{key, id}>, conflicts: Array<{key, has, catalog}>}}
+ */
+export function bindYoutubeIds(ledger, catalog) {
+  const videos = { ...(ledger?.videos ?? {}) };
+  const bound = [];
+  const conflicts = [];
+  for (const [id, upload] of Object.entries(catalog?.videos ?? {})) {
+    const key = upload?.content_key;
+    const record = key ? videos[key] : null;
+    if (!record) continue;
+    if (!record.youtube_video_id) {
+      videos[key] = { ...record, youtube_video_id: id };
+      bound.push({ key, id });
+    } else if (record.youtube_video_id !== id) {
+      conflicts.push({ key, has: record.youtube_video_id, catalog: id });
+    }
+  }
+  return { ledger: bound.length ? { ...ledger, videos } : ledger, changed: bound.length > 0, bound, conflicts };
+}
+
+const SNAPSHOT_FIELDS = ["views", "watch_minutes", "avg_view_seconds", "retention_pct", "subs_gained", "impressions", "ctr"];
+
+/**
+ * Take every snapshot that is due: a record with a YouTube id, a `due_at` on or before today and
+ * metrics in the catalog gets one dated, append-only snapshot, and its next one is scheduled
+ * NEXT_SNAPSHOT_DAYS later. Backfilled history (`due_at: null`) is never scheduled, so it is never
+ * snapshotted — its numbers live in the catalog. Idempotent within a day: once taken, `due_at`
+ * moves past today.
+ * @returns {{ledger, changed: boolean, taken: Array<{key, at}>}}
+ */
+export function takeDueSnapshots(ledger, catalog, { now = new Date() } = {}) {
+  const today = todayStr(now);
+  const videos = { ...(ledger?.videos ?? {}) };
+  const taken = [];
+  for (const [key, record] of Object.entries(videos)) {
+    const due = record?.analytics?.due_at;
+    const metrics = record?.youtube_video_id ? catalog?.videos?.[record.youtube_video_id]?.metrics : null;
+    if (!due || due > today || !metrics) continue;
+    const snapshot = { at: today };
+    for (const f of SNAPSHOT_FIELDS) if (typeof metrics[f] === "number") snapshot[f] = metrics[f];
+    videos[key] = {
+      ...record,
+      analytics: {
+        ...record.analytics,
+        due_at: addDays(today, NEXT_SNAPSHOT_DAYS),
+        snapshots: [...(record.analytics.snapshots ?? []), snapshot],
+      },
+    };
+    taken.push({ key, at: today });
+  }
+  return { ledger: taken.length ? { ...ledger, videos } : ledger, changed: taken.length > 0, taken };
 }
 
 // ── the lesson obligation (D-061 as code, not a rule) ────────────────────────

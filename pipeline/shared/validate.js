@@ -39,6 +39,8 @@ const FILENAME_TO_SCHEMA = {
   "thumb_candidates.json": "thumb-candidates.schema.json",
   // The lifecycle ledger (pipeline/state/videos.json) — D-062.
   "videos.json": "videos.schema.json",
+  // The channel catalog (pipeline/state/youtube.json) — D-073.
+  "youtube.json": "youtube.schema.json",
 };
 
 function resolveSchemaPath(filePath, override) {

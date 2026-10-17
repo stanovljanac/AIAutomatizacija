@@ -1,782 +1,6 @@
 {
-  "updated": "2026-08-25",
+  "updated": "2026-10-17",
   "ideas": [
-    {
-      "id": "bulk-personalized-emails",
-      "title": "Send 200 Personalized Emails in One Click",
-      "search_term": "send bulk personalized emails",
-      "task": "outbound-comms",
-      "sector": "general",
-      "tool": "Gmail",
-      "archetype": "mini-demo",
-      "angle_hint": "Mail-merge is older than you think — but AI makes each one not look templated.",
-      "score": 88,
-      "status": "in-progress",
-      "produced_video_id": "005-bulk-personalized-emails"
-    },
-    {
-      "id": "invoice-emails-sheets",
-      "title": "Automatically Email Invoices from a Google Sheet",
-      "search_term": "automatically email invoices google sheets",
-      "task": "outbound-comms",
-      "sector": "accounting",
-      "tool": "Google Sheets",
-      "archetype": "mini-demo",
-      "angle_hint": "The accountant doesn't want a tool — the freelancer who builds this for them gets paid.",
-      "score": 86,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "pdf-invoice-generator",
-      "title": "Turn a Spreadsheet Row into a PDF Invoice",
-      "search_term": "spreadsheet to pdf invoice",
-      "task": "documents",
-      "sector": "accounting",
-      "tool": "Apps Script",
-      "archetype": "mini-demo",
-      "angle_hint": "One template + one script replaces a daily copy-paste ritual.",
-      "score": 85,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "five-tasks-ai-secretary",
-      "title": "5 Tasks an AI Can Do Like a Secretary",
-      "search_term": "ai secretary tasks",
-      "task": "other",
-      "sector": "general",
-      "tool": "Claude",
-      "archetype": "ideas",
-      "angle_hint": "Nobody hires a secretary anymore, but the work didn't disappear.",
-      "score": 85,
-      "status": "produced",
-      "produced_video_id": "003-five-tasks-ai-secretary"
-    },
-    {
-      "id": "clean-imported-data-excel",
-      "title": "Auto-Clean Messy Imported Data in Excel",
-      "search_term": "clean messy data excel automatically",
-      "task": "data-entry",
-      "sector": "accounting",
-      "tool": "Excel",
-      "archetype": "mini-demo",
-      "angle_hint": "The boring 20 minutes everyone wastes after every export.",
-      "score": 84,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "claude-vs-chatgpt-spreadsheets",
-      "title": "Claude vs ChatGPT for Spreadsheet Work",
-      "search_term": "claude vs chatgpt spreadsheets",
-      "task": "other",
-      "sector": "general",
-      "tool": "Claude",
-      "archetype": "comparison",
-      "angle_hint": "For tabular work the 'best chatbot' isn't the obvious one.",
-      "score": 84,
-      "status": "produced",
-      "produced_video_id": "004-claude-vs-chatgpt-spreadsheets"
-    },
-    {
-      "id": "validated-cleanup-system",
-      "title": "Build a Spreadsheet Cleanup System That Can't Let Bad Data In",
-      "search_term": "automate data cleaning validation rules",
-      "task": "data-entry",
-      "sector": "general",
-      "tool": "Python",
-      "archetype": "diagram",
-      "angle_hint": "Don't fix errors after the fact — build rules so they can never get entered. (Teased sequel to 004.)",
-      "score": 84,
-      "status": "produced",
-      "produced_video_id": "006-validated-cleanup-system"
-    },
-    {
-      "id": "expense-receipt-to-sheet",
-      "title": "Photograph a Receipt, Auto-Fill the Expense Sheet",
-      "search_term": "receipt to spreadsheet ai",
-      "task": "data-entry",
-      "sector": "accounting",
-      "tool": "AI",
-      "archetype": "ideas",
-      "angle_hint": "The most-hated five minutes of every small business owner's week.",
-      "score": 83,
-      "status": "produced",
-      "produced_video_id": "008-receipt-to-spreadsheet"
-    },
-    {
-      "id": "best-model-for-automation",
-      "title": "Best AI Model for Automating Office Work",
-      "search_term": "best ai model for automation",
-      "task": "other",
-      "sector": "general",
-      "tool": "Claude",
-      "archetype": "comparison",
-      "angle_hint": "Cheaper, smaller models win more office tasks than people expect.",
-      "score": 83,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "pdf-data-extraction",
-      "title": "Extract Data from PDFs into a Spreadsheet",
-      "search_term": "extract data from pdf to excel",
-      "task": "data-entry",
-      "sector": "accounting",
-      "tool": "AI",
-      "archetype": "mini-demo",
-      "angle_hint": "The classic 'retype the PDF' job, finally gone.",
-      "score": 82,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "appointment-reminders",
-      "title": "Send Automatic Appointment Reminders",
-      "search_term": "automatic appointment reminders",
-      "task": "outbound-comms",
-      "sector": "healthcare",
-      "tool": "Make",
-      "archetype": "ideas",
-      "angle_hint": "No-shows cost money; a reminder costs nothing to send.",
-      "score": 82,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "best-tool-no-code-automation",
-      "title": "Make vs Zapier vs n8n for Beginners",
-      "search_term": "make vs zapier vs n8n",
-      "task": "other",
-      "sector": "general",
-      "tool": "Make",
-      "archetype": "comparison",
-      "angle_hint": "Skip the hype: which one a beginner should actually start with.",
-      "score": 81,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "meeting-notes-to-tasks",
-      "title": "Turn Meeting Notes into Tasks Automatically",
-      "search_term": "meeting notes to tasks ai",
-      "task": "documents",
-      "sector": "general",
-      "tool": "Claude",
-      "archetype": "mini-demo",
-      "angle_hint": "Everyone takes notes; almost nobody turns them into action.",
-      "score": 81,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "shift-schedule-cafe",
-      "title": "Auto-Build Weekly Cafe Shift Schedules",
-      "search_term": "automate shift scheduling",
-      "task": "scheduling",
-      "sector": "hospitality",
-      "tool": "Google Sheets",
-      "archetype": "ideas",
-      "angle_hint": "One sheet, a few rules, and Sunday-night scheduling disappears.",
-      "score": 80,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "form-to-email-confirmation",
-      "title": "Auto-Confirm Every Form Submission by Email",
-      "search_term": "auto email after form submission",
-      "task": "outbound-comms",
-      "sector": "general",
-      "tool": "Forms",
-      "archetype": "mini-demo",
-      "angle_hint": "A tiny automation that makes a one-person shop look professional.",
-      "score": 80,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "auto-reminder-unpaid-invoices",
-      "title": "Auto-Chase Unpaid Invoices",
-      "search_term": "automatic payment reminder",
-      "task": "outbound-comms",
-      "sector": "accounting",
-      "tool": "Make",
-      "archetype": "ideas",
-      "angle_hint": "The polite reminder nobody enjoys sending — so automate the awkward part.",
-      "score": 80,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "crm-followup-automation",
-      "title": "Auto-Follow-Up with Leads Who Went Quiet",
-      "search_term": "automate lead follow up",
-      "task": "outbound-comms",
-      "sector": "sales",
-      "tool": "Make",
-      "archetype": "ideas",
-      "angle_hint": "Most sales are lost to silence, not rejection.",
-      "score": 79,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "how-to-build-automation-system",
-      "title": "How to Design Your First Automation System",
-      "search_term": "how to build automation system",
-      "task": "other",
-      "sector": "general",
-      "tool": "Make",
-      "archetype": "diagram",
-      "angle_hint": "A simple mental model: trigger, do, record — that's most automations.",
-      "score": 79,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "auto-categorize-expenses",
-      "title": "Auto-Categorize Bank Transactions",
-      "search_term": "auto categorize expenses spreadsheet",
-      "task": "data-entry",
-      "sector": "accounting",
-      "tool": "Google Sheets",
-      "archetype": "mini-demo",
-      "angle_hint": "Bookkeeping's most tedious step, handled by one formula plus AI.",
-      "score": 79,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "ai-architecture-agent-workflow",
-      "title": "How an AI Agent Can Run a Whole Workflow",
-      "search_term": "ai agent workflow automation",
-      "task": "other",
-      "sector": "general",
-      "tool": "Claude",
-      "archetype": "diagram",
-      "angle_hint": "Where agents actually help — and where they just add risk.",
-      "score": 78,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "spreadsheet-to-dashboard",
-      "title": "Auto-Build a Dashboard from Raw Data",
-      "search_term": "automatic dashboard from spreadsheet",
-      "task": "lookups-reports",
-      "sector": "general",
-      "tool": "Google Sheets",
-      "archetype": "mini-demo",
-      "angle_hint": "Stop rebuilding the same chart every Monday.",
-      "score": 78,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "dedupe-customer-list",
-      "title": "Find & Remove Duplicate Customers Automatically",
-      "search_term": "remove duplicates spreadsheet automatically",
-      "task": "data-entry",
-      "sector": "sales",
-      "tool": "Google Sheets",
-      "archetype": "mini-demo",
-      "angle_hint": "Dirty contact lists quietly cost you sales.",
-      "score": 78,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "monthly-report-automation",
-      "title": "Auto-Generate a Monthly Sales Report",
-      "search_term": "automate monthly report",
-      "task": "lookups-reports",
-      "sector": "sales",
-      "tool": "Google Sheets",
-      "archetype": "ideas",
-      "angle_hint": "The report your boss wants, built while you sleep.",
-      "score": 77,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "auto-generate-quotes",
-      "title": "Auto-Generate Price Quotes from a Template",
-      "search_term": "automate price quotes",
-      "task": "documents",
-      "sector": "sales",
-      "tool": "Apps Script",
-      "archetype": "mini-demo",
-      "angle_hint": "Faster quotes close more deals — speed is the feature.",
-      "score": 77,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "recurring-invoice-system",
-      "title": "Build a Recurring-Invoice System (No Code)",
-      "search_term": "recurring invoice automation",
-      "task": "documents",
-      "sector": "accounting",
-      "tool": "Make",
-      "archetype": "diagram",
-      "angle_hint": "Subscriptions for any business, without subscription software.",
-      "score": 76,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "email-to-spreadsheet",
-      "title": "Save Email Attachments to a Sheet Automatically",
-      "search_term": "email attachments to spreadsheet",
-      "task": "data-entry",
-      "sector": "general",
-      "tool": "Make",
-      "archetype": "mini-demo",
-      "angle_hint": "The inbox is a to-do list nobody asked for — drain it automatically.",
-      "score": 76,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "social-post-scheduler",
-      "title": "Auto-Schedule a Week of Posts from a Sheet",
-      "search_term": "schedule social posts from spreadsheet",
-      "task": "scheduling",
-      "sector": "marketing",
-      "tool": "Make",
-      "archetype": "ideas",
-      "angle_hint": "Plan once, publish all week — from a humble spreadsheet.",
-      "score": 76,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "ai-vs-macros-excel",
-      "title": "AI vs a 10-Year-Old Excel Macro",
-      "search_term": "ai vs excel macros",
-      "task": "other",
-      "sector": "general",
-      "tool": "Excel",
-      "archetype": "comparison",
-      "angle_hint": "Short / Type A experiment (credibility): race a modern AI against a dusty 10-year-old macro on the SAME real task. Non-obvious result — the macro wins the repetitive, rigid job; AI wins the messy, judgement job; the real answer is use both. Macros aren't dead — they're just boring, and that's a virtue. (Parked idea #5 from the counter-trend-money round; this is the canonical home — do not duplicate.)",
-      "score": 84,
-      "status": "backlog",
-      "lane": "tool-review",
-      "value_type": [
-        "surprising-truth",
-        "teaches-system"
-      ],
-      "takeaway": "Don't pick AI vs macros — match the tool to the task: rigid+repetitive = macro, messy+judgement = AI.",
-      "produced_video_id": null
-    },
-    {
-      "id": "inventory-low-stock-alert",
-      "title": "Get an Alert When Stock Runs Low",
-      "search_term": "low stock alert spreadsheet",
-      "task": "lookups-reports",
-      "sector": "retail",
-      "tool": "Google Sheets",
-      "archetype": "ideas",
-      "angle_hint": "The cheapest inventory system is the one that just emails you.",
-      "score": 75,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "calendar-from-spreadsheet",
-      "title": "Turn a Spreadsheet into Calendar Events",
-      "search_term": "spreadsheet to calendar events",
-      "task": "scheduling",
-      "sector": "general",
-      "tool": "Apps Script",
-      "archetype": "mini-demo",
-      "angle_hint": "Plan in a grid, live in your calendar.",
-      "score": 74,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "email-parser-to-crm",
-      "title": "Auto-Parse Order Emails into Your CRM",
-      "search_term": "parse emails into crm",
-      "task": "data-entry",
-      "sector": "sales",
-      "tool": "Make",
-      "archetype": "diagram",
-      "angle_hint": "Orders arrive as messy emails; they shouldn't be retyped.",
-      "score": 74,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "spreadsheet-data-validation",
-      "title": "Stop Bad Data Entry with Auto-Validation",
-      "search_term": "data validation google sheets",
-      "task": "data-entry",
-      "sector": "general",
-      "tool": "Google Sheets",
-      "archetype": "mini-demo",
-      "angle_hint": "Cleaning data is harder than preventing the mess.",
-      "score": 73,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "order-confirmation-bot",
-      "title": "Auto-Confirm Orders and Update Stock",
-      "search_term": "automate order confirmation",
-      "task": "data-entry",
-      "sector": "retail",
-      "tool": "Make",
-      "archetype": "diagram",
-      "angle_hint": "Two boring jobs solved by one trigger.",
-      "score": 73,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "mail-merge-certificates",
-      "title": "Auto-Generate Certificates for a Whole Class",
-      "search_term": "bulk certificate generator",
-      "task": "documents",
-      "sector": "schools",
-      "tool": "Apps Script",
-      "archetype": "mini-demo",
-      "angle_hint": "One template, thirty names, zero manual copies.",
-      "score": 72,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "timesheet-summary",
-      "title": "Auto-Summarize Timesheets into Payroll",
-      "search_term": "automate timesheet summary",
-      "task": "lookups-reports",
-      "sector": "accounting",
-      "tool": "Google Sheets",
-      "archetype": "ideas",
-      "angle_hint": "Payroll math is exactly the kind of boring a computer loves.",
-      "score": 72,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "auto-thank-you-emails",
-      "title": "Auto-Send Thank-You Emails After a Purchase",
-      "search_term": "automatic thank you email",
-      "task": "outbound-comms",
-      "sector": "retail",
-      "tool": "Make",
-      "archetype": "ideas",
-      "angle_hint": "Small courtesy, fully automated, real repeat business.",
-      "score": 72,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "weekly-digest-email",
-      "title": "Auto-Send a Weekly Digest from Your Data",
-      "search_term": "automated weekly digest email",
-      "task": "outbound-comms",
-      "sector": "general",
-      "tool": "Make",
-      "archetype": "ideas",
-      "angle_hint": "Replace the Monday status meeting with an email nobody dreads.",
-      "score": 71,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "school-prom-invites",
-      "title": "Auto-Send Prom Invitations to Every Student",
-      "search_term": "bulk event invitations email",
-      "task": "outbound-comms",
-      "sector": "schools",
-      "tool": "Gmail",
-      "archetype": "ideas",
-      "angle_hint": "Event admin is pure busywork — perfect to hand to a script.",
-      "score": 70,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "auto-sort-incoming-files",
-      "title": "Auto-Sort Files into Folders by Name",
-      "search_term": "automatically organize files",
-      "task": "data-entry",
-      "sector": "general",
-      "tool": "Apps Script",
-      "archetype": "mini-demo",
-      "angle_hint": "A tidy drive nobody had to tidy.",
-      "score": 70,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "survey-results-summary",
-      "title": "Auto-Summarize Survey Results",
-      "search_term": "summarize survey results automatically",
-      "task": "lookups-reports",
-      "sector": "general",
-      "tool": "Forms",
-      "archetype": "ideas",
-      "angle_hint": "Raw responses are useless; the summary is the product.",
-      "score": 70,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "pharmacy-refill-reminders",
-      "title": "Auto-Remind Customers When a Prescription Is Due",
-      "search_term": "prescription refill reminder automation",
-      "task": "outbound-comms",
-      "sector": "pharmacy",
-      "tool": "Make",
-      "archetype": "ideas",
-      "angle_hint": "A reminder list isn't a real process — a trigger is.",
-      "score": 69,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "bulk-rename-files",
-      "title": "Bulk-Rename Hundreds of Files by Rule",
-      "search_term": "bulk rename files",
-      "task": "data-entry",
-      "sector": "general",
-      "tool": "Python",
-      "archetype": "mini-demo",
-      "angle_hint": "The five-second task you somehow do five hundred times.",
-      "score": 69,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "parent-absence-emails",
-      "title": "Auto-Email Parents When a Student Is Absent",
-      "search_term": "automate absence notification",
-      "task": "outbound-comms",
-      "sector": "schools",
-      "tool": "Google Sheets",
-      "archetype": "ideas",
-      "angle_hint": "A register column that quietly does the phoning for you.",
-      "score": 68,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "contract-renewal-alerts",
-      "title": "Never Miss a Contract Renewal Again",
-      "search_term": "contract renewal reminder",
-      "task": "scheduling",
-      "sector": "legal",
-      "tool": "Google Sheets",
-      "archetype": "ideas",
-      "angle_hint": "A date in a sheet that emails you before it's too late.",
-      "score": 68,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "translate-emails-auto",
-      "title": "Auto-Translate Incoming Customer Emails",
-      "search_term": "auto translate emails",
-      "task": "outbound-comms",
-      "sector": "general",
-      "tool": "AI",
-      "archetype": "ideas",
-      "angle_hint": "Serve customers in any language without speaking it.",
-      "score": 67,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "notary-document-templates",
-      "title": "Auto-Fill Repetitive Legal Documents",
-      "search_term": "automate document templates",
-      "task": "documents",
-      "sector": "legal",
-      "tool": "Word",
-      "archetype": "ideas",
-      "angle_hint": "The same form, a hundred times, with three fields changed.",
-      "score": 66,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "waitlist-automation",
-      "title": "Auto-Manage a Booking Waitlist",
-      "search_term": "automate booking waitlist",
-      "task": "scheduling",
-      "sector": "hospitality",
-      "tool": "Google Sheets",
-      "archetype": "ideas",
-      "angle_hint": "Fill cancellations without a single phone call.",
-      "score": 66,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "attendance-tracker",
-      "title": "Automate Attendance Tracking",
-      "search_term": "automate attendance tracking",
-      "task": "data-entry",
-      "sector": "schools",
-      "tool": "Google Sheets",
-      "archetype": "ideas",
-      "angle_hint": "A daily tally that tallies itself.",
-      "score": 65,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "duplicate-file-finder",
-      "title": "Find Duplicate Files Automatically",
-      "search_term": "find duplicate files",
-      "task": "data-entry",
-      "sector": "general",
-      "tool": "Python",
-      "archetype": "ideas",
-      "angle_hint": "Reclaim a disk you forgot you were wasting.",
-      "score": 64,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "auto-backup-sheets",
-      "title": "Auto-Back-Up Your Spreadsheets Daily",
-      "search_term": "automatic spreadsheet backup",
-      "task": "other",
-      "sector": "general",
-      "tool": "Apps Script",
-      "archetype": "mini-demo",
-      "angle_hint": "The automation you only appreciate the day something breaks.",
-      "score": 62,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "municipal-permit-tracker",
-      "title": "Track Permit Requests Automatically",
-      "search_term": "automate request tracking",
-      "task": "lookups-reports",
-      "sector": "government",
-      "tool": "Google Sheets",
-      "archetype": "ideas",
-      "angle_hint": "Even the least digital office can start with one tracked sheet.",
-      "score": 60,
-      "status": "backlog",
-      "produced_video_id": null
-    },
-    {
-      "id": "ai-vs-human-stopwatch-race",
-      "title": "I Raced AI Against Myself on a Boring Task",
-      "search_term": "ai vs human speed test",
-      "task": "data-entry",
-      "sector": "general",
-      "tool": "AI (model-agnostic) + a spreadsheet",
-      "archetype": "mini-demo",
-      "angle_hint": "Short / Type A experiment (credibility): literal stopwatch race — me vs an AI on one real back-office task. Twist line (use verbatim): 'AI finished first… but that's not why it won.' The point isn't speed, it's that it runs unattended / never gets bored / doesn't fat-finger row 200. Predicted ~84. (Parked idea #2 from the counter-trend-money round.)",
-      "score": 84,
-      "status": "backlog",
-      "lane": "desk-notes",
-      "value_type": [
-        "surprising-truth",
-        "saves-time"
-      ],
-      "takeaway": "Speed is the obvious win and the wrong one — the real value is that it runs unattended and never tires.",
-      "produced_video_id": null,
-      "source": {
-        "origin": "manual",
-        "added": "2026-06-27"
-      }
-    },
-    {
-      "id": "before-coffee-automation-montage",
-      "title": "What My Automations Did Before I Finished My Coffee",
-      "search_term": "morning automation routine",
-      "task": "other",
-      "sector": "general",
-      "tool": "AI (model-agnostic) + a spreadsheet",
-      "archetype": "ideas",
-      "angle_hint": "Short / Type B-ish discovery (fast, visual, new-audience entry point — may out-view the credibility ones, so do NOT auto-rank it last). A tight before-coffee montage of small jobs already done by the time you sit down: rows filled, invoice chased, inbox triaged. Build as a visual discovery Short (optionally a light timed framing). Must differentiate from 003 (003 is the '5 secretary jobs' list; this is a single-morning montage, not a numbered list). Predicted ~80. (Parked idea #4 from the counter-trend-money round.)",
-      "score": 80,
-      "status": "backlog",
-      "lane": "desk-notes",
-      "value_type": [
-        "surprising-truth",
-        "saves-time"
-      ],
-      "takeaway": "The payoff of boring automation is invisible: the work is just already done when you show up.",
-      "produced_video_id": null,
-      "source": {
-        "origin": "manual",
-        "added": "2026-06-27"
-      }
-    },
-    {
-      "id": "money-leak-shock-stat",
-      "title": "The Hidden Number Small Businesses Lose Every Year",
-      "search_term": "how much time wasted copy paste work",
-      "task": "data-entry",
-      "sector": "general",
-      "tool": "AI (model-agnostic) + a spreadsheet",
-      "archetype": "ideas",
-      "angle_hint": "Short / big-number shock-stat. CAUTION before building: shares 009's stat ($28,500/yr, ~quarter of the workday) — DO NOT reuse the same number, it will feel recycled. Re-angle around a DIFFERENT sourced number or a different test (e.g. error-cost, no-show cost, late-invoice cost) and lead relatable-first like 009. Predicted ~75. (Parked idea #3 from the counter-trend-money round.)",
-      "score": 75,
-      "status": "backlog",
-      "lane": "desk-notes",
-      "value_type": [
-        "surprising-truth",
-        "saves-money"
-      ],
-      "takeaway": "A small, boring leak compounds into a real yearly number — naming it is what makes people fix it.",
-      "produced_video_id": null,
-      "source": {
-        "origin": "manual",
-        "added": "2026-06-27"
-      }
-    },
-    {
-      "id": "everyone-asks-ai-series",
-      "title": "\"Everyone Asks AI to X. I Asked It to Y.\" (repeatable Short series)",
-      "search_term": "ai to make money",
-      "task": "other",
-      "sector": "general",
-      "tool": "AI (model-agnostic) + a spreadsheet",
-      "archetype": "ideas",
-      "angle_hint": "OWNER-ENDORSED REPEATABLE SHORT FORMAT (not a single idea): 'Everyone asks AI to [hyped thing]. I asked it to [boring back-office opposite]. Here's what happened.' Each entry rides a hyped search term, delivers our boring-automation angle, keeps the VISIBLE-PROOF beat (see proof-must-be-visible) + promise discipline (saves/keeps, never earns). 009 = make-money -> chase-invoices. Owner's other seeds: replace jobs -> replace copy-paste; write code -> clean spreadsheets. Pick the next one from these — but the picker must give it a fresh SUBJECT coordinate (subject-guard, D-059). RETIRED SEED (D-059, 2026-07-15): 'write emails -> find the emails I shouldn't answer' (015) was dropped as a near-duplicate of 011 (subject attention/inbox, already covered by 011 + 016); do NOT re-seed inbox triage here.",
-      "score": 88,
-      "status": "backlog",
-      "lane": "desk-notes",
-      "value_type": [
-        "surprising-truth",
-        "corrects-misbelief"
-      ],
-      "takeaway": "Point AI at the boring opposite of the hype, and show the run — that's the recognizable format.",
-      "produced_video_id": "009-boring-money-leak",
-      "source": {
-        "origin": "manual",
-        "added": "2026-06-27"
-      }
-    },
-    {
-      "id": "read-my-inbox",
-      "title": "Everyone Asks AI to Build an App. I Asked It to Read My Inbox.",
-      "search_term": "ask ai to build an app",
-      "task": "documents",
-      "sector": "general",
-      "tool": "AI (model-agnostic) + Gmail filters & labels",
-      "archetype": "ideas",
-      "lane": "everyone-asks-ai",
-      "angle_hint": "The hype asks AI to build; the win is AI that reads — triage, not construction.",
-      "score": 88,
-      "status": "produced",
-      "produced_video_id": "011-read-my-inbox",
-      "youtube_video_id": "-pBNgF-zPgU"
-    },
     {
       "id": "inbox-ai-week-long",
       "title": "I Let AI Run My Inbox for 7 Days",
@@ -799,144 +23,14 @@
       "source": {
         "origin": "manual",
         "added": "2026-07-08"
-      }
-    },
-    {
-      "id": "ai-employee-studio-reveal",
-      "title": "I Built an AI Employee. It Makes These Videos.",
-      "search_term": "ai employee",
-      "task": "other",
-      "sector": "general",
-      "tool": "Claude Code (agent) — our own studio pipeline",
-      "archetype": "diagram",
-      "lane": "ai-how-to",
-      "angle_hint": "STUDIO REVEAL, anti-hype positioning (sequel to 010 point-of-trust). The channel's own autonomous studio as a public case-study: the system + review loops + QA + human gates + where it fails. Keep the searchable phrase 'AI employee' but with self-referential specificity; explicitly distance from the get-rich faceless genre (YouTube's July-2025 inauthentic-content policy punishes lazy mass automation — we position AS the counterexample: AI as production accelerator, human as creative direction + gates). Absorbs the 'Stop Building AI Agents Wrong' story (Input -> Validation -> Retries -> Human review). Message: leverage for a solo operator, not a magic worker.",
-      "score": 88,
-      "status": "produced",
-      "value_type": [
-        "teaches-system",
-        "corrects-misbelief"
-      ],
-      "takeaway": "An 'AI employee' is leverage with human gates — validation, retries, review — not a magic worker you can walk away from.",
-      "produced_video_id": "012-studio-reveal",
-      "source": {
-        "origin": "manual",
-        "added": "2026-07-08"
-      }
-    },
-    {
-      "id": "freelance-automation-capstone",
-      "title": "I Built a Freelance Automation System From Scratch",
-      "search_term": "freelance automation system",
-      "task": "other",
-      "sector": "general",
-      "tool": "AI (model-agnostic) + Google Sheets + Apps Script",
-      "archetype": "diagram",
-      "lane": "ai-how-to",
-      "angle_hint": "CAPSTONE — produce AFTER the freelance cluster episodes (invoice-emails-sheets @86, chase-unpaid-invoices @80, follow-up-quiet-leads / meeting-notes-to-tasks) have shipped and actually run. Honest solo-builder 'From Scratch' framing (NOT 'I automated my entire freelance business'): chain the parts that already worked in real runs, synthetic data only. Cluster/topical-authority play: the episodes answer the single queries, this answers the system query.",
-      "score": 85,
-      "status": "backlog",
-      "value_type": [
-        "teaches-system",
-        "saves-time"
-      ],
-      "takeaway": "A freelance 'system' is just proven small automations chained — build each part alone before you connect them.",
-      "produced_video_id": null,
-      "source": {
-        "origin": "manual",
-        "added": "2026-07-08"
-      }
-    },
-    {
-      "id": "automation-maintenance-story",
-      "title": "Your Automation Will Break — Here's How Mine Told Me",
-      "search_term": "automation stopped working",
-      "task": "other",
-      "sector": "general",
-      "tool": "AI (model-agnostic) + validation & alerts",
-      "archetype": "diagram",
-      "lane": "ai-how-to",
-      "angle_hint": "ONLY REAL INCIDENTS — never invented (accuracy rule). Candidates from the studio log: 008 Gemini free-tier 503s, review-loop rejections, QA catches; plus whatever Phase-B automations actually break. Produce as a LONG only after the freelance cluster has lived; if a good incident lands earlier, a desk-notes Short is allowed immediately. Frame: failure-design (validation, alerts, fallbacks, human gates), not war stories.",
-      "score": 84,
-      "status": "backlog",
-      "value_type": [
-        "avoids-mistake",
-        "teaches-system"
-      ],
-      "takeaway": "Every automation breaks eventually — the design goal is that it tells you, loudly, instead of failing silently.",
-      "produced_video_id": "013-fail-loud",
-      "source": {
-        "origin": "manual",
-        "added": "2026-07-08"
-      }
-    },
-    {
-      "id": "client-mess-onboarding",
-      "title": "AI Onboarded Me onto a Client's Mess",
-      "search_term": "client onboarding automation",
-      "task": "lookups-reports",
-      "sector": "general",
-      "tool": "AI (model-agnostic) + client files (synthetic)",
-      "archetype": "mini-demo",
-      "lane": "ai-how-to",
-      "angle_hint": "Dev idea reframed for freelancers (the dev/OSS lane stays parked — Phase 3). Every freelancer inherits a client's messy folder/inbox/spreadsheet on day one. Point AI at the mess READ-ONLY first: inventory, map, list of dangers before touching anything. Synthetic client data only.",
-      "score": 80,
-      "status": "backlog",
-      "value_type": [
-        "saves-time",
-        "surprising-truth"
-      ],
-      "takeaway": "AI's best onboarding trick isn't writing — it's reading: point it at the mess and get the map before you touch anything.",
-      "produced_video_id": null,
-      "source": {
-        "origin": "manual",
-        "added": "2026-07-08"
-      }
-    },
-    {
-      "id": "landing-page-designer-experiment",
-      "title": "Can AI Replace a Designer? I Tried Building My Landing Page",
-      "search_term": "can ai replace designers",
-      "task": "other",
-      "sector": "general",
-      "tool": "Claude Design (paid research preview — needs brief.approvedTools)",
-      "archetype": "mini-demo",
-      "lane": "tool-review",
-      "angle_hint": "EXPERIMENT framing, not a tutorial: 'Can AI replace a designer?' tested on our own real landing page. Claude Design VERIFIED to exist (Anthropic Labs, claude.ai/design, research preview) but it requires a paid plan (Pro/Max) -> must go through brief.approvedTools per the no-paid-SaaS rule; keep the tool modular + disclose. Honest verdict beats hype either way.",
-      "score": 78,
-      "status": "backlog",
-      "value_type": [
-        "surprising-truth",
-        "corrects-misbelief"
-      ],
-      "takeaway": "AI design tools get you a credible draft, not a designer — the gap is judgement, and that stays with you.",
-      "produced_video_id": null,
-      "source": {
-        "origin": "manual",
-        "added": "2026-07-08"
-      }
-    },
-    {
-      "id": "design-tools-experiment",
-      "title": "Claude Design vs Stitch on the Same Brief",
-      "search_term": "claude design vs stitch",
-      "task": "other",
-      "sector": "general",
-      "tool": "Claude Design vs Google Stitch",
-      "archetype": "comparison",
-      "lane": "tool-review",
-      "angle_hint": "Comparison-as-experiment (see comparison-as-experiment memory): Claude Design vs Google Stitch on the SAME real brief (our landing page or a client-style brief), never a feature-list review. LOW PRIORITY — news-decay risk; paid/preview tools -> brief.approvedTools. Only produce if the landing-page experiment performs.",
-      "score": 72,
-      "status": "backlog",
-      "value_type": [
-        "surprising-truth",
-        "teaches-system"
-      ],
-      "takeaway": "Same brief, two tools — judge design AIs on a shared real task, not on feature lists.",
-      "produced_video_id": null,
-      "source": {
-        "origin": "manual",
-        "added": "2026-07-08"
+      },
+      "adjusted_score": 92,
+      "search_demand": {
+        "phrase": "ai inbox management",
+        "status": "verified",
+        "depth": 1,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
       }
     },
     {
@@ -961,90 +55,44 @@
       "source": {
         "origin": "manual",
         "added": "2026-07-14"
+      },
+      "adjusted_score": 92,
+      "search_demand": {
+        "phrase": "n8n email triage workflow",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "n8n clickup",
+          "n8n workflow",
+          "n8n deploy"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
       }
     },
     {
-      "id": "agent-fine-print-watch",
-      "title": "I Gave an AI Agent One Job: Watch the Fine Print",
-      "search_term": "ai monitor terms of service changes",
-      "task": "lookups-reports",
-      "sector": "general",
-      "tool": "AI agent (model-agnostic) + any change-watch source (a saved page / a doc / an RSS or diff feed); kept modular",
-      "archetype": "ideas",
-      "lane": "desk-notes",
-      "series": "The AI Agent",
-      "angle_hint": "Ep. 1 of 'The AI Agent'. An agent is a DECISION layer, not a scraper. A dumb diff-watcher spams you on every character change; the agent reads the change, decides whether it MATTERS, and hands you only the ones that do — with a reason. Money shot = a DECISION CARD (old vs new clause + AI verdict: impact + reason), not a scanning animation. Human-approval posture: it flags, you decide. subject = change-detection/policy; bridges to 016 (automate the deciding).",
+      "id": "pdf-invoice-generator",
+      "title": "Turn a Spreadsheet Row into a PDF Invoice",
+      "search_term": "spreadsheet to pdf invoice",
+      "task": "documents",
+      "sector": "accounting",
+      "tool": "Apps Script",
+      "archetype": "mini-demo",
+      "angle_hint": "One template + one script replaces a daily copy-paste ritual.",
       "score": 85,
       "status": "backlog",
-      "subject": "change-detection/policy",
-      "value_type": [
-        "teaches-system",
-        "avoids-mistake",
-        "corrects-misbelief"
-      ],
-      "takeaway": "An AI agent isn't a scraper that flags every change — it's a decision layer that reads a change, judges whether it matters, and hands you the call. Automate the deciding, keep the approval.",
-      "value_score": 9,
-      "value_band": "qualify",
-      "produced_video_id": "017-fine-print-watch",
-      "source": {
-        "origin": "manual",
-        "added": "2026-07-15"
-      }
-    },
-    {
-      "id": "desk-lessons-what-is-a-token",
-      "title": "AI Can't See the Letters in Your Words",
-      "search_term": "what is a token in ai",
-      "task": "other",
-      "sector": "general",
-      "subject": "llm-mental-model",
-      "series": "Desk Lessons",
-      "tool": "None (concept video; tiktoken used only as the measuring instrument)",
-      "archetype": "ideas",
-      "angle_hint": "Not the definition ('~4 characters'). The letters never arrive — the model receives learned chunks, and the chunk is the only unit it perceives, remembers and bills.",
-      "score": 89,
-      "status": "produced",
-      "lane": "desk-notes",
-      "value_type": [
-        "corrects-misbelief",
-        "teaches-system",
-        "surprising-truth",
-        "saves-money"
-      ],
-      "takeaway": "The chunk is the model's atom: it cannot look inside one, and it pays for every one. When an AI fails something trivially easy, ask what it can actually see — and put character-exact work in a tool, not in the guess.",
-      "value_score": 8.35,
-      "value_band": "owner",
-      "produced_video_id": "021-what-is-a-token",
-      "source": {
-        "origin": "manual"
-      }
-    },
-    {
-      "id": "desk-lessons-context-window",
-      "title": "AI Has No Memory — It Re-Reads Everything",
-      "search_term": "what is a context window in ai",
-      "task": "other",
-      "sector": "general",
-      "subject": "llm-mental-model",
-      "series": "Desk Lessons",
-      "tool": "None (concept video; tiktoken used only as the measuring instrument, as in 021)",
-      "archetype": "ideas",
-      "angle_hint": "Not 'how much the AI remembers'. Nothing is remembered — every turn the whole conversation is handed back and re-read from scratch, and re-reading degrades with size and with position in the pile.",
-      "score": 90,
-      "status": "produced",
-      "lane": "desk-notes",
-      "value_type": [
-        "corrects-misbelief",
-        "teaches-system",
-        "surprising-truth",
-        "saves-money"
-      ],
-      "takeaway": "The window is not memory, it is what gets re-read every single turn — so curate the pile: put the task first and the question last, never bury the line that matters in the middle, and start a fresh chat with a short summary instead of dragging a long thread.",
-      "value_score": 8.75,
-      "value_band": "owner",
-      "produced_video_id": "022-context-window",
-      "source": {
-        "origin": "manual"
+      "produced_video_id": null,
+      "adjusted_score": 90,
+      "search_demand": {
+        "phrase": "spreadsheet to pdf invoice",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "excel to pdf invoice",
+          "save invoice as pdf in excel"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
       }
     },
     {
@@ -1073,7 +121,1647 @@
       "source": {
         "origin": "manual"
       },
-      "produced_video_id": "023-attention"
+      "produced_video_id": "023-attention",
+      "search_demand": {
+        "phrase": "what is attention in ai",
+        "status": "verified",
+        "depth": 1,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "bulk-personalized-emails",
+      "title": "Send 200 Personalized Emails in One Click",
+      "search_term": "send bulk personalized emails",
+      "task": "outbound-comms",
+      "sector": "general",
+      "tool": "Gmail",
+      "archetype": "mini-demo",
+      "angle_hint": "Mail-merge is older than you think — but AI makes each one not look templated.",
+      "score": 88,
+      "status": "in-progress",
+      "produced_video_id": "005-bulk-personalized-emails",
+      "search_demand": {
+        "phrase": "send bulk personalized emails",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "send personalized bulk emails in gmail",
+          "send personalized bulk emails in gmail with attachments",
+          "send personalized bulk emails in outlook",
+          "send bulk emails outlook",
+          "send bulk email from word"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "everyone-asks-ai-series",
+      "title": "\"Everyone Asks AI to X. I Asked It to Y.\" (repeatable Short series)",
+      "search_term": "ai to make money",
+      "task": "other",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + a spreadsheet",
+      "archetype": "ideas",
+      "angle_hint": "OWNER-ENDORSED REPEATABLE SHORT FORMAT (not a single idea): 'Everyone asks AI to [hyped thing]. I asked it to [boring back-office opposite]. Here's what happened.' Each entry rides a hyped search term, delivers our boring-automation angle, keeps the VISIBLE-PROOF beat (see proof-must-be-visible) + promise discipline (saves/keeps, never earns). 009 = make-money -> chase-invoices. Owner's other seeds: replace jobs -> replace copy-paste; write code -> clean spreadsheets. Pick the next one from these — but the picker must give it a fresh SUBJECT coordinate (subject-guard, D-059). RETIRED SEED (D-059, 2026-07-15): 'write emails -> find the emails I shouldn't answer' (015) was dropped as a near-duplicate of 011 (subject attention/inbox, already covered by 011 + 016); do NOT re-seed inbox triage here.",
+      "score": 88,
+      "status": "backlog",
+      "lane": "desk-notes",
+      "value_type": [
+        "surprising-truth",
+        "corrects-misbelief"
+      ],
+      "takeaway": "Point AI at the boring opposite of the hype, and show the run — that's the recognizable format.",
+      "produced_video_id": "009-boring-money-leak",
+      "source": {
+        "origin": "manual",
+        "added": "2026-06-27"
+      },
+      "search_demand": {
+        "phrase": "ai to make money",
+        "status": "verified",
+        "depth": 4,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "invoice-emails-sheets",
+      "title": "Automatically Email Invoices from a Google Sheet",
+      "search_term": "automatically email invoices google sheets",
+      "task": "outbound-comms",
+      "sector": "accounting",
+      "tool": "Google Sheets",
+      "archetype": "mini-demo",
+      "angle_hint": "The accountant doesn't want a tool — the freelancer who builds this for them gets paid.",
+      "score": 86,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automatically email invoices google sheets",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automatically send email from google sheets"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "meeting-notes-to-tasks",
+      "title": "Turn Meeting Notes into Tasks Automatically",
+      "search_term": "meeting notes to tasks ai",
+      "task": "documents",
+      "sector": "general",
+      "tool": "Claude",
+      "archetype": "mini-demo",
+      "angle_hint": "Everyone takes notes; almost nobody turns them into action.",
+      "score": 81,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 86,
+      "search_demand": {
+        "phrase": "meeting notes to tasks ai",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "use ai to take meeting notes",
+          "ai to take meeting notes"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "agent-fine-print-watch",
+      "title": "I Gave an AI Agent One Job: Watch the Fine Print",
+      "search_term": "ai monitor terms of service changes",
+      "task": "lookups-reports",
+      "sector": "general",
+      "tool": "AI agent (model-agnostic) + any change-watch source (a saved page / a doc / an RSS or diff feed); kept modular",
+      "archetype": "ideas",
+      "lane": "desk-notes",
+      "series": "The AI Agent",
+      "angle_hint": "Ep. 1 of 'The AI Agent'. An agent is a DECISION layer, not a scraper. A dumb diff-watcher spams you on every character change; the agent reads the change, decides whether it MATTERS, and hands you only the ones that do — with a reason. Money shot = a DECISION CARD (old vs new clause + AI verdict: impact + reason), not a scanning animation. Human-approval posture: it flags, you decide. subject = change-detection/policy; bridges to 016 (automate the deciding).",
+      "score": 85,
+      "status": "backlog",
+      "subject": "change-detection/policy",
+      "value_type": [
+        "teaches-system",
+        "avoids-mistake",
+        "corrects-misbelief"
+      ],
+      "takeaway": "An AI agent isn't a scraper that flags every change — it's a decision layer that reads a change, judges whether it matters, and hands you the call. Automate the deciding, keep the approval.",
+      "value_score": 9,
+      "value_band": "qualify",
+      "produced_video_id": "017-fine-print-watch",
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-15"
+      },
+      "search_demand": {
+        "phrase": "ai monitor terms of service changes",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "freelance-automation-capstone",
+      "title": "I Built a Freelance Automation System From Scratch",
+      "search_term": "freelance automation system",
+      "task": "other",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + Google Sheets + Apps Script",
+      "archetype": "diagram",
+      "lane": "ai-how-to",
+      "angle_hint": "CAPSTONE — produce AFTER the freelance cluster episodes (invoice-emails-sheets @86, chase-unpaid-invoices @80, follow-up-quiet-leads / meeting-notes-to-tasks) have shipped and actually run. Honest solo-builder 'From Scratch' framing (NOT 'I automated my entire freelance business'): chain the parts that already worked in real runs, synthetic data only. Cluster/topical-authority play: the episodes answer the single queries, this answers the system query.",
+      "score": 85,
+      "status": "backlog",
+      "value_type": [
+        "teaches-system",
+        "saves-time"
+      ],
+      "takeaway": "A freelance 'system' is just proven small automations chained — build each part alone before you connect them.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      },
+      "search_demand": {
+        "phrase": "freelance automation system",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "freelance automation"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "ai-vs-macros-excel",
+      "title": "AI vs a 10-Year-Old Excel Macro",
+      "search_term": "ai vs excel macros",
+      "task": "other",
+      "sector": "general",
+      "tool": "Excel",
+      "archetype": "comparison",
+      "angle_hint": "Short / Type A experiment (credibility): race a modern AI against a dusty 10-year-old macro on the SAME real task. Non-obvious result — the macro wins the repetitive, rigid job; AI wins the messy, judgement job; the real answer is use both. Macros aren't dead — they're just boring, and that's a virtue. (Parked idea #5 from the counter-trend-money round; this is the canonical home — do not duplicate.)",
+      "score": 84,
+      "status": "backlog",
+      "lane": "tool-review",
+      "value_type": [
+        "surprising-truth",
+        "teaches-system"
+      ],
+      "takeaway": "Don't pick AI vs macros — match the tool to the task: rigid+repetitive = macro, messy+judgement = AI.",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "ai vs excel macros",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "ai vs excel",
+          "ai for excel vba"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "automation-maintenance-story",
+      "title": "Your Automation Will Break — Here's How Mine Told Me",
+      "search_term": "automation stopped working",
+      "task": "other",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + validation & alerts",
+      "archetype": "diagram",
+      "lane": "ai-how-to",
+      "angle_hint": "ONLY REAL INCIDENTS — never invented (accuracy rule). Candidates from the studio log: 008 Gemini free-tier 503s, review-loop rejections, QA catches; plus whatever Phase-B automations actually break. Produce as a LONG only after the freelance cluster has lived; if a good incident lands earlier, a desk-notes Short is allowed immediately. Frame: failure-design (validation, alerts, fallbacks, human gates), not war stories.",
+      "score": 84,
+      "status": "backlog",
+      "value_type": [
+        "avoids-mistake",
+        "teaches-system"
+      ],
+      "takeaway": "Every automation breaks eventually — the design goal is that it tells you, loudly, instead of failing silently.",
+      "produced_video_id": "013-fail-loud",
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      },
+      "search_demand": {
+        "phrase": "automation stopped working",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automation not working iphone",
+          "automation not working",
+          "automation troubleshooting"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "best-model-for-automation",
+      "title": "Best AI Model for Automating Office Work",
+      "search_term": "best ai model for automation",
+      "task": "other",
+      "sector": "general",
+      "tool": "Claude",
+      "archetype": "comparison",
+      "angle_hint": "Cheaper, smaller models win more office tasks than people expect.",
+      "score": 83,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "best ai model for automation",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "best ai for automation",
+          "best ai tools for automation",
+          "how to use ai for automation",
+          "ai tools for automation"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "clean-imported-data-excel",
+      "title": "Auto-Clean Messy Imported Data in Excel",
+      "search_term": "clean messy data excel automatically",
+      "task": "data-entry",
+      "sector": "accounting",
+      "tool": "Excel",
+      "archetype": "mini-demo",
+      "angle_hint": "The boring 20 minutes everyone wastes after every export.",
+      "score": 84,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 82,
+      "search_demand": {
+        "phrase": "clean messy data excel automatically",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "clean messy data in excel"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "appointment-reminders",
+      "title": "Send Automatic Appointment Reminders",
+      "search_term": "automatic appointment reminders",
+      "task": "outbound-comms",
+      "sector": "healthcare",
+      "tool": "Make",
+      "archetype": "ideas",
+      "angle_hint": "No-shows cost money; a reminder costs nothing to send.",
+      "score": 82,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automatic appointment reminders",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "auto-generate-quotes",
+      "title": "Auto-Generate Price Quotes from a Template",
+      "search_term": "automate price quotes",
+      "task": "documents",
+      "sector": "sales",
+      "tool": "Apps Script",
+      "archetype": "mini-demo",
+      "angle_hint": "Faster quotes close more deals — speed is the feature.",
+      "score": 77,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 82,
+      "search_demand": {
+        "phrase": "automate price quotes",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "ai-vs-human-stopwatch-race",
+      "title": "I Raced AI Against Myself on a Boring Task",
+      "search_term": "ai vs human speed test",
+      "task": "data-entry",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + a spreadsheet",
+      "archetype": "mini-demo",
+      "angle_hint": "Short / Type A experiment (credibility): literal stopwatch race — me vs an AI on one real back-office task. Twist line (use verbatim): 'AI finished first… but that's not why it won.' The point isn't speed, it's that it runs unattended / never gets bored / doesn't fat-finger row 200. Predicted ~84. (Parked idea #2 from the counter-trend-money round.)",
+      "score": 84,
+      "status": "backlog",
+      "lane": "desk-notes",
+      "value_type": [
+        "surprising-truth",
+        "saves-time"
+      ],
+      "takeaway": "Speed is the obvious win and the wrong one — the real value is that it runs unattended and never tires.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-06-27"
+      },
+      "adjusted_score": 82,
+      "search_demand": {
+        "phrase": "ai vs human speed test",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "recurring-invoice-system",
+      "title": "Build a Recurring-Invoice System (No Code)",
+      "search_term": "recurring invoice automation",
+      "task": "documents",
+      "sector": "accounting",
+      "tool": "Make",
+      "archetype": "diagram",
+      "angle_hint": "Subscriptions for any business, without subscription software.",
+      "score": 76,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 81,
+      "search_demand": {
+        "phrase": "recurring invoice automation",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "recurring invoice quickbooks",
+          "how to automate reconciliation in excel",
+          "recurring invoice"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "best-tool-no-code-automation",
+      "title": "Make vs Zapier vs n8n for Beginners",
+      "search_term": "make vs zapier vs n8n",
+      "task": "other",
+      "sector": "general",
+      "tool": "Make",
+      "archetype": "comparison",
+      "angle_hint": "Skip the hype: which one a beginner should actually start with.",
+      "score": 81,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "make vs zapier vs n8n",
+        "status": "verified",
+        "depth": 1,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "pdf-data-extraction",
+      "title": "Extract Data from PDFs into a Spreadsheet",
+      "search_term": "extract data from pdf to excel",
+      "task": "data-entry",
+      "sector": "accounting",
+      "tool": "AI",
+      "archetype": "mini-demo",
+      "angle_hint": "The classic 'retype the PDF' job, finally gone.",
+      "score": 82,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 80,
+      "search_demand": {
+        "phrase": "extract data from pdf to excel",
+        "status": "verified",
+        "depth": 6,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "shift-schedule-cafe",
+      "title": "Auto-Build Weekly Cafe Shift Schedules",
+      "search_term": "automate shift scheduling",
+      "task": "scheduling",
+      "sector": "hospitality",
+      "tool": "Google Sheets",
+      "archetype": "ideas",
+      "angle_hint": "One sheet, a few rules, and Sunday-night scheduling disappears.",
+      "score": 80,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automate shift scheduling",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automatic shift schedule generator",
+          "automatic shift schedule excel",
+          "automate scheduling"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "form-to-email-confirmation",
+      "title": "Auto-Confirm Every Form Submission by Email",
+      "search_term": "auto email after form submission",
+      "task": "outbound-comms",
+      "sector": "general",
+      "tool": "Forms",
+      "archetype": "mini-demo",
+      "angle_hint": "A tiny automation that makes a one-person shop look professional.",
+      "score": 80,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "auto email after form submission",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "auto-reminder-unpaid-invoices",
+      "title": "Auto-Chase Unpaid Invoices",
+      "search_term": "automatic payment reminder",
+      "task": "outbound-comms",
+      "sector": "accounting",
+      "tool": "Make",
+      "archetype": "ideas",
+      "angle_hint": "The polite reminder nobody enjoys sending — so automate the awkward part.",
+      "score": 80,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automatic payment reminder",
+        "status": "verified",
+        "depth": 2,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "client-mess-onboarding",
+      "title": "AI Onboarded Me onto a Client's Mess",
+      "search_term": "client onboarding automation",
+      "task": "lookups-reports",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + client files (synthetic)",
+      "archetype": "mini-demo",
+      "lane": "ai-how-to",
+      "angle_hint": "Dev idea reframed for freelancers (the dev/OSS lane stays parked — Phase 3). Every freelancer inherits a client's messy folder/inbox/spreadsheet on day one. Point AI at the mess READ-ONLY first: inventory, map, list of dangers before touching anything. Synthetic client data only.",
+      "score": 80,
+      "status": "backlog",
+      "value_type": [
+        "saves-time",
+        "surprising-truth"
+      ],
+      "takeaway": "AI's best onboarding trick isn't writing — it's reading: point it at the mess and get the map before you touch anything.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      },
+      "search_demand": {
+        "phrase": "client onboarding automation",
+        "status": "verified",
+        "depth": 3,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "before-coffee-automation-montage",
+      "title": "What My Automations Did Before I Finished My Coffee",
+      "search_term": "morning automation routine",
+      "task": "other",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + a spreadsheet",
+      "archetype": "ideas",
+      "angle_hint": "Short / Type B-ish discovery (fast, visual, new-audience entry point — may out-view the credibility ones, so do NOT auto-rank it last). A tight before-coffee montage of small jobs already done by the time you sit down: rows filled, invoice chased, inbox triaged. Build as a visual discovery Short (optionally a light timed framing). Must differentiate from 003 (003 is the '5 secretary jobs' list; this is a single-morning montage, not a numbered list). Predicted ~80. (Parked idea #4 from the counter-trend-money round.)",
+      "score": 80,
+      "status": "backlog",
+      "lane": "desk-notes",
+      "value_type": [
+        "surprising-truth",
+        "saves-time"
+      ],
+      "takeaway": "The payoff of boring automation is invisible: the work is just already done when you show up.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-06-27"
+      },
+      "search_demand": {
+        "phrase": "morning automation routine",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "crm-followup-automation",
+      "title": "Auto-Follow-Up with Leads Who Went Quiet",
+      "search_term": "automate lead follow up",
+      "task": "outbound-comms",
+      "sector": "sales",
+      "tool": "Make",
+      "archetype": "ideas",
+      "angle_hint": "Most sales are lost to silence, not rejection.",
+      "score": 79,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automate lead follow up",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automate email follow up"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "how-to-build-automation-system",
+      "title": "How to Design Your First Automation System",
+      "search_term": "how to build automation system",
+      "task": "other",
+      "sector": "general",
+      "tool": "Make",
+      "archetype": "diagram",
+      "angle_hint": "A simple mental model: trigger, do, record — that's most automations.",
+      "score": 79,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "how to build automation system",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "how to build home automation system",
+          "how to build automated trading system",
+          "how to build automatic storage system in minecraft",
+          "how to make home automation system using arduino",
+          "how to make home automation system"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "spreadsheet-to-dashboard",
+      "title": "Auto-Build a Dashboard from Raw Data",
+      "search_term": "automatic dashboard from spreadsheet",
+      "task": "lookups-reports",
+      "sector": "general",
+      "tool": "Google Sheets",
+      "archetype": "mini-demo",
+      "angle_hint": "Stop rebuilding the same chart every Monday.",
+      "score": 78,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automatic dashboard from spreadsheet",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automatic dashboard in excel",
+          "automate dashboard in excel",
+          "automate charts in excel"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "ai-architecture-agent-workflow",
+      "title": "How an AI Agent Can Run a Whole Workflow",
+      "search_term": "ai agent workflow automation",
+      "task": "other",
+      "sector": "general",
+      "tool": "Claude",
+      "archetype": "diagram",
+      "angle_hint": "Where agents actually help — and where they just add risk.",
+      "score": 78,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "ai agent workflow automation",
+        "status": "verified",
+        "depth": 1,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "landing-page-designer-experiment",
+      "title": "Can AI Replace a Designer? I Tried Building My Landing Page",
+      "search_term": "can ai replace designers",
+      "task": "other",
+      "sector": "general",
+      "tool": "Claude Design (paid research preview — needs brief.approvedTools)",
+      "archetype": "mini-demo",
+      "lane": "tool-review",
+      "angle_hint": "EXPERIMENT framing, not a tutorial: 'Can AI replace a designer?' tested on our own real landing page. Claude Design VERIFIED to exist (Anthropic Labs, claude.ai/design, research preview) but it requires a paid plan (Pro/Max) -> must go through brief.approvedTools per the no-paid-SaaS rule; keep the tool modular + disclose. Honest verdict beats hype either way.",
+      "score": 78,
+      "status": "backlog",
+      "value_type": [
+        "surprising-truth",
+        "corrects-misbelief"
+      ],
+      "takeaway": "AI design tools get you a credible draft, not a designer — the gap is judgement, and that stays with you.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      },
+      "search_demand": {
+        "phrase": "can ai replace designers",
+        "status": "verified",
+        "depth": 1,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "auto-categorize-expenses",
+      "title": "Auto-Categorize Bank Transactions",
+      "search_term": "auto categorize expenses spreadsheet",
+      "task": "data-entry",
+      "sector": "accounting",
+      "tool": "Google Sheets",
+      "archetype": "mini-demo",
+      "angle_hint": "Bookkeeping's most tedious step, handled by one formula plus AI.",
+      "score": 79,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 77,
+      "search_demand": {
+        "phrase": "auto categorize expenses spreadsheet",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "how to categorize expenses in excel"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "monthly-report-automation",
+      "title": "Auto-Generate a Monthly Sales Report",
+      "search_term": "automate monthly report",
+      "task": "lookups-reports",
+      "sector": "sales",
+      "tool": "Google Sheets",
+      "archetype": "ideas",
+      "angle_hint": "The report your boss wants, built while you sleep.",
+      "score": 77,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automate monthly report",
+        "status": "verified",
+        "depth": 1,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "mail-merge-certificates",
+      "title": "Auto-Generate Certificates for a Whole Class",
+      "search_term": "bulk certificate generator",
+      "task": "documents",
+      "sector": "schools",
+      "tool": "Apps Script",
+      "archetype": "mini-demo",
+      "angle_hint": "One template, thirty names, zero manual copies.",
+      "score": 72,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 77,
+      "search_demand": {
+        "phrase": "bulk certificate generator",
+        "status": "verified",
+        "depth": 1,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "dedupe-customer-list",
+      "title": "Find & Remove Duplicate Customers Automatically",
+      "search_term": "remove duplicates spreadsheet automatically",
+      "task": "data-entry",
+      "sector": "sales",
+      "tool": "Google Sheets",
+      "archetype": "mini-demo",
+      "angle_hint": "Dirty contact lists quietly cost you sales.",
+      "score": 78,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 76,
+      "search_demand": {
+        "phrase": "remove duplicates spreadsheet automatically",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "remove duplicates in sheets",
+          "remove duplicate google sheet"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "social-post-scheduler",
+      "title": "Auto-Schedule a Week of Posts from a Sheet",
+      "search_term": "schedule social posts from spreadsheet",
+      "task": "scheduling",
+      "sector": "marketing",
+      "tool": "Make",
+      "archetype": "ideas",
+      "angle_hint": "Plan once, publish all week — from a humble spreadsheet.",
+      "score": 76,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "schedule social posts from spreadsheet",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "schedule social media posts",
+          "schedule posts with canva",
+          "schedule social media content"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "inventory-low-stock-alert",
+      "title": "Get an Alert When Stock Runs Low",
+      "search_term": "low stock alert spreadsheet",
+      "task": "lookups-reports",
+      "sector": "retail",
+      "tool": "Google Sheets",
+      "archetype": "ideas",
+      "angle_hint": "The cheapest inventory system is the one that just emails you.",
+      "score": 75,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "low stock alert spreadsheet",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "low stock alert",
+          "google sheet stock alert",
+          "stock alert app free"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "email-to-spreadsheet",
+      "title": "Save Email Attachments to a Sheet Automatically",
+      "search_term": "email attachments to spreadsheet",
+      "task": "data-entry",
+      "sector": "general",
+      "tool": "Make",
+      "archetype": "mini-demo",
+      "angle_hint": "The inbox is a to-do list nobody asked for — drain it automatically.",
+      "score": 76,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 74,
+      "search_demand": {
+        "phrase": "email attachments to spreadsheet",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "email attachment in excel",
+          "power automate email attachment to excel",
+          "email attachment power automate"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "calendar-from-spreadsheet",
+      "title": "Turn a Spreadsheet into Calendar Events",
+      "search_term": "spreadsheet to calendar events",
+      "task": "scheduling",
+      "sector": "general",
+      "tool": "Apps Script",
+      "archetype": "mini-demo",
+      "angle_hint": "Plan in a grid, live in your calendar.",
+      "score": 74,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "spreadsheet to calendar events",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "sheet to calendar event",
+          "event calendar google sheets",
+          "spreadsheet to google calendar"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "read-my-inbox",
+      "title": "Everyone Asks AI to Build an App. I Asked It to Read My Inbox.",
+      "search_term": "ask ai to build an app",
+      "task": "documents",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + Gmail filters & labels",
+      "archetype": "ideas",
+      "lane": "everyone-asks-ai",
+      "angle_hint": "The hype asks AI to build; the win is AI that reads — triage, not construction.",
+      "score": 88,
+      "status": "produced",
+      "produced_video_id": "011-read-my-inbox",
+      "youtube_video_id": "-pBNgF-zPgU",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "youtube_video_id": "-pBNgF-zPgU",
+        "views": 30,
+        "avg_view_seconds": 83,
+        "retention_pct": 98.82,
+        "subs_gained": 0
+      },
+      "performance": 60,
+      "adjusted_score": 74
+    },
+    {
+      "id": "money-leak-shock-stat",
+      "title": "The Hidden Number Small Businesses Lose Every Year",
+      "search_term": "how much time wasted copy paste work",
+      "task": "data-entry",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + a spreadsheet",
+      "archetype": "ideas",
+      "angle_hint": "Short / big-number shock-stat. CAUTION before building: shares 009's stat ($28,500/yr, ~quarter of the workday) — DO NOT reuse the same number, it will feel recycled. Re-angle around a DIFFERENT sourced number or a different test (e.g. error-cost, no-show cost, late-invoice cost) and lead relatable-first like 009. Predicted ~75. (Parked idea #3 from the counter-trend-money round.)",
+      "score": 75,
+      "status": "backlog",
+      "lane": "desk-notes",
+      "value_type": [
+        "surprising-truth",
+        "saves-money"
+      ],
+      "takeaway": "A small, boring leak compounds into a real yearly number — naming it is what makes people fix it.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-06-27"
+      },
+      "adjusted_score": 73,
+      "search_demand": {
+        "phrase": "how much time wasted copy paste work",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "email-parser-to-crm",
+      "title": "Auto-Parse Order Emails into Your CRM",
+      "search_term": "parse emails into crm",
+      "task": "data-entry",
+      "sector": "sales",
+      "tool": "Make",
+      "archetype": "diagram",
+      "angle_hint": "Orders arrive as messy emails; they shouldn't be retyped.",
+      "score": 74,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 72,
+      "search_demand": {
+        "phrase": "parse emails into crm",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "email parser in zoho crm"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "timesheet-summary",
+      "title": "Auto-Summarize Timesheets into Payroll",
+      "search_term": "automate timesheet summary",
+      "task": "lookups-reports",
+      "sector": "accounting",
+      "tool": "Google Sheets",
+      "archetype": "ideas",
+      "angle_hint": "Payroll math is exactly the kind of boring a computer loves.",
+      "score": 72,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automate timesheet summary",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "power automate timesheet"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "auto-thank-you-emails",
+      "title": "Auto-Send Thank-You Emails After a Purchase",
+      "search_term": "automatic thank you email",
+      "task": "outbound-comms",
+      "sector": "retail",
+      "tool": "Make",
+      "archetype": "ideas",
+      "angle_hint": "Small courtesy, fully automated, real repeat business.",
+      "score": 72,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automatic thank you email",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "desk-lessons-context-window",
+      "title": "AI Has No Memory — It Re-Reads Everything",
+      "search_term": "what is a context window in ai",
+      "task": "other",
+      "sector": "general",
+      "subject": "llm-mental-model",
+      "series": "Desk Lessons",
+      "tool": "None (concept video; tiktoken used only as the measuring instrument, as in 021)",
+      "archetype": "ideas",
+      "angle_hint": "Not 'how much the AI remembers'. Nothing is remembered — every turn the whole conversation is handed back and re-read from scratch, and re-reading degrades with size and with position in the pile.",
+      "score": 90,
+      "status": "produced",
+      "lane": "desk-notes",
+      "value_type": [
+        "corrects-misbelief",
+        "teaches-system",
+        "surprising-truth",
+        "saves-money"
+      ],
+      "takeaway": "The window is not memory, it is what gets re-read every single turn — so curate the pile: put the task first and the question last, never bury the line that matters in the middle, and start a fresh chat with a short summary instead of dragging a long thread.",
+      "value_score": 8.75,
+      "value_band": "owner",
+      "produced_video_id": "022-context-window",
+      "source": {
+        "origin": "manual"
+      },
+      "metrics": {
+        "fetched": "2026-10-17",
+        "youtube_video_id": "rkLKEh6iJnE",
+        "views": 2,
+        "avg_view_seconds": 375,
+        "retention_pct": 99.87,
+        "subs_gained": 0
+      },
+      "performance": 53,
+      "adjusted_score": 72
+    },
+    {
+      "id": "design-tools-experiment",
+      "title": "Claude Design vs Stitch on the Same Brief",
+      "search_term": "claude design vs stitch",
+      "task": "other",
+      "sector": "general",
+      "tool": "Claude Design vs Google Stitch",
+      "archetype": "comparison",
+      "lane": "tool-review",
+      "angle_hint": "Comparison-as-experiment (see comparison-as-experiment memory): Claude Design vs Google Stitch on the SAME real brief (our landing page or a client-style brief), never a feature-list review. LOW PRIORITY — news-decay risk; paid/preview tools -> brief.approvedTools. Only produce if the landing-page experiment performs.",
+      "score": 72,
+      "status": "backlog",
+      "value_type": [
+        "surprising-truth",
+        "teaches-system"
+      ],
+      "takeaway": "Same brief, two tools — judge design AIs on a shared real task, not on feature lists.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      },
+      "search_demand": {
+        "phrase": "claude design vs stitch",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "claude figure",
+          "clover stitch",
+          "claude outfit"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "spreadsheet-data-validation",
+      "title": "Stop Bad Data Entry with Auto-Validation",
+      "search_term": "data validation google sheets",
+      "task": "data-entry",
+      "sector": "general",
+      "tool": "Google Sheets",
+      "archetype": "mini-demo",
+      "angle_hint": "Cleaning data is harder than preventing the mess.",
+      "score": 73,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 71,
+      "search_demand": {
+        "phrase": "data validation google sheets",
+        "status": "verified",
+        "depth": 3,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "order-confirmation-bot",
+      "title": "Auto-Confirm Orders and Update Stock",
+      "search_term": "automate order confirmation",
+      "task": "data-entry",
+      "sector": "retail",
+      "tool": "Make",
+      "archetype": "diagram",
+      "angle_hint": "Two boring jobs solved by one trigger.",
+      "score": 73,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 71,
+      "search_demand": {
+        "phrase": "automate order confirmation",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automatic order confirmation shopify",
+          "how to automate order fulfillment shopify",
+          "order confirmation email shopify",
+          "order confirmation sms shopify"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "weekly-digest-email",
+      "title": "Auto-Send a Weekly Digest from Your Data",
+      "search_term": "automated weekly digest email",
+      "task": "outbound-comms",
+      "sector": "general",
+      "tool": "Make",
+      "archetype": "ideas",
+      "angle_hint": "Replace the Monday status meeting with an email nobody dreads.",
+      "score": 71,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automated weekly digest email",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automated newsletter"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "notary-document-templates",
+      "title": "Auto-Fill Repetitive Legal Documents",
+      "search_term": "automate document templates",
+      "task": "documents",
+      "sector": "legal",
+      "tool": "Word",
+      "archetype": "ideas",
+      "angle_hint": "The same form, a hundred times, with three fields changed.",
+      "score": 66,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 71,
+      "search_demand": {
+        "phrase": "automate document templates",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automate document creation",
+          "automate word template",
+          "automate document generation"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "school-prom-invites",
+      "title": "Auto-Send Prom Invitations to Every Student",
+      "search_term": "bulk event invitations email",
+      "task": "outbound-comms",
+      "sector": "schools",
+      "tool": "Gmail",
+      "archetype": "ideas",
+      "angle_hint": "Event admin is pure busywork — perfect to hand to a script.",
+      "score": 70,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "bulk event invitations email",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "survey-results-summary",
+      "title": "Auto-Summarize Survey Results",
+      "search_term": "summarize survey results automatically",
+      "task": "lookups-reports",
+      "sector": "general",
+      "tool": "Forms",
+      "archetype": "ideas",
+      "angle_hint": "Raw responses are useless; the summary is the product.",
+      "score": 70,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "summarize survey results automatically",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "how to summarize survey results in excel",
+          "how to summarize survey results"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "pharmacy-refill-reminders",
+      "title": "Auto-Remind Customers When a Prescription Is Due",
+      "search_term": "prescription refill reminder automation",
+      "task": "outbound-comms",
+      "sector": "pharmacy",
+      "tool": "Make",
+      "archetype": "ideas",
+      "angle_hint": "A reminder list isn't a real process — a trigger is.",
+      "score": 69,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "prescription refill reminder automation",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "prescription apps",
+          "prescription errors",
+          "prescription labels",
+          "prescription audit"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "auto-sort-incoming-files",
+      "title": "Auto-Sort Files into Folders by Name",
+      "search_term": "automatically organize files",
+      "task": "data-entry",
+      "sector": "general",
+      "tool": "Apps Script",
+      "archetype": "mini-demo",
+      "angle_hint": "A tidy drive nobody had to tidy.",
+      "score": 70,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 68,
+      "search_demand": {
+        "phrase": "automatically organize files",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automatic file organizer windows",
+          "how to organize files mac",
+          "how to organize files windows"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "parent-absence-emails",
+      "title": "Auto-Email Parents When a Student Is Absent",
+      "search_term": "automate absence notification",
+      "task": "outbound-comms",
+      "sector": "schools",
+      "tool": "Google Sheets",
+      "archetype": "ideas",
+      "angle_hint": "A register column that quietly does the phoning for you.",
+      "score": 68,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automate absence notification",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "outlook reponse automatique absence"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "contract-renewal-alerts",
+      "title": "Never Miss a Contract Renewal Again",
+      "search_term": "contract renewal reminder",
+      "task": "scheduling",
+      "sector": "legal",
+      "tool": "Google Sheets",
+      "archetype": "ideas",
+      "angle_hint": "A date in a sheet that emails you before it's too late.",
+      "score": 68,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "contract renewal reminder",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "bulk-rename-files",
+      "title": "Bulk-Rename Hundreds of Files by Rule",
+      "search_term": "bulk rename files",
+      "task": "data-entry",
+      "sector": "general",
+      "tool": "Python",
+      "archetype": "mini-demo",
+      "angle_hint": "The five-second task you somehow do five hundred times.",
+      "score": 69,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 67,
+      "search_demand": {
+        "phrase": "bulk rename files",
+        "status": "verified",
+        "depth": 5,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "translate-emails-auto",
+      "title": "Auto-Translate Incoming Customer Emails",
+      "search_term": "auto translate emails",
+      "task": "outbound-comms",
+      "sector": "general",
+      "tool": "AI",
+      "archetype": "ideas",
+      "angle_hint": "Serve customers in any language without speaking it.",
+      "score": 67,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "auto translate emails",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "waitlist-automation",
+      "title": "Auto-Manage a Booking Waitlist",
+      "search_term": "automate booking waitlist",
+      "task": "scheduling",
+      "sector": "hospitality",
+      "tool": "Google Sheets",
+      "archetype": "ideas",
+      "angle_hint": "Fill cancellations without a single phone call.",
+      "score": 66,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automate booking waitlist",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "five-tasks-ai-secretary",
+      "title": "5 Tasks an AI Can Do Like a Secretary",
+      "search_term": "ai secretary tasks",
+      "task": "other",
+      "sector": "general",
+      "tool": "Claude",
+      "archetype": "ideas",
+      "angle_hint": "Nobody hires a secretary anymore, but the work didn't disappear.",
+      "score": 85,
+      "status": "produced",
+      "produced_video_id": "003-five-tasks-ai-secretary",
+      "adjusted_score": 64,
+      "metrics": {
+        "fetched": "2026-10-17",
+        "youtube_video_id": "7JXXjFZe0QM",
+        "views": 6,
+        "avg_view_seconds": 212,
+        "retention_pct": 65.86,
+        "subs_gained": 0
+      },
+      "performance": 42
+    },
+    {
+      "id": "attendance-tracker",
+      "title": "Automate Attendance Tracking",
+      "search_term": "automate attendance tracking",
+      "task": "data-entry",
+      "sector": "schools",
+      "tool": "Google Sheets",
+      "archetype": "ideas",
+      "angle_hint": "A daily tally that tallies itself.",
+      "score": 65,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 63,
+      "search_demand": {
+        "phrase": "automate attendance tracking",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automated attendance tracker",
+          "automated employee attendance tracking sheet in excel",
+          "automate attendance",
+          "automated attendance google sheet",
+          "automated employee attendance tracker"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "duplicate-file-finder",
+      "title": "Find Duplicate Files Automatically",
+      "search_term": "find duplicate files",
+      "task": "data-entry",
+      "sector": "general",
+      "tool": "Python",
+      "archetype": "ideas",
+      "angle_hint": "Reclaim a disk you forgot you were wasting.",
+      "score": 64,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 62,
+      "search_demand": {
+        "phrase": "find duplicate files",
+        "status": "verified",
+        "depth": 7,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "auto-backup-sheets",
+      "title": "Auto-Back-Up Your Spreadsheets Daily",
+      "search_term": "automatic spreadsheet backup",
+      "task": "other",
+      "sector": "general",
+      "tool": "Apps Script",
+      "archetype": "mini-demo",
+      "angle_hint": "The automation you only appreciate the day something breaks.",
+      "score": 62,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automatic spreadsheet backup",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "auto backup excel file",
+          "automatic data backup software"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "municipal-permit-tracker",
+      "title": "Track Permit Requests Automatically",
+      "search_term": "automate request tracking",
+      "task": "lookups-reports",
+      "sector": "government",
+      "tool": "Google Sheets",
+      "archetype": "ideas",
+      "angle_hint": "Even the least digital office can start with one tracked sheet.",
+      "score": 60,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "automate request tracking",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "how to automate with zapier",
+          "automated tracker"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "expense-receipt-to-sheet",
+      "title": "Photograph a Receipt, Auto-Fill the Expense Sheet",
+      "search_term": "receipt to spreadsheet ai",
+      "task": "data-entry",
+      "sector": "accounting",
+      "tool": "AI",
+      "archetype": "ideas",
+      "angle_hint": "The most-hated five minutes of every small business owner's week.",
+      "score": 83,
+      "status": "produced",
+      "produced_video_id": "008-receipt-to-spreadsheet",
+      "adjusted_score": 57,
+      "metrics": {
+        "fetched": "2026-10-17",
+        "youtube_video_id": "smW-2hwz4QM",
+        "views": 15,
+        "avg_view_seconds": 124,
+        "retention_pct": 40.29,
+        "subs_gained": 0
+      },
+      "performance": 31
+    },
+    {
+      "id": "claude-vs-chatgpt-spreadsheets",
+      "title": "Claude vs ChatGPT for Spreadsheet Work",
+      "search_term": "claude vs chatgpt spreadsheets",
+      "task": "other",
+      "sector": "general",
+      "tool": "Claude",
+      "archetype": "comparison",
+      "angle_hint": "For tabular work the 'best chatbot' isn't the obvious one.",
+      "score": 84,
+      "status": "produced",
+      "produced_video_id": "004-claude-vs-chatgpt-spreadsheets",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "youtube_video_id": "8leAPqVdC20",
+        "views": 11,
+        "avg_view_seconds": 123,
+        "retention_pct": 41.64,
+        "subs_gained": 0
+      },
+      "performance": 30,
+      "adjusted_score": 57
+    },
+    {
+      "id": "ai-employee-studio-reveal",
+      "title": "I Built an AI Employee. It Makes These Videos.",
+      "search_term": "ai employee",
+      "task": "other",
+      "sector": "general",
+      "tool": "Claude Code (agent) — our own studio pipeline",
+      "archetype": "diagram",
+      "lane": "ai-how-to",
+      "angle_hint": "STUDIO REVEAL, anti-hype positioning (sequel to 010 point-of-trust). The channel's own autonomous studio as a public case-study: the system + review loops + QA + human gates + where it fails. Keep the searchable phrase 'AI employee' but with self-referential specificity; explicitly distance from the get-rich faceless genre (YouTube's July-2025 inauthentic-content policy punishes lazy mass automation — we position AS the counterexample: AI as production accelerator, human as creative direction + gates). Absorbs the 'Stop Building AI Agents Wrong' story (Input -> Validation -> Retries -> Human review). Message: leverage for a solo operator, not a magic worker.",
+      "score": 88,
+      "status": "produced",
+      "value_type": [
+        "teaches-system",
+        "corrects-misbelief"
+      ],
+      "takeaway": "An 'AI employee' is leverage with human gates — validation, retries, review — not a magic worker you can walk away from.",
+      "produced_video_id": "012-studio-reveal",
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      },
+      "metrics": {
+        "fetched": "2026-10-17",
+        "youtube_video_id": "9W9pWYEzjmM",
+        "views": 29,
+        "avg_view_seconds": 87,
+        "retention_pct": 29.220000000000002,
+        "subs_gained": 0
+      },
+      "performance": 26,
+      "adjusted_score": 57
+    },
+    {
+      "id": "desk-lessons-what-is-a-token",
+      "title": "AI Can't See the Letters in Your Words",
+      "search_term": "what is a token in ai",
+      "task": "other",
+      "sector": "general",
+      "subject": "llm-mental-model",
+      "series": "Desk Lessons",
+      "tool": "None (concept video; tiktoken used only as the measuring instrument)",
+      "archetype": "ideas",
+      "angle_hint": "Not the definition ('~4 characters'). The letters never arrive — the model receives learned chunks, and the chunk is the only unit it perceives, remembers and bills.",
+      "score": 89,
+      "status": "produced",
+      "lane": "desk-notes",
+      "value_type": [
+        "corrects-misbelief",
+        "teaches-system",
+        "surprising-truth",
+        "saves-money"
+      ],
+      "takeaway": "The chunk is the model's atom: it cannot look inside one, and it pays for every one. When an AI fails something trivially easy, ask what it can actually see — and put character-exact work in a tool, not in the guess.",
+      "value_score": 8.35,
+      "value_band": "owner",
+      "produced_video_id": "021-what-is-a-token",
+      "source": {
+        "origin": "manual"
+      },
+      "metrics": {
+        "fetched": "2026-10-17",
+        "youtube_video_id": "foexgrUcbXI",
+        "views": 9,
+        "avg_view_seconds": 73,
+        "retention_pct": 26.239999999999995,
+        "subs_gained": 0
+      },
+      "performance": 21,
+      "adjusted_score": 55
+    },
+    {
+      "id": "validated-cleanup-system",
+      "title": "Build a Spreadsheet Cleanup System That Can't Let Bad Data In",
+      "search_term": "automate data cleaning validation rules",
+      "task": "data-entry",
+      "sector": "general",
+      "tool": "Python",
+      "archetype": "diagram",
+      "angle_hint": "Don't fix errors after the fact — build rules so they can never get entered. (Teased sequel to 004.)",
+      "score": 84,
+      "status": "produced",
+      "produced_video_id": "006-validated-cleanup-system",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "youtube_video_id": "eZXUIn9GZTI",
+        "views": 10,
+        "avg_view_seconds": 97,
+        "retention_pct": 31.379999999999995,
+        "subs_gained": 0
+      },
+      "performance": 24,
+      "adjusted_score": 54
     }
   ]
 }

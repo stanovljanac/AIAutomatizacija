@@ -323,7 +323,8 @@ The detailed per-wave build handoffs and verifier-verdict log were removed once 
 - **Official-source RSS endpoints.** Some changelogs (anthropic/openai/google/microsoft/meta) currently
   point at HTML pages → `fetch-news.mjs` fails soft to 0 items; wire verified RSS endpoints when found.
 - **Re-register the weekly autonomous run.** The CronCreate routine is session-local and auto-expires after
-  7 days — re-register it each week (or keep a session alive / use `/loop`).
+  7 days — re-register it each week (or keep a session alive / use `/loop`). (The weekly **analytics** run
+  no longer depends on it: Windows Task Scheduler since D-073 — the same move would make auto-run durable.)
 - **LinkedIn skill (plan v2 Phase 3, research-first).** Research LinkedIn writing style, then
   `.claude/skills/linkedin-post/SKILL.md` + a `linkedin_post` kind in `distribution.schema.json`
   (the `pipeline/07-distribute` seam already accommodates it); built around an extracted **essence
@@ -332,6 +333,31 @@ The detailed per-wave build handoffs and verifier-verdict log were removed once 
   Owner logs Studio Test & Compare winners (`--choose-thumb` records the pick); when data accumulates,
   tune `score-scenes.mjs` WEIGHTS from pick/CTR history and emit draft KOS lessons for clear
   over/under-performers. No AI thumbnail reviewer until then (owner decision, D-056).
+
+## Growth plan — quadrant 1 "do now" (D-073, 2026-10-17)
+
+From the growth-options doc (options 1A · 3A · 3B · 3E — cheap, high effect). **Built:**
+- [x] **1A analytics loop** — channel catalog (33 uploads, all tied to their folders), ledger
+  `youtube_video_id` 17/18 (was 4/17), first snapshots (021–024), idea metrics for 8 ideas, weekly run
+  on Windows Task Scheduler, reach/CTR code against the Reporting API.
+- [x] **3A package** — `publish.md` Test & Compare block (2–3 titles + thumbnails), one-title warning,
+  `--ab-result` recorder (`publish.json.ab_test`), skill + publish-review rule.
+- [x] **3B search demand** — autocomplete evidence on every idea (14/60 verified), idea-pass
+  `audience_fit`, pick-next warning, seed-gate stop.
+- [x] **3E playlist test** — `pipeline/state/playlist-report.md` weekly; review 2026-12-12 → 2026-12-26.
+
+**Open:**
+- [ ] **Enable the YouTube Reporting API** in the Cloud project (owner, one click) — until then no CTR.
+  The next weekly run creates the job; first report ≤ 48 h later, plus a 30-day backfill.
+- [ ] **Verify the CTR scale** on the first report: one video's CTR vs Studio → Reach (`CTR_SCALE` in
+  `reach.mjs`; `reachWarnings` flags the likely miss).
+- [ ] **Re-word the 46 unverified phrases** — at Gate 1 as each idea comes up (the seed gate forces it),
+  or in one editorial pass over the bank.
+- [ ] **Produced ideas still marked `backlog`** — `desk-lessons-attention` (023), `agent-fine-print-watch`
+  (017), `automation-maintenance-story` (013) were made without pick-next, so they get no `performance`
+  and could be re-picked. `projectIdeas` deliberately never moves `backlog` (series ideas live there);
+  fix by hand or teach it the difference.
+- [ ] **020's Short is not on the channel** (ledger says published 2026-07-25; no upload matches).
 
 ## Next big systems (from the 014-analytics plan, D-058) — ordered
 

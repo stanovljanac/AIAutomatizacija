@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "youtube.json",
+  "description": "The CHANNEL CATALOG (pipeline/state/youtube.json): every upload on the YouTube channel, keyed by its YouTube video id — what YouTube says it is (title, type, playlists), which content folder it came from, its latest metrics, and the daily reach rows (impressions + CTR) the Reporting API delivers. Written by pipeline/06-publish/fetch-analytics.mjs (1A, D-073). The lifecycle ledger (videos.json) stays the owner of each video's lifecycle; it only receives the youtube_video_id binding and the scheduled snapshots from here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "updated", "fetched", "playlists", "reach", "videos"],
+  "properties": {
+    "schema_version": { "const": 1, "description": "Catalog format version. Bump only with a migration." },
+    "updated": { "type": "string", "description": "ISO date (YYYY-MM-DD) the catalog was last written." },
+    "fetched": { "type": ["string", "null"], "description": "ISO date of the last LIVE fetch from YouTube (null until the first one)." },
+    "playlist_test": {
+      "type": "object",
+      "description": "3E — the playlist test: all playlists stay; after 8-10 weeks (and >=3 videos per playlist) the data picks the channel's main promise.",
+      "additionalProperties": false,
+      "required": ["started"],
+      "properties": {
+        "started": { "type": "string", "description": "ISO date the test window opened (stamped on the first fetch)." }
+      }
+    },
+    "playlists": {
+      "type": "object",
+      "description": "The channel's own playlists as YouTube lists them, keyed by playlist id.",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "video_ids"],
+        "properties": {
+          "title": { "type": "string" },
+          "video_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "reach": {
+      "type": "object",
+      "description": "The YouTube Reporting API job that delivers thumbnail impressions + CTR (report type channel_reach_basic_a1). Its daily CSV reports expire after 30-60 days, so every row is kept in videos[].reach_daily.",
+      "additionalProperties": false,
+      "required": ["report_type", "job_id", "ingested"],
+      "properties": {
+        "report_type": { "const": "channel_reach_basic_a1" },
+        "job_id": { "type": ["string", "null"], "description": "Reporting job id; null until the job exists." },
+        "job_created": { "type": ["string", "null"], "description": "ISO date the job was created (first reports ~48h later, plus a 30-day backfill)." },
+        "ingested": { "type": "array", "items": { "type": "string" }, "description": "Report ids already merged — so a re-run never double-counts a day." },
+        "status": { "type": "string", "description": "Last outcome in plain words (e.g. 'ok', 'api disabled', 'waiting for the first report')." }
+      }
+    },
+    "videos": {
+      "type": "object",
+      "description": "One record per upload, keyed by the YouTube video id.",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "published_at", "content_type", "content_key"],
+        "properties": {
+          "title": { "type": "string", "description": "The title as it is live on YouTube (the owner may rename at upload)." },
+          "published_at": { "type": "string", "description": "ISO date YouTube reports for the upload." },
+          "duration_seconds": { "type": ["number", "null"] },
+          "privacy": { "type": "string", "description": "public | unlisted | private." },
+          "content_type": {
+            "type": ["string", "null"],
+            "enum": ["long", "short", null],
+            "description": "From the Analytics API creatorContentType (shorts / videoOnDemand); null while YouTube has no views to classify it by and its length can't tell."
+          },
+          "content_key": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9]{3}-[a-z0-9-]+(/short)?$",
+            "description": "The content folder this upload came from — the ledger key shape (\"024-frozen\", \"024-frozen/short\", legacy \"002-short\"). null = not mapped yet (fetch-analytics --map <ytId> <key>)."
+          },
+          "key_source": { "type": "string", "enum": ["title", "manual", "none"], "description": "How content_key was set: auto-matched on the title, by hand (--map), or deliberately left without a folder (--map <id> none — e.g. a folder's second Short). manual and none are never re-matched." },
+          "metrics": {
+            "type": "object",
+            "description": "Lifetime metrics as of `fetched` (YouTube Analytics API; impressions + CTR from the reach rows).",
+            "additionalProperties": false,
+            "required": ["fetched"],
+            "properties": {
+              "fetched": { "type": "string" },
+              "views": { "type": "number" },
+              "watch_minutes": { "type": "number" },
+              "avg_view_seconds": { "type": "number" },
+              "retention_pct": { "type": "number", "description": "averageViewPercentage (0..100; a looping Short can exceed 100)." },
+              "subs_gained": { "type": "number" },
+              "impressions": { "type": "number", "description": "Sum of the daily thumbnail impressions kept in reach_daily." },
+              "ctr": { "type": "number", "description": "Impression-weighted click-through rate, as a FRACTION (0.05 = 5%)." },
+              "traffic": {
+                "type": "object",
+                "description": "Views by traffic source (insightTrafficSourceType → views), e.g. SHORTS, YT_SEARCH, RELATED_VIDEO.",
+                "additionalProperties": { "type": "number" }
+              }
+            }
+          },
+          "reach_daily": {
+            "type": "object",
+            "description": "Daily reach rows, date (YYYY-MM-DD) → [impressions, ctr exactly as the report delivered it]. Kept because the reports themselves expire.",
+            "additionalProperties": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -37,4 +37,6 @@ lesson with no evidence stays `draft` forever.
 - [Constant background motion buries the point — the background moves only now and then](2026-10-09-constant-background-motion-buries-the-point.md) — lesson, stable
 - [A re-voice moves every word — a typed word offset is stale the moment the final voice lands](2026-10-10-a-re-voice-moves-every-word.md) — lesson, stable
 - [Angle variety is not motion design — hold the camera square and move the OBJECT](2026-10-10-angle-variety-is-not-motion-design.md) — lesson, stable
+- [A search term is a guess until YouTube autocomplete says people type it](2026-10-17-a-search-term-is-a-guess-until-autocomplete-says-so.md) — lesson, stable
+- [A loop that waits for a hand-typed id never runs — read the channel, not our copy of it](2026-10-17-read-the-channel-not-our-copy-of-it.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

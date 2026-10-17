@@ -1,0 +1,854 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-17",
+  "fetched": "2026-10-17",
+  "playlists": {
+    "PLS3E2qEMmF3g": {
+      "title": "Desk Lessons",
+      "video_ids": [
+        "uCDpkEJ9Pdg",
+        "rKTadKQ4CYU",
+        "8BbY-FJLGt0",
+        "DPXmsLBjyyw",
+        "8kPsv_p2SiI",
+        "rkLKEh6iJnE",
+        "I5SlmowU-m8",
+        "foexgrUcbXI",
+        "xnVng9WfKok"
+      ]
+    },
+    "PLBKFd3n5MZjU": {
+      "title": "Desk Automation",
+      "video_ids": [
+        "ePnW2xZwtEs",
+        "2Xm-n0K7pIM",
+        "SHOUFDOB8gM",
+        "9W9pWYEzjmM"
+      ]
+    },
+    "PLUy9tBSEDTLo": {
+      "title": "Desk Notes",
+      "video_ids": [
+        "lWOBtSHlntM",
+        "hZ8WbNMAzwc",
+        "VLUIIDaZA_c"
+      ]
+    },
+    "PLO8b2qzU_eTM": {
+      "title": "Everyone Asks AI",
+      "video_ids": [
+        "-pBNgF-zPgU",
+        "Aozxob3tH6w"
+      ]
+    },
+    "PLv9w9kEp4uj-nmoe9uzRfFmaEywqgFvaP": {
+      "title": "Desk News",
+      "video_ids": [
+        "ppuPa2kSOdk",
+        "v8ZJFXf6Fvo",
+        "9eNMhvKqRa4"
+      ]
+    },
+    "PLv9w9kEp4uj9FVKvBECrrFqcjEAlCskWi": {
+      "title": "Desk Loops",
+      "video_ids": [
+        "YxLERCHY8Yc",
+        "eZXUIn9GZTI"
+      ]
+    }
+  },
+  "reach": {
+    "report_type": "channel_reach_basic_a1",
+    "job_id": null,
+    "job_created": null,
+    "ingested": [],
+    "status": "api disabled"
+  },
+  "videos": {
+    "lWOBtSHlntM": {
+      "title": "Before You Run an AI Agent, You need to Write the Stop Line",
+      "published_at": "2026-10-17",
+      "duration_seconds": 60,
+      "privacy": "public",
+      "content_type": null,
+      "content_key": "025-always-on-agents/short",
+      "key_source": "manual",
+      "metrics": {
+        "fetched": "2026-10-17"
+      }
+    },
+    "hZ8WbNMAzwc": {
+      "title": "This is how my AI Agent Sent 73 Emails Nobody Approved",
+      "published_at": "2026-10-17",
+      "duration_seconds": 207,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "025-always-on-agents",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17"
+      }
+    },
+    "uCDpkEJ9Pdg": {
+      "title": "Does AI Learn From You? I Corrected an AI 100 Times and nothing happened",
+      "published_at": "2026-10-09",
+      "duration_seconds": 59,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "024-frozen/short",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 228,
+        "watch_minutes": 44,
+        "avg_view_seconds": 27,
+        "retention_pct": 47.35,
+        "subs_gained": 1,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "YT_SEARCH": 1,
+          "YT_OTHER_PAGE": 3,
+          "NOTIFICATION": 2,
+          "SHORTS": 222
+        }
+      }
+    },
+    "rKTadKQ4CYU": {
+      "title": "“You're Absolutely Right!” — Why AI Never Learns From You",
+      "published_at": "2026-10-09",
+      "duration_seconds": 132,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "024-frozen",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 12,
+        "watch_minutes": 2,
+        "avg_view_seconds": 127,
+        "retention_pct": 96.64,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 10,
+          "YT_SEARCH": 1,
+          "NOTIFICATION": 1
+        }
+      }
+    },
+    "8BbY-FJLGt0": {
+      "title": "53% of an AI's Attention Goes to a Meaningless Word #shorts #ai",
+      "published_at": "2026-08-25",
+      "duration_seconds": 57,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "023-attention/short",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 9,
+        "watch_minutes": 4,
+        "avg_view_seconds": 53,
+        "retention_pct": 93.92,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 3,
+          "YT_SEARCH": 3,
+          "SHORTS": 3
+        }
+      }
+    },
+    "DPXmsLBjyyw": {
+      "title": "Attention! It Doesn't Focus. It Spends",
+      "published_at": "2026-08-25",
+      "duration_seconds": 378,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "023-attention",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 17,
+        "watch_minutes": 6,
+        "avg_view_seconds": 189,
+        "retention_pct": 50.1,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 15,
+          "YT_SEARCH": 1,
+          "NOTIFICATION": 1
+        }
+      }
+    },
+    "8kPsv_p2SiI": {
+      "title": "You've Never Had a Conversation With an AI",
+      "published_at": "2026-08-18",
+      "duration_seconds": 56,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "022-context-window/short",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 313,
+        "watch_minutes": 15,
+        "avg_view_seconds": 17,
+        "retention_pct": 30.61,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 2,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 6,
+          "YT_OTHER_PAGE": 14,
+          "SHORTS": 290
+        }
+      }
+    },
+    "rkLKEh6iJnE": {
+      "title": "The Context Window Is Not Memory. It Re-Reads Everything.",
+      "published_at": "2026-08-18",
+      "duration_seconds": 376,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "022-context-window",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 2,
+        "watch_minutes": 6,
+        "avg_view_seconds": 375,
+        "retention_pct": 99.87,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 1,
+          "YT_SEARCH": 1
+        }
+      }
+    },
+    "I5SlmowU-m8": {
+      "title": "Your AI Never Reads Words. It Reads Chunks. #shorts #ai #automation #token #lessons #learning #chunk",
+      "published_at": "2026-08-16",
+      "duration_seconds": 53,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "021-what-is-a-token/short",
+      "key_source": "manual",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 56,
+        "watch_minutes": 8,
+        "avg_view_seconds": 28,
+        "retention_pct": 54.620000000000005,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 1,
+          "YT_OTHER_PAGE": 5,
+          "NOTIFICATION": 4,
+          "SHORTS": 45
+        }
+      }
+    },
+    "foexgrUcbXI": {
+      "title": "What Is a Token? The 3 Things It Silently Decides",
+      "published_at": "2026-08-16",
+      "duration_seconds": 281,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "021-what-is-a-token",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 9,
+        "watch_minutes": 8,
+        "avg_view_seconds": 73,
+        "retention_pct": 26.239999999999995,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 5,
+          "YT_SEARCH": 2,
+          "RELATED_VIDEO": 2
+        }
+      }
+    },
+    "xnVng9WfKok": {
+      "title": "Why Does ChatGPT Sound So Confident When It's Wrong? #shorts #ai #chatgpt #llm #aimodel #token",
+      "published_at": "2026-07-22",
+      "duration_seconds": 57,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "019-next-word-engine/short",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 31,
+        "watch_minutes": 4,
+        "avg_view_seconds": 35,
+        "retention_pct": 61.44,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 2,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 1,
+          "SHORTS": 27
+        }
+      }
+    },
+    "ui7KaKzZso4": {
+      "title": "20 Years. One Page. — The Story Behind The Automation Desk",
+      "published_at": "2026-07-19",
+      "duration_seconds": 100,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "018-life-story",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 11,
+        "watch_minutes": 9,
+        "avg_view_seconds": 58,
+        "retention_pct": 58.57,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 4,
+          "YT_CHANNEL": 2,
+          "YT_SEARCH": 2,
+          "YT_OTHER_PAGE": 2,
+          "END_SCREEN": 1
+        }
+      }
+    },
+    "qglzqGydJV4": {
+      "title": "I Built an AI Agent That Knows Which Changes Matter #shorts #ai #claude #chatgpt #automation #agent",
+      "published_at": "2026-07-15",
+      "duration_seconds": 94,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "017-fine-print-watch",
+      "key_source": "manual",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 95,
+        "watch_minutes": 20,
+        "avg_view_seconds": 33,
+        "retention_pct": 35.85,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 4,
+          "YT_CHANNEL": 2,
+          "YT_SEARCH": 1,
+          "YT_OTHER_PAGE": 6,
+          "EXT_URL": 1,
+          "SHORTS": 81
+        }
+      }
+    },
+    "ePnW2xZwtEs": {
+      "title": "Will AI Take Your Job? I Gave It the Worst Hour #ai #shorts #automation #job #bussiness",
+      "published_at": "2026-07-13",
+      "duration_seconds": 61,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "014-worst-hour",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 36,
+        "watch_minutes": 9,
+        "avg_view_seconds": 35,
+        "retention_pct": 58.82999999999999,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 3,
+          "YT_CHANNEL": 5,
+          "YT_SEARCH": 2,
+          "YT_OTHER_PAGE": 4,
+          "EXT_URL": 1,
+          "PLAYLIST": 1,
+          "SHORTS": 20
+        }
+      }
+    },
+    "2Xm-n0K7pIM": {
+      "title": "Never Trust the Green Checkmark #ai #shorts #automation #fail",
+      "published_at": "2026-07-12",
+      "duration_seconds": 60,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "013-fail-loud",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 295,
+        "watch_minutes": 81,
+        "avg_view_seconds": 52,
+        "retention_pct": 87.87,
+        "subs_gained": 1,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 5,
+          "YT_CHANNEL": 4,
+          "YT_SEARCH": 3,
+          "YT_OTHER_PAGE": 37,
+          "EXT_URL": 1,
+          "PLAYLIST": 1,
+          "SHORTS": 244
+        }
+      }
+    },
+    "SHOUFDOB8gM": {
+      "title": "I Built an AI Employee That Makes My YouTube Videos — the Full Pipeline #ai #automation #shorts #yt",
+      "published_at": "2026-07-11",
+      "duration_seconds": 64,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "012-studio-reveal/short",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 46,
+        "watch_minutes": 8,
+        "avg_view_seconds": 31,
+        "retention_pct": 48.52,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 1,
+          "YT_CHANNEL": 2,
+          "YT_SEARCH": 1,
+          "YT_OTHER_PAGE": 14,
+          "NOTIFICATION": 1,
+          "SHORTS": 27
+        }
+      }
+    },
+    "9W9pWYEzjmM": {
+      "title": "I Built an AI Employee. It Makes These Videos.",
+      "published_at": "2026-07-10",
+      "duration_seconds": 300,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "012-studio-reveal",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 29,
+        "watch_minutes": 42,
+        "avg_view_seconds": 87,
+        "retention_pct": 29.220000000000002,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 2,
+          "SUBSCRIBER": 6,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 6,
+          "RELATED_VIDEO": 7,
+          "YT_OTHER_PAGE": 5,
+          "EXT_URL": 2
+        }
+      }
+    },
+    "-pBNgF-zPgU": {
+      "title": "Everyone asks AI to build an app. I asked it to read my inbox. #ai #shorts #claude #email",
+      "published_at": "2026-07-08",
+      "duration_seconds": 84,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "011-read-my-inbox",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 30,
+        "watch_minutes": 8,
+        "avg_view_seconds": 83,
+        "retention_pct": 98.82,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 2,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 1,
+          "YT_OTHER_PAGE": 6,
+          "SHORTS": 20
+        }
+      }
+    },
+    "nGGXkmbtq0k": {
+      "title": "A Lawyer Trusted AI in Court. It Backfired #facts #ai #news #desknotes",
+      "published_at": "2026-07-04",
+      "duration_seconds": 67,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "010-point-of-trust/short",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 133,
+        "watch_minutes": 8,
+        "avg_view_seconds": 22,
+        "retention_pct": 33.64,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 2,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 1,
+          "YT_OTHER_PAGE": 9,
+          "SHORTS": 120
+        }
+      }
+    },
+    "VLUIIDaZA_c": {
+      "title": "AI Wrote Fake Court Cases. A Lawyer Got Suspended",
+      "published_at": "2026-07-03",
+      "duration_seconds": 262,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "010-point-of-trust",
+      "key_source": "manual",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 10,
+        "watch_minutes": 20,
+        "avg_view_seconds": 123,
+        "retention_pct": 47.23,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 1,
+          "SUBSCRIBER": 6,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 2
+        }
+      }
+    },
+    "Aozxob3tH6w": {
+      "title": "Everyone Asks AI to Make Money. I Did the Opposite",
+      "published_at": "2026-06-29",
+      "duration_seconds": 91,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "009-boring-money-leak",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 25,
+        "watch_minutes": 11,
+        "avg_view_seconds": 69,
+        "retention_pct": 75.92,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 2,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 1,
+          "YT_OTHER_PAGE": 6,
+          "SHORTS": 15,
+          "SHORTS_CONTENT_LINKS": 0
+        }
+      }
+    },
+    "smW-2hwz4QM": {
+      "title": "Stop Typing Receipts Into Excel (Automate It Instead)",
+      "published_at": "2026-06-26",
+      "duration_seconds": 308,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "008-receipt-to-spreadsheet",
+      "key_source": "manual",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 15,
+        "watch_minutes": 31,
+        "avg_view_seconds": 124,
+        "retention_pct": 40.29,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 2,
+          "YT_CHANNEL": 2,
+          "YT_SEARCH": 10,
+          "YT_OTHER_PAGE": 1
+        }
+      }
+    },
+    "ppuPa2kSOdk": {
+      "title": "Claude Fable 5: The Most Powerful AI Lasted 72 Hours",
+      "published_at": "2026-06-14",
+      "duration_seconds": 223,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "007-fable-rise-and-fall",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 7,
+        "watch_minutes": 11,
+        "avg_view_seconds": 97,
+        "retention_pct": 43.69,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 1,
+          "SUBSCRIBER": 3,
+          "YT_CHANNEL": 1,
+          "YT_OTHER_PAGE": 1,
+          "EXT_URL": 1
+        }
+      }
+    },
+    "v8ZJFXf6Fvo": {
+      "title": "The fall of the Claude Fable 5 in 72 Hours #shorts #ai #claude",
+      "published_at": "2026-06-14",
+      "duration_seconds": 56,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": null,
+      "key_source": "none",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 39,
+        "watch_minutes": 6,
+        "avg_view_seconds": 30,
+        "retention_pct": 53.88,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 1,
+          "YT_CHANNEL": 2,
+          "YT_SEARCH": 3,
+          "YT_OTHER_PAGE": 7,
+          "SHORTS": 26
+        }
+      }
+    },
+    "9eNMhvKqRa4": {
+      "title": "The Rise Of the Claude Fable 5 #shorts #claude #fable5  #ai",
+      "published_at": "2026-06-14",
+      "duration_seconds": 56,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "007-fable-rise-and-fall/short",
+      "key_source": "manual",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 62,
+        "watch_minutes": 9,
+        "avg_view_seconds": 40,
+        "retention_pct": 72.18,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "SUBSCRIBER": 2,
+          "YT_CHANNEL": 2,
+          "YT_SEARCH": 2,
+          "YT_OTHER_PAGE": 13,
+          "SHORTS": 43
+        }
+      }
+    },
+    "YxLERCHY8Yc": {
+      "title": "Build a Spreadsheet That Can't Let Bad Data In #Shorts",
+      "published_at": "2026-06-13",
+      "duration_seconds": 48,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "006-validated-cleanup-system/short",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 153,
+        "watch_minutes": 13,
+        "avg_view_seconds": 14,
+        "retention_pct": 29.520000000000003,
+        "subs_gained": 1,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 1,
+          "YT_OTHER_PAGE": 16,
+          "NOTIFICATION": 1,
+          "SHORTS": 134
+        }
+      }
+    },
+    "eZXUIn9GZTI": {
+      "title": "Build a Spreadsheet That Can't Let Bad Data In with AI",
+      "published_at": "2026-06-13",
+      "duration_seconds": 312,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "006-validated-cleanup-system",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 10,
+        "watch_minutes": 16,
+        "avg_view_seconds": 97,
+        "retention_pct": 31.379999999999995,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 1,
+          "SUBSCRIBER": 5,
+          "YT_CHANNEL": 3,
+          "YT_SEARCH": 1
+        }
+      }
+    },
+    "UcWdSQOWEmc": {
+      "title": "Claude vs ChatGPT for Spreadsheets: I Tested Both",
+      "published_at": "2026-06-07",
+      "duration_seconds": 51,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "004-claude-vs-chatgpt-spreadsheets/short",
+      "key_source": "manual",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 69,
+        "watch_minutes": 8,
+        "avg_view_seconds": 28,
+        "retention_pct": 55.89999999999999,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 3,
+          "YT_OTHER_PAGE": 2,
+          "EXT_URL": 1,
+          "SHORTS": 62
+        }
+      }
+    },
+    "8leAPqVdC20": {
+      "title": "I Gave Claude and ChatGPT the Same Messy Spreadsheet",
+      "published_at": "2026-06-07",
+      "duration_seconds": 297,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "004-claude-vs-chatgpt-spreadsheets",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 11,
+        "watch_minutes": 18,
+        "avg_view_seconds": 123,
+        "retention_pct": 41.64,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 1,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 6,
+          "RELATED_VIDEO": 1,
+          "EXT_URL": 1,
+          "NOTIFICATION": 1
+        }
+      }
+    },
+    "eupibzR7dHY": {
+      "title": "5 Boring Office Tasks AI Can Do For You",
+      "published_at": "2026-06-06",
+      "duration_seconds": 51,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "003-short",
+      "key_source": "manual",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 216,
+        "watch_minutes": 21,
+        "avg_view_seconds": 17,
+        "retention_pct": 34.87,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 0,
+          "YT_CHANNEL": 2,
+          "YT_SEARCH": 1,
+          "YT_OTHER_PAGE": 18,
+          "NOTIFICATION": 1,
+          "SHORTS": 194
+        }
+      }
+    },
+    "7JXXjFZe0QM": {
+      "title": "5 Boring Office Tasks AI Can Do For You",
+      "published_at": "2026-06-06",
+      "duration_seconds": 323,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "003-five-tasks-ai-secretary",
+      "key_source": "manual",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 6,
+        "watch_minutes": 21,
+        "avg_view_seconds": 212,
+        "retention_pct": 65.86,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 1,
+          "SUBSCRIBER": 2,
+          "YT_CHANNEL": 1,
+          "RELATED_VIDEO": 2
+        }
+      }
+    },
+    "0ReClo3IRvI": {
+      "title": "AI Automation: Stop Doing the Boring Stuff by Hand",
+      "published_at": "2026-06-05",
+      "duration_seconds": 244,
+      "privacy": "public",
+      "content_type": "long",
+      "content_key": "002-what-is-ai-automation",
+      "key_source": "title",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 11,
+        "watch_minutes": 9,
+        "avg_view_seconds": 53,
+        "retention_pct": 21.99,
+        "subs_gained": 0,
+        "traffic": {
+          "NO_LINK_OTHER": 2,
+          "YT_CHANNEL": 1,
+          "YT_SEARCH": 3,
+          "YT_OTHER_PAGE": 4,
+          "EXT_URL": 1
+        }
+      }
+    },
+    "eFL2MSLKxrk": {
+      "title": "AI Automation: Stop Doing the Boring Stuff by Hand",
+      "published_at": "2026-06-05",
+      "duration_seconds": 34,
+      "privacy": "public",
+      "content_type": "short",
+      "content_key": "002-short",
+      "key_source": "manual",
+      "metrics": {
+        "fetched": "2026-10-17",
+        "views": 24,
+        "watch_minutes": 4,
+        "avg_view_seconds": 24,
+        "retention_pct": 73.43,
+        "subs_gained": 0,
+        "traffic": {
+          "YT_SEARCH": 1,
+          "YT_OTHER_PAGE": 7,
+          "SHORTS": 16
+        }
+      }
+    }
+  },
+  "playlist_test": {
+    "started": "2026-10-17"
+  }
+}
