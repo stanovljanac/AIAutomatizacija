@@ -19,6 +19,65 @@ Format:
 
 ---
 
+## 2026-10-18 — The 023 cuts rejected: no Shorts from 022–025, a portrait branch needs a looked-at sign-off — D-075
+- who: agent (owner: deleted 023 `short-2`/`short-3` — "katastrofalni", overlapping, unclear, poor
+  contrast; skip the old videos, cut from the next one; delete 020; keep 005/016).
+- did: traced the cause — no new scenes; every reused scene's `.portrait` branch dates from the 023 library
+  (2026-08-23) and had never been seen tall; the gate counted any branch as ready, and the frame gate can't
+  see overlap or contrast. The only cut-time change (`at3d-pairs` portrait camera) reverted.
+- did: `lib/portrait.mjs` `portraitSignoffProblems` + `05-qa/check.mjs` `portrait_signoff` (HARD on a
+  derived Short: every reused landscape scene needs `props.portrait_ok`, given after looking at its tall
+  frame for overlap / contrast / fill); the sign-off rides outside the render variables (`job.portraitOk`
+  — no re-render) and survives a re-derive (`keepTimings`); make-shorts lists unsigned scenes.
+  publish.md no longer tells a published package to schedule.
+- did: 023 `short_cuts` + `extra_shorts` + their 10-19/10-21 days removed, publish.md regenerated;
+  `content/020-everyone-asks-clean-data/` (+ its render props) deleted; 005/016 `parked` with a reason.
+  (A mistaken `pick-next.mjs --help` — the script has no help flag — scaffolded `026-inbox-ai-week-long`;
+  folder removed and the idea restored to `backlog` at once.)
+- did: tests 980 → **983**. Docs: D-075 (+ D-074 cross-refs), MOTION_SPEC §10 + enforcement table, skills
+  storyboard / video-render / qa-video, ROADMAP, lesson `2026-10-18-a-portrait-branch-written-blind-is-not-a-portrait`.
+- next: the next long (1C) — scenes in both framings, each tall frame checked when written; its Shorts are
+  the first real 1B cuts.
+
+## 2026-10-17/18 — Growth quadrant 2: 1440p upload file, Shorts cut from the long, fixed days; bank clean-up — D-074
+- who: agent (owner: "kreni da radiš ove stvari nadalje" — 2B, 1B/3C, 1C, 3D, 3E + the three clean-ups).
+- did: **clean-ups** — `projectIdeas` promotes `backlog → produced` unless the idea is `recurring: true`
+  (only `everyone-asks-ai-series`): 013/017/023 produced; idea records added for 019, 024, 025
+  (`agent-stop-line`; the ledger now ties 025 to it). New `reconcile <key> --retire --reason`
+  (`videos.json.retired`, never re-ingested, subject freed): 020's Short retired; its topic returns as
+  `clean-imported-data-excel` on "how to clean data in excel" (depth 10). Phrase pass over the bank: 42 of
+  46 re-worded to verified autocomplete phrases on the same topic, 2 parked (`waitlist-automation`,
+  `pharmacy-refill-reminders` — no search of that intent), 2 were produced → **55/55 backlog + in-progress
+  ideas verified**.
+- did: **2B** — `pipeline/04-render/finalize.mjs` + orchestrator node `finalize`: approved 1080p cut →
+  `render/master.mp4`, `video/final.mp4` = 2560×1440 lanczos upscale at CRF 12 (pixel format/colour/tbn
+  kept, audio copied, frames + seconds + tbn + audio MD5 verified). Real test on 20 s of 025: 28 s (≈1.4×
+  real time), colours/levels identical on a still. `config.render.upscale` (long on, Short off);
+  patch-scenes refuses an upscaled base; publish.md gets the upload-file + "Stats for nerds" codec lines.
+- did: **1B/3C** — `pipeline/shared/lib/units.mjs` (short / short-2 … one rule for every phase; schemas,
+  reconcile, catalog, orchestrator follow); `script.short_cuts` (+ `opening`, `hook`);
+  `pipeline/01-script/make-shorts.mjs` (derive units reusing the long's HF scenes, hook-card opener,
+  carry only into the long's next scene, hand-built units untouched, writes only what changed;
+  `--marks` word-warp of marks + SFX); `lib/portrait.mjs` + compile-hyperframes portrait gate;
+  `publish.json.extra_shorts`. **First run: 023** — cuts s21–s24 ("3 Rules to Make an AI Actually Focus",
+  59.2 s) and s16–s19 ("Pasting More Into an AI Costs You Twice", 60.8 s), zero new scenes; 025 dry run
+  flags `mv-twins`/`mv-card` (no portrait framing).
+- did: **3D** — `pipeline/06-publish/schedule.mjs` + `config.schedule` (long every second Tuesday from
+  2026-10-27, Shorts Mon/Wed/Fri), `--assign` into publish.json/md, catalog keeps `scheduled_for`
+  (YouTube `status.publishAt`). Calendar for the next 4 weeks: all 12 Short slots free.
+- did: edge-tts 7.2.8 → 7.3.1 in the venv (403 on Microsoft's token; voices again).
+- did: **023 Shorts, end to end** — voice (edge-tts) → `--marks` → portrait HF clips → Remotion → repair →
+  QA 8/8 → frame-gate. Script review failed both new openings once (a dangling "It"; "a fixed total" used
+  before stated) → fixed → pass. frame-gate failed short-3 s2 (`at3d-pairs`, a ring flattened under black
+  sky in portrait) → portrait-only fix (camera looks down 0.62→0.98 rad, ring fills 1.1 of the width, kicker moved below it) → 0 failed; the long's landscape framing is untouched. Packaged in 023's `extra_shorts`,
+  scheduled Mon 2026-10-19 / Wed 2026-10-21. ~13 min render per Short.
+- did: tests 940 → **980**. Docs: D-074, ARCHITECTURE §3 + §12, WORKFLOW (Steps 1, 4, 6), ROADMAP
+  (quadrant 1 closed, quadrant 2), CHANNEL_MAP (020 retired), CLAUDE.md, skills script-writing /
+  storyboard / video-render / youtube-publish, MOTION_SPEC §10, lesson `2026-10-17-a-short-is-a-cut-of-its-long`.
+- next: owner reviews the two 023 Short renders (Gate ③) → schedule them; first 1440p long upload → codec
+  check; more cuts (022 is portrait-ready; 024/025 need portrait branches); 1C in the next video; owner's
+  call on 005/016 (stuck at Gate ②) and on deleting the 020 folder.
+
 ## 2026-10-17 — Growth quadrant 1 built: analytics loop on the channel, CTR, search demand, Test & Compare, playlist test — D-073
 - who: agent (owner: "implement the first quadrant" of the growth-options doc).
 - did: **1A** — new channel catalog `pipeline/state/youtube.json` (`youtube-catalog.mjs`, schema `youtube`):

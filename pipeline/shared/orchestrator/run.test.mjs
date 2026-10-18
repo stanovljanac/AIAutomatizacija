@@ -5,7 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { runVideo, loadConfig, videoNodes, defaultExecutors, notifiesOwner, AGENT_DEFERRAL_NODES, REPO_ROOT } from "./run.mjs";
+import { runVideo, loadConfig, videoNodes, defaultExecutors, notifiesOwner, shortUnitsOf, AGENT_DEFERRAL_NODES, REPO_ROOT } from "./run.mjs";
 import { topoWaves } from "./dag.mjs";
 import { withTempDir } from "../testkit/index.mjs";
 
@@ -39,6 +39,17 @@ function stageFixture(tmp) {
   return contentRoot;
 }
 
+// The Short units are read from disk (1B: short, short-2, …), as short_script leaves them.
+async function withUnits(units, fn) {
+  return withTempDir(async (dir) => {
+    for (const u of units) {
+      fs.mkdirSync(path.join(dir, u), { recursive: true });
+      fs.writeFileSync(path.join(dir, u, "script.json"), "{}");
+    }
+    return fn(dir);
+  });
+}
+
 test("videoNodes is a valid DAG: brief first, owner gate last", () => {
   const waves = topoWaves(videoNodes(defaultExecutors()));
   assert.equal(waves[0][0], "brief");
@@ -66,7 +77,7 @@ test("end-to-end on _FIXTURE runs to the owner gate and writes real artifacts", 
     for (const id of [
       "brief", "script", "review_script", "short_script", "plan_long", "plan_short",
       "voice_long", "align_long", "render_long", "voice_short", "align_short", "render_short",
-      "qa", "review_cut", "thumbnails", "metadata", "review_publish", "upload",
+      "qa", "review_cut", "thumbnails", "finalize", "metadata", "review_publish", "upload",
     ]) {
       assert.equal(r.manifest.nodes[id]?.status, "done", `${id} should be done`);
     }
@@ -128,32 +139,36 @@ test("notifiesOwner: any hard ERROR pings the owner, even on an agent node", () 
 
 // ── integration unit tests for the wired executors ──────────────────────────
 test("voice/align executors call the runner with the python scripts (long + short)", async () => {
-  const calls = [];
-  const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
-  const ex = defaultExecutors();
-  const ctx = { id: "005-x", root: "/repo", contentDir: "/repo/content/005-x", config: {}, runner, python: "/repo/.venv/py" };
-  await ex.voice_long(ctx);
-  await ex.align_short(ctx);
-  assert.ok(calls.some((c) => c.args.includes("scripts/make_voice.py") && c.args.includes("005-x")));
-  assert.ok(calls.some((c) => c.args.includes("scripts/make_alignment.py") && c.args.includes("005-x/short")));
-  assert.equal(calls[0].cmd, "/repo/.venv/py");
+  await withUnits(["short"], async (unitDir) => {
+    const calls = [];
+    const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
+    const ex = defaultExecutors();
+    const ctx = { id: "005-x", root: "/repo", contentDir: unitDir, config: {}, runner, python: "/repo/.venv/py" };
+    await ex.voice_long(ctx);
+    await ex.align_short(ctx);
+    assert.ok(calls.some((c) => c.args.includes("scripts/make_voice.py") && c.args.includes("005-x")));
+    assert.ok(calls.some((c) => c.args.includes("scripts/make_alignment.py") && c.args.includes("005-x/short")));
+    assert.equal(calls[0].cmd, "/repo/.venv/py");
+  });
 });
 
 test("voice executors honor config.voice.provider (azure routes to make_voice_azure.py) — T4.2 seam", async () => {
-  const calls = [];
-  const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
-  const ex = defaultExecutors();
-  const ctx = {
-    id: "005-x", root: "/repo", contentDir: "/repo/content/005-x",
-    config: { voice: { provider: "azure" } }, runner, python: "/repo/.venv/py",
-  };
-  await ex.voice_long(ctx);
-  await ex.voice_short(ctx);
-  assert.ok(calls[0].args.includes("scripts/make_voice_azure.py"), "azure provider must route long voice to the Azure script");
-  assert.ok(calls[1].args.includes("scripts/make_voice_azure.py") && calls[1].args.includes("005-x/short"));
-  // alignment stays provider-agnostic (always faster-whisper) regardless of the voice provider.
-  await ex.align_long(ctx);
-  assert.ok(calls[2].args.includes("scripts/make_alignment.py"));
+  await withUnits(["short"], async (unitDir) => {
+    const calls = [];
+    const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
+    const ex = defaultExecutors();
+    const ctx = {
+      id: "005-x", root: "/repo", contentDir: unitDir,
+      config: { voice: { provider: "azure" } }, runner, python: "/repo/.venv/py",
+    };
+    await ex.voice_long(ctx);
+    await ex.voice_short(ctx);
+    assert.ok(calls[0].args.includes("scripts/make_voice_azure.py"), "azure provider must route long voice to the Azure script");
+    assert.ok(calls[1].args.includes("scripts/make_voice_azure.py") && calls[1].args.includes("005-x/short"));
+    // alignment stays provider-agnostic (always faster-whisper) regardless of the voice provider.
+    await ex.align_long(ctx);
+    assert.ok(calls[2].args.includes("scripts/make_alignment.py"));
+  });
 });
 
 test("a mechanical step that exits non-zero rejects (the DAG converts this to a pause)", async () => {
@@ -174,12 +189,14 @@ test("render/qa are agent steps that defer (pause) when the runner can't run the
 // ── [verifier] additional probes ─────────────────────────────────────────────
 
 test("[verifier] spawn error (code -1) is treated as failure by mechanical — DAG pauses, not crashes", async () => {
-  // runner.mjs resolves code:-1 on spawn failure (ENOENT etc); mechanical must throw so guardStep pauses.
-  const runner = { runCommand: async () => ({ code: -1, stderr: "ENOENT: no such file", stdout: "" }) };
-  const ex = defaultExecutors();
-  const ctx = { id: "005-y", root: "/r", contentDir: "/r/c", config: {}, runner, python: "/missing/python" };
-  await assert.rejects(() => ex.voice_long(ctx), /voice\(long\) failed \(exit -1\)/);
-  await assert.rejects(() => ex.align_short(ctx), /align\(short\) failed \(exit -1\)/);
+  await withUnits(["short"], async (unitDir) => {
+    // runner.mjs resolves code:-1 on spawn failure (ENOENT etc); mechanical must throw so guardStep pauses.
+    const runner = { runCommand: async () => ({ code: -1, stderr: "ENOENT: no such file", stdout: "" }) };
+    const ex = defaultExecutors();
+    const ctx = { id: "005-y", root: "/r", contentDir: unitDir, config: {}, runner, python: "/missing/python" };
+    await assert.rejects(() => ex.voice_long(ctx), /voice\(long\) failed \(exit -1\)/);
+    await assert.rejects(() => ex.align_short(ctx), /align\(short\) failed \(exit -1\)/);
+  });
 });
 
 test("[verifier] voice/align long targets id only (no /short suffix)", async () => {
@@ -199,19 +216,21 @@ test("[verifier] voice/align long targets id only (no /short suffix)", async () 
 });
 
 test("[verifier] voice/align short targets id/short, not bare id", async () => {
-  const calls = [];
-  const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
-  const ex = defaultExecutors();
-  const ctx = { id: "005-z", root: "/r", contentDir: "/r/c", config: {}, runner, python: "py" };
-  await ex.voice_short(ctx);
-  await ex.align_short(ctx);
-  const voiceShortArgs = calls[0].args;
-  const alignShortArgs = calls[1].args;
-  assert.ok(voiceShortArgs.includes("005-z/short"), "voice_short must use id/short");
-  assert.ok(alignShortArgs.includes("005-z/short"), "align_short must use id/short");
-  // Negative: the bare id alone must NOT appear as a separate element (only as prefix of id/short)
-  assert.ok(!voiceShortArgs.includes("005-z") || voiceShortArgs.includes("005-z/short"),
-    "voice_short arg must be id/short not bare id");
+  await withUnits(["short"], async (unitDir) => {
+    const calls = [];
+    const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
+    const ex = defaultExecutors();
+    const ctx = { id: "005-z", root: "/r", contentDir: unitDir, config: {}, runner, python: "py" };
+    await ex.voice_short(ctx);
+    await ex.align_short(ctx);
+    const voiceShortArgs = calls[0].args;
+    const alignShortArgs = calls[1].args;
+    assert.ok(voiceShortArgs.includes("005-z/short"), "voice_short must use id/short");
+    assert.ok(alignShortArgs.includes("005-z/short"), "align_short must use id/short");
+    // Negative: the bare id alone must NOT appear as a separate element (only as prefix of id/short)
+    assert.ok(!voiceShortArgs.includes("005-z") || voiceShortArgs.includes("005-z/short"),
+      "voice_short arg must be id/short not bare id");
+  });
 });
 
 test("[verifier] render_short targets id/short, render_long targets id (not id/short)", async () => {
@@ -260,6 +279,42 @@ test("thumbnails executor runs the 04b extractor CLI on the video id (mechanical
   assert.deepEqual(calls[0].args, ["pipeline/04b-thumbnails/extract.mjs", "005-x"]);
   const bad = { runCommand: async () => ({ code: 1, stderr: "no timeline" }) };
   await assert.rejects(() => ex.thumbnails({ ...ctx, runner: bad }), /thumbnails failed/);
+});
+
+test("finalize executor upscales the long, then every Short unit, and runs after the thumbnails", async () => {
+  await withUnits(["short", "short-2"], async (unitDir) => {
+    const calls = [];
+    const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
+    const ctx = { id: "005-x", root: "/repo", contentDir: unitDir, config: {}, runner, python: "py" };
+    await defaultExecutors().finalize(ctx);
+    assert.deepEqual(calls.map((c) => c.args), [
+      ["pipeline/04-render/finalize.mjs", "005-x"],
+      ["pipeline/04-render/finalize.mjs", "005-x/short"],
+      ["pipeline/04-render/finalize.mjs", "005-x/short-2"],
+    ]);
+    const bad = { runCommand: async () => ({ code: 1, stderr: "refusing" }) };
+    await assert.rejects(() => defaultExecutors().finalize({ ...ctx, runner: bad }), /finalize\(long\) failed/);
+  });
+  const nodes = Object.fromEntries(videoNodes(defaultExecutors()).map((n) => [n.id, n.deps]));
+  assert.ok(nodes.finalize.includes("thumbnails"), "thumbnails read the 1080p cut before it moves");
+  assert.ok(nodes.upload.includes("finalize"), "the upload takes the finalized file");
+});
+
+test("Short units: every cut is voiced + aligned, an already-aligned (hand-built) one is skipped", async () => {
+  await withUnits(["short", "short-2", "short-3"], async (unitDir) => {
+    // short/ is hand-built and already aligned from its current script → never re-voiced
+    fs.writeFileSync(path.join(unitDir, "short", "alignment.json"), "{}");
+    assert.deepEqual(shortUnitsOf(unitDir), ["short", "short-2", "short-3"]);
+    const calls = [];
+    const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
+    const ctx = { id: "023-x", root: "/r", contentDir: unitDir, config: {}, runner, python: "py" };
+    const res = await defaultExecutors().voice_short(ctx);
+    assert.deepEqual(res.units, ["short-2", "short-3"]);
+    assert.deepEqual(calls.map((c) => c.args.at(-1)), ["023-x/short-2", "023-x/short-3"]);
+    const agent = [];
+    await defaultExecutors().render_short({ ...ctx, runner: { runAgent: async (spec) => { agent.push(spec); return { data: {} }; } } });
+    assert.deepEqual(agent[0].targets, ["023-x/short", "023-x/short-2", "023-x/short-3"]);
+  });
 });
 
 test("review_publish reviews the metadata artifact at the publish stage (stage override resolved)", async () => {

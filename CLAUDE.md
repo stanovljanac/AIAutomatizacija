@@ -114,7 +114,8 @@ pipeline/00-ideas → 01-script → 02-voice → 03-visuals → 04-render → 05
 Every video lives in `content/<NNN>-<slug>/` (skeleton `content/_TEMPLATE/`). The **Short
 nests inside** at `…/short/` — a lean sub-unit with its own `script.json`/`voice/`/
 `scene-plan.json`/`alignment.json`/`video/`, inheriting the topic, angle and sources. Render
-it with `build-props.mjs <id>/short` (it detects the Short by the last path segment).
+it with `build-props.mjs <id>/short` (it detects the Short by the last path segment). Since D-074 a
+long also gives `short-2/`, `short-3/` — Shorts cut from its own scenes (`make-shorts.mjs`, `short_cuts`).
 **Per-video content + the idea-bank are git-ignored; only `_TEMPLATE` and the system
 (code/docs/skills/schemas/templates) are committed**; media is ignored everywhere. (Legacy:
 001/002 and `002-short`/`003-short` stay tracked/flat for history; the Serbian

@@ -38,5 +38,7 @@ lesson with no evidence stays `draft` forever.
 - [A re-voice moves every word — a typed word offset is stale the moment the final voice lands](2026-10-10-a-re-voice-moves-every-word.md) — lesson, stable
 - [Angle variety is not motion design — hold the camera square and move the OBJECT](2026-10-10-angle-variety-is-not-motion-design.md) — lesson, stable
 - [A search term is a guess until YouTube autocomplete says people type it](2026-10-17-a-search-term-is-a-guess-until-autocomplete-says-so.md) — lesson, stable
+- [A Short is a cut of its long — reuse the scenes, re-voice the words, and pay for it in portrait framing](2026-10-17-a-short-is-a-cut-of-its-long.md) — lesson, stable
 - [A loop that waits for a hand-typed id never runs — read the channel, not our copy of it](2026-10-17-read-the-channel-not-our-copy-of-it.md) — lesson, stable
+- [A portrait branch written blind is not a portrait — look at the tall frame before a Short reaches the owner](2026-10-18-a-portrait-branch-written-blind-is-not-a-portrait.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

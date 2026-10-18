@@ -49,8 +49,17 @@ test("listUploads walks every page of the uploads playlist and keeps private upl
   const yt = fakeYouTube({ uploads: UPLOADS });
   const out = await listUploads(yt);
   assert.deepEqual(out.map((u) => u.id), ["LONG1", "SHORT1", "LONG2"]);
-  assert.deepEqual(out[2], { id: "LONG2", title: UPLOADS[2].title, published_at: "2026-10-17", duration_seconds: 207, privacy: "private" });
+  assert.deepEqual(out[2], { id: "LONG2", title: UPLOADS[2].title, published_at: "2026-10-17", duration_seconds: 207, privacy: "private", scheduled_for: null });
   assert.equal(yt.calls.filter(([n]) => n === "playlistItems.list").length, 2, "3 ids at 2 per page = 2 pages");
+});
+
+test("listUploads reads a scheduled upload's publish day (status.publishAt) for the schedule (3D)", async () => {
+  const yt = fakeYouTube({ uploads: [{ ...UPLOADS[2], privacy: "private", publishAt: "2026-10-27T15:00:00Z" }] });
+  const [u] = await listUploads(yt);
+  assert.equal(u.scheduled_for, "2026-10-27");
+  const merged = mergeCatalog(null, { uploads: [u] });
+  assert.equal(merged.videos[u.id].scheduled_for, "2026-10-27");
+  assert.equal(mergeCatalog(null, { uploads: [{ ...u, scheduled_for: null }] }).videos[u.id].scheduled_for, undefined, "absent when not scheduled");
 });
 
 test("listUploads fails loudly when the account has no channel", async () => {
@@ -231,6 +240,8 @@ test("setContentKey maps by hand, refuses a stolen or malformed key, and unmaps"
   assert.deepEqual(mapped.videos.B, { title: "b", published_at: "2026-01-02", content_type: "short", content_key: "021-what-is-a-token/short", key_source: "manual" });
   assert.throws(() => setContentKey(cat, "B", "021-what-is-a-token"), /already belongs to A/);
   assert.throws(() => setContentKey(cat, "B", "Not A Key"), /not a content key/);
+  assert.equal(setContentKey(cat, "B", "021-what-is-a-token/short-2").videos.B.content_key, "021-what-is-a-token/short-2", "a 1B unit is a key");
+  assert.throws(() => setContentKey(cat, "B", "021-what-is-a-token/short-1"), /not a content key/);
   assert.throws(() => setContentKey(cat, "ZZZ", "021-what-is-a-token/short"), /no upload "ZZZ"/);
   const unmapped = setContentKey(mapped, "B", null);
   assert.equal(unmapped.videos.B.content_key, null);
@@ -263,6 +274,9 @@ test("contentCandidates gives each folder the keys the ledger would give it", as
     writeJson(dir, "023-attention/brief.json", { format: "long+short", title_working: "AI Doesn't Focus. It Spends." });
     writeJson(dir, "023-attention/publish.json", { title_options: ["AI Attention: It Doesn't Focus. It Spends."], chosen_title: null, short: { title: "53% of attention" } });
     fs.mkdirSync(path.join(dir, "023-attention", "short"));
+    // 1B: a further Short cut from the long's scenes, titled in publish.extra_shorts
+    writeJson(dir, "023-attention/short-2/script.json", { title_working: "3 Rules to Make an AI Focus" });
+    writeJson(dir, "023-attention/publish.json", { title_options: ["AI Attention: It Doesn't Focus. It Spends."], chosen_title: null, short: { title: "53% of attention" }, extra_shorts: [{ unit: "short-2", title: "3 Rules to Make an AI Actually Focus" }] });
     // Short-only, package at the folder
     writeJson(dir, "013-fail-loud/brief.json", { format: "short", title_working: "Never Trust the Green Checkmark" });
     writeJson(dir, "013-fail-loud/publish.json", { title_options: ["Never Trust the Green Checkmark"] });
@@ -278,7 +292,8 @@ test("contentCandidates gives each folder the keys the ledger would give it", as
 
     const out = contentCandidates(dir);
     const byKey = Object.fromEntries(out.map((c) => [c.key, c]));
-    assert.deepEqual(Object.keys(byKey).sort(), ["002-short", "010-point-of-trust", "013-fail-loud", "019-next-word-engine/short", "023-attention", "023-attention/short"]);
+    assert.deepEqual(Object.keys(byKey).sort(), ["002-short", "010-point-of-trust", "013-fail-loud", "019-next-word-engine/short", "023-attention", "023-attention/short", "023-attention/short-2"]);
+    assert.deepEqual(byKey["023-attention/short-2"], { key: "023-attention/short-2", content_type: "short", titles: ["3 Rules to Make an AI Actually Focus", "3 Rules to Make an AI Focus"] });
     assert.equal(byKey["023-attention"].content_type, "long");
     assert.deepEqual(byKey["023-attention"].titles, ["AI Attention: It Doesn't Focus. It Spends.", "AI Doesn't Focus. It Spends."]);
     assert.deepEqual(byKey["023-attention/short"], { key: "023-attention/short", content_type: "short", titles: ["53% of attention"] });

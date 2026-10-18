@@ -56,6 +56,7 @@
           "published_at": { "type": "string", "description": "ISO date YouTube reports for the upload." },
           "duration_seconds": { "type": ["number", "null"] },
           "privacy": { "type": "string", "description": "public | unlisted | private." },
+          "scheduled_for": { "type": "string", "description": "ISO date a scheduled (still private) upload goes public — YouTube status.publishAt. The publish schedule (3D, D-074) counts the slot on this day, not on the upload day." },
           "content_type": {
             "type": ["string", "null"],
             "enum": ["long", "short", null],
@@ -63,7 +64,7 @@
           },
           "content_key": {
             "type": ["string", "null"],
-            "pattern": "^[0-9]{3}-[a-z0-9-]+(/short)?$",
+            "pattern": "^[0-9]{3}-[a-z0-9-]+(/short(-[2-9])?)?$",
             "description": "The content folder this upload came from — the ledger key shape (\"024-frozen\", \"024-frozen/short\", legacy \"002-short\"). null = not mapped yet (fetch-analytics --map <ytId> <key>)."
           },
           "key_source": { "type": "string", "enum": ["title", "manual", "none"], "description": "How content_key was set: auto-matched on the title, by hand (--map), or deliberately left without a folder (--map <id> none — e.g. a folder's second Short). manual and none are never re-matched." },

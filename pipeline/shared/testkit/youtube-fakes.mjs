@@ -37,7 +37,7 @@ export function fakeYouTube({ uploads = [], playlists = [] } = {}) {
             id: u.id,
             snippet: { title: u.title, publishedAt: u.publishedAt },
             contentDetails: { duration: u.duration },
-            status: { privacyStatus: u.privacy ?? "public" },
+            status: { privacyStatus: u.privacy ?? "public", ...(u.publishAt ? { publishAt: u.publishAt } : {}) },
           }));
         return { data: { items } };
       },

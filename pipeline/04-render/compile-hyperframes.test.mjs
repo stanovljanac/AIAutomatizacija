@@ -136,6 +136,16 @@ test("motion budget: an authored props.motion wins untouched (the 024 Short's sc
   assert.deepEqual(buildHyperframesJobs(syntheticTimeline()).jobs[0].props.motion, undefined, "no budget → props untouched");
 });
 
+test("portrait_ok rides on the job, outside the render variables (a sign-off never re-renders a clip)", () => {
+  const timeline = syntheticTimeline();
+  timeline.scenes[1].props.portrait_ok = true;
+  const [job] = buildHyperframesJobs(timeline).jobs;
+  assert.equal(job.portraitOk, true);
+  assert.equal("portrait_ok" in job.props, false);
+  assert.deepEqual(jobVariables(job), jobVariables(buildHyperframesJobs(syntheticTimeline()).jobs[0]), "same cache key signed or not");
+  assert.equal(buildHyperframesJobs(syntheticTimeline()).jobs[0].portraitOk, false);
+});
+
 test("buildHyperframesJobs is pure — does not mutate the timeline", () => {
   const timeline = syntheticTimeline();
   const snapshot = JSON.stringify(timeline);

@@ -87,3 +87,4 @@ context — a hook has to be the thing the viewer recognises.
 - [A 3D test clip is not a scene — four things that must change before it can carry a beat](2026-08-17-a-3d-test-clip-is-not-a-scene.md)
 - [A clip that plays perfectly is not necessarily a clip the compositor can SEEK — normalise it](2026-08-18-a-rendered-clip-is-not-a-seekable-clip.md)
 - ["Plain" is missing detail, not missing content](2026-08-22-plain-is-detail-not-emptiness.md)
+- [A portrait branch written blind is not a portrait — look at the tall frame before a Short reaches the owner](2026-10-18-a-portrait-branch-written-blind-is-not-a-portrait.md)

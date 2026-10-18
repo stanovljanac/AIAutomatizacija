@@ -182,7 +182,18 @@ track, never cut): a quiet looped bed, and one-shot cues placed on the narration
   `node pipeline/shared/validate.js content/<id>/scene-plan.json`.
 - Set `brief.json.status: "planned"`.
 
-> **You only storyboard the LONG video.** The **Short scene-plan is DERIVED**, not hand-authored:
+> **Shorts cut from the long (1B, D-074):** when the script has `short_cuts`, `make-shorts.mjs` writes each
+> unit's scene-plan from YOUR long plan entries — same HF scene, same props — and renders them in PORTRAIT.
+> So **author every new long scene with both framings**: its camera and HUD under `S.portrait` / a
+> `.portrait` rule (or native portrait), per MOTION_SPEC §10. A reused scene with no portrait framing is
+> named in make-shorts' report and refused by compile-hyperframes.
+> **A branch is not a checked framing (D-075).** Render the portrait still when you write the branch and
+> look at it at phone size — **overlap** (nothing over anything), **contrast** (subject and every word
+> read against the background), **fill** (not just the top half). Then set `props.portrait_ok: true` on
+> the long's plan entry (make-shorts copies it). 05-qa fails a cut while any reused landscape scene is
+> unsigned. The 023 cuts were rejected for exactly these three; 022–025 are never cut.
+>
+> **Without `short_cuts`:** the **Short scene-plan is DERIVED**, not hand-authored:
 > `deriveShortPlanFile` (`pipeline/01-script/make-short.mjs`) reuses each kept scene's long plan entry under
 > the Short's renumbered `scene_id` and strips `engine`/`hf_scene` (the Short is pure Remotion). The orchestrator's
 > `plan_short` node calls it automatically after `make-short`. Author a `content/<id>/short/scene-plan.json` by hand

@@ -12,6 +12,8 @@ import { runDag } from "./dag.mjs";
 import { createRunner } from "./runner.mjs";
 import { notify } from "./notify.mjs";
 import { deriveShortFile, deriveShortPlanFile } from "../../01-script/make-short.mjs";
+import { deriveShorts, remarkShorts } from "../../01-script/make-shorts.mjs";
+import { SHORT_UNIT_RE, sortUnits } from "../lib/units.mjs";
 import { voiceArgs } from "../../02-voice/voice-dispatcher.mjs";
 import { buildMetadataFile } from "../../06-publish/build-metadata.mjs";
 import { reviewLoop } from "../review/loop.mjs";
@@ -88,33 +90,89 @@ function readArtifactOr(dir, file, deferReason) {
   return fs.existsSync(p) ? readJson(p) : pause(deferReason);
 }
 
+/** Every Short unit of the topic that has a script, in order: short, short-2, … (1B, D-074). */
+export function shortUnitsOf(contentDir) {
+  if (!fs.existsSync(contentDir)) return [];
+  return sortUnits(
+    fs.readdirSync(contentDir, { withFileTypes: true })
+      .filter((e) => e.isDirectory() && SHORT_UNIT_RE.test(e.name) && fs.existsSync(path.join(contentDir, e.name, "script.json")))
+      .map((e) => e.name)
+  );
+}
+
+/** A unit already voiced + aligned from its current script (a hand-built Short) is never re-voiced. */
+function unitIsAligned(contentDir, unit) {
+  const al = path.join(contentDir, unit, "alignment.json");
+  const sc = path.join(contentDir, unit, "script.json");
+  return fs.existsSync(al) && fs.statSync(al).mtimeMs >= fs.statSync(sc).mtimeMs;
+}
+
+const hasCuts = (contentDir) => {
+  const p = path.join(contentDir, "script.json");
+  return fs.existsSync(p) && (readJson(p).short_cuts ?? []).length > 0;
+};
+
+/** Run one mechanical step for every Short unit still to do. */
+async function eachUnit(ctx, label, argsFor, { skipAligned = false } = {}) {
+  const done = [];
+  for (const unit of shortUnitsOf(ctx.contentDir)) {
+    if (skipAligned && unitIsAligned(ctx.contentDir, unit)) continue;
+    await mechanical(ctx, ...argsFor(`${ctx.id}/${unit}`), `${label}(${unit})`);
+    done.push(unit);
+  }
+  return { ok: true, units: done };
+}
+
 /** Default executors. Each receives (ctx, results). ctx = { id, contentDir, config, runner }. */
 export function defaultExecutors() {
   return {
     brief: ({ contentDir }) => readJson(path.join(contentDir, "brief.json")),
     script: ({ contentDir }) => readArtifactOr(contentDir, "script.json", "script-writing (agent) required"),
     review_script: (ctx, results) => reviewStage("script", results.script, ctx),
-    short_script: ({ contentDir, config }) =>
-      deriveShortFile(contentDir, { targetSeconds: config.defaults?.short_seconds }),
+    // 1B (D-074): a long script with `short_cuts` gives 2-3 Shorts cut from its own scenes (make-shorts);
+    // without them, the one lean derived Short of before (make-short).
+    short_script: ({ contentDir, config, root, id }) => {
+      if (!hasCuts(contentDir)) return deriveShortFile(contentDir, { targetSeconds: config.defaults?.short_seconds });
+      const res = deriveShorts({ root, id: id.split("/")[0] });
+      if (!res.ok) throw new Error(`short_cuts: ${res.problems.join("; ")}`);
+      return { units: res.units };
+    },
     plan_long: ({ contentDir }) => readArtifactOr(contentDir, "scene-plan.json", "storyboard (agent)"),
     // The Short scene-plan is DERIVED from the long plan (lean reuse of kept scenes) — no agent
     // pause, no second storyboard pass. Respects a hand-authored short/scene-plan.json if present.
-    plan_short: ({ contentDir, config }) => deriveShortPlanFile(contentDir, { targetSeconds: config.defaults?.short_seconds }),
+    plan_short: ({ contentDir, config }) =>
+      hasCuts(contentDir)
+        ? { derived: "make-shorts", units: shortUnitsOf(contentDir) } // the cut plans were written with their scripts
+        : deriveShortPlanFile(contentDir, { targetSeconds: config.defaults?.short_seconds }),
     // Mechanical: real Node/Python commands (run in both modes). Voice goes through the TtsProvider
     // seam (T4.2): voiceArgs() picks the synth script from config.voice (draft = edge-tts by default;
     // the Azure final is a `--final` pre-publish lock, not a per-iteration node). Alignment is
     // provider-agnostic (faster-whisper on the produced narration.mp3).
     voice_long: (ctx) => mechanical(ctx, ctx.python, voiceArgs(ctx.config, ctx.id), "voice(long)"),
     align_long: (ctx) => mechanical(ctx, ctx.python, ["scripts/make_alignment.py", ctx.id], "align(long)"),
-    voice_short: (ctx) => mechanical(ctx, ctx.python, voiceArgs(ctx.config, `${ctx.id}/short`), "voice(short)"),
-    align_short: (ctx) => mechanical(ctx, ctx.python, ["scripts/make_alignment.py", `${ctx.id}/short`], "align(short)"),
+    voice_short: (ctx) => eachUnit(ctx, "voice", (unitId) => [ctx.python, voiceArgs(ctx.config, unitId)], { skipAligned: true }),
+    // after aligning, a cut's word marks + SFX move from the long's clock to its own (make-shorts --marks)
+    align_short: async (ctx) => {
+      const res = await eachUnit(ctx, "align", (unitId) => [ctx.python, ["scripts/make_alignment.py", unitId]], { skipAligned: true });
+      if (hasCuts(ctx.contentDir)) res.marks = remarkShorts({ root: ctx.root, id: ctx.id.split("/")[0] });
+      return res;
+    },
     // Agent/skill: render (video-render) + qa (qa-video). Real in headless; deferred to the top agent in Claude-Code mode.
     render_long: (ctx) => agentStep(ctx, "video-render", { target: ctx.id }, "render(long) via the video-render skill"),
-    render_short: (ctx) => agentStep(ctx, "video-render", { target: `${ctx.id}/short` }, "render(short) via the video-render skill"),
+    render_short: (ctx) => {
+      const targets = shortUnitsOf(ctx.contentDir).map((u) => `${ctx.id}/${u}`);
+      return agentStep(ctx, "video-render", { target: targets[0] ?? `${ctx.id}/short`, targets }, `render(${targets.length} Short unit(s)) via the video-render skill`);
+    },
     qa: (ctx) => agentStep(ctx, "qa-video", {}, "qa-video (agent) — run the qa-video skill"),
     review_cut: (ctx, results) => reviewStage("cut", { qa: results.qa, scriptId: ctx.id }, ctx),
     // Mechanical: 3 caption-free thumbnail candidate stills from the video's own timeline (04b).
     thumbnails: (ctx) => mechanical(ctx, "node", ["pipeline/04b-thumbnails/extract.mjs", ctx.id], "thumbnails"),
+    // Mechanical: the upload file — the approved 1080p master upscaled to config.render.upscale (2B,
+    // D-074); the master moves to render/master.mp4. Idempotent, and a no-op for a format set to null.
+    finalize: async (ctx) => {
+      await mechanical(ctx, "node", ["pipeline/04-render/finalize.mjs", ctx.id], "finalize(long)");
+      return eachUnit(ctx, "finalize", (unitId) => ["node", ["pipeline/04-render/finalize.mjs", unitId]]);
+    },
     metadata: ({ contentDir }) => buildMetadataFile(contentDir),
     // Publish copy passes the review agent before the owner sees it (operating principle 3).
     review_publish: (ctx, results) => reviewStage("publish", results.metadata, ctx),
@@ -147,9 +205,11 @@ export function videoNodes(ex) {
     node("qa", ["render_long", "render_short"]),
     node("review_cut", ["qa"]),
     node("thumbnails", ["render_long"]), // candidates from the long cut's own timeline (04b)
+    // after the thumbnails: they grab from the 1080p cut, which finalize moves to render/master.mp4
+    node("finalize", ["review_cut", "thumbnails"]),
     node("metadata", ["review_cut"]),
     node("review_publish", ["metadata"]),
-    node("upload", ["review_publish", "thumbnails"]),
+    node("upload", ["review_publish", "finalize"]),
     node("gate_owner", ["upload"], { gate: true }),
   ];
 }

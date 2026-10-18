@@ -11,7 +11,25 @@
     "render": {
       "type": "object",
       "properties": {
-        "engine": { "type": "string", "enum": ["remotion", "hyperframes", "combo"] }
+        "engine": { "type": "string", "enum": ["remotion", "hyperframes", "combo"] },
+        "upscale": {
+          "type": "object",
+          "description": "Upload size per format (2B, D-074): pipeline/04-render/finalize.mjs upscales the approved master to it after Gate 3. null = upload as rendered.",
+          "additionalProperties": false,
+          "properties": {
+            "long": { "$ref": "#/definitions/size" },
+            "short": { "$ref": "#/definitions/size" }
+          }
+        }
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "description": "Fixed publish days (3D, D-074) — pipeline/06-publish/schedule.mjs assigns each cut its slot.",
+      "additionalProperties": false,
+      "properties": {
+        "long": { "$ref": "#/definitions/rhythm" },
+        "short": { "$ref": "#/definitions/rhythm" }
       }
     },
     "paths": { "type": "object" },
@@ -168,6 +186,27 @@
           "description": "Target channel handles per post kind (short_crosspost / link_post / pin / blog).",
           "additionalProperties": { "type": "array", "items": { "type": "string" } }
         }
+      }
+    }
+  },
+  "definitions": {
+    "rhythm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["weekdays"],
+      "properties": {
+        "weekdays": { "type": "array", "minItems": 1, "items": { "enum": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] } },
+        "every_weeks": { "type": "integer", "minimum": 1, "description": "1 = every week; 2 = every second week, counted from `anchor`." },
+        "anchor": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", "description": "A date in a week the rhythm runs (needed when every_weeks > 1)." }
+      }
+    },
+    "size": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 16 },
+        "height": { "type": "integer", "minimum": 16 }
       }
     }
   }

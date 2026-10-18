@@ -183,6 +183,25 @@ as the Short's first scene (the long hook is dropped from the Short).
 - The hook must land in the Short's first **~3s** (`format.hook.visual_detail.short_first_seconds`,
   default 3) — qa-video enforces this on the vertical cut (tighter than the long-form 30s gate).
 
+## Short cuts (`short_cuts`) — 2–3 Shorts from this long's own scenes (1B, D-074)
+95% of the channel's views come from Shorts, and each Short used to be a second production. Now a
+Short is a **cut** of the long: list 2–3 `short_cuts` in the long `script.json` and
+`make-shorts.mjs` turns each into a unit (`short`, `short-2`, `short-3`) that reuses the long's scenes
+in portrait, with their narration voiced again as the Short's own continuous track.
+- Each cut: `title` (the Short's own hook title), `scenes` (long scene ids in play order, ~45–60 s of
+  narration; each scene in one cut only), optional `opening` (replaces the FIRST sentence of the first
+  scene, one sentence for one — the scene's beats stay on their sentences), optional `hook`
+  (`narration` + a portrait `hf_scene`) when no scene opens strongly enough, optional
+  `closing_question`.
+- **Pick runs that stand alone:** one claim + its proof + its consequence. The Short's first sentence is
+  its cold open — a line that leans on what came before ("So…", "Then…", "in this video", "all this")
+  gets an `opening`. Prefer cuts that SHOW a number or a run (proof-must-be-visible), and give the three
+  cuts three different payoffs, not three slices of one.
+- **Write the long so it cuts:** open each major segment with a sentence that works on its own; the cut
+  then needs no `opening` at all.
+- `script.review` checks the cuts like any other script; the owner approves them with the long
+  (Gate ②).
+
 ## Per-scene fields (script.schema.json)
 `id`, `role` (hook|intro|point|demo|transition|cta|outro), **`template`** (pick from
 the scene vocabulary in `style/VISUAL_IDENTITY.md` §5), `narration`, `sentences`

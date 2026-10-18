@@ -8,6 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { validate, formatErrors } from "../shared/lib/validate-lib.mjs";
+import { SHORT_UNIT_RE, sortUnits } from "../shared/lib/units.mjs";
 
 export function fmtTime(sec) {
   const s = Math.max(0, Math.round(sec));
@@ -167,8 +168,13 @@ export function buildBridge({ publish = {}, brief = {} }) {
   };
 }
 
-export function buildMetadata({ brief, script, alignment, introOffset = 0 }) {
+/**
+ * `shortUnits` = the topic's Short units on disk ([{unit, title}], make-shorts.mjs — 1B, D-074). A cut's
+ * title (from its derived script) names `short`; every further unit gets its own `extra_shorts` entry.
+ */
+export function buildMetadata({ brief, script, alignment, introOffset = 0, shortUnits = [] }) {
   const tags = buildTags(brief);
+  const shortTitle = (unit) => shortUnits.find((u) => u.unit === unit)?.title;
   const publish = {
     id: brief.id,
     title_options: buildTitleOptions(brief),
@@ -178,15 +184,43 @@ export function buildMetadata({ brief, script, alignment, introOffset = 0 }) {
     chapters: buildChapters(script, alignment, { introOffset }),
     subtitles: "video/subtitles.srt", // D-072 — build-srt.mjs writes it
     altered_content: true,
-    short: { title: `${brief.title_working || ""} (Short)`.trim(), tags: tags.slice(0, 8), caption: "", subtitles: "short/video/subtitles.srt" },
+    short: { title: shortTitle("short") ?? `${brief.title_working || ""} (Short)`.trim(), tags: tags.slice(0, 8), caption: "", subtitles: "short/video/subtitles.srt" },
     youtube_video_id: null,
     status: "draft_pending",
   };
+  const extra = shortUnits.filter((u) => u.unit !== "short");
+  if (extra.length) {
+    publish.extra_shorts = extra.map((u) => ({
+      unit: u.unit,
+      title: u.title ?? `${brief.title_working || ""} (Short)`.trim(),
+      tags: tags.slice(0, 8),
+      caption: "",
+      subtitles: `${u.unit}/video/subtitles.srt`,
+    }));
+  }
   // 1.3 → the closing-question-seeded pin FIRST, so 1.2's bridge mirrors it into the ecosystem chain.
   const pinned = buildPinnedComment(script);
   if (pinned) publish.pinned_comment = pinned;
   publish.bridge = buildBridge({ publish, brief });
   return publish;
+}
+
+/**
+ * The topic's Short units with a script, in order — a DERIVED unit (make-shorts left a
+ * short_source.json) is named by its cut's title; a hand-built `short/` keeps the default title.
+ */
+export function shortUnitsOnDisk(contentDir) {
+  if (!fs.existsSync(contentDir)) return [];
+  const units = fs
+    .readdirSync(contentDir, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && SHORT_UNIT_RE.test(e.name) && fs.existsSync(path.join(contentDir, e.name, "script.json")))
+    .map((e) => e.name);
+  return sortUnits(units).map((unit) => {
+    const dir = path.join(contentDir, unit);
+    const derived = fs.existsSync(path.join(dir, "short_source.json"));
+    const title = derived ? JSON.parse(fs.readFileSync(path.join(dir, "script.json"), "utf8")).title_working : null;
+    return { unit, title };
+  });
 }
 
 /** Reads brief/script/alignment from contentDir, writes publish.json + publish.md, returns it. */
@@ -196,6 +230,7 @@ export function buildMetadataFile(contentDir, opts = {}) {
     brief: read("brief.json"),
     script: read("script.json"),
     alignment: read("alignment.json"),
+    shortUnits: shortUnitsOnDisk(contentDir),
     ...opts,
   });
   const { valid, errors } = validate(publish, "publish");
@@ -238,6 +273,23 @@ export function publishMarkdown(publish, { candidates = null } = {}) {
   if (publish.short) {
     lines.push("", "## Short", `- Title: ${publish.short.title ?? ""}`, `- Caption: ${publish.short.caption ?? ""}`, `- Tags: ${(publish.short.tags ?? []).join(", ")}`);
   }
+  // 1B (D-074): the further Shorts cut from the long's scenes.
+  for (const [i, s] of (publish.extra_shorts ?? []).entries()) {
+    lines.push("", `## Short ${i + 2} (\`${s.unit}/video/final.mp4\`)`, `- Title: ${s.title ?? ""}`, `- Caption: ${s.caption ?? ""}`, `- Tags: ${(s.tags ?? []).join(", ")}`);
+  }
+  // 3D (D-074): the fixed publish days schedule.mjs assigned — set the same days in Studio at upload.
+  const days = [
+    publish.scheduled_for ? `long ${publish.scheduled_for}` : null,
+    publish.short?.scheduled_for ? `Short ${publish.short.scheduled_for}` : null,
+    ...(publish.extra_shorts ?? []).map((s, i) => (s.scheduled_for ? `Short ${i + 2} ${s.scheduled_for}` : null)),
+  ].filter(Boolean);
+  // a package already on the channel has nothing left to schedule (023's publish.md told it to, 2026-10-18)
+  if (days.length || publish.status !== "published") {
+    lines.push("", "## Schedule");
+    lines.push(days.length
+      ? `- Publish days: ${days.join(" · ")} — schedule each upload in Studio for its day`
+      : `- Not scheduled yet: \`node pipeline/06-publish/schedule.mjs ${publish.id} --assign\` (long every second Tuesday, Shorts Mon/Wed/Fri)`);
+  }
   const bridge = publish.bridge;
   if (bridge && (bridge.manual_checklist?.length || bridge.related_long_id || bridge.template_link)) {
     lines.push("", "## Short → Long bridge");
@@ -266,6 +318,9 @@ export function publishMarkdown(publish, { candidates = null } = {}) {
   lines.push(
     "",
     "## Upload checklist",
+    // 2B (D-074): the upload file is the approved master upscaled to 1440p; the codec YouTube assigns is the test.
+    `- Video: \`video/final.mp4\` after \`node pipeline/04-render/finalize.mjs ${publish.id}\` (1440p upload file; the 1080p master stays in \`render/\`)`,
+    "- After processing: right-click the player → **Stats for nerds** → *Codecs* — note `vp09` (the 1440p upload earned VP9) or `avc1` (D-074)",
     "- Altered/synthetic content: **Yes** (always — AI voice + visuals, D-025)",
   );
   // D-072: the picture carries no captions; the subtitles go up as a file (build-srt.mjs makes it).
@@ -273,6 +328,7 @@ export function publishMarkdown(publish, { candidates = null } = {}) {
     `- Subtitles (${what}): Studio → Subtitles → English → Add → **Upload file → With timing** → \`${file}\``;
   if (publish.subtitles) lines.push(srtStep(publish.subtitles, "long"));
   if (publish.short?.subtitles) lines.push(srtStep(publish.short.subtitles, "Short"));
+  for (const [i, s] of (publish.extra_shorts ?? []).entries()) if (s.subtitles) lines.push(srtStep(s.subtitles, `Short ${i + 2}`));
   lines.push(`- Status: ${publish.status}`, "");
   return lines.join("\n");
 }

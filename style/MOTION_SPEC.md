@@ -323,6 +323,19 @@ over is dead air under live narration (022 s4: **5s of empty desk**; Short s1: 2
 **Portrait is its own composition, not a crop.** An 11-page stack at 22px pitch is 242px — **12.6%**
 of a 1920 frame, a thin strip on a phone.
 
+- **Every new scene ships both framings (1B, D-074).** The Shorts are cut from the long's own scenes
+  (`make-shorts.mjs`) and rendered at 1080×1920, so a scene authors its portrait branch with the
+  landscape one: the camera keys and HUD plates under `S.portrait` / `.portrait` (or the scene is
+  native portrait). Same narration, same beats and marks — only the framing changes. A scene without
+  one is refused in a portrait render (`pipeline/04-render/lib/portrait.mjs`).
+- **A branch is not a checked framing (owner, 2026-10-18 — D-075).** The first two cuts of 023 were
+  rejected: overlapping elements, unclear action, poor contrast — every branch had been written blind
+  in August and never seen tall. Render the portrait still **when you write the branch** and look at
+  it at phone size: **overlap** (nothing lands over anything — §13), **contrast** (the subject and
+  every word read against the background), **fill** (the subject uses the frame, not its top half).
+  Only then set `props.portrait_ok: true`; `05-qa/check.mjs` fails a Short cut from the long while
+  any reused landscape scene is unsigned.
+
 - **A 9:16 hero object carries 55–65% of frame height.** Grow UPWARD and let the camera give ground
   only as fast as it must, so the object still visibly outgrows the shot (022 Short: 47% → 60%).
 - **Pivot a portrait camera near the ground line** (`transform-origin: 50% 80%`), never the centre —
@@ -656,6 +669,7 @@ deliberate still (a "pause and copy" card) keeps a slow readable drift too. Chec
 | Capture clips silent (§ screen-capture) | `compile-remotion.mjs` strip-at-ingest + `qa-video` silence assert |
 | No paid-SaaS product names (§7) | `qa-video` denylist vs `brief.approvedTools` |
 | Bespoke ratio / no repeated template (§6) | `qa-video` custom-ratio + no-repeat checks |
+| A reused scene's tall frame was looked at — overlap, contrast, fill (§10, D-075) | `05-qa/check.mjs` `portrait_signoff` (HARD) on a derived Short: `props.portrait_ok` per reused landscape scene (`lib/portrait.mjs`). The look itself is perceptual — no pixel measure yet |
 | Scene is not plain / empty / too small in frame (§0, §10, §12) | `pipeline/05-qa/frame-gate.mjs` — measures every scene's settled, caption-free frame against the calibrated detail/coverage/box floors in `05-qa/lib/ink-coverage.mjs` (HARD; `--warn-only` to inspect) |
 
 Sources for the numbers above: YouTube retention-editing & 3-second-rule studies (AIR Media-Tech,

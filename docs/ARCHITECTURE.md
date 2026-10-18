@@ -48,10 +48,12 @@ AIAutomatizacija/
 > tracked). The layout below still describes what every video folder contains on disk;
 > it just isn't committed. 001/002 remain in history by owner choice.
 
-The topic folder **is** the long video; the **Short is a nested lean sub-unit** at
-`short/` (its own script/voice/alignment/scene-plan/video; it inherits topic, angle and
-sources from the long unit above). `build-props.mjs` detects the Short by the last path
-segment (`.../short`) → vertical 1080×1920. Legacy `002-short`/`003-short` stay flat.
+The topic folder **is** the long video; each **Short is a nested lean sub-unit** at
+`short/` — and, since 1B (D-074), `short-2/` … `short-9/` for the further Shorts cut from the
+long's own scenes (each with its own script/voice/alignment/scene-plan/video; they inherit topic,
+angle and sources from the long unit above). One helper, `pipeline/shared/lib/units.mjs`, decides
+what a content id is (`isShortUnit`, `topicOf`) for every phase → vertical 1080×1920. Legacy
+`002-short`/`003-short` stay flat.
 
 ```
 content/<NNN>-<slug>/
@@ -65,10 +67,12 @@ content/<NNN>-<slug>/
 ├── visual-prompts.json   Thumbnail + occasional concept-image prompts only.
 ├── images/               (git-ignored) thumbnails / rare AI or stock images.
 ├── captures/             (git-ignored) your OBS recordings for mini-demos.
-├── render/               (git-ignored) engine props + intermediate frames.
-├── video/                (git-ignored) the long final.mp4 (+ thumb_a/b.png).
-├── short/                The nested Short sub-unit:
+├── render/               (git-ignored) engine props + intermediate frames; master.mp4 = the approved
+│                             1080p cut once finalize.mjs has made the 1440p upload file (D-074).
+├── video/                (git-ignored) the long final.mp4 — after finalize, the 2560×1440 upload file.
+├── short/                The nested Short sub-unit (short-2/, short-3/ … the same shape, 1B):
 │   ├── script.json           Short's own ~50–60s script.
+│   ├── short_source.json     (derived units only) the long scene behind each Short scene — make-shorts.mjs.
 │   ├── voice/                (git-ignored) Short narration.
 │   ├── alignment.json        Short's timestamps.
 │   ├── scene-plan.json       Short's scene plan.
@@ -267,6 +271,35 @@ Runner / Reviewer / Publisher ports.
   Mondays 09:30, StartWhenAvailable) — durable, unlike the session-local CronCreate routine.
 - **Search demand (3B)** (`pipeline/00-ideas/search-demand.mjs`): YouTube autocomplete evidence per
   idea (`search_demand`, re-checked monthly) → idea-pass `audience_fit`, pick-next warning, seed-gate stop.
+
+**Growth quadrant 2 — upload file, Shorts from the long, fixed days (D-074).**
+- **2B upload file** (`pipeline/04-render/finalize.mjs`, orchestrator node `finalize` after `review_cut`
+  + `thumbnails`): the approved 1080p cut moves to `render/master.mp4` and `video/final.mp4` becomes a
+  lanczos upscale to `config.render.upscale` (long 2560×1440; Short `null` = off) at `MASTER_CRF`, the
+  source's pixel format + colour tags kept (Remotion masters are full-range `yuvj420p`), timebase kept,
+  audio stream-copied; frames, played seconds, timebase and audio MD5 are verified against the master
+  before anything is replaced. Idempotent (`current` / `redo` when a patch made the master newer);
+  refuses to clobber an older master without `--replace-master`. `patch-scenes` refuses a base whose size
+  is not the timeline's and points at `render/master.mp4`. ~1.4× real time on the i5-12400F.
+- **1B Shorts from the long** (`pipeline/01-script/make-shorts.mjs`): the script writer lists 2-3
+  `short_cuts` in the long's `script.json` (long scene ids, optional `opening` that replaces the first
+  sentence one-for-one, optional `hook` with its own portrait scene). Each cut becomes the next free unit
+  (`short`, `short-2`, … — a hand-built unit, i.e. one without `short_source.json`, is never overwritten):
+  the scenes' narration verbatim, voiced again as the Short's own continuous track, the long's plan
+  entries reused (same HF scene + props), the first scene tagged `hook-card` for the opening gate, a
+  `carry`/`match` kept only into the long's next scene. After the unit is aligned, `--marks` carries
+  every word mark (`props.marks`) and SFX cue from the long's clock to the Short's by a piecewise-linear
+  word warp (an `opening` sentence maps start/end, the rest word for word). Portrait: a reused scene needs
+  a portrait framing (`lib/portrait.mjs` — native 1080×1920 or a `.portrait` / `S.portrait` branch);
+  `compile-hyperframes` refuses a Short scene without one (`props.portrait_ok` waives it after a still is
+  checked). The orchestrator's Short branch walks every unit (already-aligned units are never re-voiced);
+  `publish.json.extra_shorts` packages units 2+; reconcile, the catalog and the schemas accept
+  `<topic>/short-N` keys.
+- **3D fixed days** (`pipeline/06-publish/schedule.mjs`, `config.schedule`): long every second Tuesday
+  (anchor 2026-10-27), Shorts Mon/Wed/Fri. `--assign` writes `scheduled_for` on the long, `short` and each
+  `extra_shorts` entry (Shorts after their long) and regenerates publish.md; taken days = catalog uploads
+  on their publish day (a scheduled private upload on `scheduled_for`, from YouTube `status.publishAt`) +
+  every date promised in another publish.json. With no args it prints the next 4 weeks of slots.
 
 **Autonomous driver (the hands-off pass).**
 - `pipeline/00-ideas/pick-next.mjs` — auto-pick the top backlog idea by effective score → `scaffoldVideo`

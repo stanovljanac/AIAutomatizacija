@@ -26,9 +26,11 @@ import {
   projectPublishStatus,
   projectSubjects,
   resolveFact,
+  retireVideo,
   scanVideos,
   setLesson,
   stampLesson,
+  stampRetire,
   statePaths,
   subjectOf,
   videoFolders,
@@ -185,8 +187,9 @@ const IDEAS = {
   updated: "2026-07-01",
   ideas: [
     { id: "everyone-asks-clean-data", title: "A", archetype: "ideas", task: "t", score: 90, status: "in-progress", produced_video_id: null },
-    { id: "everyone-asks-ai-series", title: "B", archetype: "ideas", task: "t", score: 88, status: "backlog", produced_video_id: "009-boring-money-leak" },
+    { id: "everyone-asks-ai-series", title: "B", archetype: "ideas", task: "t", score: 88, status: "backlog", recurring: true, produced_video_id: "009-boring-money-leak" },
     { id: "parked-idea", title: "C", archetype: "ideas", task: "t", score: 40, status: "parked", produced_video_id: null },
+    { id: "made-from-a-brief", title: "D", archetype: "ideas", task: "t", score: 80, status: "backlog", produced_video_id: null },
   ],
 };
 
@@ -225,6 +228,15 @@ test("projectIdeas leaves a recurring series entry untouched (first binding wins
   const { ideas, changed } = projectIdeas(IDEAS, ledger, { now: NOW });
   assert.equal(changed, false, "a series idea stays in the backlog to be spent again");
   assert.equal(ideas.ideas[1].produced_video_id, "009-boring-money-leak", "and keeps the video it was first spent on");
+});
+
+test("projectIdeas promotes a backlog idea a video was made from (no pick-next → never in-progress)", () => {
+  const ledger = ledgerWith({ "023-attention": record({ idea_id: "made-from-a-brief", subject: null }) });
+  const { ideas, changed } = projectIdeas(IDEAS, ledger, { now: NOW });
+  assert.equal(changed, true);
+  assert.equal(ideas.ideas[3].status, "produced", "013/017/023 sat at backlog and could be picked again");
+  assert.equal(ideas.ideas[3].produced_video_id, "023-attention");
+  assert.equal(projectIdeas(ideas, ledger, { now: NOW }).changed, false, "idempotent");
 });
 
 test("projectIdeas records a parked idea's video without reversing the parking decision", () => {
@@ -485,6 +497,19 @@ test("scanVideos finds the long + the nested Short and skips everything that isn
   });
 });
 
+test("scanVideos finds every Short unit of a topic in order (short, short-2 …, 1B)", async () => {
+  await withTempDir(async (root) => {
+    const p = makeRoot(root);
+    writeJson(path.join(p.content, "020-clean-data", "short-2", "publish.json"), publishFile("020-clean-data", "draft_pending"));
+    fs.mkdirSync(path.join(p.content, "020-clean-data", "shorts-misc"), { recursive: true });
+    const ids = scanVideos(p.content).map((s) => s.videoId);
+    assert.deepEqual(ids.filter((i) => i.startsWith("020")), ["020-clean-data/short", "020-clean-data/short-2"]);
+    assert.equal(baseVideoId("020-clean-data/short-2"), "020-clean-data");
+    assert.equal(contentTypeFor("020-clean-data/short-2"), "short");
+    assert.equal(contentTypeFor("002-short"), "long", "a legacy flat folder is decided by its brief, not its name");
+  });
+});
+
 test("scanVideos is fail-soft on an unreadable publish.json — presence still counts", async () => {
   await withTempDir(async (root) => {
     const p = makeRoot(root);
@@ -684,18 +709,69 @@ test("applyPlan validates every document before it reaches disk, and one bad fil
   });
 });
 
+test("retireVideo moves the record to `retired`, frees its subject, and is loud without a reason", () => {
+  const ledger = ledgerWith({
+    "020-clean-data/short": record({ idea_id: "clean-data" }),
+    "021-token": record({ idea_id: null, subject: "llm-mental-model" }),
+  });
+  const registry = { note: "n", subjects: { "execution/data-cleaning": ["020-clean-data"], "llm-mental-model": ["021-token"] } };
+  const res = retireVideo(ledger, registry, "020-clean-data/short", { reason: "never uploaded", now: NOW });
+  assert.equal(res.changed, true);
+  assert.deepEqual(Object.keys(res.ledger.videos), ["021-token"]);
+  assert.deepEqual(res.ledger.retired, { "020-clean-data/short": { at: "2026-07-25", reason: "never uploaded" } });
+  assert.ok(validateLedger(res.ledger).valid, "a ledger with `retired` is schema-valid");
+  assert.deepEqual(res.registry.subjects, { "llm-mental-model": ["021-token"] }, "an emptied subject is dropped");
+  assert.equal(res.registry.note, "n");
+  assert.equal(ledger.videos["020-clean-data/short"].status, "published", "the input is not mutated");
+
+  const again = retireVideo(res.ledger, res.registry, "020-clean-data/short", { reason: "x", now: NOW });
+  assert.equal(again.changed, false, "retiring twice is a no-op");
+  assert.throws(() => retireVideo(ledger, registry, "099-nope", { reason: "x" }), /no ledger record/);
+  assert.throws(() => retireVideo(ledger, registry, "021-token", { reason: "  " }), /needs a reason/);
+});
+
+test("retireVideo keeps the subject while the topic's other cut is still in the ledger", () => {
+  const ledger = ledgerWith({ "020-clean-data": record({ content_type: "long" }), "020-clean-data/short": record() });
+  const registry = { subjects: { "execution/data-cleaning": ["020-clean-data"] } };
+  const res = retireVideo(ledger, registry, "020-clean-data/short", { reason: "never uploaded", now: NOW });
+  assert.equal(res.registry, registry, "the long still claims the subject");
+});
+
+test("stampRetire writes both files, and reconcile never re-ingests the retired publish.json", async () => {
+  await withTempDir(async (root) => {
+    const p = makeRoot(root);
+    applyPlan(plan(root), { now: NOW });
+    const { written } = stampRetire({ root, videoId: "020-clean-data/short", reason: "approved, never uploaded", now: NOW });
+    assert.equal(written.length, 2);
+    assert.ok(validateFile(p.ledger).valid);
+    const ledger = readJson(p.ledger);
+    assert.equal(ledger.videos["020-clean-data/short"], undefined);
+    assert.equal(ledger.retired["020-clean-data/short"].reason, "approved, never uploaded");
+    assert.deepEqual(readJson(p.subjects).subjects, { "explanation/llm-basics": ["019-old-topic"] });
+
+    const after = plan(root);
+    assert.deepEqual(after.writes, [], "the publish.json is still on disk, and is skipped");
+    assert.equal(after.scanned.includes("020-clean-data/short"), false);
+    assert.deepEqual(after.owed, [], "a retired video owes no lesson");
+  });
+});
+
 test("parseArgs covers the ways the reconciler is invoked", () => {
-  assert.deepEqual(parseArgs([]), { videoId: null, fix: false, backfill: false, learned: false, state: null, note: null });
+  const none = { retire: false, reason: null };
+  assert.deepEqual(parseArgs([]), { videoId: null, fix: false, backfill: false, learned: false, state: null, note: null, ...none });
   assert.equal(parseArgs(["--fix"]).fix, true);
   assert.equal(parseArgs(["--dry-run"]).fix, false);
   assert.equal(parseArgs(["--fix", "--dry-run"]).fix, false, "the safer flag wins when both are passed");
   assert.equal(parseArgs(["--backfill"]).backfill, true);
   assert.equal(parseArgs(["--backfill", "--fix"]).fix, true);
   assert.deepEqual(parseArgs(["020-x/short", "--learned", "--nothing"]), {
-    videoId: "020-x/short", fix: false, backfill: false, learned: true, state: "none", note: null,
+    videoId: "020-x/short", fix: false, backfill: false, learned: true, state: "none", note: null, ...none,
   });
   assert.deepEqual(parseArgs(["020-x", "--learned", "--note", "faithful-not-correct"]), {
-    videoId: "020-x", fix: false, backfill: false, learned: true, state: "linked", note: "faithful-not-correct",
+    videoId: "020-x", fix: false, backfill: false, learned: true, state: "linked", note: "faithful-not-correct", ...none,
+  });
+  assert.deepEqual(parseArgs(["020-x/short", "--retire", "--reason", "never uploaded"]), {
+    videoId: "020-x/short", fix: false, backfill: false, learned: false, state: null, note: null, retire: true, reason: "never uploaded",
   });
   assert.throws(() => parseArgs(["--wat"]), /unknown flag/);
   assert.throws(() => parseArgs(["a", "b"]), /unexpected argument/);

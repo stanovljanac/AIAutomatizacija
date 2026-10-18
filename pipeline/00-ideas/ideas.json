@@ -36,7 +36,7 @@
     {
       "id": "n8n-inbox-triage-teardown",
       "title": "The n8n Inbox That Triages Itself (and the One Node That Keeps It Safe)",
-      "search_term": "n8n email triage workflow",
+      "search_term": "n8n email automation",
       "task": "documents",
       "sector": "general",
       "tool": "n8n (free, self-host) + Gmail + a modular classifier model",
@@ -44,7 +44,8 @@
       "lane": "ai-how-to",
       "angle_hint": "Teardown of a REAL public n8n template (workflow 4876) - understand WHY it works + the failure modes; label-only safety spine (a wrong guess = a wrong label, never a lost email). Bridges from the 015 Short. Establishes the reusable teardown FORMAT (ROADMAP Phase 3 #7).",
       "score": 87,
-      "status": "in-progress",
+      "status": "parked",
+      "parked_reason": "Owner 2026-10-18: keep content/016-n8n-inbox-triage (script at the script gate since 2026-07-15) to finish some day, but stop it blocking the next pick. Resume = set status back to in-progress.",
       "value_type": [
         "teaches-system",
         "saves-time",
@@ -58,14 +59,9 @@
       },
       "adjusted_score": 92,
       "search_demand": {
-        "phrase": "n8n email triage workflow",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "n8n clickup",
-          "n8n workflow",
-          "n8n deploy"
-        ],
+        "phrase": "n8n email automation",
+        "status": "verified",
+        "depth": 9,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -73,7 +69,7 @@
     {
       "id": "pdf-invoice-generator",
       "title": "Turn a Spreadsheet Row into a PDF Invoice",
-      "search_term": "spreadsheet to pdf invoice",
+      "search_term": "google sheets invoice",
       "task": "documents",
       "sector": "accounting",
       "tool": "Apps Script",
@@ -84,13 +80,9 @@
       "produced_video_id": null,
       "adjusted_score": 90,
       "search_demand": {
-        "phrase": "spreadsheet to pdf invoice",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "excel to pdf invoice",
-          "save invoice as pdf in excel"
-        ],
+        "phrase": "google sheets invoice",
+        "status": "verified",
+        "depth": 5,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -107,7 +99,7 @@
       "archetype": "ideas",
       "angle_hint": "Not 'it focuses on the important words'. The scores over everything you handed it sum to exactly 1, every time — attention is a fixed budget that must be fully spent, so nothing you add is free and you steer it by deleting, not by emphasising.",
       "score": 89,
-      "status": "backlog",
+      "status": "produced",
       "lane": "desk-notes",
       "value_type": [
         "corrects-misbelief",
@@ -133,26 +125,20 @@
     {
       "id": "bulk-personalized-emails",
       "title": "Send 200 Personalized Emails in One Click",
-      "search_term": "send bulk personalized emails",
+      "search_term": "mail merge gmail",
       "task": "outbound-comms",
       "sector": "general",
       "tool": "Gmail",
       "archetype": "mini-demo",
       "angle_hint": "Mail-merge is older than you think — but AI makes each one not look templated.",
       "score": 88,
-      "status": "in-progress",
+      "status": "parked",
+      "parked_reason": "Owner 2026-10-18: keep content/005-bulk-personalized-emails (scripted, needs an owner screen-capture) to finish some day, but stop it blocking the next pick. Resume = set status back to in-progress.",
       "produced_video_id": "005-bulk-personalized-emails",
       "search_demand": {
-        "phrase": "send bulk personalized emails",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "send personalized bulk emails in gmail",
-          "send personalized bulk emails in gmail with attachments",
-          "send personalized bulk emails in outlook",
-          "send bulk emails outlook",
-          "send bulk email from word"
-        ],
+        "phrase": "mail merge gmail",
+        "status": "verified",
+        "depth": 9,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -185,12 +171,13 @@
         "depth": 4,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
-      }
+      },
+      "recurring": true
     },
     {
       "id": "invoice-emails-sheets",
       "title": "Automatically Email Invoices from a Google Sheet",
-      "search_term": "automatically email invoices google sheets",
+      "search_term": "google sheets send email",
       "task": "outbound-comms",
       "sector": "accounting",
       "tool": "Google Sheets",
@@ -200,12 +187,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automatically email invoices google sheets",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "automatically send email from google sheets"
-        ],
+        "phrase": "google sheets send email",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -213,7 +197,7 @@
     {
       "id": "meeting-notes-to-tasks",
       "title": "Turn Meeting Notes into Tasks Automatically",
-      "search_term": "meeting notes to tasks ai",
+      "search_term": "ai meeting notes",
       "task": "documents",
       "sector": "general",
       "tool": "Claude",
@@ -224,13 +208,9 @@
       "produced_video_id": null,
       "adjusted_score": 86,
       "search_demand": {
-        "phrase": "meeting notes to tasks ai",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "use ai to take meeting notes",
-          "ai to take meeting notes"
-        ],
+        "phrase": "ai meeting notes",
+        "status": "verified",
+        "depth": 5,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -247,7 +227,7 @@
       "series": "The AI Agent",
       "angle_hint": "Ep. 1 of 'The AI Agent'. An agent is a DECISION layer, not a scraper. A dumb diff-watcher spams you on every character change; the agent reads the change, decides whether it MATTERS, and hands you only the ones that do — with a reason. Money shot = a DECISION CARD (old vs new clause + AI verdict: impact + reason), not a scanning animation. Human-approval posture: it flags, you decide. subject = change-detection/policy; bridges to 016 (automate the deciding).",
       "score": 85,
-      "status": "backlog",
+      "status": "produced",
       "subject": "change-detection/policy",
       "value_type": [
         "teaches-system",
@@ -274,7 +254,7 @@
     {
       "id": "freelance-automation-capstone",
       "title": "I Built a Freelance Automation System From Scratch",
-      "search_term": "freelance automation system",
+      "search_term": "freelance automation",
       "task": "other",
       "sector": "general",
       "tool": "AI (model-agnostic) + Google Sheets + Apps Script",
@@ -294,12 +274,9 @@
         "added": "2026-07-08"
       },
       "search_demand": {
-        "phrase": "freelance automation system",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "freelance automation"
-        ],
+        "phrase": "freelance automation",
+        "status": "verified",
+        "depth": 2,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -307,7 +284,7 @@
     {
       "id": "ai-vs-macros-excel",
       "title": "AI vs a 10-Year-Old Excel Macro",
-      "search_term": "ai vs excel macros",
+      "search_term": "chatgpt vba",
       "task": "other",
       "sector": "general",
       "tool": "Excel",
@@ -323,13 +300,9 @@
       "takeaway": "Don't pick AI vs macros — match the tool to the task: rigid+repetitive = macro, messy+judgement = AI.",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "ai vs excel macros",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "ai vs excel",
-          "ai for excel vba"
-        ],
+        "phrase": "chatgpt vba",
+        "status": "verified",
+        "depth": 7,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -345,7 +318,7 @@
       "lane": "ai-how-to",
       "angle_hint": "ONLY REAL INCIDENTS — never invented (accuracy rule). Candidates from the studio log: 008 Gemini free-tier 503s, review-loop rejections, QA catches; plus whatever Phase-B automations actually break. Produce as a LONG only after the freelance cluster has lived; if a good incident lands earlier, a desk-notes Short is allowed immediately. Frame: failure-design (validation, alerts, fallbacks, human gates), not war stories.",
       "score": 84,
-      "status": "backlog",
+      "status": "produced",
       "value_type": [
         "avoids-mistake",
         "teaches-system"
@@ -372,7 +345,7 @@
     {
       "id": "best-model-for-automation",
       "title": "Best AI Model for Automating Office Work",
-      "search_term": "best ai model for automation",
+      "search_term": "best ai for office work",
       "task": "other",
       "sector": "general",
       "tool": "Claude",
@@ -382,47 +355,39 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "best ai model for automation",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "best ai for automation",
-          "best ai tools for automation",
-          "how to use ai for automation",
-          "ai tools for automation"
-        ],
+        "phrase": "best ai for office work",
+        "status": "verified",
+        "depth": 1,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
     },
     {
       "id": "clean-imported-data-excel",
-      "title": "Auto-Clean Messy Imported Data in Excel",
-      "search_term": "clean messy data excel automatically",
+      "title": "How to Clean Data in Excel (and Make AI Flag What It Can't Fix)",
+      "search_term": "how to clean data in excel",
       "task": "data-entry",
       "sector": "accounting",
       "tool": "Excel",
       "archetype": "mini-demo",
-      "angle_hint": "The boring 20 minutes everyone wastes after every export.",
+      "angle_hint": "The boring 20 minutes everyone wastes after every export. Replaces the retired 020 Short (2026-10-17), keeping its one good idea: a sheet with 'LA', 'L.A.' and 'Los Angeles' as three cities and dates stored as text still sums to a confident, wrong total under a green check, because the formula is faithful, not correct. The fix shown on screen: normalize what is certain, FLAG what is ambiguous instead of guessing, a person settles the flags, the total changes. Note: 004 and 006 were data-cleaning videos on phrases nobody types (10-11 views each); this one starts from a phrase autocomplete offers 10 ways.",
       "score": 84,
       "status": "backlog",
       "produced_video_id": null,
       "adjusted_score": 82,
       "search_demand": {
-        "phrase": "clean messy data excel automatically",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "clean messy data in excel"
-        ],
+        "phrase": "how to clean data in excel",
+        "status": "verified",
+        "depth": 10,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
-      }
+      },
+      "subject": "execution/data-cleaning"
     },
     {
       "id": "appointment-reminders",
       "title": "Send Automatic Appointment Reminders",
-      "search_term": "automatic appointment reminders",
+      "search_term": "appointment reminder",
       "task": "outbound-comms",
       "sector": "healthcare",
       "tool": "Make",
@@ -432,10 +397,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automatic appointment reminders",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
+        "phrase": "appointment reminder",
+        "status": "verified",
+        "depth": 4,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -443,7 +407,7 @@
     {
       "id": "auto-generate-quotes",
       "title": "Auto-Generate Price Quotes from a Template",
-      "search_term": "automate price quotes",
+      "search_term": "quotation template",
       "task": "documents",
       "sector": "sales",
       "tool": "Apps Script",
@@ -454,10 +418,9 @@
       "produced_video_id": null,
       "adjusted_score": 82,
       "search_demand": {
-        "phrase": "automate price quotes",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
+        "phrase": "quotation template",
+        "status": "verified",
+        "depth": 5,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -465,7 +428,7 @@
     {
       "id": "ai-vs-human-stopwatch-race",
       "title": "I Raced AI Against Myself on a Boring Task",
-      "search_term": "ai vs human speed test",
+      "search_term": "ai vs human challenge",
       "task": "data-entry",
       "sector": "general",
       "tool": "AI (model-agnostic) + a spreadsheet",
@@ -486,10 +449,9 @@
       },
       "adjusted_score": 82,
       "search_demand": {
-        "phrase": "ai vs human speed test",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
+        "phrase": "ai vs human challenge",
+        "status": "verified",
+        "depth": 1,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -497,7 +459,7 @@
     {
       "id": "recurring-invoice-system",
       "title": "Build a Recurring-Invoice System (No Code)",
-      "search_term": "recurring invoice automation",
+      "search_term": "recurring invoices",
       "task": "documents",
       "sector": "accounting",
       "tool": "Make",
@@ -508,14 +470,9 @@
       "produced_video_id": null,
       "adjusted_score": 81,
       "search_demand": {
-        "phrase": "recurring invoice automation",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "recurring invoice quickbooks",
-          "how to automate reconciliation in excel",
-          "recurring invoice"
-        ],
+        "phrase": "recurring invoices",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -564,7 +521,7 @@
     {
       "id": "shift-schedule-cafe",
       "title": "Auto-Build Weekly Cafe Shift Schedules",
-      "search_term": "automate shift scheduling",
+      "search_term": "shift schedule",
       "task": "scheduling",
       "sector": "hospitality",
       "tool": "Google Sheets",
@@ -574,14 +531,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automate shift scheduling",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "automatic shift schedule generator",
-          "automatic shift schedule excel",
-          "automate scheduling"
-        ],
+        "phrase": "shift schedule",
+        "status": "verified",
+        "depth": 9,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -589,7 +541,7 @@
     {
       "id": "form-to-email-confirmation",
       "title": "Auto-Confirm Every Form Submission by Email",
-      "search_term": "auto email after form submission",
+      "search_term": "google form confirmation email",
       "task": "outbound-comms",
       "sector": "general",
       "tool": "Forms",
@@ -599,10 +551,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "auto email after form submission",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
+        "phrase": "google form confirmation email",
+        "status": "verified",
+        "depth": 1,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -660,7 +611,7 @@
     {
       "id": "before-coffee-automation-montage",
       "title": "What My Automations Did Before I Finished My Coffee",
-      "search_term": "morning automation routine",
+      "search_term": "automate your life",
       "task": "other",
       "sector": "general",
       "tool": "AI (model-agnostic) + a spreadsheet",
@@ -680,10 +631,9 @@
         "added": "2026-06-27"
       },
       "search_demand": {
-        "phrase": "morning automation routine",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
+        "phrase": "automate your life",
+        "status": "verified",
+        "depth": 6,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -691,7 +641,7 @@
     {
       "id": "crm-followup-automation",
       "title": "Auto-Follow-Up with Leads Who Went Quiet",
-      "search_term": "automate lead follow up",
+      "search_term": "lead follow up",
       "task": "outbound-comms",
       "sector": "sales",
       "tool": "Make",
@@ -701,12 +651,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automate lead follow up",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "automate email follow up"
-        ],
+        "phrase": "lead follow up",
+        "status": "verified",
+        "depth": 7,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -714,7 +661,7 @@
     {
       "id": "how-to-build-automation-system",
       "title": "How to Design Your First Automation System",
-      "search_term": "how to build automation system",
+      "search_term": "how to automate your business",
       "task": "other",
       "sector": "general",
       "tool": "Make",
@@ -724,16 +671,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "how to build automation system",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "how to build home automation system",
-          "how to build automated trading system",
-          "how to build automatic storage system in minecraft",
-          "how to make home automation system using arduino",
-          "how to make home automation system"
-        ],
+        "phrase": "how to automate your business",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -741,7 +681,7 @@
     {
       "id": "spreadsheet-to-dashboard",
       "title": "Auto-Build a Dashboard from Raw Data",
-      "search_term": "automatic dashboard from spreadsheet",
+      "search_term": "google sheets dashboard",
       "task": "lookups-reports",
       "sector": "general",
       "tool": "Google Sheets",
@@ -751,14 +691,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automatic dashboard from spreadsheet",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "automatic dashboard in excel",
-          "automate dashboard in excel",
-          "automate charts in excel"
-        ],
+        "phrase": "google sheets dashboard",
+        "status": "verified",
+        "depth": 10,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -816,7 +751,7 @@
     {
       "id": "auto-categorize-expenses",
       "title": "Auto-Categorize Bank Transactions",
-      "search_term": "auto categorize expenses spreadsheet",
+      "search_term": "categorize expenses in excel",
       "task": "data-entry",
       "sector": "accounting",
       "tool": "Google Sheets",
@@ -827,12 +762,9 @@
       "produced_video_id": null,
       "adjusted_score": 77,
       "search_demand": {
-        "phrase": "auto categorize expenses spreadsheet",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "how to categorize expenses in excel"
-        ],
+        "phrase": "categorize expenses in excel",
+        "status": "verified",
+        "depth": 1,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -881,7 +813,7 @@
     {
       "id": "dedupe-customer-list",
       "title": "Find & Remove Duplicate Customers Automatically",
-      "search_term": "remove duplicates spreadsheet automatically",
+      "search_term": "find duplicates in excel",
       "task": "data-entry",
       "sector": "sales",
       "tool": "Google Sheets",
@@ -892,13 +824,9 @@
       "produced_video_id": null,
       "adjusted_score": 76,
       "search_demand": {
-        "phrase": "remove duplicates spreadsheet automatically",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "remove duplicates in sheets",
-          "remove duplicate google sheet"
-        ],
+        "phrase": "find duplicates in excel",
+        "status": "verified",
+        "depth": 10,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -906,7 +834,7 @@
     {
       "id": "social-post-scheduler",
       "title": "Auto-Schedule a Week of Posts from a Sheet",
-      "search_term": "schedule social posts from spreadsheet",
+      "search_term": "schedule social media posts",
       "task": "scheduling",
       "sector": "marketing",
       "tool": "Make",
@@ -916,14 +844,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "schedule social posts from spreadsheet",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "schedule social media posts",
-          "schedule posts with canva",
-          "schedule social media content"
-        ],
+        "phrase": "schedule social media posts",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -931,7 +854,7 @@
     {
       "id": "inventory-low-stock-alert",
       "title": "Get an Alert When Stock Runs Low",
-      "search_term": "low stock alert spreadsheet",
+      "search_term": "low stock alert",
       "task": "lookups-reports",
       "sector": "retail",
       "tool": "Google Sheets",
@@ -941,14 +864,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "low stock alert spreadsheet",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "low stock alert",
-          "google sheet stock alert",
-          "stock alert app free"
-        ],
+        "phrase": "low stock alert",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -956,7 +874,7 @@
     {
       "id": "email-to-spreadsheet",
       "title": "Save Email Attachments to a Sheet Automatically",
-      "search_term": "email attachments to spreadsheet",
+      "search_term": "gmail to google sheets",
       "task": "data-entry",
       "sector": "general",
       "tool": "Make",
@@ -967,14 +885,9 @@
       "produced_video_id": null,
       "adjusted_score": 74,
       "search_demand": {
-        "phrase": "email attachments to spreadsheet",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "email attachment in excel",
-          "power automate email attachment to excel",
-          "email attachment power automate"
-        ],
+        "phrase": "gmail to google sheets",
+        "status": "verified",
+        "depth": 1,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -982,7 +895,7 @@
     {
       "id": "calendar-from-spreadsheet",
       "title": "Turn a Spreadsheet into Calendar Events",
-      "search_term": "spreadsheet to calendar events",
+      "search_term": "google sheets to google calendar",
       "task": "scheduling",
       "sector": "general",
       "tool": "Apps Script",
@@ -992,14 +905,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "spreadsheet to calendar events",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "sheet to calendar event",
-          "event calendar google sheets",
-          "spreadsheet to google calendar"
-        ],
+        "phrase": "google sheets to google calendar",
+        "status": "verified",
+        "depth": 1,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1032,7 +940,7 @@
     {
       "id": "money-leak-shock-stat",
       "title": "The Hidden Number Small Businesses Lose Every Year",
-      "search_term": "how much time wasted copy paste work",
+      "search_term": "manual data entry",
       "task": "data-entry",
       "sector": "general",
       "tool": "AI (model-agnostic) + a spreadsheet",
@@ -1053,10 +961,9 @@
       },
       "adjusted_score": 73,
       "search_demand": {
-        "phrase": "how much time wasted copy paste work",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
+        "phrase": "manual data entry",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1064,7 +971,7 @@
     {
       "id": "email-parser-to-crm",
       "title": "Auto-Parse Order Emails into Your CRM",
-      "search_term": "parse emails into crm",
+      "search_term": "email parser",
       "task": "data-entry",
       "sector": "sales",
       "tool": "Make",
@@ -1075,12 +982,9 @@
       "produced_video_id": null,
       "adjusted_score": 72,
       "search_demand": {
-        "phrase": "parse emails into crm",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "email parser in zoho crm"
-        ],
+        "phrase": "email parser",
+        "status": "verified",
+        "depth": 4,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1088,7 +992,7 @@
     {
       "id": "timesheet-summary",
       "title": "Auto-Summarize Timesheets into Payroll",
-      "search_term": "automate timesheet summary",
+      "search_term": "timesheet automation",
       "task": "lookups-reports",
       "sector": "accounting",
       "tool": "Google Sheets",
@@ -1098,12 +1002,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automate timesheet summary",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "power automate timesheet"
-        ],
+        "phrase": "timesheet automation",
+        "status": "verified",
+        "depth": 1,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1111,7 +1012,7 @@
     {
       "id": "auto-thank-you-emails",
       "title": "Auto-Send Thank-You Emails After a Purchase",
-      "search_term": "automatic thank you email",
+      "search_term": "post purchase email",
       "task": "outbound-comms",
       "sector": "retail",
       "tool": "Make",
@@ -1121,10 +1022,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automatic thank you email",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
+        "phrase": "post purchase email",
+        "status": "verified",
+        "depth": 2,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1170,7 +1070,7 @@
     {
       "id": "design-tools-experiment",
       "title": "Claude Design vs Stitch on the Same Brief",
-      "search_term": "claude design vs stitch",
+      "search_term": "claude design",
       "task": "other",
       "sector": "general",
       "tool": "Claude Design vs Google Stitch",
@@ -1190,14 +1090,9 @@
         "added": "2026-07-08"
       },
       "search_demand": {
-        "phrase": "claude design vs stitch",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "claude figure",
-          "clover stitch",
-          "claude outfit"
-        ],
+        "phrase": "claude design",
+        "status": "verified",
+        "depth": 9,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1226,7 +1121,7 @@
     {
       "id": "order-confirmation-bot",
       "title": "Auto-Confirm Orders and Update Stock",
-      "search_term": "automate order confirmation",
+      "search_term": "order confirmation email",
       "task": "data-entry",
       "sector": "retail",
       "tool": "Make",
@@ -1237,15 +1132,9 @@
       "produced_video_id": null,
       "adjusted_score": 71,
       "search_demand": {
-        "phrase": "automate order confirmation",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "automatic order confirmation shopify",
-          "how to automate order fulfillment shopify",
-          "order confirmation email shopify",
-          "order confirmation sms shopify"
-        ],
+        "phrase": "order confirmation email",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1253,7 +1142,7 @@
     {
       "id": "weekly-digest-email",
       "title": "Auto-Send a Weekly Digest from Your Data",
-      "search_term": "automated weekly digest email",
+      "search_term": "automated report",
       "task": "outbound-comms",
       "sector": "general",
       "tool": "Make",
@@ -1263,12 +1152,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automated weekly digest email",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "automated newsletter"
-        ],
+        "phrase": "automated report",
+        "status": "verified",
+        "depth": 6,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1276,7 +1162,7 @@
     {
       "id": "notary-document-templates",
       "title": "Auto-Fill Repetitive Legal Documents",
-      "search_term": "automate document templates",
+      "search_term": "document automation",
       "task": "documents",
       "sector": "legal",
       "tool": "Word",
@@ -1287,14 +1173,9 @@
       "produced_video_id": null,
       "adjusted_score": 71,
       "search_demand": {
-        "phrase": "automate document templates",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "automate document creation",
-          "automate word template",
-          "automate document generation"
-        ],
+        "phrase": "document automation",
+        "status": "verified",
+        "depth": 10,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1302,7 +1183,7 @@
     {
       "id": "school-prom-invites",
       "title": "Auto-Send Prom Invitations to Every Student",
-      "search_term": "bulk event invitations email",
+      "search_term": "mail merge invitation",
       "task": "outbound-comms",
       "sector": "schools",
       "tool": "Gmail",
@@ -1312,10 +1193,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "bulk event invitations email",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
+        "phrase": "mail merge invitation",
+        "status": "verified",
+        "depth": 10,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1323,7 +1203,7 @@
     {
       "id": "survey-results-summary",
       "title": "Auto-Summarize Survey Results",
-      "search_term": "summarize survey results automatically",
+      "search_term": "analyze survey data",
       "task": "lookups-reports",
       "sector": "general",
       "tool": "Forms",
@@ -1333,13 +1213,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "summarize survey results automatically",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "how to summarize survey results in excel",
-          "how to summarize survey results"
-        ],
+        "phrase": "analyze survey data",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1354,7 +1230,7 @@
       "archetype": "ideas",
       "angle_hint": "A reminder list isn't a real process — a trigger is.",
       "score": 69,
-      "status": "backlog",
+      "status": "parked",
       "produced_video_id": null,
       "search_demand": {
         "phrase": "prescription refill reminder automation",
@@ -1368,12 +1244,13 @@
         ],
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
-      }
+      },
+      "parked_reason": "No search phrase with this intent (2026-10-17): 'prescription refill reminder', 'refill reminders', 'medication refill reminder' are not typed; 'medication reminder' is patients looking for an app and 'pharmacy automation' is dispensing robots."
     },
     {
       "id": "auto-sort-incoming-files",
       "title": "Auto-Sort Files into Folders by Name",
-      "search_term": "automatically organize files",
+      "search_term": "organize files with ai",
       "task": "data-entry",
       "sector": "general",
       "tool": "Apps Script",
@@ -1384,14 +1261,9 @@
       "produced_video_id": null,
       "adjusted_score": 68,
       "search_demand": {
-        "phrase": "automatically organize files",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "automatic file organizer windows",
-          "how to organize files mac",
-          "how to organize files windows"
-        ],
+        "phrase": "organize files with ai",
+        "status": "verified",
+        "depth": 1,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1399,7 +1271,7 @@
     {
       "id": "parent-absence-emails",
       "title": "Auto-Email Parents When a Student Is Absent",
-      "search_term": "automate absence notification",
+      "search_term": "school attendance system",
       "task": "outbound-comms",
       "sector": "schools",
       "tool": "Google Sheets",
@@ -1409,12 +1281,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automate absence notification",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "outlook reponse automatique absence"
-        ],
+        "phrase": "school attendance system",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1422,7 +1291,7 @@
     {
       "id": "contract-renewal-alerts",
       "title": "Never Miss a Contract Renewal Again",
-      "search_term": "contract renewal reminder",
+      "search_term": "excel due date reminder",
       "task": "scheduling",
       "sector": "legal",
       "tool": "Google Sheets",
@@ -1432,10 +1301,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "contract renewal reminder",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
+        "phrase": "excel due date reminder",
+        "status": "verified",
+        "depth": 2,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1464,7 +1332,7 @@
     {
       "id": "translate-emails-auto",
       "title": "Auto-Translate Incoming Customer Emails",
-      "search_term": "auto translate emails",
+      "search_term": "translate email",
       "task": "outbound-comms",
       "sector": "general",
       "tool": "AI",
@@ -1474,10 +1342,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "auto translate emails",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
+        "phrase": "translate email",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1492,7 +1359,7 @@
       "archetype": "ideas",
       "angle_hint": "Fill cancellations without a single phone call.",
       "score": 66,
-      "status": "backlog",
+      "status": "parked",
       "produced_video_id": null,
       "search_demand": {
         "phrase": "automate booking waitlist",
@@ -1501,7 +1368,8 @@
         "alternatives": [],
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
-      }
+      },
+      "parked_reason": "No search phrase with this intent (2026-10-17): 'automate booking waitlist', 'waitlist automation', 'waitlist system', 'waiting list google sheets' are not typed; 'waiting list' / 'waitlist' are music and Amazon Flex searches."
     },
     {
       "id": "five-tasks-ai-secretary",
@@ -1529,7 +1397,7 @@
     {
       "id": "attendance-tracker",
       "title": "Automate Attendance Tracking",
-      "search_term": "automate attendance tracking",
+      "search_term": "attendance tracker excel",
       "task": "data-entry",
       "sector": "schools",
       "tool": "Google Sheets",
@@ -1540,16 +1408,9 @@
       "produced_video_id": null,
       "adjusted_score": 63,
       "search_demand": {
-        "phrase": "automate attendance tracking",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "automated attendance tracker",
-          "automated employee attendance tracking sheet in excel",
-          "automate attendance",
-          "automated attendance google sheet",
-          "automated employee attendance tracker"
-        ],
+        "phrase": "attendance tracker excel",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1578,7 +1439,7 @@
     {
       "id": "auto-backup-sheets",
       "title": "Auto-Back-Up Your Spreadsheets Daily",
-      "search_term": "automatic spreadsheet backup",
+      "search_term": "backup excel",
       "task": "other",
       "sector": "general",
       "tool": "Apps Script",
@@ -1588,13 +1449,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automatic spreadsheet backup",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "auto backup excel file",
-          "automatic data backup software"
-        ],
+        "phrase": "backup excel",
+        "status": "verified",
+        "depth": 5,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1602,7 +1459,7 @@
     {
       "id": "municipal-permit-tracker",
       "title": "Track Permit Requests Automatically",
-      "search_term": "automate request tracking",
+      "search_term": "task tracker excel",
       "task": "lookups-reports",
       "sector": "government",
       "tool": "Google Sheets",
@@ -1612,13 +1469,9 @@
       "status": "backlog",
       "produced_video_id": null,
       "search_demand": {
-        "phrase": "automate request tracking",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "how to automate with zapier",
-          "automated tracker"
-        ],
+        "phrase": "task tracker excel",
+        "status": "verified",
+        "depth": 6,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -1762,6 +1615,84 @@
       },
       "performance": 24,
       "adjusted_score": 54
+    },
+    {
+      "id": "desk-lessons-llm-next-word",
+      "title": "AI is never unsure. That's the bug.",
+      "search_term": "why is chatgpt confidently wrong",
+      "task": "other",
+      "sector": "general",
+      "subject": "llm-mental-model",
+      "series": "Desk Lessons",
+      "lane": "desk-notes",
+      "tool": "None — this is a concept/mental-model Short, not a how-to. No product named; the subject is the base LLM itself (model-agnostic; ChatGPT used only as the recognizable stand-in in the hook).",
+      "archetype": "ideas",
+      "angle_hint": "Not 'it predicts the next word' but what that costs you: a base LLM builds a right answer and a made-up one the same way, so it sounds equally sure either way. Confidence is not a truth signal.",
+      "score": 88,
+      "status": "produced",
+      "value_type": [
+        "corrects-misbelief",
+        "avoids-mistake",
+        "teaches-system"
+      ],
+      "takeaway": "An AI's confidence is not evidence it's right. A base LLM builds true answers and made-up ones the same way — one likely word at a time, with no facts it looks up and nothing measuring truth — so it sounds equally sure either way. Stop reading a fluent, confident tone as 'it knows'; treat every answer as a very good guess you still verify.",
+      "produced_video_id": "019-next-word-engine",
+      "source": {
+        "origin": "manual",
+        "added": "2026-10-17"
+      }
+    },
+    {
+      "id": "desk-lessons-frozen-weights",
+      "title": "Correcting Your AI Teaches It Nothing",
+      "search_term": "does ai learn from your conversations",
+      "task": "other",
+      "sector": "general",
+      "subject": "llm-mental-model",
+      "series": "Desk Lessons",
+      "lane": "desk-notes",
+      "tool": "None — concept video, model-agnostic. GPT-2 small (open, local CPU) is the measuring instrument only, exactly as in 023.",
+      "archetype": "ideas",
+      "angle_hint": "A correction in a chat is not a lesson, it is one more page the model reads. Weights are set once in training and frozen; measured on an open model, 100 corrections changed 0 of its numbers.",
+      "score": 89,
+      "status": "produced",
+      "value_type": [
+        "corrects-misbelief",
+        "teaches-system",
+        "surprising-truth"
+      ],
+      "takeaway": "Your corrections live in the chat window, not in the model. A mistake you have fixed twice is an instruction: put it in saved instructions, a project file, or the top of your prompt, where it is read every time.",
+      "produced_video_id": "024-frozen",
+      "source": {
+        "origin": "manual",
+        "added": "2026-10-17"
+      }
+    },
+    {
+      "id": "agent-stop-line",
+      "title": "AI Agents Make Mistakes. One Line Makes Them Undoable.",
+      "search_term": "scheduled ai agent mistakes",
+      "task": "outbound-comms",
+      "sector": "general",
+      "subject": "execution/actions",
+      "series": "Desk Loops",
+      "lane": "desk-loops",
+      "tool": "Model- and tool-agnostic (a headless agent as the measuring instrument; OpenAI Dots, Claude routines, Cursor automations named as news)",
+      "archetype": "ideas",
+      "angle_hint": "You cannot stop an agent from making mistakes, but you can decide where they land: ten runs with a one-line job sent 73 unapproved emails; ten runs with a stop line ('Never send. Drafts only.') sent zero, and the same slips landed in drafts.",
+      "score": 85,
+      "status": "produced",
+      "value_type": [
+        "avoids-mistake",
+        "teaches-system",
+        "surprising-truth"
+      ],
+      "takeaway": "Before an agent runs without you, write its stop line: swap every action it cannot take back for the twin it can (send -> draft, delete -> move, pay -> prepare, publish -> private), and where there is no twin, the action waits for you. You cannot prompt away a slip, but one line decides whether a slip is a draft you delete or an email you can never recall.",
+      "produced_video_id": "025-always-on-agents",
+      "source": {
+        "origin": "manual",
+        "added": "2026-10-17"
+      }
     }
   ]
 }

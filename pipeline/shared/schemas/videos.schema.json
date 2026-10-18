@@ -6,6 +6,22 @@
   "additionalProperties": false,
   "required": ["schema_version", "updated", "live_from", "videos"],
   "properties": {
+    "retired": {
+      "type": "object",
+      "description": "Videos the owner withdrew after approval that never reached the channel (reconcile --retire). The key is skipped by every reconcile pass, so its publish.json is never ingested again; the reason stays on file.",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[0-9]{3}-[a-z0-9-]+(/short(-[2-9])?)?$": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["at", "reason"],
+          "properties": {
+            "at": { "type": "string", "description": "ISO date it was retired." },
+            "reason": { "type": "string", "minLength": 1, "description": "Why it will never ship." }
+          }
+        }
+      }
+    },
     "schema_version": { "const": 1, "description": "Ledger format version. Bump only with a migration." },
     "updated": { "type": "string", "description": "ISO date (YYYY-MM-DD) this ledger was last written." },
     "live_from": {
@@ -18,7 +34,7 @@
       "description": "One record per publish.json — keyed by that file's directory relative to content/ (\"018-life-story\" for the long, \"018-life-story/short\" for its Short).",
       "additionalProperties": false,
       "patternProperties": {
-        "^[0-9]{3}-[a-z0-9-]+(/short)?$": {
+        "^[0-9]{3}-[a-z0-9-]+(/short(-[2-9])?)?$": {
           "type": "object",
           "additionalProperties": false,
           "required": ["content_type", "status", "lesson", "analytics"],

@@ -21,7 +21,12 @@
     "engine": "combo",
     "fps": 30,
     "long": { "width": 1920, "height": 1080 },
-    "short": { "width": 1080, "height": 1920 }
+    "short": { "width": 1080, "height": 1920 },
+    "upscale": { "long": { "width": 2560, "height": 1440 }, "short": null }
+  },
+  "schedule": {
+    "long": { "weekdays": ["tue"], "every_weeks": 2, "anchor": "2026-10-27" },
+    "short": { "weekdays": ["mon", "wed", "fri"], "every_weeks": 1 }
   },
   "paths": {
     "content": "content",

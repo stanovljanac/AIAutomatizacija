@@ -130,6 +130,18 @@ The Medium **post** also needs (owner rule 2026-06-07), stored in `publish.json.
   placed right after the 2–4 sentence overview (and optionally repeated as the last line).
   The real URL is filled at upload.
 
+## Extra Shorts, upload file, publish days (D-074)
+- **Shorts cut from the long (1B):** units `short-2`, `short-3` … are packaged in
+  `publish.json.extra_shorts` (title from the cut, tags, caption, subtitles) and each gets its own
+  `## Short N` section in publish.md. Give every one its one-sentence caption + link to the long, like
+  the first Short.
+- **Upload file (2B):** after Gate ③ run `node pipeline/04-render/finalize.mjs <id>` — `video/final.mp4`
+  becomes the 2560×1440 upscale (the 1080p master stays in `render/master.mp4`). After processing, the
+  owner checks the codec once (right-click → Stats for nerds: `vp09` or `avc1`).
+- **Publish days (3D):** `node pipeline/06-publish/schedule.mjs <id> --assign` → `scheduled_for` on the
+  long, `short` and every `extra_shorts` entry (long every second Tuesday, Shorts Mon/Wed/Fri, each
+  Short after its long); publish.md lists them and the owner schedules each upload in Studio.
+
 ## Upload
 - **SUSPENDED — D-055 (owner, 2026-07-10): do NOT upload via the API or create YouTube drafts.**
   The owner uploads **manually** (he is testing whether API drafts flipped private→public get

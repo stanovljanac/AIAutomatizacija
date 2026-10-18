@@ -921,3 +921,89 @@ old one (don't delete history).
 - **Not done here, on purpose.** No change to `projectIdeas` (three produced ideas sit at `backlog` —
   flagged in ROADMAP); no re-wording of the 46 unverified phrases; no regeneration of existing
   `publish.md` files (025 gets its Test & Compare block when its package is next regenerated).
+
+## D-074 — Growth quadrant 2: the 1440p upload file, Shorts cut from the long's own scenes, fixed publish days; produced ideas close themselves (owner, 2026-10-17)
+- **Context.** After quadrant 1 (D-073) the owner said *"kreni da radiš ove stvari nadalje"*: 2B (1440p
+  upscale), 1B/3C (Shorts from the long's scenes — the biggest lever, 95% of views come from Shorts;
+  target 3 Shorts a week), 1C (a video assembled from 2–4 scene sets), 3D (fixed publish days), 3E
+  (the niche decision, 2026-12-12 → 12-26) — plus three clean-ups: 013/017/023 (and 025) done but not
+  marked so; the 46 search phrases nobody types; 020's Short not on the channel (*"loše urađen i
+  konstruisan"* — delete it or make a new one on a similar, popular topic).
+- **Decision 1 (2B).** The upload file is the approved 1080p master upscaled to 2560×1440 at the very
+  end (`pipeline/04-render/finalize.mjs`, orchestrator node `finalize`): lanczos at `MASTER_CRF`, the
+  source's pixel format and colour tags kept (Remotion masters are full-range `yuvj420p` — a range
+  conversion would shift every black and gold), timebase kept, audio stream-copied, every frame + the
+  played seconds + the timebase + the audio MD5 verified before anything is replaced. `video/` still holds
+  ONE file (D-071); the 1080p master moves to `render/master.mp4` as the patch base. Long on, Short off
+  (`config.render.upscale.short: null`) until the first long upload's codec check (Stats for nerds:
+  `vp09` vs `avc1`) shows whether 1440p earns VP9. Measured: ~1.4× real time on the i5-12400F; a still
+  from the upscale matches the master's colour and levels. Native 1440p (2C) stays deferred.
+- **Decision 2 (1B).** A Short is a CUT of its long, not a second production. The script writer lists 2–3
+  `short_cuts` (long scene ids; optional `opening` that replaces the first sentence one-for-one, because
+  a verbatim cut inherits the long's back-references — "So…", "Then…", "in this video"; optional `hook`
+  with its own portrait scene). `pipeline/01-script/make-shorts.mjs` turns each into the next free unit
+  — `short`, `short-2`, `short-3` (one helper, `pipeline/shared/lib/units.mjs`, now answers "is this a
+  Short, and whose" for every phase; a hand-built unit, i.e. one without `short_source.json`, is never
+  overwritten). The narration is the long's, voiced again as the Short's own continuous track (PRD R11
+  holds); the long's plan entries are reused (same HF scene, same props); the first scene is tagged
+  `hook-card` for the opening gate (the 025 s1 convention); a `carry`/`match` survives only into the
+  long's next scene. After alignment, `--marks` carries every word mark and SFX cue onto the Short's
+  clock by a piecewise-linear word warp (the 024 re-voice method). **Portrait is the price of reuse:** a
+  scene renders into a Short only with a portrait framing (`lib/portrait.mjs`; compile-hyperframes refuses
+  otherwise, `props.portrait_ok` waives after a still is checked), so every new scene ships both framings
+  (MOTION_SPEC §10). 022/023's scenes have them; 024/025's (`hf-world`, `hf-mech`) do not — their cuts
+  need a portrait branch per reused scene, which is the "medium once" of the plan. *(D-075: the two 023
+  cuts were rejected — a branch is not a checked framing; 022–025 are not cut at all.)*
+- **Decision 3 (3D).** Long every second Tuesday (anchor 2026-10-27), Shorts Monday, Wednesday, Friday
+  (`config.schedule`). `pipeline/06-publish/schedule.mjs --assign` writes `scheduled_for` on the long and
+  each Short (Shorts after their long, so the related-video link points at a public video); a slot is
+  taken by any catalog upload on its publish day — a scheduled private upload on YouTube's
+  `status.publishAt` day, now kept in the catalog as `scheduled_for` — or by a date promised in another
+  publish.json. The owner still uploads and schedules by hand (D-055).
+- **Decision 4 (clean-ups).** (a) `projectIdeas` promotes `backlog → produced` too; only an idea marked
+  `recurring: true` (a series format — `everyone-asks-ai-series`) stays in the backlog. 013, 017, 023
+  became produced; 019, 024 and 025 got the idea records their ledger entries pointed at
+  (`desk-lessons-llm-next-word`, `desk-lessons-frozen-weights`, `agent-stop-line`). (b) An approved video
+  that will never ship is RETIRED (`reconcile <key> --retire --reason`): its record moves to
+  `videos.json.retired`, its publish.json is never ingested again, its subject is freed. 020's Short is
+  retired; its folder stays on disk until the owner confirms the delete (git-ignored, so irreversible —
+  confirmed and deleted 2026-10-18, D-075).
+  Its topic is reborn as `clean-imported-data-excel` on the phrase "how to clean data in excel"
+  (autocomplete offers 10 continuations), keeping 020's one good idea (flag, don't guess). (c) The owner
+  delegated the re-wording: 42 of the 46 unverified phrases now have a verified phrase on the same topic;
+  2 ideas with no search of the right intent are `parked` with a `parked_reason`
+  (`waitlist-automation`, `pharmacy-refill-reminders`); 013/017's two were produced.
+- **Also.** edge-tts 7.2.8 started failing with HTTP 403 (Microsoft's `Sec-MS-GEC` token); upgraded the
+  venv to 7.3.1, which voices again (revert: `pip install edge-tts==7.2.8`).
+- **Not done here.** 1C is a production decision for the next video (2–4 scene sets joined by
+  transitions — the 025-benchmark memory). 3E waits for its window (2026-12-12 → 12-26). 005 and 016
+  have sat at Gate ② (`in-progress`) since June/July and block pick-next — the owner's call (D-075:
+  parked, kept).
+
+## D-075 — No Shorts cut from 022–025; a portrait framing counts only once its tall frame was looked at (owner, 2026-10-18)
+- **Context.** The first two Shorts cut by D-074's 1B — 023's "3 Rules to Make an AI Actually Focus"
+  (s21–s24) and "Pasting More Into an AI Costs You Twice" (s16–s19) — passed check.mjs, the frame gate and
+  a second-pass review, and the owner deleted both as catastrophic: *"dosta stvari se preklapa vizuelno
+  jedno sa drugim i nije jasno šta se radi dok su takođe i kontrasti loši"*. No scene was new: every
+  reused scene's `.portrait` branch was written with the 023 library (2026-08-23) and had never been
+  rendered tall or looked at; `portraitReady` counted any branch as ready, and the frame gate measures
+  neither overlap nor contrast. D-054's "overlap checks … for landscape AND portrait" was prose only.
+- **Decision 1.** Shorts are cut from the long only from the next video on; 022–025 are skipped (their
+  visuals sit below the 025 floor — visually, not semantically). 023's `short_cuts`, its `extra_shorts`
+  and their publish days were removed; the `at3d-pairs` portrait camera change made for the cut was
+  reverted. The proposed "two Shorts from 022 + portrait branches for 024/025" is dropped.
+- **Decision 2.** A landscape scene's portrait branch makes it RENDERABLE tall, not ready. Each reused
+  landscape scene in a derived Short (a unit with `short_source.json`) needs `props.portrait_ok: true`,
+  given only after its tall frame was looked at at phone size for **overlap** (nothing over anything —
+  MOTION_SPEC §13), **contrast** (subject and every word read against the background) and **fill** (the
+  subject uses the frame, not its top half — §10). `05-qa/check.mjs` fails such a Short HARD
+  (`portrait_signoff`); `make-shorts.mjs` lists unsigned scenes in its report; the sign-off rides outside
+  the render variables (`job.portraitOk`), so giving it never re-renders the clip it was judged on, and a
+  re-derive of the same cut keeps it. Native-portrait scenes are exempt (composed for 9:16 and checked
+  with their own video). The same look belongs at authoring time, when the branch is written.
+- **Decision 3 (owner's calls on D-074's open items).** `content/020-everyone-asks-clean-data/` deleted
+  (its Short stays a tombstone in `videos.json.retired`). 005 and 016 are kept to finish some day but
+  `parked` (with a `parked_reason`) so they no longer block pick-next; resume = status back to
+  `in-progress`.
+- **Open.** An automatic overlap/contrast measure for the frame gate; today the sign-off rests on
+  looking. Lesson: `knowledge/desk-knowledge/lessons/2026-10-18-a-portrait-branch-written-blind-is-not-a-portrait.md`.

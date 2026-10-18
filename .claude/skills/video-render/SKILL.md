@@ -80,6 +80,17 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   version. Quality is set in code, in one place — `pipeline/shared/lib/encode.mjs` `MASTER_CRF` (12):
   Remotion composites lossless PNG frames at that CRF (`remotion.config.ts`), the HF clips are normalised at
   it, and `repair-dropouts` re-encodes at it. Never re-encode the master below it.
+- **Shorts cut from the long (1B, D-074):** with `short_cuts` in the script, `make-shorts.mjs <id>` derives
+  units `short`, `short-2`, `short-3` (reused HF scenes, portrait); each unit is voiced + aligned, then
+  `make-shorts.mjs <id> --marks` re-times its word marks + SFX, then compile-hyperframes → build-props →
+  render → repair-dropouts, per unit (`<id>/short-2` …). compile-hyperframes refuses a scene with no portrait
+  framing; 05-qa then fails the unit (`portrait_signoff`) until every reused landscape scene carries
+  `props.portrait_ok: true` — given only after looking at its tall frame for overlap, contrast and fill
+  (D-075; the sign-off never re-renders a clip). Only longs after 025 are cut.
+- **Upload file (2B, D-074):** after Gate ③, `node pipeline/04-render/finalize.mjs <id>` moves the approved
+  1080p cut to `render/master.mp4` and makes `video/final.mp4` its 2560×1440 lanczos upscale (verified frame
+  for frame; the Short stays as rendered while `config.render.upscale.short` is null). To patch a scene
+  after that, patch `render/master.mp4` (`--base`) and re-run finalize.
 - `video/final.mp4` (long), `short/video/final.mp4` (the nested Short — 1–2 key beats,
   **light music allowed**; length per **STYLE_GUIDE §7** — ~50–60s target, hard max 2:00,
   `config.defaults.short_seconds` / `short_seconds_max`).

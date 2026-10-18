@@ -21,6 +21,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { validate, formatErrors } from "../shared/lib/validate-lib.mjs";
 import { NON_VIDEOS, VIDEO_DIR_RE, readJsonSoft } from "../state/reconcile.mjs";
+import { SHORT_KEY_SUFFIX, SHORT_UNIT_RE, sortUnits } from "../shared/lib/units.mjs";
 import { REACH_REPORT_TYPE } from "./reach.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -120,6 +121,8 @@ export async function listUploads(yt) {
         published_at: String(v.snippet?.publishedAt ?? "").slice(0, 10),
         duration_seconds: parseIsoDuration(v.contentDetails?.duration),
         privacy: v.status?.privacyStatus ?? "unknown",
+        // a scheduled upload is private until status.publishAt; the schedule (3D) counts that day
+        scheduled_for: v.status?.publishAt ? String(v.status.publishAt).slice(0, 10) : null,
       });
     }
   }
@@ -225,6 +228,7 @@ export function mergeCatalog(prev, { uploads = [], playlists = {}, types = {}, m
       content_type: types[u.id] ?? old?.content_type ?? inferContentType(u.duration_seconds),
       content_key: old?.content_key ?? null,
     };
+    if (u.scheduled_for) rec.scheduled_for = u.scheduled_for;
     if (old?.key_source) rec.key_source = old.key_source;
     rec.metrics = { fetched, ...(metrics[u.id] ?? {}) };
     if (traffic[u.id] && Object.keys(traffic[u.id]).length) rec.metrics.traffic = traffic[u.id];
@@ -246,7 +250,8 @@ const titlesOf = (doc) => [doc?.chosen_title, ...(doc?.title_options ?? []), doc
 
 /**
  * Every content folder as the uploads it can stand for: {key, content_type, titles}.
- *  • a long or long+short topic → `<folder>` (long) and, when it has a Short, `<folder>/short`;
+ *  • a long or long+short topic → `<folder>` (long) and, when it has a Short, `<folder>/short`
+ *    (plus `<folder>/short-2` … for the further Shorts cut from its scenes, 1B);
  *  • a Short-only topic → `<folder>` (short), or `<folder>/short` when its package lives there
  *    (019, 020) — the same key the ledger gives it;
  *  • the two legacy flat Shorts (`002-short`, `003-short`) → themselves.
@@ -282,6 +287,16 @@ export function contentCandidates(contentDir) {
     }
     out.push({ key: folder, content_type: "long", titles: clean([...titlesOf(pub), ...titlesOf(brief), script?.title_working]) });
     if (hasShortDir || pub?.short) out.push({ key: `${folder}/short`, content_type: "short", titles: shortTitles });
+    // 1B (D-074): the further Shorts cut from the long's scenes, `short-2` … (titles in publish.extra_shorts).
+    const extra = sortUnits(
+      fs.readdirSync(path.join(contentDir, folder), { withFileTypes: true })
+        .filter((e) => e.isDirectory() && SHORT_UNIT_RE.test(e.name) && e.name !== "short")
+        .map((e) => e.name)
+    );
+    for (const unit of extra) {
+      const meta = (pub?.extra_shorts ?? []).find((s) => s?.unit === unit);
+      out.push({ key: `${folder}/${unit}`, content_type: "short", titles: clean([meta?.title, read(folder, unit, "script.json")?.title_working]) });
+    }
   }
   return out;
 }
@@ -367,7 +382,9 @@ export function setContentKey(catalog, ytId, key) {
   if (key === null) {
     return { ...catalog, videos: { ...catalog.videos, [ytId]: { ...v, content_key: null, key_source: "none" } } };
   }
-  if (!/^[0-9]{3}-[a-z0-9-]+(\/short)?$/.test(key)) throw new Error(`"${key}" is not a content key (e.g. 024-frozen or 024-frozen/short)`);
+  if (!new RegExp(`^[0-9]{3}-[a-z0-9-]+${SHORT_KEY_SUFFIX}$`).test(key)) {
+    throw new Error(`"${key}" is not a content key (e.g. 024-frozen, 024-frozen/short or 024-frozen/short-2)`);
+  }
   const holder = Object.entries(catalog.videos).find(([id, other]) => id !== ytId && other.content_key === key);
   if (holder) throw new Error(`"${key}" already belongs to ${holder[0]} ("${holder[1].title}") — unmap it first (--map ${holder[0]} none)`);
   return { ...catalog, videos: { ...catalog.videos, [ytId]: { ...v, content_key: key, key_source: "manual" } } };

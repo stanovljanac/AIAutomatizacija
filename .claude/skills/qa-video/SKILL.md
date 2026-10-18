@@ -34,6 +34,12 @@ You catch problems **before** the owner watches (PRD R13–R14), and you produce
 - **No overlap (HARD):** nothing covers scene graphics; scene content/bottom-anchored elements
   stay above the bottom band (our captions when burned in; YouTube's CC/player bar either way).
   FAIL on overlap.
+- **Short cut from the long — every reused scene, tall (HARD, D-075):** look at each scene's settled
+  portrait frame at phone size: **overlap** (no element over another — MOTION_SPEC §13), **contrast**
+  (subject and every word read against the background; a dark 3D floor with small objects fails),
+  **fill** (the subject uses the frame, not the top ~55% over an empty bottom). Only a scene that passes
+  all three gets `props.portrait_ok: true`; check.mjs (`portrait_signoff`) fails the unit until each
+  has it. The two 023 cuts failed all three and were deleted — a portrait branch is not a checked one.
 - **Scene/audio coherence:** no scene change mid-sentence; narration continuous (R11).
 - **Demo legibility (mini-demo):** capture region readable; cursor/zoom land on the action.
 - **Coverage:** every scene rendered; audio length ≈ sum of scenes; no black gaps.

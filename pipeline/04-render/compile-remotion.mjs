@@ -17,6 +17,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveFormat } from "../shared/lib/format.mjs";
+import { isShortUnit } from "../shared/lib/units.mjs";
 import { deriveRenderTimings } from "./lib/timings.mjs";
 import { localizeCueWindow } from "./lib/focal.mjs";
 import { sceneWindow } from "./lib/transitions.mjs";
@@ -217,8 +218,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   if (!id) { console.error("usage: compile-remotion.mjs <content_id>"); process.exit(1); }
   const cdir = join(ROOT, "content", id);
   const outId = id.replace(/[\\/]/g, "-");
-  const seg = id.split(/[\\/]/).pop();
-  const vertical = seg === "short" || seg.endsWith("-short");
+  const vertical = isShortUnit(id);
 
   const timeline = JSON.parse(readFileSync(join(cdir, "timeline.json"), "utf8"));
   const script = JSON.parse(readFileSync(join(cdir, "script.json"), "utf8"));

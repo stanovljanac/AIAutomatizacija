@@ -220,6 +220,25 @@ test("publishMarkdown: every publish.json field appears 1:1 (titles, description
   for (const c of pub.chapters) assert.ok(md.includes(`${c.time} ${c.label}`), `chapter ${c.time} missing`);
   assert.ok(md.includes(pub.short.title), "short title missing");
   assert.ok(md.includes("Altered/synthetic content: **Yes**"), "D-025 disclosure reminder missing");
+  assert.ok(md.includes(`finalize.mjs ${pub.id}`), "2B: the 1440p upload file step is missing");
+  assert.ok(md.includes("Stats for nerds"), "2B: the codec check after upload is missing");
+});
+
+test("buildMetadata: a derived cut names the Short, further units become extra_shorts (1B)", () => {
+  const base = { brief: readFixture("brief.json"), script: readFixture("script.json"), alignment: readFixture("alignment.json") };
+  const pub = buildMetadata({ ...base, shortUnits: [{ unit: "short", title: "Cut one" }, { unit: "short-2", title: "Cut two" }] });
+  assert.equal(pub.short.title, "Cut one");
+  assert.deepEqual(pub.extra_shorts.map((s) => [s.unit, s.title, s.subtitles]), [["short-2", "Cut two", "short-2/video/subtitles.srt"]]);
+  assertValid(pub, "publish");
+  const md = publishMarkdown(pub);
+  assert.ok(md.includes("## Short 2 (`short-2/video/final.mp4`)"));
+  assert.ok(md.includes("Subtitles (Short 2)"));
+  assert.ok(md.includes("schedule.mjs"), "an unscheduled package says how to schedule it (3D)");
+  assert.ok(publishMarkdown({ ...pub, scheduled_for: "2026-11-10" }).includes("Publish days: long 2026-11-10"));
+  assert.ok(!publishMarkdown({ ...pub, status: "published" }).includes("## Schedule"), "a published package is not told to schedule");
+  const plain = buildMetadata({ ...base, shortUnits: [{ unit: "short", title: null }] });
+  assert.equal(plain.extra_shorts, undefined, "one hand-built Short → no extra_shorts");
+  assert.match(plain.short.title, /\(Short\)$/);
 });
 
 test("chapterProblems: a chapter under 10 s (025's draft, 1:41 → 1:48) and the other YouTube rules", () => {

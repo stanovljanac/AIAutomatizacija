@@ -79,7 +79,10 @@ that passes the review agent.
    (`pass: true|false` + issues).
 4. **Fix loop.** If `pass: false`, the writer fixes and re-runs fact-check + review (cap at
    N loops, then surface to you).
-5. Set `status: "scripted"`.
+5. **Short cuts (1B, D-074).** The writer lists 2–3 `short_cuts` in `script.json`: runs of the
+   long's own scenes that stand alone in ~45–60 s (an `opening` replaces a first sentence that leans
+   on what came before). They become the Shorts in Step 4 — no second storyboard.
+6. Set `status: "scripted"`.
 
 ### ▶ GATE ② — You review the script
 You read `script.json` (already auto-reviewed and clean). Approve or request changes.
@@ -138,13 +141,18 @@ On approval → `status: "script_approved"`.
    highlight. Subtitles use the same timings (burned-in, animated, English).
 3. Add the reusable **outro** (no music on long-form; **no intro** — the hook owns frame 0, D-068). Render via the selected
    `render.engine` (Remotion / hyperframes / combo).
-4. Build the **Short** (1–2 key beats; light music allowed).
+4. Build the **Shorts** (1B, D-074): `node pipeline/01-script/make-shorts.mjs <id>` turns each
+   `short_cuts` entry into a unit (`short`, `short-2`, `short-3`) that reuses the long's scenes in
+   portrait; voice + align each unit (`<id>/short-2` …), then `make-shorts.mjs <id> --marks` moves the
+   word marks + SFX onto its clock, then compile-hyperframes → build-props → render per unit. The
+   readiness report names any reused scene without a portrait framing (compile-hyperframes refuses it).
+   No `short_cuts` → the one lean derived Short of before (`make-short.mjs`).
 5. **Thumbnail candidates (04b, D-056):** `node pipeline/04b-thumbnails/extract.mjs <id>`
    grabs 3 **caption-free** stills from the video's own timeline (scored deterministically;
    you pick — no AI ranking). Fallback: 2 image prompts (`visual-prompts` skill).
 6. Set `status: "rendered"`.
 
-**Output:** `video/final.mp4`, `video/short.mp4`, `images/thumb_candidate_{1..3}.png` +
+**Output:** `video/final.mp4`, `short*/video/final.mp4`, `images/thumb_candidate_{1..3}.png` +
 `thumb_final_{1..3}.png` + `thumb_candidates.json`, `render/props.json` (media git-ignored).
 
 ---
@@ -185,7 +193,15 @@ You watch `video/final.mp4` (with the digest). Last gate. Approve → `status: "
    `node pipeline/06-publish/build-metadata.mjs <id> --choose-thumb <#>`. Build the subtitles
    for each cut (D-072 — the picture carries none): `node pipeline/06-publish/build-srt.mjs <id>`
    and `<id>/short` → `video/subtitles.srt`.
+   **Upload file (2B, D-074):** after your approval (Gate ③), `node pipeline/04-render/finalize.mjs <id>`
+   (the orchestrator's `finalize` node) makes `video/final.mp4` the 2560×1440 upscale of the approved cut
+   (the 1080p master moves to `render/master.mp4`; Shorts stay 1080×1920 unless `config.render.upscale.short`
+   is set). **Publish days (3D, D-074):** `node pipeline/06-publish/schedule.mjs <id> --assign` gives the
+   long and every Short its slot (long every second Tuesday, Shorts Mon/Wed/Fri, each Short after its long)
+   and writes them into `publish.json` + `publish.md`; `schedule.mjs` alone prints the next 4 weeks.
 2. **You upload manually (D-055 — API drafts suspended)**, copy-pasting from `publish.md`,
+   schedule each upload in Studio for its day, check the codec once processed (right-click → Stats for
+   nerds: `vp09` or `avc1`),
    set "Altered content = Yes" in Studio, and upload each cut's `subtitles.srt` (Subtitles →
    Upload file → With timing).
 3. You review title/description/tags and **click publish**.

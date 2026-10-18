@@ -27,6 +27,34 @@
         "component": { "type": "string", "pattern": "^hook", "description": "Optional bespoke hook-* component name (must start with 'hook' to satisfy the hook-class QA gate). When set the opener renders as a custom hero instead of a hook-card." }
       }
     },
+    "short_cuts": {
+      "type": "array",
+      "maxItems": 9,
+      "description": "1B (D-074): the 2-3 Shorts cut from THIS long video's own scenes — make-shorts.mjs turns each into a unit (short, short-2, short-3) that reuses the scenes' HyperFrames renders in portrait, with their narration voiced again as the Short's own track. An editorial call by the script writer: each cut must stand alone in ~45-60 s.",
+      "items": {
+        "type": "object",
+        "required": ["title", "scenes"],
+        "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string", "minLength": 1, "description": "The Short's working title (its own hook, not the long's)." },
+          "scenes": { "type": "array", "minItems": 1, "items": { "type": "string" }, "description": "Long scene ids, in the order the Short plays them. Each scene belongs to one cut. Without a hook, the first one is the cold open." },
+          "opening": { "type": "string", "minLength": 1, "description": "Replaces the FIRST sentence of the first listed scene — one sentence for one, so the scene's beats still land — when the long's line leans on what came before ('So…', 'Then…', 'in this video')." },
+          "hook": {
+            "type": "object",
+            "required": ["narration"],
+            "additionalProperties": false,
+            "description": "Optional purpose-built opener voiced before the scenes.",
+            "properties": {
+              "narration": { "type": "string", "minLength": 1 },
+              "sentences": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "on_screen_text": { "type": ["string", "null"] },
+              "hf_scene": { "type": "string", "description": "The portrait HyperFrames scene the hook renders with (templates/hyperframes/scenes/<name>)." }
+            }
+          },
+          "closing_question": { "type": "string", "description": "The Short's own closing question, when the long's does not fit it." }
+        }
+      }
+    },
     "scenes": {
       "type": "array",
       "minItems": 1,

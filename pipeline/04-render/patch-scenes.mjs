@@ -415,6 +415,14 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   // come out at 90000 tbn and would otherwise poison the concat (see buildSegmentCutCommand).
   const timescale = parseVideoTimescale(scanLog);
   if (!timescale) { console.error(`could not read the video timebase (tbn) of ${base} — refusing to splice blind`); process.exit(1); }
+  // After finalize (2B) video/final.mp4 is the 1440p upload file; Remotion renders segments at the
+  // timeline's size, so the splice must go into the 1080p master it was upscaled from.
+  const baseSize = /Stream #\d+:\d+[^\n]*: Video:[^\n]*?\b(\d{2,5})x(\d{2,5})\b/.exec(scanLog);
+  if (baseSize && (Number(baseSize[1]) !== timeline.format.width || Number(baseSize[2]) !== timeline.format.height)) {
+    console.error(`${base} is ${baseSize[1]}x${baseSize[2]}, the timeline renders ${timeline.format.width}x${timeline.format.height} — ` +
+      `patch the 1080p master instead (--base ${join(cdir, "render", "master.mp4")}), then re-run finalize.mjs`);
+    process.exit(1);
+  }
 
   // The base file's CRF (from x264's SEI) — the segment is encoded at it, so the patch matches the master's quality.
   const crf = readX264Crf(base);

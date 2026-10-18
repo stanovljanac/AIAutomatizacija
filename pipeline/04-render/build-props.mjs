@@ -16,6 +16,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveFormat } from "../shared/lib/format.mjs";
+import { isShortUnit } from "../shared/lib/units.mjs";
 import { validate, formatErrors } from "../shared/lib/validate-lib.mjs";
 import { deriveRenderTimings } from "./lib/timings.mjs";
 import { openingHasHook, SPARSE_TEMPLATES } from "./lib/policy.mjs";
@@ -40,9 +41,8 @@ const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, seri
 
 const fps = cfg.render?.fps ?? 30;
 // Short detection by the LAST path segment, so both schemes work:
-//   new nested: content/004-foo/short  (seg === "short")  · legacy flat: content/002-short (-short)
-const seg = id.split(/[\\/]/).pop();
-const vertical = seg === "short" || seg.endsWith("-short"); // → 1080x1920 Short
+//   nested: content/004-foo/short, …/short-2 (1B) · legacy flat: content/002-short — units.mjs decides
+const vertical = isShortUnit(id); // → 1080x1920 Short
 const dims = vertical ? (cfg.render?.short ?? { width: 1080, height: 1920 }) : (cfg.render?.long ?? { width: 1920, height: 1080 });
 const outId = id.replace(/[\\/]/g, "-"); // flat artifact id: 004-foo/short → 004-foo-short
 const timings = deriveRenderTimings(fmt, { fps, vertical });

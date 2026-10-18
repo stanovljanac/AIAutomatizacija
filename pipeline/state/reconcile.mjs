@@ -13,6 +13,7 @@
  *   projectPublishStatus(publish, rec)   ledger → that video's publish.json status
  *   lessonOwed / owedLessons             what the Stop hook blocks on
  *   setLesson(record, …)                 the owner settling the one manual obligation
+ *   retireVideo(ledger, registry, key)   the owner withdrawing an approved video that never shipped
  *   ── the fs edge ──
  *   scanVideos(contentDir)               every publish.json under content/ = one candidate record
  *   resolveFact(scan, …)                 subject / idea_id / content_type for that video
@@ -32,12 +33,14 @@
  *   node pipeline/state/reconcile.mjs --backfill [--fix]  # only the videos below live_from (one-time)
  *   node pipeline/state/reconcile.mjs <id> --learned --note <slug>   # a KOS note exists
  *   node pipeline/state/reconcile.mjs <id> --learned --nothing       # reviewed, nothing durable
+ *   node pipeline/state/reconcile.mjs <key> --retire --reason "…"    # approved, will never ship
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { formatErrors, validate } from "../shared/lib/validate-lib.mjs";
 import { DEFAULT_LIVE_FROM, loadLedger, saveLedger, todayStr, videoSeq } from "./ledger.mjs";
+import { SHORT_UNIT_RE, isShortUnit, sortUnits, topicOf } from "../shared/lib/units.mjs";
 
 /** publish.json / ledger status vocabulary, ordered — the rank IS the forward-only rule. */
 export const STATUS_RANK = { draft_pending: 0, uploaded_private: 1, published: 2 };
@@ -65,12 +68,13 @@ export function addDays(dateStr, days) {
 }
 
 /**
- * The video FOLDER a ledger key belongs to: "019-next-word-engine/short" → "019-next-word-engine".
+ * The video FOLDER a ledger key belongs to: "019-next-word-engine/short" → "019-next-word-engine"
+ * (and "025-x/short-2" → "025-x": a long gives 2-3 Shorts since 1B, D-074).
  * `ideas.produced_video_id` and `produced_subjects.json` name the topic folder, and a nested Short
  * is the same topic — so both projections key off this, never off the raw ledger key.
  */
 export function baseVideoId(id) {
-  return String(id ?? "").replace(/\/short$/, "");
+  return topicOf(id);
 }
 
 /** A record is GOVERNED by the ledger from `live_from` on; earlier ones are backfilled history. */
@@ -80,10 +84,10 @@ export function isLive(id, liveFrom = DEFAULT_LIVE_FROM) {
   return seq !== null && from !== null && seq >= from;
 }
 
-/** `content_type` for a ledger key — explicit wins, else the "/short" suffix decides. */
+/** `content_type` for a ledger key — explicit wins, else the "/short" (or "/short-N") suffix decides. */
 export function contentTypeFor(id, explicit) {
   if (explicit === "long" || explicit === "short") return explicit;
-  return /\/short$/.test(String(id ?? "")) ? "short" : "long";
+  return String(id ?? "").includes("/") && isShortUnit(id) ? "short" : "long";
 }
 
 /** Key-order-insensitive deep comparison, so `changed` means a real difference. */
@@ -165,9 +169,12 @@ export function ingestPublish(ledger, fact = {}, { now = new Date(), liveFrom = 
  *
  * Deliberately narrow — `ideas.json` stays authoritative for idea *selection* (backlog, scores,
  * metrics), so this touches exactly two fields and only forward:
- *  • `status: "in-progress" → "produced"` — and ONLY that transition. A `backlog` idea is left
- *    alone on purpose: recurring series entries (`everyone-asks-ai-series`) stay in the backlog to
- *    be spent again, and `parked` is a decision a projection has no business reversing.
+ *  • `status: "in-progress" | "backlog" → "produced"`. Two ideas are left alone on purpose: a
+ *    `recurring: true` entry (a series format such as `everyone-asks-ai-series`) stays in the
+ *    backlog to be spent again, and `parked` is a decision a projection has no business reversing.
+ *    `backlog` is promoted too because a video is often made straight from a brief, without
+ *    pick-next ever moving its idea to `in-progress` (013, 017, 023 sat at `backlog`, so they got no
+ *    `performance` and could be picked again).
  *  • `produced_video_id` — bound only when empty, so a series idea keeps the first video it was
  *    spent on.
  * A record with no `idea_id` (a bespoke video) is a no-op, as is an `idea_id` with no bank entry.
@@ -184,7 +191,8 @@ export function projectIdeas(ideas, ledger, { now = new Date() } = {}) {
     if (!video) return idea;
     const next = { ...idea };
     if (!next.produced_video_id) next.produced_video_id = video;
-    if (next.status === "in-progress") next.status = "produced";
+    const promotable = next.status === "in-progress" || (next.status === "backlog" && next.recurring !== true);
+    if (promotable) next.status = "produced";
     if (stable(next) === stable(idea)) return idea;
     changed = true;
     return next;
@@ -300,6 +308,47 @@ export function takeDueSnapshots(ledger, catalog, { now = new Date() } = {}) {
   return { ledger: taken.length ? { ...ledger, videos } : ledger, changed: taken.length > 0, taken };
 }
 
+// ── retiring a video that will never ship ────────────────────────────────────
+
+/**
+ * Retire a ledger record: the owner withdrew a video that was approved but never reached the
+ * channel (020's Short — "presence of publish.json ⇒ published" had recorded it as published).
+ * The one place a record leaves the ledger, so it is an explicit owner action, never a projection:
+ *  • the record moves out of `videos` into `retired[key] = {at, reason}` — the reason stays on file
+ *    and `planReconcile` skips that key, so its publish.json is never ingested again;
+ *  • the topic folder is dropped from `produced_subjects.json` once no other record of it remains,
+ *    so its subject is free for the replacement video.
+ * Throws on an unknown key and on a missing reason. Retiring an already-retired key is a no-op.
+ * @returns {{ledger: object, registry: object|null, changed: boolean}}
+ */
+export function retireVideo(ledger, registry, key, { reason, now = new Date() } = {}) {
+  if (ledger?.retired?.[key]) return { ledger, registry, changed: false };
+  if (!ledger?.videos?.[key]) throw new Error(`no ledger record for "${key}"`);
+  if (!String(reason ?? "").trim()) throw new Error(`retiring "${key}" needs a reason (--reason "…")`);
+
+  const { [key]: _gone, ...videos } = ledger.videos;
+  const nextLedger = {
+    ...ledger,
+    videos,
+    retired: { ...(ledger.retired ?? {}), [key]: { at: todayStr(now), reason: String(reason).trim() } },
+  };
+
+  const folder = baseVideoId(key);
+  const stillClaimed = Object.keys(videos).some((k) => baseVideoId(k) === folder);
+  if (!registry?.subjects || stillClaimed) return { ledger: nextLedger, registry, changed: true };
+  const subjects = {};
+  for (const [subject, list] of Object.entries(registry.subjects)) {
+    const kept = Array.isArray(list) ? list.filter((v) => v !== folder) : list;
+    if (!Array.isArray(kept) || kept.length) subjects[subject] = kept;
+  }
+  const registryChanged = stable(subjects) !== stable(registry.subjects);
+  return {
+    ledger: nextLedger,
+    registry: registryChanged ? { ...registry, updated: todayStr(now), subjects } : registry,
+    changed: true,
+  };
+}
+
 // ── the lesson obligation (D-061 as code, not a rule) ────────────────────────
 
 /**
@@ -384,8 +433,8 @@ export function videoFolders(contentDir) {
 }
 
 /**
- * Every publish.json under content/ — the long at `<folder>/publish.json`, its Short at
- * `<folder>/short/publish.json`. One file = one candidate ledger record, keyed by its directory
+ * Every publish.json under content/ — the long at `<folder>/publish.json`, its Shorts at
+ * `<folder>/short/publish.json`, `<folder>/short-2/publish.json` …. One file = one candidate ledger record, keyed by its directory
  * relative to content/ (always with a forward slash, so the key matches the schema on Windows too).
  * `publish` is null when the file is unreadable — such a video is still ingested (its presence is
  * the approval signal) but its status is never projected back into the broken file.
@@ -393,7 +442,12 @@ export function videoFolders(contentDir) {
 export function scanVideos(contentDir, { warn = () => {} } = {}) {
   const scans = [];
   for (const folder of videoFolders(contentDir)) {
-    for (const videoId of [folder, `${folder}/short`]) {
+    const units = sortUnits(
+      fs.readdirSync(path.join(contentDir, folder), { withFileTypes: true })
+        .filter((e) => e.isDirectory() && SHORT_UNIT_RE.test(e.name))
+        .map((e) => e.name)
+    );
+    for (const videoId of [folder, ...units.map((u) => `${folder}/${u}`)]) {
       const publishPath = path.join(contentDir, ...videoId.split("/"), "publish.json");
       if (!fs.existsSync(publishPath)) continue;
       const publish = readJsonSoft(publishPath, warn);
@@ -503,7 +557,8 @@ export function planReconcile({ root = ROOT, now = new Date(), liveFrom, backfil
   // owner's data. A merely missing derived file is fine to create.
   const registryBroken = registryBefore == null && fs.existsSync(paths.subjects);
 
-  const allScans = scanVideos(paths.content, { warn });
+  // A retired video's publish.json stays on disk but is never ingested again (retireVideo).
+  const allScans = scanVideos(paths.content, { warn }).filter((s) => !ledgerBefore.retired?.[s.videoId]);
   const governedFrom = liveFrom ?? ledgerBefore.live_from ?? DEFAULT_LIVE_FROM;
   const scans = backfill ? allScans.filter((s) => !isLive(s.videoId, governedFrom)) : allScans;
   const changes = [];
@@ -616,11 +671,30 @@ export function stampLesson({ root = ROOT, videoId, state, note = null, now = ne
   return { ledger: saved, record: next };
 }
 
+/** Retire one video on disk (`--retire`): the ledger and produced_subjects.json, both validated. */
+export function stampRetire({ root = ROOT, videoId, reason, now = new Date() } = {}) {
+  const paths = statePaths(root);
+  const ledger = loadLedger(paths.ledger);
+  const registry = readJsonSoft(paths.subjects);
+  const res = retireVideo(ledger, registry, videoId, { reason, now });
+  if (!res.changed) return { ...res, written: [] };
+  saveLedger(res.ledger, { filePath: paths.ledger, now });
+  const written = [paths.ledger];
+  if (res.registry && res.registry !== registry) {
+    fs.writeFileSync(paths.subjects, JSON.stringify(res.registry, null, 2) + "\n");
+    written.push(paths.subjects);
+  }
+  return { ...res, written };
+}
+
 // ── CLI ──────────────────────────────────────────────────────────────────────
 
-/** `[<id>] [--backfill] [--dry-run | --fix] [--learned [--note <slug> | --nothing]]` — last flag wins. */
+/**
+ * `[<id>] [--backfill] [--dry-run | --fix] [--learned [--note <slug> | --nothing]]
+ *  [--retire --reason "…"]` — last flag wins.
+ */
 export function parseArgs(argv = []) {
-  const out = { videoId: null, fix: false, backfill: false, learned: false, state: null, note: null };
+  const out = { videoId: null, fix: false, backfill: false, learned: false, state: null, note: null, retire: false, reason: null };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--fix") out.fix = true;
@@ -628,6 +702,8 @@ export function parseArgs(argv = []) {
     else if (arg === "--backfill") out.backfill = true;
     else if (arg === "--learned") out.learned = true;
     else if (arg === "--nothing") out.state = "none";
+    else if (arg === "--retire") out.retire = true;
+    else if (arg === "--reason") out.reason = argv[++i] ?? null;
     else if (arg === "--note") {
       out.state = "linked";
       out.note = argv[++i] ?? null;
@@ -649,6 +725,13 @@ function main(argv = process.argv.slice(2)) {
     }
     const { record } = stampLesson({ videoId: args.videoId, state: args.state, note: args.note });
     console.log(`${args.videoId} lesson → ${record.lesson.state}${record.lesson.note ? ` (${record.lesson.note})` : ""}`);
+    return;
+  }
+
+  if (args.retire) {
+    if (!args.videoId) throw new Error('--retire needs the ledger key: reconcile <key> --retire --reason "…"');
+    const { changed, written } = stampRetire({ videoId: args.videoId, reason: args.reason });
+    console.log(changed ? `${args.videoId} retired — wrote ${written.map(rel).join(", ")}` : `${args.videoId} was already retired`);
     return;
   }
 

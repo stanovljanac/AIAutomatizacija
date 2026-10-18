@@ -207,23 +207,6 @@
         "snapshots": []
       }
     },
-    "020-everyone-asks-clean-data/short": {
-      "subject": "execution/data-cleaning",
-      "idea_id": "everyone-asks-ai-series",
-      "content_type": "short",
-      "status": "published",
-      "published_at": "2026-07-25",
-      "youtube_video_id": null,
-      "lesson": {
-        "state": "none",
-        "at": "2026-07-25",
-        "note": null
-      },
-      "analytics": {
-        "due_at": "2026-08-01",
-        "snapshots": []
-      }
-    },
     "021-what-is-a-token": {
       "subject": "llm-mental-model",
       "idea_id": "desk-lessons-what-is-a-token",
@@ -330,7 +313,7 @@
     },
     "025-always-on-agents": {
       "subject": "execution/actions",
-      "idea_id": null,
+      "idea_id": "agent-stop-line",
       "content_type": "long",
       "status": "published",
       "published_at": "2026-10-17",
@@ -344,6 +327,12 @@
         "due_at": "2026-10-24",
         "snapshots": []
       }
+    }
+  },
+  "retired": {
+    "020-everyone-asks-clean-data/short": {
+      "at": "2026-10-17",
+      "reason": "Approved 2026-07-23 but never uploaded; owner 2026-10-17: badly made and constructed, not worth shipping. Its topic is reborn as idea clean-imported-data-excel (search phrase 'how to clean data in excel')."
     }
   }
 }

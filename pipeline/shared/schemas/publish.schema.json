@@ -36,9 +36,29 @@
         "title": { "type": "string" },
         "tags": { "type": "array", "items": { "type": "string" } },
         "caption": { "type": "string", "description": "One-sentence cross-post caption + link to the long video (D-038)." },
-        "subtitles": { "type": "string", "description": "The Short's subtitles.srt, relative to the long's content folder (D-072)." }
+        "subtitles": { "type": "string", "description": "The Short's subtitles.srt, relative to the long's content folder (D-072)." },
+        "scheduled_for": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "The Short's publish day (schedule.mjs, 3D)." }
       }
     },
+    "extra_shorts": {
+      "type": "array",
+      "description": "1B (D-074): the further Shorts cut from this long's scenes (make-shorts.mjs) — one entry per unit after `short`.",
+      "items": {
+        "type": "object",
+        "required": ["unit", "title"],
+        "additionalProperties": false,
+        "properties": {
+          "unit": { "type": "string", "pattern": "^short-[2-9]$" },
+          "title": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "caption": { "type": "string" },
+          "subtitles": { "type": "string" },
+          "scheduled_for": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+          "youtube_video_id": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "scheduled_for": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "The long video's publish day (schedule.mjs, 3D, D-074) — the owner sets it in Studio at upload." },
     "pinned_comment": { "type": "string", "description": "The pinned comment. Phase 1.3: leads with the answer to the video's closing_question + an invite to reply ('Mine was copy-paste. What's yours?') — a single topical conversation starter, not engagement-begging (STYLE_GUIDE §9). May also carry utility text (the copy-pasteable master prompt / template link) — never in the 3-sentence description." },
     "community_post": { "type": "string", "description": "YouTube Community/Posts announcement (D-042): a 'just published' line + a 1-2 sentence teaser + the long-video link. Generated for EVERY video; the owner posts it manually (the Data API can't create Community posts). <LONG_URL> is filled at upload." },
     "bridge": {

@@ -351,13 +351,40 @@ From the growth-options doc (options 1A · 3A · 3B · 3E — cheap, high effect
   The next weekly run creates the job; first report ≤ 48 h later, plus a 30-day backfill.
 - [ ] **Verify the CTR scale** on the first report: one video's CTR vs Studio → Reach (`CTR_SCALE` in
   `reach.mjs`; `reachWarnings` flags the likely miss).
-- [ ] **Re-word the 46 unverified phrases** — at Gate 1 as each idea comes up (the seed gate forces it),
-  or in one editorial pass over the bank.
-- [ ] **Produced ideas still marked `backlog`** — `desk-lessons-attention` (023), `agent-fine-print-watch`
-  (017), `automation-maintenance-story` (013) were made without pick-next, so they get no `performance`
-  and could be re-picked. `projectIdeas` deliberately never moves `backlog` (series ideas live there);
-  fix by hand or teach it the difference.
-- [ ] **020's Short is not on the channel** (ledger says published 2026-07-25; no upload matches).
+- [x] **Re-word the 46 unverified phrases** — done 2026-10-17 (D-074): 42 re-worded to verified phrases
+  on the same topic, 2 parked (no search of the right intent), 2 belonged to produced ideas.
+- [x] **Produced ideas still marked `backlog`** — done (D-074): `projectIdeas` promotes `backlog` too,
+  `recurring: true` marks a series format; 013/017/023 produced, 019/024/025 got their idea records.
+- [x] **020's Short is not on the channel** — retired (D-074, `reconcile --retire`); the topic is reborn
+  as `clean-imported-data-excel` ("how to clean data in excel"). The folder awaits the owner's OK to delete.
+
+## Growth plan — quadrant 2 (D-074, 2026-10-17)
+
+**Built:**
+- [x] **2B upload file** — `finalize.mjs`: approved 1080p master → 2560×1440 lanczos upscale, verified,
+  `render/master.mp4` kept as the patch base; orchestrator node `finalize`. Short off until the codec check.
+- [x] **1B / 3C Shorts from the long** — `short_cuts` in the script → `make-shorts.mjs` units `short`,
+  `short-2`, `short-3` reusing the long's HF scenes in portrait; word-warp `--marks`; portrait gate in
+  compile-hyperframes; orchestrator walks every unit; `publish.json.extra_shorts`; catalog/ledger keys.
+  First run: 023 → two cuts, **rejected and deleted by the owner** (overlap, unclear action, poor
+  contrast — D-075). Since then: a reused landscape scene needs `props.portrait_ok` (its tall frame
+  looked at) or 05-qa fails the cut; 022–025 are never cut.
+- [x] **3D fixed days** — `schedule.mjs` (long every second Tuesday from 2026-10-27, Shorts Mon/Wed/Fri),
+  `--assign` into publish.json/md; scheduled uploads counted on their `publishAt` day.
+
+**Open:**
+- [ ] **First 1440p upload → codec check** (Stats for nerds `vp09`/`avc1`); if VP9, switch the Short on
+  (`config.render.upscale.short: {1440, 2560}`).
+- [ ] **Shorts supply for the calendar** (12 Short slots in 4 weeks, none filled on 2026-10-17): starts with
+  the next long — its scenes authored in both framings, each tall frame checked as it is written (D-075).
+  No cuts from 022–025.
+- [ ] **Automatic overlap/contrast measure** for the frame gate (D-075 open item) — today the portrait
+  sign-off rests on looking.
+- [ ] **1C** — the next video assembles 2–4 existing scene sets joined by transitions (the 025 floor + the
+  step up), every new scene authored with both framings.
+- [ ] **3E** — niche decision from `playlist-report.md`, 2026-12-12 → 2026-12-26.
+- [x] **005 / 016** — owner 2026-10-18: keep them to finish some day; `parked` so they no longer block
+  pick-next (resume = status back to `in-progress`). Folder 020 deleted (D-075).
 
 ## Next big systems (from the 014-analytics plan, D-058) — ordered
 

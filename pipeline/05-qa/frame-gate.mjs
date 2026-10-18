@@ -28,6 +28,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { settledSeconds, hfClipLocalSeconds, captionFreeSeconds, ffmpegPath } from "../04b-thumbnails/extract.mjs";
 import { measureFrame, gateFrame } from "./lib/ink-coverage.mjs";
+import { isShortUnit } from "../shared/lib/units.mjs";
 
 /**
  * The floors are calibrated at this size and are meaningless at any other, because a flat shape's
@@ -86,8 +87,7 @@ export function runFrameGate({ root, id, spawn = spawnSync, videoOverride = null
   const script = JSON.parse(readFileSync(join(cdir, "script.json"), "utf8"));
   const roleById = new Map((script.scenes ?? []).map((s) => [s.id, s.role]));
 
-  const seg = id.split(/[\\/]/).pop();
-  const vertical = seg === "short" || seg.endsWith("-short");
+  const vertical = isShortUnit(id);
   const { width, height } = vertical ? ANALYSIS_SIZE.portrait : ANALYSIS_SIZE.long;
   const ffmpeg = ffmpegPath(root);
   const crossfadeSeconds = timeline.crossfade_seconds ?? 0;

@@ -34,8 +34,10 @@ import { delimiter, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { MASTER_CRF, MASTER_PRESET } from "../shared/lib/encode.mjs";
 import { resolveFormat } from "../shared/lib/format.mjs";
+import { isShortUnit } from "../shared/lib/units.mjs";
 import { deriveRenderTimings } from "./lib/timings.mjs";
 import { sceneWindow } from "./lib/transitions.mjs";
+import { portraitProblems, sceneSources } from "./lib/portrait.mjs";
 
 /**
  * PURE: timeline (seconds) → HyperFrames render jobs. No fs. Each job carries the fixed VARIABLES
@@ -63,7 +65,9 @@ export function buildHyperframesJobs(timeline, { leadFrames = 0, motion } = {}) 
     if (sc.engine !== "hyperframes") return;
     // window math — the SAME function compile-remotion.mjs calls (k indexes the FULL scene list)
     const { fromFrame, durFrames: durationFrames } = sceneWindow(timeline, k);
-    const { hf_scene: hfScene, ...props } = sc.props ?? {};
+    // portrait_ok is a QA sign-off, not a render input: kept out of props so signing a scene off after
+    // looking at its tall frame does not invalidate the clip it was judged on (lib/portrait.mjs)
+    const { hf_scene: hfScene, portrait_ok: portraitOk, ...props } = sc.props ?? {};
     if (budget && props.motion == null) props.motion = budget;
     if (!hfScene) {
       warnings.push(`hyperframes scene ${sc.scene_id} has no props.hf_scene (the templates/hyperframes/scenes/<name> to render) — skipped`);
@@ -83,6 +87,7 @@ export function buildHyperframesJobs(timeline, { leadFrames = 0, motion } = {}) 
       durationSeconds: durationFrames / fps,
       revealsSeconds,
       props,
+      portraitOk: portraitOk === true,
       outFile: `${sc.scene_id}.mp4`,
     });
   });
@@ -322,8 +327,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const id = argv.find((a) => !a.startsWith("--"));
   if (!id) { console.error("usage: compile-hyperframes.mjs <content_id> [--force]"); process.exit(1); }
   const cdir = join(ROOT, "content", id);
-  const seg = id.split(/[\\/]/).pop();
-  const vertical = seg === "short" || seg.endsWith("-short");
+  const vertical = isShortUnit(id);
 
   const timeline = JSON.parse(readFileSync(join(cdir, "timeline.json"), "utf8"));
   const script = JSON.parse(readFileSync(join(cdir, "script.json"), "utf8"));
@@ -336,6 +340,12 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   if (!jobs.length) {
     console.log(`No engine:"hyperframes" scenes in ${id}/timeline.json — nothing to render.`);
     process.exit(0);
+  }
+  // 1B (D-074): a Short reuses the long's scenes — only the ones that have a portrait framing.
+  const notPortrait = portraitProblems(jobs, (name) => sceneSources(ROOT, name));
+  if (notPortrait.length) {
+    console.error(`refusing to render ${id} in portrait:\n  - ${notPortrait.join("\n  - ")}`);
+    process.exit(1);
   }
   const { rendered, skipped } = renderHyperframesScenes({ root: ROOT, cdir, jobs, force });
   console.log(`OK hyperframes: ${rendered.length} rendered, ${skipped.length} skipped → content/${id}/video/hf/`);
