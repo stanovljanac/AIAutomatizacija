@@ -135,7 +135,8 @@ Author the hook in three phases:
 - **15–30s — stakes / the journey starts**, with another interrupt right around 15s to survive the
   inflection.
 
-The opener must be a **hook-class** scene with real motion in the first 30s (enforced).
+The opener must be a **hook-class** scene with real motion in the first 30s (enforced). The first
+~15 s (the hook + after-hook) also run **12% faster and busier than the body** (§19, D-078).
 
 ## 3. Transitions — cuts first, effects with meaning
 
@@ -588,7 +589,7 @@ relative to the 024 Short:
 | captions | `captions.sentence_breaks` | true (that Short only) | **true** |
 
 How it reaches a scene:
-- **Voice:** `make_voice.py` / `make_voice_azure.py` take `voice.rate` / `rate_key` from
+- **Voice:** `make_voice.py` takes `voice.rate` / `rate_key` from
   `formats/default.json` when the brief sets no `voice_rate`; a brief with its own `voice_rate` keeps its
   own key rate (or none). Still measure the result when the target matters (§16 — edge-tts drifts run to run).
 - **Motion:** `compile-hyperframes` hands `motion.budget` (camelCased) to every HF scene whose props carry
@@ -666,13 +667,48 @@ deliberate still (a "pause and copy" card) keeps a slow readable drift too. Chec
 
 ---
 
+## 19. The opening runs quicker — hook + after-hook 10–15% faster than the body (owner, D-078, 2026-10-20)
+
+Owner: *"the hook and the after-hook, the first 10–15 seconds or the first 2–3 scenes, should be 10 to
+15% faster and more dynamic than the rest of the video, to pull viewers in."* The steepest drop is
+between second 10 and 20 (§2), so the house calibration (§17, deliberately calm) gives way there. One
+knob, `format.opening` in `formats/default.json`:
+
+| Knob | Default | What it does |
+|---|---|---|
+| `opening.tempo` | **1.12** | the opening runs 1.12× the body (1 = off; `brief.format_recipe.opening` per video) |
+| `opening.max_seconds` | 15 | the opening = the leading sentences that END by this second (estimated before any voice exists) |
+| `opening.max_scenes` | 3 | ...and only inside the first 3 scenes |
+| `opening.words_per_second` | 2.42 | the body pace the estimate uses (026: 834 words / 344.5 s) |
+
+How it reaches the picture and the sound:
+- **Voice (automatic):** `make_voice.py` speaks those sentences at `faster(rate, tempo)`. Rates scale
+  speed, so `-11%` → `+0%` and a key take's `-15%` → `-5%`. The boundary is an ordinary rate-change
+  segment (`RATE_BOUNDARY_TAIL`), and `alignment.json` records `opening: {scenes, sentences, tempo}`.
+  **Measured** on 026's first five scenes against the same text without it: the opening sentences ran
+  1.10–1.20× faster and the body stayed at 1.00×; the opening ended at 13.7 s.
+- **Motion (automatic for the budget):** `compile-hyperframes` gives every HF scene the opening
+  touches `props.tempo` = 1.12. A scene without its own `props.motion` also gets the house budget's
+  camera and background clocks × 1.12 (capped at 1): 0.855 → 0.958 and 0.81 → 0.907.
+- **Motion (authored, the part that shows):** §16 measured that the budget knob is only ~3% of what
+  moves; story motion is authored. So an opening scene **divides its own tween and hold durations by
+  `props.tempo`** (`var T = props.tempo || 1; … duration: 0.6 / T`) and carries **more beats**: a visual
+  change every ~2–3 s instead of 3–7 s, one more cut or reveal per sentence, a snappier ease-out. It
+  still lands every move on its word mark; the marks already move with the faster voice.
+- **Write for it** (script-writing 5a): 2–3 short opening scenes (hook ≤ ~8 s, after-hook ≤ ~7 s), not
+  one long setup scene. A long after-hook scene is sped up only for its first ~15 s and slows down
+  mid-scene.
+
+---
+
 ## Enforcement (where each rule is checked, so it can't be skipped)
 
 | Rule | Check |
 |---|---|
 | Hook-class scene w/ motion in first 30s (§2) | `lib/policy.mjs` + `qa-video` (HARD) |
 | No intro bumper (§2, §17) | `formats/default.json` `intro` 0 → `lib/timeline.mjs` (scene 0 owns frame 0, no fade-in); Remotion skips the Intro sequence |
-| Pace 5% slower (§17) | `formats/default.json` `voice` → `make_voice.py` / `make_voice_azure.py` `recipe_pacing` |
+| Pace 5% slower (§17) | `formats/default.json` `voice` → `make_voice.py` `recipe_pacing` |
+| Opening 12% quicker (§19) | `formats/default.json` `opening` → `make_voice.py` `opening_sentences` / `faster` (voice) + `alignment.opening` → `compile-hyperframes` (`props.tempo`, quicker budget) → `05-qa/check.mjs` `opening_tempo` (measured speech rate vs the body; medium) |
 | Background still unless a scene opens a window (§17) | `compile-hyperframes` hands `motion.budget` to every HF scene without `props.motion`; `HW.motion` `ambient` / `ambientScale` (`hf-world-motion.test.mjs`) |
 | No long static hold (§1) | `build-props` warn + `qa-video` (HARD), `format.pacing.max_static_hold_seconds` |
 | Sequential reveals in order (§1/§4) | `lib/timeline.mjs` monotonic clamp |

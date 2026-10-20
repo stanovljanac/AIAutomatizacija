@@ -16,7 +16,7 @@ const PANEL = {
   },
 };
 
-const gates = { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true };
+const gates = { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true };
 const scored = (v) => ({
   hard_gates: gates,
   category_scores: {

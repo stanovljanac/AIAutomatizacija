@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-19",
+  "updated": "2026-10-20",
   "ideas": [
     {
       "id": "inbox-ai-week-long",
@@ -295,7 +295,7 @@
       "archetype": "ideas",
       "angle_hint": "Error alerts catch the failures that were already loud. A scheduled agent whose source goes quiet reports \"No new requests\" — measured; GitLab 2017 lost its backups the same way (the alert email itself was rejected). Flip the default: make success prove itself, and let silence be the alarm.",
       "score": 84,
-      "status": "in-progress",
+      "status": "produced",
       "produced_video_id": "026-silent-failures",
       "source": {
         "origin": "manual",

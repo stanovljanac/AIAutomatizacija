@@ -222,8 +222,8 @@ Runner / Reviewer / Publisher ports.
 - **Render engine** — `render.engine` = `remotion | hyperframes | combo` (§9); the engine-agnostic
   `timeline.json` is the seam (§6), so a second compiler never duplicates the sync logic.
 - `pipeline/02-voice/voice-dispatcher.mjs` — the **`TtsProvider`** seam: a Node selector over
-  `VOICE_SCRIPTS` (edge-tts → `make_voice.py`, azure → `make_voice_azure.py`); draft = edge-tts,
-  `--final` = Azure (D-024). Alignment stays provider-agnostic. Adding a provider = one map entry + one script.
+  `VOICE_SCRIPTS` (edge-tts → `make_voice.py`, the one provider since D-076 retired the Azure final).
+  Alignment stays provider-agnostic. Adding a provider = one map entry + one script.
 - `pipeline/07-distribute/distributor.mjs` — the **`Distributor`** seam: a pure plan builder →
   schema-valid `distribution.json` + Noop / Mock / Postiz adapters + `createDistributor` (noop while
   `config.distribute.enabled` is false). The live Postiz client is the remaining T5.3 (D-027).

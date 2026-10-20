@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-17",
+  "updated": "2026-10-20",
   "live_from": "020",
   "videos": {
     "002-what-is-ai-automation": {
@@ -325,6 +325,23 @@
       },
       "analytics": {
         "due_at": "2026-10-24",
+        "snapshots": []
+      }
+    },
+    "026-silent-failures": {
+      "subject": "failure-detection/silent-runs",
+      "idea_id": "silent-failure-heartbeat",
+      "content_type": "long",
+      "status": "published",
+      "published_at": "2026-10-20",
+      "youtube_video_id": null,
+      "lesson": {
+        "state": "linked",
+        "at": "2026-10-20",
+        "note": "2026-10-20-a-term-nobody-was-shown-is-noise"
+      },
+      "analytics": {
+        "due_at": "2026-10-27",
         "snapshots": []
       }
     }

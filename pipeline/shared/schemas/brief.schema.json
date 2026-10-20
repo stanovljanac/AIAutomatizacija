@@ -77,7 +77,7 @@
         }
       }
     },
-    "voice_rate": { "type": "string", "pattern": "^[+-]\\d+%$", "description": "Per-video speaking rate for the narration (edge-tts / Azure prosody, e.g. '+3%', '-6%'). A nested Short without its own brief inherits the parent's." },
+    "voice_rate": { "type": "string", "pattern": "^[+-]\\d+%$", "description": "Per-video speaking rate for the narration (edge-tts prosody, e.g. '+3%', '-6%'). A nested Short without its own brief inherits the parent's." },
     "voice_rate_key": { "type": "string", "pattern": "^[+-]\\d+%$", "description": "Speaking rate for the script's KEY TAKES (scenes[].key_takes) — slower than voice_rate so the line lands. Absent = key takes use voice_rate." },
     "format_recipe": { "type": "object", "description": "Per-video FORMAT override (a partial pipeline/shared/formats recipe, e.g. { \"intro\": { \"short_seconds\": 0 } }), deep-merged last by lib/format.mjs. Separate from `format` (long/short), which is a string." },
     "status": {

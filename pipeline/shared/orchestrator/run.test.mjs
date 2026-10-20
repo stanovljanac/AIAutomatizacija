@@ -8,6 +8,7 @@ import path from "node:path";
 import { runVideo, loadConfig, videoNodes, defaultExecutors, notifiesOwner, shortUnitsOf, AGENT_DEFERRAL_NODES, REPO_ROOT } from "./run.mjs";
 import { topoWaves } from "./dag.mjs";
 import { withTempDir } from "../testkit/index.mjs";
+import { VOICE_SCRIPTS } from "../../02-voice/voice-dispatcher.mjs";
 
 // A runner where mechanical steps succeed and agent steps return a result (not deferred).
 const okRun = { runCommand: async () => ({ code: 0 }), runAgent: async () => ({ data: { ok: true } }) };
@@ -152,23 +153,28 @@ test("voice/align executors call the runner with the python scripts (long + shor
   });
 });
 
-test("voice executors honor config.voice.provider (azure routes to make_voice_azure.py) — T4.2 seam", async () => {
-  await withUnits(["short"], async (unitDir) => {
-    const calls = [];
-    const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
-    const ex = defaultExecutors();
-    const ctx = {
-      id: "005-x", root: "/repo", contentDir: unitDir,
-      config: { voice: { provider: "azure" } }, runner, python: "/repo/.venv/py",
-    };
-    await ex.voice_long(ctx);
-    await ex.voice_short(ctx);
-    assert.ok(calls[0].args.includes("scripts/make_voice_azure.py"), "azure provider must route long voice to the Azure script");
-    assert.ok(calls[1].args.includes("scripts/make_voice_azure.py") && calls[1].args.includes("005-x/short"));
-    // alignment stays provider-agnostic (always faster-whisper) regardless of the voice provider.
-    await ex.align_long(ctx);
-    assert.ok(calls[2].args.includes("scripts/make_alignment.py"));
-  });
+test("voice executors honor config.voice.provider (a registered provider routes both voice nodes) — T4.2 seam", async () => {
+  VOICE_SCRIPTS["stand-in-tts"] = "scripts/make_voice_stand_in.py"; // edge-tts is the only real one (D-076)
+  try {
+    await withUnits(["short"], async (unitDir) => {
+      const calls = [];
+      const runner = { runCommand: async (spec) => { calls.push(spec); return { code: 0 }; } };
+      const ex = defaultExecutors();
+      const ctx = {
+        id: "005-x", root: "/repo", contentDir: unitDir,
+        config: { voice: { provider: "stand-in-tts" } }, runner, python: "/repo/.venv/py",
+      };
+      await ex.voice_long(ctx);
+      await ex.voice_short(ctx);
+      assert.ok(calls[0].args.includes("scripts/make_voice_stand_in.py"), "the provider must route long voice to its script");
+      assert.ok(calls[1].args.includes("scripts/make_voice_stand_in.py") && calls[1].args.includes("005-x/short"));
+      // alignment stays provider-agnostic (always faster-whisper) regardless of the voice provider.
+      await ex.align_long(ctx);
+      assert.ok(calls[2].args.includes("scripts/make_alignment.py"));
+    });
+  } finally {
+    delete VOICE_SCRIPTS["stand-in-tts"];
+  }
 });
 
 test("a mechanical step that exits non-zero rejects (the DAG converts this to a pause)", async () => {

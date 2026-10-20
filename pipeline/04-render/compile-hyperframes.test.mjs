@@ -139,6 +139,30 @@ test("motion budget: an authored props.motion wins untouched (the 024 Short's sc
   assert.deepEqual(buildHyperframesJobs(syntheticTimeline()).jobs[0].props.motion, undefined, "no budget → props untouched");
 });
 
+// D-078 (owner, 2026-10-20): the hook + after-hook run 10–15% quicker than the body.
+test("opening: its scenes get props.tempo and the budget's clocks × tempo; the body keeps the house budget", () => {
+  const budget = { scale: 0.855, ambient_scale: 0.81, ambient: [], focus_scale: 0.35, ease: 0.4 };
+  const { jobs } = buildHyperframesJobs(syntheticTimeline(), { motion: budget, opening: { scenes: ["s2"], tempo: 1.12 } });
+  assert.equal(jobs[0].props.tempo, 1.12);
+  assert.deepEqual(jobs[0].props.motion, { scale: 0.958, ambientScale: 0.907, ambient: [], focusScale: 0.35, ease: 0.4 });
+  const body = buildHyperframesJobs(syntheticTimeline(), { motion: budget, opening: { scenes: ["s1"], tempo: 1.12 } }).jobs[0];
+  assert.equal(body.props.tempo, undefined, "a scene outside the opening is untouched");
+  assert.equal(body.props.motion.scale, 0.855);
+});
+
+test("opening: an authored props.motion stays (the author applies the tempo), a clock never passes 1, tempo 1 is off", () => {
+  const timeline = syntheticTimeline();
+  const own = { scale: 0.9, focus: [[1, 2]] };
+  timeline.scenes[1].props.motion = own;
+  const authored = buildHyperframesJobs(timeline, { motion: { scale: 0.855 }, opening: { scenes: ["s2"], tempo: 1.12 } }).jobs[0];
+  assert.deepEqual(authored.props.motion, own);
+  assert.equal(authored.props.tempo, 1.12, "the authored scene still gets the tempo to divide its tweens by");
+  assert.equal(buildHyperframesJobs(syntheticTimeline(), { motion: { scale: 0.95 }, opening: { scenes: ["s2"], tempo: 1.12 } }).jobs[0].props.motion.scale, 1);
+  const off = buildHyperframesJobs(syntheticTimeline(), { motion: { scale: 0.855 }, opening: { scenes: ["s2"], tempo: 1 } }).jobs[0];
+  assert.equal(off.props.tempo, undefined);
+  assert.equal(off.props.motion.scale, 0.855);
+});
+
 test("portrait_ok rides on the job, outside the render variables (a sign-off never re-renders a clip)", () => {
   const timeline = syntheticTimeline();
   timeline.scenes[1].props.portrait_ok = true;

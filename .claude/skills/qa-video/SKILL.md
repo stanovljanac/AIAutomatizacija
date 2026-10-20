@@ -64,6 +64,11 @@ You catch problems **before** the owner watches (PRD R13–R14), and you produce
     `format.hook.visual_detail.short_first_seconds` (default **3s**), not the 30s long-form window —
     Short psychology means the purpose-built hook (`script.short_hook`, prepended by `make-short`)
     must land in the first ~3s. Same hook-class rule, tighter clock.
+- **Quick opening (medium — D-078, MOTION_SPEC §19):** check.mjs `opening_tempo` fails when the voice
+  was made without the opening tempo (no `alignment.opening` → re-voice). It warns when the measured
+  speech rate of the opening sentences (letters per second inside each sentence) is under 1.05× the
+  body's. Perceptually, watch the first ~15 s: they should feel visibly busier than the body (a change
+  every ~2–3 s), not just faster-spoken.
 
 - **No paid-SaaS product names (HARD — owner rule 2026-06-24):** never name a paid SaaS product
   (Expensify, QuickBooks, …) on screen or in narration unless it's in `brief.approved_tools` (a paid

@@ -9,19 +9,16 @@ You produce the narration and the timing backbone of the whole video. The golden
 (PRD R11–R12): **the audio is one continuous track and is never cut**; visuals and
 captions are positioned in time to match it.
 
-## Voice — dual provider (D-024)
-- **Drafts → edge-tts** (free, fast iteration): `python scripts/make_voice.py <id>`.
-  **Never ship an edge-tts file in a published video** — edge-tts violates Microsoft's ToS
-  for commercial use and is unreliable.
-- **Final/published → Azure AI Speech** (licensed, same Andrew voice, 500k chars/mo free):
-  `python scripts/make_voice_azure.py <id>` (needs `AZURE_SPEECH_KEY`/`REGION` in `.env`).
-  Run it **once the video + Short are locked** (saves the quota), then re-align.
+## Voice — one provider, edge-tts (D-076)
+- **edge-tts is the channel voice, draft and published alike:** `python scripts/make_voice.py <id>`.
+  The voice the owner approves at Gate ③ is the voice that ships — there is **no re-voice step** before
+  publish. (D-024's Azure final was retired on 2026-10-20: it re-made the same Andrew voice, cost a
+  re-align and moved every typed word time, for no audible gain.)
 - **One dispatcher picks the backend (the TtsProvider seam — Wave 4 / T4.2):**
-  `node pipeline/02-voice/voice-dispatcher.mjs <id> [--final]` — selects the synth script from
-  `config.voice.provider` (draft, default edge-tts) or `config.voice.final_provider` (`--final`, Azure)
-  via the `VOICE_SCRIPTS` registry. The orchestrator's voice nodes route through it (`voiceArgs`), so a
-  provider swap is a config flip and adding a new TTS (ElevenLabs/…) is one registry entry + one script —
-  you still call the same `make_voice*.py` underneath. Alignment is unchanged/provider-agnostic.
+  `node pipeline/02-voice/voice-dispatcher.mjs <id>` — selects the synth script from
+  `config.voice.provider` (default edge-tts) via the `VOICE_SCRIPTS` registry. The orchestrator's voice
+  nodes route through it (`voiceArgs`), so adding a new TTS (ElevenLabs/…) is one registry entry + one
+  script. Alignment is unchanged/provider-agnostic.
 - One consistent channel voice = brand recognition. Each scene's `narration` is concatenated
   in order into one continuous track `voice/narration.mp3`; never cut the audio (PRD R11).
 
@@ -39,7 +36,7 @@ captions are positioned in time to match it.
 ## Pace knobs and key takes (024 Short, 2026-10-09)
 - **Default pace (D-068)** = the format recipe's `voice` in `pipeline/shared/formats/default.json`:
   `rate "-11%"`, `rate_key "-15%"` — 5% slower than the 024 Short (whose `-6%` / `-11%` measured
-  1.10× / 1.166× the long cut's speech time). Both `make_voice.py` and `make_voice_azure.py` read it
+  1.10× / 1.166× the long cut's speech time). `make_voice.py` reads it
   (`recipe_pacing`); `config.json`'s `rate` is only the fallback when the recipe has none.
 - **Per-video pace** = `brief.voice_rate` (e.g. `"-6%"`) overrides the recipe. A brief that sets its own
   `voice_rate` keeps its own `voice_rate_key` (or none) — the recipe's key rate never mixes in. A nested
@@ -47,9 +44,13 @@ captions are positioned in time to match it.
   **first** brief found wins.
 - **Key takes** = the lines the viewer must remember: `"key_takes": [sentence idx]` on a script scene,
   spoken at `brief.voice_rate_key` (slower than `voice_rate`). A rate change starts a new segment, like a
-  pause does. Both `make_voice.py` and `make_voice_azure.py` honour it (Azure: one `<prosody>` per
-  segment, and pauses become `<break>`s — before 2026-10-09 the Azure final silently dropped every
-  `pause_after`).
+  pause does.
+- **The opening is spoken 12% faster (D-078, MOTION_SPEC §19).** Every sentence that ends within
+  `format.opening.max_seconds` (15, estimated from word counts) inside the first `max_scenes` (3) scenes
+  is spoken at `faster(rate, opening.tempo)`: `-11%` → `+0%`, a key take's `-15%` → `-5%`. The
+  boundary is an ordinary rate-change segment. `alignment.json` records
+  `opening: {scenes, sentences, tempo}` for `compile-hyperframes` and QA. `brief.format_recipe.opening.tempo: 1`
+  switches it off for one video (a nested Short inherits its long's brief).
 - **edge-tts pads a short request to ~1.87s** (measured), so a lone key take would trail ~1s of silence.
   A segment that ends only because the RATE changes is cut back to `RATE_BOUNDARY_TAIL` (0.30s after its
   last word ≈ an ordinary 0.39s sentence break). Pause boundaries are untouched.
@@ -65,7 +66,7 @@ captions are positioned in time to match it.
   lands every word at 0.0s — a valid-looking alignment with a dead clock. The script asks for
   `WordBoundary` explicitly and **fails loud** if none arrive; never "fix" that by removing the guard.
 - `python scripts/make_alignment.py <id>` (faster-whisper) exists as the provider-agnostic fallback
-  for audio that carries no word events — e.g. re-aligning the Azure final voice. Re-run it whenever
+  for audio that carries no word events (an outside recording, a future provider). Re-run it whenever
   the audio changes.
 - Schema: `pipeline/shared/schemas/alignment.schema.json`.
 
@@ -79,6 +80,6 @@ captions are positioned in time to match it.
 - Set `brief.json.status: "voiced"`.
 
 ## Notes
-- Channel voice was picked by A/B listening to edge-tts voices (`scripts/tts_sample_edge_en.py`);
-  the same voice id is used on Azure for the final.
-- For drafts iterate with edge; only spend Azure quota on the locked final + Short.
+- Channel voice was picked by A/B listening to edge-tts voices (`scripts/tts_sample_edge_en.py`).
+- edge-tts is not repeatable run to run, so **never re-synthesize an approved track** — the master and
+  its Shorts keep the narration they were cut to.

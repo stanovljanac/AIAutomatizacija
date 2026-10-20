@@ -19,8 +19,8 @@
  */
 var S = HF.scene({ id: "fz-learn", width: 1920, height: 1080, frames: 472, beatLo: 0.0, beatHi: 0.1 });
 var D = S.D, W = S.W, H = S.H, props = S.props;
-/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice (the Azure
-   final) re-reads them into props.offsets — absent, every mark is exactly the typed value */
+/* word marks: each typed offset below was read off the draft (edge-tts) alignment; a re-voice
+   re-reads them into props.offsets — absent, every mark is exactly the typed value */
 var OFF = props.offsets || {};
 function off(k, v) { return typeof OFF[k] === "number" ? OFF[k] : v; }
 var b1 = S.beatAt(1, 0.127), b2 = S.beatAt(2, 0.286), b3 = S.beatAt(3, 0.379), b4 = S.beatAt(4, 0.608), b5 = S.beatAt(5, 0.778), b6 = S.beatAt(6, 0.907);

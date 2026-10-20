@@ -40,6 +40,27 @@ the viewer's time."
 5. **Scene-segmented with template tags.** Write so the script maps to scenes and each
    scene names its render `template` (see §6).
 6. **No reproduced sentences / no transcripts.** Sources give facts and topics only (D-002).
+7. **Explain it on everyday things, so anyone can follow (owner rule 2026-10-20, D-079).** Our
+   recent videos stacked terms (draft, job card, silent failure, proof line) on systems the viewer
+   never saw built. Someone who walked in at 0:30 had no idea what was going on, where the system came
+   from, what it was for or why it was built that way. From now on:
+   - **Set it up before going deep.** Early and in plain words: what the system or tool is, what I use
+     it for, where it came from, and why I built it this way. One or two sentences is enough, but
+     they cannot be skipped.
+   - **Parallel first, name second.** Every idea the viewer needs gets an everyday parallel or a tiny
+     basic example *before* its technical name. A smoke alarm that only beeps when its battery dies
+     is an alarm that speaks only on failure. A parcel-tracking page that stopped updating shows that
+     "no news" is not "nothing happened". A restaurant order slip is a job card. Then the term, then
+     the depth.
+   - **Run examples on what the viewer has:** their inbox, a shop's orders, a backup, a spreadsheet.
+     Not an invented system they would have to learn first. Our own system can be the story; it
+     cannot be the only example.
+   - **One new term at a time,** each grounded before the next arrives. Our pipeline's own labels
+     never appear ungrounded (§9).
+   - **Run the stranger test on every scene:** someone who has never seen this channel walks in at
+     this exact moment. Do they know what is happening and why it matters to them? If not, add the
+     parallel or the setup line.
+   The review panel enforces this as the hard gate `plain_explained` (`pipeline/shared/review/rubric.mjs`).
 
 ## 3. Sentence & rhythm guidelines
 
@@ -133,6 +154,10 @@ wall of narration as one scene.
   Isn't the One That Fails"; the green checkmark is the thing they'll recall and repeat.
 - **Descriptions:** first 1–2 lines carry the hook + main keyword; then a short
   paragraph; then chapters/timestamps and links. Natural keyword use, no stuffing.
+- **A Short gets its own full description (owner rule 2026-10-20, D-077)**, written as if the Short
+  were its own video: an answer-first 2–3 sentences, the copy-paste text if the Short shows one, and
+  sources if it quotes facts. It never contains a "watch the full video" line or a link to the long:
+  the long goes in the Shorts upload's **Related video** field, where a viewer who wants more clicks.
 - **Thumbnail:** big readable phrase (≤ 3–4 words), high contrast, one focal idea;
   consistent brand look (VISUAL_IDENTITY §9); **2 variants**, owner picks.
 - The owner reviews title/description/tags before publishing.
@@ -151,6 +176,9 @@ wall of narration as one scene.
 - **Engineer jargon / spoken error codes (owner rule, 2026-07-12):** internal labels the
   viewer doesn't share ("Pipeline A/B", "the orchestrator") and read-aloud codes/values
   ("five-oh-three", "two, four, eight seconds"). Use viewer language; put the code on screen.
+- **Depth on a system nobody was shown (owner rule, 2026-10-20, D-079):** a fix explained on our
+  own invented setup that was never introduced, or a run of terms with no everyday parallel ahead of
+  them. Set the system up in plain words first and ground each term (§2.7).
 - **Predictable hook setups:** a hook whose second beat the viewer can finish for you
   ("My thing broke." → "…best thing that happened", everyone sees it coming). Open on the
   reframe instead (§5).
@@ -166,6 +194,11 @@ wall of narration as one scene.
 ## 10. Self-check the review agent runs (mirror in script-review skill)
 
 - [ ] Hook lands in ≤ 10s and promises a payoff.
+- [ ] **The opening is quick (D-078):** the hook + after-hook fit in ~15 s (2–3 short scenes, each
+      with its own visual beat); the voice and motion run 12% faster there automatically.
+- [ ] **A stranger can follow it (D-079, §2.7):** the system/tool is set up in plain words (what,
+      what for, why) before the depth; every concept gets an everyday parallel or a basic example
+      before its name; examples run on things the viewer has.
 - [ ] **An original human angle is present** and surfaces early.
 - [ ] Accuracy rule for the archetype is met (sources for comparisons/stats; demos use
       synthetic data; concepts framed as ideas).

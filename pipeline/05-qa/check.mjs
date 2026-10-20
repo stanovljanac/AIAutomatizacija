@@ -16,7 +16,7 @@ import { fileURLToPath } from "node:url";
 import { resolveFormat } from "../shared/lib/format.mjs";
 import { isShortUnit } from "../shared/lib/units.mjs";
 import { validate, formatErrors } from "../shared/lib/validate-lib.mjs";
-import { runChecks, summarize } from "./lib/check-lib.mjs";
+import { runChecks, summarize, openingTempoCheck } from "./lib/check-lib.mjs";
 import { portraitSignoffProblems, sceneSources, PORTRAIT_CHECK } from "../04-render/lib/portrait.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -46,6 +46,7 @@ if (!existsSync(propsPath)) {
 } else {
   const props = readJson(propsPath);
   const { checks } = runChecks(props, fmt, { vertical, durationSeconds: al.duration, approvedTools: brief.approved_tools ?? [] });
+  checks.push(openingTempoCheck(al, fmt)); // D-078: the hook + after-hook spoken faster than the body
   // 1B (D-074): a Short CUT from the long (short_source.json) reuses scenes whose portrait branch was
   // written blind — each needs a sign-off that someone looked at its tall frame (lib/portrait.mjs).
   if (existsSync(join(cdir, "short_source.json"))) {

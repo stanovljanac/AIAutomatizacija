@@ -29,6 +29,11 @@ KEY TAKES (optional). A scene may mark the lines the viewer must remember:
 ...(indexes into that scene's `sentences`). They are spoken at `brief.voice_rate_key` instead of
 `brief.voice_rate`, so the take has time to land. A rate change starts a new segment, exactly like
 a pause does (one edge-tts request carries one rate).
+
+THE OPENING (D-078). The hook and the after-hook — the leading sentences that end by the recipe's
+`opening.max_seconds` (the first always, inside the first `max_scenes` scenes) — are spoken
+`opening.tempo`× faster than the body (1.12 by default). alignment.json records them as
+`opening: {scenes, sentences, tempo}` (scenes = the ones those sentences touch).
 """
 import asyncio
 import json
@@ -160,17 +165,27 @@ def key_take_set(scenes):
     return out
 
 
-def plan_segments(n, pauses, keys, rate, key_rate=None):
+def faster(rate: str, tempo: float) -> str:
+    """The edge-tts rate that speaks `tempo`× faster than `rate`: a rate scales the speaking speed, so
+    the speeds multiply — "-11%" × 1.12 → "+0%", "-15%" × 1.12 → "-5%"."""
+    pct = round(((1 + int(rate.strip().rstrip("%")) / 100) * tempo - 1) * 100)
+    return f"{pct:+d}%"
+
+
+def plan_segments(n, pauses, keys, rate, key_rate=None, fast=frozenset(), tempo=1.0):
     """Group sentences 0..n-1 into synthesis segments: [(indexes, rate, pause_after_seconds)].
 
     A segment ends after every scripted pause AND wherever the speaking rate changes (a key take
-    starts or ends), because one edge-tts request carries one rate. With no pauses and no key takes
-    this is the single segment the track has always been.
+    starts or ends, the opening ends), because one edge-tts request carries one rate. With no pauses,
+    key takes or opening this is the single segment the track has always been. `fast` = the flat
+    sentence indexes of the opening (D-078), spoken `tempo`× faster — key takes in it too.
     """
     segs = []
     cur, cur_rate = [], None
     for i in range(n):
         r = key_rate if (key_rate and i in keys) else rate
+        if i in fast:
+            r = faster(r, tempo)
         if cur and r != cur_rate:
             segs.append((cur, cur_rate, 0.0))
             cur = []
@@ -190,6 +205,44 @@ def recipe_pacing(fallback: str):
     fpath = ROOT / "pipeline" / "shared" / "formats" / "default.json"
     v = json.loads(fpath.read_text(encoding="utf-8")).get("voice", {}) if fpath.exists() else {}
     return v.get("rate") or fallback, v.get("rate_key")
+
+
+# D-078: the opening's defaults when the recipe has no `opening` block — off.
+OPENING_OFF = {"tempo": 1.0, "max_seconds": 15, "max_scenes": 3, "words_per_second": 2.42}
+
+
+def read_opening(cdir: Path):
+    """The opening knobs (D-078): the format recipe's `opening`, shallow-overridden by the nearest
+    brief's `format_recipe.opening` (a video may switch it off with tempo 1). None when off."""
+    fpath = ROOT / "pipeline" / "shared" / "formats" / "default.json"
+    o = dict(OPENING_OFF)
+    if fpath.exists():
+        o.update(json.loads(fpath.read_text(encoding="utf-8")).get("opening") or {})
+    for bdir in (cdir, cdir.parent):
+        bpath = bdir / "brief.json"
+        if bpath.exists():
+            o.update(((json.loads(bpath.read_text(encoding="utf-8")).get("format_recipe") or {}).get("opening")) or {})
+            break
+    return o if float(o["tempo"]) > 1 else None
+
+
+def opening_sentences(scenes, tempo: float, max_seconds: float, max_scenes: int, words_per_second: float):
+    """Flat indexes of the sentences that form the opening — the hook and the after-hook (D-078): the
+    first sentence always, then each next one whose estimated END stays within `max_seconds`, inside
+    the first `max_scenes` scenes. No voice exists yet, so the end is estimated from the word count at
+    the body pace sped up by `tempo`, plus the scripted pauses. Per sentence, not per scene: a long
+    after-hook scene is sped up only for its first ~15 s, like the owner asked."""
+    pauses = pause_map(scenes)
+    out, t, flat = [], 0.0, 0
+    for sc in scenes[:max_scenes]:
+        for s in sc["sentences"]:
+            t += len(tokens_of(s)) / (words_per_second * tempo)
+            if out and t > max_seconds:
+                return out
+            out.append(flat)
+            t += pauses.get(flat, 0.0)
+            flat += 1
+    return out
 
 
 def read_pacing(cdir: Path, rate: str, key_rate=None):
@@ -273,7 +326,12 @@ async def main(cid: str):
     # One segment per run of sentences between scripted pauses / rate changes (usually exactly one).
     pauses = pause_map(script["scenes"])
     keys = key_take_set(script["scenes"])
-    segments = [([sents[i] for i in idx], r, p) for idx, r, p in plan_segments(len(sents), pauses, keys, rate, key_rate)]
+    # D-078: the hook + after-hook run faster than the body, to hold the viewer through the first ~15 s.
+    opening = read_opening(cdir)
+    tempo = float(opening["tempo"]) if opening else 1.0
+    fast = set(opening_sentences(script["scenes"], tempo, float(opening["max_seconds"]), int(opening["max_scenes"]), float(opening["words_per_second"]))) if opening else set()
+    open_ids = list(dict.fromkeys(sents[i]["scene"] for i in sorted(fast)))  # the scenes it touches, in order
+    segments = [([sents[i] for i in idx], r, p) for idx, r, p in plan_segments(len(sents), pauses, keys, rate, key_rate, fast, tempo)]
 
     # synthesize: collect audio + word boundaries, shifting each segment by everything before it
     (cdir / "voice").mkdir(parents=True, exist_ok=True)
@@ -370,6 +428,9 @@ async def main(cid: str):
 
     alignment = {"audio": "voice/narration.mp3", "duration": duration,
                  "sentences": sentences_out, "words": words_out}
+    if open_ids:
+        # read by compile-hyperframes (the opening's quicker motion budget) and 05-qa (opening_tempo)
+        alignment["opening"] = {"scenes": open_ids, "sentences": sorted(fast), "tempo": tempo}
     (cdir / "alignment.json").write_text(json.dumps(alignment, indent=2) + "\n", encoding="utf-8")
 
     print(f"OK  voice/narration.mp3  ({len(audio)//1024} KB)")
@@ -377,6 +438,9 @@ async def main(cid: str):
     print(f"voice={voice} rate={rate}" + (f" key_rate={key_rate} ({len(keys)} key takes)" if key_rate and keys else ""))
     if inserted > 0:
         print(f"    {len(segments)} segments, {inserted:.2f}s of scripted silence spliced in")
+    if open_ids:
+        last = sentences_out[max(fast)]
+        print(f"    opening {len(fast)} sentence(s) in {', '.join(open_ids)}, 0-{last['end']:.1f}s, at {tempo}x the body pace (D-078)")
 
 
 if __name__ == "__main__":

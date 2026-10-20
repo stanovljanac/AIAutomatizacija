@@ -255,7 +255,7 @@ old one (don't delete history).
   "Boring automations" survives as a *series* inside it (see D-028). Rebrand all assets/docs.
 - **Consequences:** Broader, more durable brand; supersedes the D-012 name.
 
-## D-024 — TTS: edge-tts for drafts, **Azure AI Speech for the final** (supersedes D-014)
+## D-024 — TTS: edge-tts for drafts, **Azure AI Speech for the final** (supersedes D-014) — **superseded by D-076**
 - **Context:** edge-tts commercially **violates Microsoft's ToS** (it reverse-engineers the
   Edge read-aloud endpoint) and is unreliable — unfit for a monetized channel's published
   audio. Azure AI Speech offers the **same neural voices** (incl. Andrew), **500k chars/month
@@ -1007,3 +1007,83 @@ old one (don't delete history).
   `in-progress`.
 - **Open.** An automatic overlap/contrast measure for the frame gate; today the sign-off rests on
   looking. Lesson: `knowledge/desk-knowledge/lessons/2026-10-18-a-portrait-branch-written-blind-is-not-a-portrait.md`.
+
+## D-076 — One voice: the edge-tts track that is approved is the track that ships; Azure retired (owner, 2026-10-20)
+- **Context.** D-024 made edge-tts the draft voice and Azure AI Speech the published one, re-voiced once
+  the cut was locked. In practice the Azure final made the **same** Andrew voice. Each re-voice cost a
+  re-align and moved every typed word time (024: word offsets up to 0.37 s, SFX up to 1.09 s, lesson
+  `2026-10-10-a-re-voice-moves-every-word`), and since 012 (D-055) several videos shipped on the edge
+  track. Owner: *"preskoči Azure i sad i ubuduće … edge radi sasvim okej posao, a radimo redundantno da
+  bismo napravili isti glas"*.
+- **Decision.** No Azure step, now or later. 026 ships on the edge-tts track the owner approved at
+  Gate ③. Removed: `scripts/make_voice_azure.py` and its tests, the dispatcher's `azure` provider,
+  `final_provider`, `FINAL_DEFAULT` and `--final`, the `voice.azure` block in config (example + live),
+  the `AZURE_SPEECH_*` lines in `.env.example`. The `TtsProvider` seam stays (one registry entry,
+  edge-tts) so a future provider is still one entry + one script.
+- **Consequences.** The voice the owner hears at Gate ③ is final; no re-align or re-mark before
+  publish. D-024's context still holds: edge-tts goes through Microsoft's Edge read-aloud endpoint,
+  which has no commercial licence. That is the owner's accepted trade-off. `.env` (the owner's,
+  untracked) may still hold `AZURE_SPEECH_KEY`/`REGION`; nothing reads them any more.
+
+## D-077 — A Short is described as its own video; the long is linked through Related video, never in the description (owner, 2026-10-20)
+- **Context.** Since 2026-06-07 (D-038) a Short got a one-line cross-post caption ending in a link to
+  the long ("… full test → <LONG_URL>"). The owner does not put that in the description. The long goes
+  in the Shorts upload's **Related video** field, so a viewer who wants more can click: *"za shortove mi
+  napravi normalan description kao da je zaseban video, nemoj ono one line i pogledaj ovde ceo video"*.
+- **Decision.** `publish.json.short.description` and `extra_shorts[].description` (schema) hold each
+  Short's own full description: answer-first 2–3 sentences, the copy-paste text if the Short shows one,
+  how it was measured or the sources if it quotes them, and the altered-content line. No "watch the full
+  video" line, no link to the long. build-metadata writes an answer-first baseline from each cut's own
+  script (`shortUnitsOnDisk` now carries it) and stops emitting the empty one-line caption. publish.md
+  shows each Short's description plus the step "Related video → the long", and
+  `shortDescriptionProblems` flags an empty description or a link or "watch the full video" line. The
+  publish-stage rubric checks every Short has its own standalone description. `caption` stays optional,
+  for other socials only (the distributor, still disabled).
+- **Consequences.** Supersedes the one-line-caption part of D-038 and the youtube-publish skill's
+  2026-06-07 rule. 026 is the first package built this way.
+
+## D-078 — The opening runs 12% quicker: hook + after-hook faster and busier than the body (owner, 2026-10-20)
+- **Context.** Owner: *"hook i after hook … prvih 10, 15 sekundi videa ili ti prve 2, 3 scene treba da
+  budu 10 do 15% brže i dinamičnije nego ostatak videa kako bi privukli gledaoce"*. The house calibration
+  (D-068) is deliberately calm, and the steepest drop is between seconds 10 and 20 (MOTION_SPEC §2).
+- **Decision.** A recipe knob `opening { tempo 1.12, max_seconds 15, max_scenes 3, words_per_second 2.42 }`
+  (format.schema). The opening = the leading **sentences** that end by 15 s (estimated from word counts;
+  the first always, inside the first 3 scenes). Per sentence, not per scene, because 026's after-hook
+  scene alone runs 29 s.
+  - **Voice:** `make_voice.py` speaks them at `faster(rate, tempo)` (-11% → +0%, key -15% → -5%) and
+    records `alignment.opening {scenes, sentences, tempo}` (alignment.schema). Measured on 026's first
+    five scenes against the same text without it: opening sentences 1.10–1.20× faster, body 1.00×, the
+    opening ending at 13.7 s.
+  - **Motion:** `compile-hyperframes` gives every HF scene the opening touches `props.tempo`. A scene
+    with no authored `props.motion` also gets the budget's camera/background clocks × tempo (capped at 1).
+    Authored opening scenes divide their tween/hold durations by `props.tempo` and carry more beats (a
+    change every ~2–3 s), per MOTION_SPEC §19.
+  - **QA:** `check.mjs` `opening_tempo` (medium) fails a voice made without the opening and warns when
+    the measured opening speech rate is under 1.05× the body's.
+  - **Writing:** 2–3 short opening scenes (hook ≤ ~8 s, after-hook ≤ ~7 s), no holds or key takes there
+    unless one must land (script-writing 5a).
+- **Consequences.** Applies to every video voiced from now on, long and Short, and is switched off per
+  video with `brief.format_recipe.opening.tempo: 1`. 022–026 are untouched: they have no
+  `alignment.opening`, so their clips don't change. `make_voice.py` reads `opening` from default.json +
+  the brief, not from series/archetype format files (same as `voice`).
+
+## D-079 — Anyone can follow it: set the system up in plain words, an everyday parallel before every term (owner, 2026-10-20)
+- **Context.** Owner on the last few videos (lessons and the rest): we kept stamping words and never
+  turned to explain, on a basic example, why it works that way. In 026 it was the email, the draft, the
+  silent failure. *"Uđe neko u klip i niko ne zna o čemu se radi ni odakle meni taj sistem ni zašto ga
+  koristim ni na koji način ni zašto sam neke stvari odradio. Otišli smo negde u dubinu, objašnjavamo neke
+  stvari na izmišljenim sistemima koje nikom ne trebaju."*
+- **Decision.** Every script (STYLE_GUIDE §2.7, script-writing non-negotiable 12):
+  - early, in plain words, it says what the system or tool is, what it's for, where it came from and
+    why it works this way;
+  - every idea gets an everyday parallel or a basic worked example before its technical name;
+  - examples run on things the viewer has, not on an invented system;
+  - one new term at a time;
+  - it is checked with the stranger test on every scene.
+  Enforced as a fifth script-stage **hard gate**, `plain_explained`, in `pipeline/shared/review/rubric.mjs`
+  (also used for scene-plan/cut reviews). The panel now reads its default gate list from the rubric
+  instead of keeping its own copy. The idea-pass `on_brand` gate requires the lesson to be explainable
+  on something the viewer already has or knows.
+- **Consequences.** A script that leaves a newcomer lost cannot reach the owner. review.schema.json is
+  unchanged (it lists the older four gates for stored reviews; the panel fails a reply without the new
+  one). Lesson: `knowledge/desk-knowledge/lessons/2026-10-20-a-term-nobody-was-shown-is-noise.md`.

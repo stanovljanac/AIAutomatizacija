@@ -43,4 +43,5 @@ lesson with no evidence stays `draft` forever.
 - [A portrait branch written blind is not a portrait — look at the tall frame before a Short reaches the owner](2026-10-18-a-portrait-branch-written-blind-is-not-a-portrait.md) — lesson, stable
 - [An agent experiment leaks whatever the agent can read — hide the answer behind a real interface](2026-10-18-an-agent-experiment-leaks-what-the-agent-can-read.md) — lesson, stable
 - [A 3D clip can record an empty canvas — at its head and inside it; scan every clip](2026-10-20-a-3d-clip-can-open-before-its-3d-loads.md) — lesson, stable
+- [A term nobody was shown is noise — set the system up, then an everyday parallel before every name](2026-10-20-a-term-nobody-was-shown-is-noise.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

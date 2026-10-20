@@ -20,7 +20,7 @@ const gates = (ok = true) => ({
   accuracy: ok,
   original_angle: true,
   synthetic_data: true,
-  on_screen_source: true,
+  on_screen_source: true, plain_explained: true,
 });
 const mk = (val, ok = true) => ({
   reviewer: "x",

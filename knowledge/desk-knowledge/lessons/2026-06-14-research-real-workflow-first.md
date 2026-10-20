@@ -51,4 +51,5 @@ proof scenes built on the researched workflow must still satisfy the
 - [A free-tier external reviewer becomes a single point of failure once review volume outgrows its quota](2026-07-09-free-tier-reviewer-outgrown.md)
 - [A well-written script cannot save a weak story — score story strength at the idea](2026-07-12-story-strength-scored-at-the-idea.md)
 - [An agent experiment leaks whatever the agent can read — hide the answer behind a real interface](2026-10-18-an-agent-experiment-leaks-what-the-agent-can-read.md)
+- [A term nobody was shown is noise — set the system up, then an everyday parallel before every name](2026-10-20-a-term-nobody-was-shown-is-noise.md)
 - [Studio-reveal positioning: the "AI employee" genre, YouTube's inauthentic-content policy, and Claude Design](../research/2026-07-08-studio-reveal-positioning.md)

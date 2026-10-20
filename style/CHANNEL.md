@@ -97,7 +97,7 @@ Faceless AI channels must read as a real connected brand (Fix 3). Owner one-time
 ## 8. Compliance (D-024/D-025)
 
 - **Always disclose altered content = yes** at upload (AI voice + AI visuals).
-- **Voice:** Azure AI Speech for the published audio (licensed); edge-tts for drafts only.
+- **Voice:** edge-tts (Andrew) for drafts and the published audio alike — the approved track ships (D-076).
 - Originality + the human-fingerprint (owner angle + occasional real demo) is what actually
   protects monetization — disclosure alone doesn't.
 

@@ -19,6 +19,40 @@ Format:
 
 ---
 
+## 2026-10-20/21 — Azure retired (D-076); 026 publish package + 1440p; Short descriptions (D-077); quick opening (D-078); plain parallels (D-079)
+- who: agent (owner: "uradi commit prvo" → 1 thumb.jpg added (CRT), 2 drop Azure for good, 3 1440p + publish
+  package for the long and all 3 Shorts with full Short descriptions, 4 hook + after-hook 10–15% faster,
+  5 always explain on everyday parallels, 6 commit + push).
+- did: committed the 026 production work first (4799c03).
+- did (D-076): Azure removed — `scripts/make_voice_azure.py` + its two tests deleted, the dispatcher's
+  `azure`/`final_provider`/`--final` gone (registry = edge-tts only; the orchestrator seam test uses a
+  stand-in provider), `voice.azure` out of config.example.json and config.json, `.env.example` lines out,
+  docs/skills/schemas updated. `.env` (untracked) not touched.
+- did (026 publish): `finalize.mjs` → `video/final.mp4` 2560×1440 (3.6 GB, 10:55, verified against
+  `render/master.mp4`); the Shorts stay 1080×1920 (`upscale.short: null`). Owner's CRT thumbnail → `images/thumb_final.jpg`
+  (1920×1080, 0.24 MB — the original thumb.jpg is 2752×1536, 2.7 MB, over YouTube's 2 MB). publish.json +
+  publish.md: 3 titles, answer-first description with the 16 rendered chapters, 16 tags, three standalone
+  Short descriptions, pin, community post, Medium (`medium.md` 688 words), 11-step checklist; schedule
+  long Tue 10-27, Shorts 10-28 / 10-30 / 11-02. Publish review (Sonnet, `publish.review.json`): 8.4 / 8.4 /
+  8.4, hard gates green, cap reached → surfaced (fixes: Zapier/Make out, "6 Hours of Changes", no fake
+  quote in title 3, narrower Medium title, plain words in Short 1). Ledger reconciled; lesson linked.
+- did (D-077, code): `short.description` / `extra_shorts[].description` (schema); build-metadata writes
+  each from its cut's own script and stops emitting the one-line caption; publish.md shows the
+  description + "Related video → the long"; `shortDescriptionProblems` flags empty / linked / "watch the
+  full video"; publish rubric updated.
+- did (D-078, code): `format.opening { tempo 1.12, max_seconds 15, max_scenes 3, words_per_second 2.42 }`;
+  `make_voice.py` `opening_sentences` + `faster` (per sentence — 026's after-hook scene alone is 29 s) →
+  `alignment.opening`; `compile-hyperframes` → `props.tempo` + budget × tempo; `check.mjs`
+  `opening_tempo`. Measured on 026's first five scenes (probe, deleted): opening 1.10–1.20× faster than
+  the same text without it, body 1.00×, opening ends 13.7 s. MOTION_SPEC §19.
+- did (D-079): STYLE_GUIDE §2.7 + §9 + §10, script-writing non-negotiable 12, script-review checklist; a
+  fifth script hard gate `plain_explained` (rubric.mjs; the panel now reads its gate list from the
+  rubric); idea `on_brand` asks for an example the viewer already has. Lesson
+  `2026-10-20-a-term-nobody-was-shown-is-noise`.
+- next: **owner uploads 026** by hand per `content/026-silent-failures/publish.md` (long Tue 2026-10-27).
+  The next video is the first written under D-078 + D-079.
+- blockers: none.
+
 ## 2026-10-19/20 — 026 produced: a new object kit, 16 scenes in both framings, render + 3 Shorts
 - who: agent (owner: Gate ② approved with four conditions via an external review, then "nastavi").
 - did: kit `templates/hyperframes/_lib/hf-watch.js` — six objects for 2–4 scene sets (THE LINE, THE

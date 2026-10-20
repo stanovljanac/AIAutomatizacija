@@ -113,6 +113,16 @@ polish sentences.
    screen from its first frame. Pace is set for you (format recipe `voice`, 5% slower than the 024
    Short) — write `pause_after` holds ×1.155 of the old 0.35–0.6s and mark the lines that must land
    as `key_takes` (MOTION_SPEC §17).
+5a. **The opening is 10–15% quicker than the body (D-078, owner 2026-10-20).** The hook and the
+   after-hook (the first ~15 s) are what hold a viewer, so they run faster and busier than the rest.
+   The voice does it automatically: `make_voice.py` speaks every sentence that ends within
+   `format.opening.max_seconds` (15) at `opening.tempo` (1.12×) the body pace, and the HF scenes
+   those sentences touch get `props.tempo` and a quicker motion budget. Write for it:
+   **2–3 short opening scenes** (the hook ≤ ~8 s, the after-hook ≤ ~7 s) instead of one long setup
+   scene, each with its own visual beat, short sentences, no `pause_after` and no `key_takes` there
+   unless one line truly must land. A long after-hook scene is sped up only for its first ~15 s and
+   then slows mid-scene, so split it. A video can switch the opening off with
+   `brief.format_recipe.opening.tempo: 1`.
 5b. **End on ONE topical closing question (Phase 1.3).** Set top-level `closing_question` — a single
    specific question tied to the video's topic ("Which hour would you hand over first?"), voiced in
    the final beat. Optionally author `pinned_comment` (the answer + re-ask: "Mine was copy-paste.
@@ -158,6 +168,22 @@ polish sentences.
    in the description / pinned comment**. The diagnostic build-up (separate find-this, fix-that
    steps) is optional flavor — the single reproduce-it prompt is the payoff. And remember: a
    one-off chat result isn't automation — prefer the **reusable script/system** as the takeaway.
+12. **Anyone can follow it: set it up, then a parallel before every term (D-079, owner 2026-10-20;
+   STYLE_GUIDE §2.7 is canonical).** The owner on 022–026: we kept stamping words (email, draft,
+   silent failure, job card) on systems nobody was shown. A viewer who walks in has no idea what the
+   system is, where it came from, what it is used for or why it was built that way. So, in every script:
+   - In the first ~30–45 s, **one or two plain sentences set the system up**: what it is, what I use
+     it for, where it came from, why it works this way. Do this before the first technical step.
+   - **Every concept gets an everyday parallel or a basic worked example before its name.** Pick one
+     the viewer already knows: a smoke alarm, a parcel-tracking page, a receipt, a to-do list, a
+     restaurant order slip. Plan one for each new idea while outlining, not as a patch afterwards.
+   - **Examples run on things the viewer has** (their inbox, a shop's orders, a backup, a
+     spreadsheet). Our own system may be the story, never the only example.
+   - **One new term at a time**, each grounded before the next arrives.
+   - Before handing the script to review, run the stranger test scene by scene: if someone walked in
+     right here, would they know what is happening and why it matters to them?
+   The review panel holds this as the hard gate `plain_explained`; a script that fails it does not
+   reach the owner.
 
 ## Write to the archetype (STYLE_GUIDE §5 ≙ `format.archetype_structure.<archetype>`)
 - **ideas:** hook → framing → N items (idea → why it pays → tiny illustration →

@@ -2,7 +2,7 @@
 type: lesson
 status: stable
 created: 2026-10-10
-updated: 2026-10-10
+updated: 2026-10-20
 related: [2026-10-09-a-rate-string-is-not-a-pace.md, 2026-08-15-word-alignment-is-1to1-with-the-tts-events.md]
 depends_on: []
 ---
@@ -11,7 +11,8 @@ depends_on: []
 **Purpose:** this file exists so a scene's word-timed hits and the SFX stay on their words when the
 draft voice is replaced by the final one.
 **When to read:** read before typing any word time into a scene or a plan (an impact, a stamp, a
-sound cue), and before swapping the edge-tts draft for the Azure final.
+sound cue), and before re-voicing anything after its scenes were built (since D-076 there is no planned
+Azure re-voice, but a script edit after the voice is still one).
 **Do not duplicate:** the voice pipeline lives in the voice-synthesis skill, the render order in the
 video-render skill; extend this file for any further finding about timing that survives a re-voice.
 

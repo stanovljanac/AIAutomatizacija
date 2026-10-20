@@ -50,13 +50,20 @@ import { parseLuma } from "../../scripts/repair-dropouts.mjs";
  * @param {number} opts.leadFrames      start each reveal this many frames early (same as Remotion)
  * @param {object} [opts.motion]        format.motion.budget — handed (camelCased for HW.motion) to every
  *                                      scene whose props carry no `motion` of their own (D-068)
+ * @param {object} [opts.opening]       alignment.opening { scenes, tempo } — the hook + after-hook (D-078):
+ *                                      each gets props.tempo (its authored tweens/holds ÷ tempo) and the
+ *                                      budget's camera/background clocks × tempo (capped at 1)
  * @returns {{ jobs: object[], warnings: string[] }}
  */
-export function buildHyperframesJobs(timeline, { leadFrames = 0, motion } = {}) {
+export function buildHyperframesJobs(timeline, { leadFrames = 0, motion, opening } = {}) {
   const budget = motion && {
     scale: motion.scale, ambientScale: motion.ambient_scale, ambient: motion.ambient,
     focusScale: motion.focus_scale, ease: motion.ease,
   };
+  const tempo = opening?.tempo > 1 ? opening.tempo : 1;
+  const openIds = new Set(tempo > 1 ? opening.scenes ?? [] : []);
+  const quick = (k) => (k == null ? k : Math.min(1, Math.round(k * tempo * 1000) / 1000));
+  const openBudget = budget && { ...budget, scale: quick(budget.scale ?? 1), ambientScale: quick(budget.ambientScale ?? budget.scale ?? 1) };
   const fps = timeline.format.fps;
   const F = (s) => Math.round(s * fps);
   const jobs = [];
@@ -69,7 +76,10 @@ export function buildHyperframesJobs(timeline, { leadFrames = 0, motion } = {}) 
     // portrait_ok is a QA sign-off, not a render input: kept out of props so signing a scene off after
     // looking at its tall frame does not invalidate the clip it was judged on (lib/portrait.mjs)
     const { hf_scene: hfScene, portrait_ok: portraitOk, ...props } = sc.props ?? {};
-    if (budget && props.motion == null) props.motion = budget;
+    // a timeline scene is "<script scene>.<beat>"; the opening is named by script scene
+    const inOpening = openIds.has(String(sc.scene_id).replace(/\.\d+$/, ""));
+    if (inOpening) props.tempo = tempo;
+    if (budget && props.motion == null) props.motion = inOpening ? openBudget : budget;
     if (!hfScene) {
       warnings.push(`hyperframes scene ${sc.scene_id} has no props.hf_scene (the templates/hyperframes/scenes/<name> to render) — skipped`);
       return;
@@ -406,7 +416,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const fmt = resolveFormat({ archetype: brief.archetype ?? script.archetype, series: brief.series, format: brief.format, format_recipe: brief.format_recipe });
   const timings = deriveRenderTimings(fmt, { fps: timeline.format.fps, vertical });
 
-  const { jobs, warnings } = buildHyperframesJobs(timeline, { leadFrames: timings.leadFrames, motion: fmt.motion.budget });
+  const alignPath = join(cdir, "alignment.json");
+  const opening = existsSync(alignPath) ? JSON.parse(readFileSync(alignPath, "utf8")).opening : null;
+  const { jobs, warnings } = buildHyperframesJobs(timeline, { leadFrames: timings.leadFrames, motion: fmt.motion.budget, opening });
   for (const w of warnings) console.warn(w);
   if (!jobs.length) {
     console.log(`No engine:"hyperframes" scenes in ${id}/timeline.json — nothing to render.`);

@@ -54,12 +54,19 @@ You assemble the final video deterministically from `script.json` + `alignment.j
   Intro sequence (not even the xf blend), scene 0 starts at **frame 0** instead of its first word
   (`lib/timeline.mjs`) and has no fade-in (`lib/transitions.mjs`). The hook owns frame 0. Only a video's own
   `brief.format_recipe: { intro: { long_seconds: 1.5 } }` brings a bumper back.
-- **Re-voice (Azure final) = re-read every word time.** Scene windows re-time themselves, typed numbers do
-  not: on 024 the final voice moved word offsets up to 0.37s and the plan's SFX seconds up to 1.09s.
+- **Re-voice = re-read every word time.** There is no planned re-voice any more (D-076: the edge-tts track
+  the owner approves ships), but a script edit after the voice still re-voices. Scene windows re-time
+  themselves, typed numbers do not: on 024 the then-Azure final moved word offsets up to 0.37s and the
+  plan's SFX seconds up to 1.09s.
   Scenes read word marks from props (`cues` / `offsets`; the `fz-*` scenes wrap each typed mark as
   `off("Name", x)`), the per-video plan derives them from `alignment.json`, and typed marks/SFX are carried
   across with a word warp from the draft alignment (kept in `_draft-edge/`). Lesson
   `2026-10-10-a-re-voice-moves-every-word.md`.
+- **The opening runs 12% quicker (D-078, MOTION_SPEC §19).** `compile-hyperframes` reads
+  `alignment.opening` and gives each HF scene it touches `props.tempo` (1.12), plus the budget's
+  camera/background clocks × tempo when the scene authors no `props.motion`. An opening scene divides
+  its own tween and hold durations by `props.tempo` and carries more beats (a change every ~2–3 s). A
+  scene voiced before D-078 has no `alignment.opening`, so nothing changes for it.
 - **The motion budget is a default too (D-068):** `compile-hyperframes` hands `format.motion.budget`
   (camera 0.855, background 0.81 and still unless a window opens it, takes at 0.35) to every HF scene
   whose props carry no `motion`. MOTION_SPEC §17.

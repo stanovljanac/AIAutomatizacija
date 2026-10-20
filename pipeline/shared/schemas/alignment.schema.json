@@ -4,6 +4,16 @@
   "type": "object",
   "required": ["audio", "duration", "sentences"],
   "properties": {
+    "opening": {
+      "type": "object",
+      "description": "D-078: the leading sentences make_voice.py spoke tempo× faster than the body (the hook + after-hook, the first ~15 s), and the scenes they touch.",
+      "required": ["scenes", "tempo"],
+      "properties": {
+        "scenes": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "sentences": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "description": "Flat sentence indexes (sentences[].index) spoken at the opening tempo." },
+        "tempo": { "type": "number", "minimum": 1 }
+      }
+    },
     "audio": { "type": "string" },
     "duration": { "type": "number" },
     "sentences": {

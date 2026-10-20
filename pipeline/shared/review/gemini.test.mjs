@@ -12,7 +12,7 @@ const geminiReply = (obj) => ({
 
 const goodReview = {
   score: 9.3,
-  hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true },
+  hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true },
   category_scores: { retention_structure: 9, originality_depth: 9, hard_rule_craft: 10, style_tone: 9, readaloud_clarity: 9 },
   fixes: [],
   summary: "solid",

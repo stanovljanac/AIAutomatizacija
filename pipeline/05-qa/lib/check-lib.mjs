@@ -257,6 +257,47 @@ export function runChecks(props, fmt, { vertical, durationSeconds, approvedTools
   return { pass, checks };
 }
 
+/**
+ * D-078: the hook + after-hook must run faster than the body. PURE over alignment.json + the resolved
+ * recipe. make_voice.py records the scenes it sped up (`alignment.opening`); this measures what edge-tts
+ * actually delivered — the median speech rate (letters per second inside each sentence, so pauses and
+ * gaps don't count) of the opening against the body's. The voice is the part the code controls, so a
+ * missing opening is the failure; the measured ratio only warns, because the words themselves vary.
+ */
+export const OPENING_MIN_RATIO = 1.05;
+
+export function openingTempoCheck(alignment = {}, fmt = {}) {
+  const want = fmt.opening?.tempo ?? 1;
+  if (!(want > 1)) return mk("opening_tempo", true, "medium", "off in the recipe");
+  const scenes = alignment.opening?.scenes ?? [];
+  if (!scenes.length) {
+    return mk("opening_tempo", false, "medium", `voiced without the opening tempo (recipe ${want}×)`,
+      { fix: "Re-voice with scripts/make_voice.py (it speeds the hook + after-hook and records alignment.opening), then re-render." });
+  }
+  const rate = (s) => {
+    const letters = String(s.text ?? "").replace(/[^\p{L}\p{N}]/gu, "").length;
+    const secs = (s.end ?? 0) - (s.start ?? 0);
+    return secs > 0 && letters ? letters / secs : null;
+  };
+  const median = (xs) => {
+    const v = xs.filter((x) => x != null).sort((a, b) => a - b);
+    return v.length ? (v.length % 2 ? v[(v.length - 1) / 2] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2) : null;
+  };
+  // the sped-up sentences (by flat index); an older record without them = every sentence of its scenes
+  const sents = alignment.sentences ?? [];
+  const idx = alignment.opening.sentences;
+  const inOpening = Array.isArray(idx) ? ((s) => idx.includes(s.index)) : ((s) => scenes.includes(s.scene));
+  const o = median(sents.filter(inOpening).map(rate));
+  const b = median(sents.filter((s) => !inOpening(s)).map(rate));
+  const where = `opening (${scenes.join(", ")})`;
+  if (o == null || b == null) return mk("opening_tempo", true, "medium", `${where} at ${alignment.opening.tempo}× (nothing to compare against)`);
+  const ratio = o / b;
+  const pass = ratio >= OPENING_MIN_RATIO;
+  return mk("opening_tempo", pass, "medium",
+    `${where}: ${ratio.toFixed(2)}× the body's speech rate (asked ${alignment.opening.tempo}×)`,
+    pass ? {} : { fix: "edge-tts drifts run to run — re-voice, or check the opening's words are not unusually long." });
+}
+
 /** One-line human summary for the report + log. */
 export function summarize(checks) {
   const fails = checks.filter((c) => !c.pass);

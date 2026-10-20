@@ -101,7 +101,7 @@
           },
           "key_takes": {
             "type": "array",
-            "description": "Optional: indexes into THIS scene's sentences[] that are KEY TAKES — the lines the viewer must remember. scripts/make_voice.py (and make_voice_azure.py) speak them at brief.voice_rate_key instead of brief.voice_rate so they have time to land; a scene can also read them to settle its motion and highlight the take (024 Short, 2026-10-09).",
+            "description": "Optional: indexes into THIS scene's sentences[] that are KEY TAKES — the lines the viewer must remember. scripts/make_voice.py speaks them at brief.voice_rate_key instead of brief.voice_rate so they have time to land; a scene can also read them to settle its motion and highlight the take (024 Short, 2026-10-09).",
             "items": { "type": "integer", "minimum": 0 },
             "uniqueItems": true
           },

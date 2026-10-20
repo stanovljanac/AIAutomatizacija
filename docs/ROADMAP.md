@@ -249,7 +249,7 @@ The detailed per-wave build handoffs and verifier-verdict log were removed once 
 - **Wave 4 — swappability hardening: ✅ DONE 2026-06-12** (Sonnet-verified, **366 tests green**, UNCOMMITTED).
   **T4.1** (render-engine port) was already done by V5/V6. **T4.2** the `TtsProvider` dispatcher
   `pipeline/02-voice/voice-dispatcher.mjs` (provider→script registry; `run.mjs` routes voice through `voiceArgs`;
-  draft=edge-tts, `--final`=Azure, D-024). **T4.3** the `Distributor` port seam
+  draft=edge-tts, `--final`=Azure, D-024 — the Azure final retired 2026-10-20, D-076). **T4.3** the `Distributor` port seam
   `pipeline/07-distribute/distributor.mjs` + `distribution.schema.json` + a disabled `config.distribute` (Noop/Mock/
   Postiz-**stub**; live Postiz client = Wave 5 / T5.3).
 - **Wave 5 — full autonomy + growth loop: ✅ core DONE** (headless + scheduled run, analytics loop;

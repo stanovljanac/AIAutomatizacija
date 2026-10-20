@@ -9,7 +9,7 @@ import {
   buildMetadata, buildChapters, buildDescription, buildTags, fmtTime,
   publishMarkdown, writeMarkdownExport, recordThumbnailChoice,
   buildBridge, buildPinnedComment, LONG_URL_PLACEHOLDER, chapterProblems,
-  testVariants, packageProblems, recordAbResult, TEST_VARIANTS,
+  testVariants, packageProblems, recordAbResult, TEST_VARIANTS, shortDescriptionProblems,
 } from "./build-metadata.mjs";
 import { readFixture, assertValid, validate, withTempDir } from "../shared/testkit/index.mjs";
 
@@ -239,6 +239,31 @@ test("buildMetadata: a derived cut names the Short, further units become extra_s
   const plain = buildMetadata({ ...base, shortUnits: [{ unit: "short", title: null }] });
   assert.equal(plain.extra_shorts, undefined, "one hand-built Short → no extra_shorts");
   assert.match(plain.short.title, /\(Short\)$/);
+});
+
+test("D-077: every Short gets its own answer-first description from its own script, no one-line caption", () => {
+  const base = { brief: readFixture("brief.json"), script: readFixture("script.json"), alignment: readFixture("alignment.json") };
+  const cut = (first) => ({ scenes: [{ id: "c1", sentences: [first, "Second line."] }] });
+  const pub = buildMetadata({ ...base, shortUnits: [{ unit: "short", title: "Cut one", script: cut("One opens here.") }, { unit: "short-2", title: "Cut two", script: cut("Two opens here.") }] });
+  assertValid(pub, "publish");
+  assert.match(pub.short.description, /^One opens here\. Second line\./);
+  assert.match(pub.extra_shorts[0].description, /^Two opens here\./);
+  assert.equal("caption" in pub.short, false, "no empty one-line caption is generated");
+  const md = publishMarkdown(pub);
+  assert.ok(md.includes("One opens here."), "the Short's description is in publish.md");
+  assert.ok(md.includes("Related video (Shorts upload → Related video)"), "the long is linked through Related video");
+  assert.ok(!md.includes("Caption:"), "no caption line on YouTube");
+  assert.ok(!md.includes("⚠ Fix the description"), "a clean description raises nothing");
+});
+
+test("shortDescriptionProblems: empty, a link to the long, a 'watch the full video' line", () => {
+  assert.deepEqual(shortDescriptionProblems("My agent called a broken form a quiet day. Two lines catch it."), []);
+  assert.equal(shortDescriptionProblems("").length, 1);
+  assert.match(shortDescriptionProblems("It failed. Full test → <LONG_URL>").join(" "), /Related video/);
+  assert.match(shortDescriptionProblems("See it here https://youtu.be/abc").join(" "), /links to the long/);
+  assert.match(shortDescriptionProblems("It failed quietly. Watch the full video for the fix.").join(" "), /watch the full video/);
+  const md = publishMarkdown({ id: "x", title_options: ["t"], description: "d", tags: [], status: "draft_pending", short: { title: "s", description: "Watch the full video: <LONG_URL>" } });
+  assert.ok(md.includes("⚠ Fix the description"));
 });
 
 test("chapterProblems: a chapter under 10 s (025's draft, 1:41 → 1:48) and the other YouTube rules", () => {

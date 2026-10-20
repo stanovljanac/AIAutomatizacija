@@ -21,7 +21,7 @@ const WEIGHTS = {
   readaloud_clarity: 0.15,
 };
 const PANEL = { weights: WEIGHTS, score_threshold: 9, auto_pass_threshold: 9.2 };
-const GATES_OK = { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true };
+const GATES_OK = { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true };
 const cats = (n) => ({
   retention_structure: n,
   originality_depth: n,

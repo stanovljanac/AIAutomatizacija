@@ -35,7 +35,8 @@
       "properties": {
         "title": { "type": "string" },
         "tags": { "type": "array", "items": { "type": "string" } },
-        "caption": { "type": "string", "description": "One-sentence cross-post caption + link to the long video (D-038)." },
+        "description": { "type": "string", "description": "The Short's own YouTube description, written as if it were its own video — no 'watch the full video' line, no link to the long: the long goes in the Shorts upload's Related video field (D-077)." },
+        "caption": { "type": "string", "description": "Optional cross-post caption for OTHER socials (D-038) — never the YouTube description (D-077)." },
         "subtitles": { "type": "string", "description": "The Short's subtitles.srt, relative to the long's content folder (D-072)." },
         "scheduled_for": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "The Short's publish day (schedule.mjs, 3D)." }
       }
@@ -51,6 +52,7 @@
           "unit": { "type": "string", "pattern": "^short-[2-9]$" },
           "title": { "type": "string" },
           "tags": { "type": "array", "items": { "type": "string" } },
+          "description": { "type": "string", "description": "Its own YouTube description, as for `short.description` (D-077)." },
           "caption": { "type": "string" },
           "subtitles": { "type": "string" },
           "scheduled_for": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },

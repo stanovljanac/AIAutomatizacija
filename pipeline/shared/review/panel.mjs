@@ -5,12 +5,14 @@
 // score from category_scores * weights, then clamps below 9 if any hard gate failed.
 // That keeps "≥9 / ≥9.2" deterministic and model-independent.
 import { validate } from "../lib/validate-lib.mjs";
+import { HARD_GATES } from "./rubric.mjs";
 
 const HARD_GATE_CAP = 8.5; // any hard-gate fail caps the score here (cannot auto-pass)
-// Default required gates = the script set. Each must be explicitly present AND true; a reviewer that
-// omits a gate key (or reports nothing) is treated as failing — never silently gates-OK. The IDEA
-// stage passes its own gate list via panelCfg.required_gates (resolvePanelCfg).
-const REQUIRED_GATES = ["accuracy", "original_angle", "synthetic_data", "on_screen_source"];
+// Default required gates = the script set, read from the rubric (one list — the reviewer is asked for
+// exactly these). Each must be explicitly present AND true; a reviewer that omits a gate key (or
+// reports nothing) is treated as failing — never silently gates-OK. The IDEA stage passes its own gate
+// list via panelCfg.required_gates (resolvePanelCfg).
+const REQUIRED_GATES = HARD_GATES;
 
 /**
  * Merge the global panel config with a stage override (config.review.panel.stage_overrides[stage]).

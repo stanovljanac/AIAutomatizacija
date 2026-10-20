@@ -14,7 +14,7 @@ test("review.schema compiles and accepts a valid auto-band review", () => {
         reviewer: "gemini",
         model: "gemini-3.5-flash",
         score: 9.3,
-        hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true },
+        hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true },
         category_scores: { retention_structure: 9, originality_depth: 9, hard_rule_craft: 10, style_tone: 9, readaloud_clarity: 9 },
         fixes: [],
       },
@@ -156,7 +156,7 @@ const mkReviewDoc = (stage, reviewerOverride = {}) => ({
 test("[verifier] review.schema allOf: script-stage doc missing a script category is REJECTED", () => {
   // 'readaloud_clarity' is deliberately absent
   const doc = mkReviewDoc("script", {
-    hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true },
+    hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true },
     category_scores: { retention_structure: 9, originality_depth: 9, hard_rule_craft: 9, style_tone: 9 },
   });
   const { valid } = validate(doc, "review");

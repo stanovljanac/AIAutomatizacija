@@ -21,7 +21,7 @@ SEO/claims rubric in `pipeline/shared/review/rubric.mjs` (`publish` entry; weigh
 ## Timing (owner rule 2026-06-07)
 - **Draft the SEO now, at SCRIPT APPROVAL — instant, don't wait for publish.** As soon as the
   script is approved, generate the package with the **title (name) for BOTH the video AND
-  the Short**, the description, tags, and the Short's **one-line caption**. Refine here at the
+  the Short**, the description, tags, and **each Short's own full description** (D-077). Refine here at the
   publish step (chapters need final timings). This gives the owner the names early.
 - **Write it as `publish.draft.json` until Gate ③, then rename it to `publish.json`.** Same
   schema, same content — only the filename waits. The lifecycle ledger (D-062) reads the mere
@@ -72,11 +72,16 @@ the file replaces YouTube's auto-captions for search.
 ## Short
 - Build the **Short** from the 1–2 key beats (vertical, light music ok), with its own
   short title. Length per **STYLE_GUIDE §7** (canonical) — ~50–60s, hard max 2:00.
-- **The Short gets a ONE-SENTENCE caption with a LINK to the full video (owner rule
-  2026-06-07).** One cross-post sentence that teases the long video and links to it, e.g.
-  "… — the faster one quietly got it wrong. Watch the full test: <link>". Store it in
-  `publish.json.short.caption` (the real URL is filled at upload); the owner reuses it across
-  other socials (X, IG, TikTok, LinkedIn).
+- **Every Short gets its OWN full description, as if it were its own video (owner rule
+  2026-10-20, D-077 — replaces the 2026-06-07 one-line caption).** Answer-first 2–3 SEO sentences
+  about what THIS Short shows, then the copy-paste text if it shows one, "how it was measured" if it
+  quotes a test, sources if it quotes facts, and the altered-content line. **No "watch the full
+  video" line and no link to the long:** the owner sets the long in the Shorts upload's **Related
+  video** field, which is where a viewer who wants more clicks. Store it in
+  `publish.json.short.description` / `extra_shorts[].description`. build-metadata writes an
+  answer-first baseline from each cut's own script, and publish.md flags a description that is
+  empty or links to the long (`shortDescriptionProblems`). `caption` is now optional and only for
+  other socials, never the YouTube description.
 
 ## Short → Long bridge (every video — Phase 1.2, feeds long-form discovery)
 Shorts carry most of our reach but long-form discovery is under-fed, so **formalize the chain**
@@ -133,8 +138,8 @@ The Medium **post** also needs (owner rule 2026-06-07), stored in `publish.json.
 ## Extra Shorts, upload file, publish days (D-074)
 - **Shorts cut from the long (1B):** units `short-2`, `short-3` … are packaged in
   `publish.json.extra_shorts` (title from the cut, tags, caption, subtitles) and each gets its own
-  `## Short N` section in publish.md. Give every one its one-sentence caption + link to the long, like
-  the first Short.
+  `## Short N` section in publish.md. Give every one its own full description (no link to the long;
+  Related video does that), like the first Short.
 - **Upload file (2B):** after Gate ③ run `node pipeline/04-render/finalize.mjs <id>` — `video/final.mp4`
   becomes the 2560×1440 upscale (the 1080p master stays in `render/master.mp4`). After processing, the
   owner checks the codec once (right-click → Stats for nerds: `vp09` or `avc1`).

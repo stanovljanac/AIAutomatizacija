@@ -145,9 +145,8 @@ export function defaultExecutors() {
         ? { derived: "make-shorts", units: shortUnitsOf(contentDir) } // the cut plans were written with their scripts
         : deriveShortPlanFile(contentDir, { targetSeconds: config.defaults?.short_seconds }),
     // Mechanical: real Node/Python commands (run in both modes). Voice goes through the TtsProvider
-    // seam (T4.2): voiceArgs() picks the synth script from config.voice (draft = edge-tts by default;
-    // the Azure final is a `--final` pre-publish lock, not a per-iteration node). Alignment is
-    // provider-agnostic (faster-whisper on the produced narration.mp3).
+    // seam (T4.2): voiceArgs() picks the synth script from config.voice (edge-tts by default — the
+    // voice that ships, D-076). Alignment is provider-agnostic (faster-whisper on the produced narration.mp3).
     voice_long: (ctx) => mechanical(ctx, ctx.python, voiceArgs(ctx.config, ctx.id), "voice(long)"),
     align_long: (ctx) => mechanical(ctx, ctx.python, ["scripts/make_alignment.py", ctx.id], "align(long)"),
     voice_short: (ctx) => eachUnit(ctx, "voice", (unitId) => [ctx.python, voiceArgs(ctx.config, unitId)], { skipAligned: true }),

@@ -1,6 +1,6 @@
 // load-env.mjs — make the repo-root .env actually take effect (free, zero-dependency).
 //
-// The code reads secrets from process.env (GEMINI_API_KEY, YOUTUBE_*, AZURE_*, …) but nothing
+// The code reads secrets from process.env (GEMINI_API_KEY, YOUTUBE_*, PEXELS_*, …) but nothing
 // loaded the .env file, so a key the owner put in .env never reached the process. This wires it
 // with Node's BUILT-IN parser (process.loadEnvFile, Node ≥20.12) — no `dotenv` dependency.
 //

@@ -30,7 +30,7 @@ const mkFull = (val, gatesObj) => ({
 
 // ── Edge 1: exactly 9.2 should reach 'auto' ──────────────────────────────────
 test("verdict band = auto when both reviewers are exactly 9.2 (boundary)", () => {
-  const allGates = { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true };
+  const allGates = { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true };
   const r = verdict([mkFull(9.2, allGates), mkFull(9.2, allGates)], CFG);
   assert.equal(r.verdict.band, "auto", "9.2 is the auto threshold — both exactly at it should be auto");
 });
@@ -69,7 +69,7 @@ test("[BUG] panelScore: reviewer omitting a required gate key must give gatesOk=
 // verdict() replaces r.score with the panel-computed one. Confirm category_scores
 // of 9.3 overrides a model-reported score of 5 and still yields 'auto'.
 test("verdict ignores model's self-reported score field; uses panel-computed score", () => {
-  const allGates = { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true };
+  const allGates = { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true };
   const r = mkFull(9.3, allGates);
   r.score = 5; // model claims 5 — panel must ignore this
   const v = verdict([r], CFG);
@@ -83,7 +83,7 @@ test("verdict ignores model's self-reported score field; uses panel-computed sco
 // schema/config.test.mjs already guards the live config; this test documents the
 // fragility for Wave 2 (where weights may be reconfigured).
 test("panelScore: extra weight key with score=0 drags score below threshold (documents fragility)", () => {
-  const allGates = { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true };
+  const allGates = { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true };
   const weightsWithTypo = { ...WEIGHTS, oops_extra: 0.05 }; // sums to 1.05
   const { score } = panelScore(mkFull(9, allGates), weightsWithTypo);
   // sum = 9*1.0 (known categories) + 0*0.05 (missing in scores) = 9

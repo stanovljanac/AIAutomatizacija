@@ -31,6 +31,14 @@ write `script.review.json` with `pass: true|false` + a list of issues.
       planned opening scene is **hook-class** (a `hook-card` or custom `hook-*`).
 - [ ] **No intro (D-068):** sentence 1 is the catch itself — no greeting, channel name, "in this
       video" or warm-up line — because there is no bumper and it plays over frame 0.
+- [ ] **Quick opening (D-078):** the hook + after-hook fit in ~15 s as 2–3 short scenes with their own
+      visual beats (they are voiced and animated 12% faster); a long setup scene there gets split.
+- [ ] **A stranger can follow it — HARD gate `plain_explained` (D-079, STYLE_GUIDE §2.7):** the
+      system/tool is set up in plain words (what it is, what it's for, where it came from, why it
+      works this way) before the depth; every concept the viewer needs gets an everyday parallel or a
+      basic example before its name; examples run on things the viewer has, not an invented system;
+      no stacked jargon or ungrounded pipeline labels. Fail it and name the scene where a newcomer
+      would get lost.
 - [ ] **Accuracy by archetype:** comparison/stats claims trace to sources — **delegate to
       `claims.json`** (the `fact-check` skill's scorecard): every HIGH/MED claim is
       `verified`/`corrected` with a fetched `source_url`, none left `unverified`. Demo steps use

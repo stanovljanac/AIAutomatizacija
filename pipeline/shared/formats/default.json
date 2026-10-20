@@ -21,6 +21,7 @@
     "budget": { "scale": 0.855, "ambient_scale": 0.81, "ambient": [], "focus_scale": 0.35, "ease": 0.4 }
   },
   "voice": { "rate": "-11%", "rate_key": "-15%" },
+  "opening": { "tempo": 1.12, "max_seconds": 15, "max_scenes": 3, "words_per_second": 2.42 },
   "reveals": { "lead_seconds": 0.22 },
   "pacing": {
     "beat_seconds": { "min": 3, "max": 9 },

@@ -4,7 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { resolveFormat } from "../shared/lib/format.mjs";
 import { validate } from "../shared/testkit/index.mjs";
-import { runChecks, summarize } from "./lib/check-lib.mjs";
+import { runChecks, summarize, openingTempoCheck } from "./lib/check-lib.mjs";
 
 const FMT = resolveFormat({});
 const FPS = 30;
@@ -481,4 +481,41 @@ test("report: synthetic render_props_missing report validates against qa.schema.
   };
   const { valid, errors } = validate(report, "qa");
   assert.ok(valid, JSON.stringify(errors));
+});
+
+// D-078 (owner, 2026-10-20): the hook + after-hook run 10–15% faster than the body.
+const sentence = (scene, text, start, end) => ({ scene, text, start, end });
+const words = (n) => "abcd ".repeat(n).trim(); // 4 letters a word
+
+test("opening_tempo: a sped-up opening measured faster than the body passes, with the ratio", () => {
+  const al = {
+    opening: { scenes: ["s1", "s2"], sentences: [0, 1], tempo: 1.12 },
+    sentences: [sentence("s1", words(10), 0, 3.5), sentence("s2", words(10), 4, 7.5), sentence("s2", words(10), 8, 11.9), sentence("s3", words(10), 12, 15.9)]
+      .map((s, index) => ({ ...s, index })),
+  };
+  const c = openingTempoCheck(al, FMT);
+  assert.equal(c.pass, true);
+  assert.ok(c.detail.startsWith("opening (s1, s2)"), "the body half of s2 counts as body, not opening");
+  assert.ok(c.detail.includes("1.11× the body's speech rate (asked 1.12×)"), c.detail);
+});
+
+test("opening_tempo: a voice made without the opening fails (medium) and says how to fix it; tempo 1 is off", () => {
+  const plain = { sentences: [sentence("s1", words(10), 0, 4), sentence("s2", words(10), 4, 8)] };
+  const c = openingTempoCheck(plain, FMT);
+  assert.equal(c.pass, false);
+  assert.equal(c.severity, "medium");
+  assert.ok(c.fix.includes("make_voice.py"));
+  assert.equal(openingTempoCheck(plain, { ...FMT, opening: { tempo: 1 } }).pass, true);
+});
+
+test("opening_tempo: an opening that came out no faster than the body warns", () => {
+  const al = { opening: { scenes: ["s1"], tempo: 1.12 }, sentences: [sentence("s1", words(10), 0, 4), sentence("s2", words(10), 4, 8)] };
+  assert.equal(openingTempoCheck(al, FMT).pass, false);
+  const lone = { opening: { scenes: ["s1"], tempo: 1.12 }, sentences: [sentence("s1", words(10), 0, 4)] };
+  assert.equal(openingTempoCheck(lone, FMT).pass, true, "nothing to compare against is not a failure");
+});
+
+test("opening_tempo emits a qa.schema-shaped check", () => {
+  const report = { pass: true, checked_at: new Date().toISOString(), checks: [openingTempoCheck({ sentences: [] }, FMT)], summary: "x" };
+  assert.equal(validate(report, "qa").valid, true);
 });

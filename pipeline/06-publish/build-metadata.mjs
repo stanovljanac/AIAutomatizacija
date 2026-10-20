@@ -113,6 +113,23 @@ export function buildDescription(script, brief) {
   return [answer, kw].filter(Boolean).join(" ").trim();
 }
 
+/**
+ * A Short's description stands on its own, written as if the Short were its own video (D-077, owner
+ * 2026-10-20). The long is reached through the Shorts upload's "Related video" field, so a
+ * "watch the full video" line or a link to the long does not belong in it. PURE: why this description
+ * breaks that rule, or [] when it is fine.
+ */
+export function shortDescriptionProblems(description = "") {
+  const d = String(description ?? "");
+  const out = [];
+  if (!d.trim()) out.push("no description — write one as if the Short were its own video");
+  if (/<LONG_URL>|https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(d)) out.push("links to the long — set the Shorts upload's Related video instead");
+  if (/\b(watch|see) (the )?(full|whole|complete) (video|test|breakdown)|\bfull (video|test|breakdown) (here|→|->)/i.test(d)) {
+    out.push('a "watch the full video" line — the Related video field does that job');
+  }
+  return out;
+}
+
 // The owner fills the real long-video URL at upload; until then every link that needs it carries
 // this placeholder (mirrors the community_post convention, D-042).
 export const LONG_URL_PLACEHOLDER = "<LONG_URL>";
@@ -174,7 +191,10 @@ export function buildBridge({ publish = {}, brief = {} }) {
  */
 export function buildMetadata({ brief, script, alignment, introOffset = 0, shortUnits = [] }) {
   const tags = buildTags(brief);
-  const shortTitle = (unit) => shortUnits.find((u) => u.unit === unit)?.title;
+  const unitOf = (unit) => shortUnits.find((u) => u.unit === unit);
+  const shortTitle = (unit) => unitOf(unit)?.title;
+  // D-077: each Short's baseline description is answer-first from ITS OWN script, like a long's.
+  const shortDescription = (unit) => (unitOf(unit)?.script ? buildDescription(unitOf(unit).script, brief) : "");
   const publish = {
     id: brief.id,
     title_options: buildTitleOptions(brief),
@@ -184,7 +204,7 @@ export function buildMetadata({ brief, script, alignment, introOffset = 0, short
     chapters: buildChapters(script, alignment, { introOffset }),
     subtitles: "video/subtitles.srt", // D-072 — build-srt.mjs writes it
     altered_content: true,
-    short: { title: shortTitle("short") ?? `${brief.title_working || ""} (Short)`.trim(), tags: tags.slice(0, 8), caption: "", subtitles: "short/video/subtitles.srt" },
+    short: { title: shortTitle("short") ?? `${brief.title_working || ""} (Short)`.trim(), description: shortDescription("short"), tags: tags.slice(0, 8), subtitles: "short/video/subtitles.srt" },
     youtube_video_id: null,
     status: "draft_pending",
   };
@@ -193,8 +213,8 @@ export function buildMetadata({ brief, script, alignment, introOffset = 0, short
     publish.extra_shorts = extra.map((u) => ({
       unit: u.unit,
       title: u.title ?? `${brief.title_working || ""} (Short)`.trim(),
+      description: shortDescription(u.unit),
       tags: tags.slice(0, 8),
-      caption: "",
       subtitles: `${u.unit}/video/subtitles.srt`,
     }));
   }
@@ -208,6 +228,7 @@ export function buildMetadata({ brief, script, alignment, introOffset = 0, short
 /**
  * The topic's Short units with a script, in order — a DERIVED unit (make-shorts left a
  * short_source.json) is named by its cut's title; a hand-built `short/` keeps the default title.
+ * Each carries its parsed script, which its own description is written from (D-077).
  */
 export function shortUnitsOnDisk(contentDir) {
   if (!fs.existsSync(contentDir)) return [];
@@ -218,8 +239,8 @@ export function shortUnitsOnDisk(contentDir) {
   return sortUnits(units).map((unit) => {
     const dir = path.join(contentDir, unit);
     const derived = fs.existsSync(path.join(dir, "short_source.json"));
-    const title = derived ? JSON.parse(fs.readFileSync(path.join(dir, "script.json"), "utf8")).title_working : null;
-    return { unit, title };
+    const script = JSON.parse(fs.readFileSync(path.join(dir, "script.json"), "utf8"));
+    return { unit, title: derived ? script.title_working : null, script };
   });
 }
 
@@ -270,12 +291,25 @@ export function publishMarkdown(publish, { candidates = null } = {}) {
   }
   if (publish.pinned_comment) lines.push("", "## Pinned comment", fence(publish.pinned_comment));
   if (publish.community_post) lines.push("", "## Community post", fence(publish.community_post));
-  if (publish.short) {
-    lines.push("", "## Short", `- Title: ${publish.short.title ?? ""}`, `- Caption: ${publish.short.caption ?? ""}`, `- Tags: ${(publish.short.tags ?? []).join(", ")}`);
-  }
+  // D-077: a Short is packaged like its own video — a full description, and the long is linked through
+  // the Shorts upload's Related video field (never a line in the description).
+  const longName = publish.chosen_title ?? publish.title_options?.[0] ?? publish.id;
+  const shortBlock = (s) => {
+    const out = [
+      `- Title: ${s.title ?? ""}`,
+      `- Related video (Shorts upload → Related video): the long — "${longName}", once it is live`,
+      `- Tags: ${(s.tags ?? []).join(", ")}`,
+    ];
+    if (s.caption) out.push(`- Cross-post caption (other socials only, not the YouTube description): ${s.caption}`);
+    out.push("", "**Description:**", fence(s.description ?? ""));
+    const bad = shortDescriptionProblems(s.description);
+    if (bad.length) out.push("", "**⚠ Fix the description:**", ...bad.map((b) => `- ${b}`));
+    return out;
+  };
+  if (publish.short) lines.push("", "## Short (`short/video/final.mp4`)", ...shortBlock(publish.short));
   // 1B (D-074): the further Shorts cut from the long's scenes.
   for (const [i, s] of (publish.extra_shorts ?? []).entries()) {
-    lines.push("", `## Short ${i + 2} (\`${s.unit}/video/final.mp4\`)`, `- Title: ${s.title ?? ""}`, `- Caption: ${s.caption ?? ""}`, `- Tags: ${(s.tags ?? []).join(", ")}`);
+    lines.push("", `## Short ${i + 2} (\`${s.unit}/video/final.mp4\`)`, ...shortBlock(s));
   }
   // 3D (D-074): the fixed publish days schedule.mjs assigned — set the same days in Studio at upload.
   const days = [
@@ -296,7 +330,6 @@ export function publishMarkdown(publish, { candidates = null } = {}) {
     if (bridge.related_long_id) lines.push(`- Related long video: **${bridge.related_long_id}** (link ${bridge.long_url} once uploaded)`);
     if (bridge.template_link) lines.push(`- Template link: ${bridge.template_link}`);
     if (bridge.end_screen_target) lines.push(`- End-screen target: ${bridge.end_screen_target}`);
-    lines.push(`- Short cross-post caption: ${bridge.short_caption}`);
     if (bridge.manual_checklist?.length) {
       lines.push("", "**Manual steps (YouTube can't be scripted here — D-055):**", ...bridge.manual_checklist.map((s) => `- [ ] ${s}`));
     }

@@ -31,7 +31,7 @@ test("safety: accuracy=false with perfect category scores never passes reviewLoo
     new MockReviewer({
       name: "a",
       responder: () => ({
-        hard_gates: { accuracy: false, original_angle: true, synthetic_data: true, on_screen_source: true },
+        hard_gates: { accuracy: false, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true },
         category_scores: {
           retention_structure: 10,
           originality_depth: 10,
@@ -61,7 +61,7 @@ test("safety: original_angle=false with perfect category scores never passes rev
     new MockReviewer({
       name: "a",
       responder: () => ({
-        hard_gates: { accuracy: true, original_angle: false, synthetic_data: true, on_screen_source: true },
+        hard_gates: { accuracy: true, original_angle: false, synthetic_data: true, on_screen_source: true, plain_explained: true },
         category_scores: {
           retention_structure: 10, originality_depth: 10, hard_rule_craft: 10, style_tone: 10, readaloud_clarity: 10,
         },
@@ -77,7 +77,7 @@ test("safety: original_angle=false with perfect category scores never passes rev
 test("safety: panelScore caps score at HARD_GATE_CAP (8.5) when any gate is false, even with scores of 10", () => {
   const result = {
     reviewer: "x", model: "m",
-    hard_gates: { accuracy: false, original_angle: true, synthetic_data: true, on_screen_source: true },
+    hard_gates: { accuracy: false, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true },
     category_scores: {
       retention_structure: 10, originality_depth: 10, hard_rule_craft: 10, style_tone: 10, readaloud_clarity: 10,
     },
@@ -139,7 +139,7 @@ test("throttle: _lastCall is updated on the first call (no wait), so the second 
         candidates: [{
           content: { parts: [{ text: JSON.stringify({
             score: 9,
-            hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true },
+            hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true },
             category_scores: { retention_structure: 9, originality_depth: 9, hard_rule_craft: 9, style_tone: 9, readaloud_clarity: 9 },
             fixes: [], summary: "",
           }) }] },
@@ -171,7 +171,7 @@ test("throttle: concurrent calls on same instance — JS single-thread ensures s
         candidates: [{
           content: { parts: [{ text: JSON.stringify({
             score: 9,
-            hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true },
+            hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true },
             category_scores: { retention_structure: 9, originality_depth: 9, hard_rule_craft: 9, style_tone: 9, readaloud_clarity: 9 },
             fixes: [], summary: "",
           }) }] },
@@ -201,7 +201,7 @@ test("iteration accounting: maxIterations=1 failing artifact → passed:false, c
   const reviewer = new MockReviewer({
     name: "a",
     responder: () => ({
-      hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true },
+      hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true },
       category_scores: { retention_structure: 5, originality_depth: 5, hard_rule_craft: 5, style_tone: 5, readaloud_clarity: 5 },
       fixes: [{ severity: "major", area: "hook", note: "too slow" }],
     }),
@@ -339,7 +339,7 @@ test("safety: panel with two reviewers — one passes all gates, one fails a gat
     new MockReviewer({
       name: "good",
       responder: () => ({
-        hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true },
+        hard_gates: { accuracy: true, original_angle: true, synthetic_data: true, on_screen_source: true, plain_explained: true },
         category_scores: { retention_structure: 9.5, originality_depth: 9.5, hard_rule_craft: 9.5, style_tone: 9.5, readaloud_clarity: 9.5 },
         fixes: [],
       }),
@@ -347,7 +347,7 @@ test("safety: panel with two reviewers — one passes all gates, one fails a gat
     new MockReviewer({
       name: "bad",
       responder: () => ({
-        hard_gates: { accuracy: true, original_angle: true, synthetic_data: false, on_screen_source: true }, // synthetic_data fails
+        hard_gates: { accuracy: true, original_angle: true, synthetic_data: false, on_screen_source: true, plain_explained: true }, // synthetic_data fails
         category_scores: { retention_structure: 9.5, originality_depth: 9.5, hard_rule_craft: 9.5, style_tone: 9.5, readaloud_clarity: 9.5 },
         fixes: [{ severity: "blocker", area: "data", note: "real client data found" }],
       }),

@@ -15,12 +15,13 @@ export const STAGE_RUBRICS = {
   script: {
     blurb: "script",
     categories: ["retention_structure", "originality_depth", "hard_rule_craft", "style_tone", "readaloud_clarity"],
-    gates: ["accuracy", "original_angle", "synthetic_data", "on_screen_source"],
+    gates: ["accuracy", "original_angle", "synthetic_data", "on_screen_source", "plain_explained"],
     gateLines: [
       `- accuracy: every checkable claim is sourced/verified; no invented facts.`,
       `- original_angle: a genuine original human take is present and surfaces in/after the hook.`,
       `- synthetic_data: any demo data is synthetic, never real client data.`,
       `- on_screen_source: every stated statistic shows its source on screen.`,
+      `- plain_explained: a stranger who has never seen this channel can follow it (D-079). Before going deep, the script says what the system or tool is, what it is for, and why it is built that way. Every idea the viewer needs is first grounded in an everyday parallel or a small basic example they already know (a smoke alarm that beeps when its battery dies, a parcel-tracking page that stopped updating), and only then named. Examples run on things the viewer actually has (their inbox, shop orders, backups), not on an invented system they would have to learn first. Stacked jargon fails this gate, and so do our own pipeline terms that were never grounded (job card, draft, proof line, silent failure).`,
     ],
     categoryLines: [
       `- retention_structure: answer-first, hook <=10s, payoff, pacing.`,
@@ -31,10 +32,10 @@ export const STAGE_RUBRICS = {
     ],
   },
   // The PUBLISH pass reviews the metadata package (title options, description, tags, chapters,
-  // Short caption) BEFORE the owner sees it — operating principle 3 applies to publish copy too.
+  // Short descriptions) BEFORE the owner sees it — operating principle 3 applies to publish copy too.
   // One focused SEO/claims rubric on the existing panel; no new reviewer (D-053: single Sonnet).
   publish: {
-    blurb: "publish metadata package (title options, description, tags, chapters, Short caption)",
+    blurb: "publish metadata package (title options, description, tags, chapters, Short descriptions)",
     categories: ["title_ctr", "seo_keywords", "answer_first_description", "metadata_consistency"],
     gates: ["accuracy", "no_overpromise", "disclosure_set"],
     gateLines: [
@@ -46,7 +47,7 @@ export const STAGE_RUBRICS = {
       `- title_ctr: would the best title option stop the scroll for our audience while staying honest? Specific + curiosity beats generic. The options are 2-3 GENUINELY different angles (they go into Test & Compare), not one title reworded.`,
       `- seo_keywords: keyword-first description, search-term coverage in tags, no keyword stuffing.`,
       `- answer_first_description: the description answers the core question in its first sentence(s), <=3 sentences.`,
-      `- metadata_consistency: chapters chronological and matching the content; Short title/caption present and consistent; tags coherent with the topic.`,
+      `- metadata_consistency: chapters chronological and matching the content; every Short has a title and its OWN full description, written as if it were its own video (no "watch the full video" line, no link to the long — D-077); tags coherent with the topic.`,
     ],
   },
   // The IDEA pass scores the TOPIC before a script exists — "is this worth a video?" It is tuned so
@@ -61,7 +62,7 @@ export const STAGE_RUBRICS = {
     gateLines: [
       `- value_type_present: the idea clearly delivers >=1 value type — saves time, saves money, avoids a costly mistake, teaches a reusable system/mental model, reveals a surprising useful truth, or corrects a common misbelief.`,
       `- takeaway_present: there is ONE concrete thing a viewer could apply or believe differently tomorrow (a prompt, pattern, rule of thumb, corrected belief) — not just "this happened". It must survive the STRANGER TEST: someone who has never seen this channel and does not care about our system still walks away with it. A feature list of our own pipeline ("it retries / halts / notifies") is NOT a takeaway.`,
-      `- on_brand: it fits the channel's promise (practical AI you can actually use or understand). News/zeitgeist counts IF it carries a usable lesson.`,
+      `- on_brand: it fits the channel's promise (practical AI you can actually use or understand). News/zeitgeist counts IF it carries a usable lesson. The lesson must be explainable on something the viewer already has or knows (an inbox, a shop's orders, a backup, an everyday object as a parallel), not only on an invented system of ours that the viewer would have to learn first (D-079).`,
     ],
     categoryLines: [
       `- audience_value: how strong + concrete is the payoff (real magnitude of time/money saved, mistake avoided, or how genuinely surprising/useful the truth is)? Vague or tiny payoff scores low.`,

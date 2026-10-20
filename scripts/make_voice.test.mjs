@@ -6,7 +6,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -153,6 +154,46 @@ test("plan_segments: adjacent key takes share one segment; a pause still ends it
   assert.deepEqual(out, [[[0], "-6%", 0.0], [[1, 2], "-11%", 0.5], [[3], "-6%", 0.0]]);
 });
 
+// D-078 (owner, 2026-10-20): the hook + after-hook are spoken 10–15% faster than the body.
+test("faster: edge-tts rates scale the speed, so the opening's rate multiplies (-11% × 1.12 → +0%)", { skip: !havePython }, () => {
+  const out = py("print(json.dumps([mv.faster('-11%', 1.12), mv.faster('-15%', 1.12), mv.faster('+3%', 1.12), mv.faster('-6%', 1.0)]))");
+  assert.deepEqual(out, ["+0%", "-5%", "+15%", "-6%"]);
+});
+
+test("plan_segments: the opening is its own faster segment, key takes in it faster too, the body unchanged", { skip: !havePython }, () => {
+  const out = py("print(json.dumps(mv.plan_segments(5, {}, {1, 3}, '-11%', '-15%', {0, 1}, 1.12)))");
+  assert.deepEqual(out, [[[0], "+0%", 0.0], [[1], "-5%", 0.0], [[2], "-11%", 0.0], [[3], "-15%", 0.0], [[4], "-11%", 0.0]]);
+  const none = py("print(json.dumps(mv.plan_segments(3, {}, set(), '-11%', '-15%')))");
+  assert.deepEqual(none, [[[0, 1, 2], "-11%", 0.0]], "no opening → the one segment it always was");
+});
+
+test("opening_sentences: the first sentence always, then each next one that ends by max_seconds, inside max_scenes", { skip: !havePython }, () => {
+  const words = (n) => Array.from({ length: n }, (_, i) => `w${i}`).join(" ") + ".";
+  const open = (scenes) => py(`print(json.dumps(mv.opening_sentences(json.loads('''${JSON.stringify(scenes)}'''), 1.12, 15, 3, 2.42)))`);
+  // at 2.42 w/s × 1.12 ≈ 2.71 w/s: 20 words ≈ 7.4 s, +13 ≈ 12.2 s, +30 ≈ 23.2 s
+  assert.deepEqual(open([{ id: "s1", sentences: [words(20)] }, { id: "s2", sentences: [words(13), words(30)] }, { id: "s3", sentences: [words(2)] }]), [0, 1],
+    "a long after-hook scene is sped up only for its sentences inside the 15 s");
+  assert.deepEqual(open([{ id: "s1", sentences: [words(80)] }, { id: "s2", sentences: [words(5)] }]), [0], "a long first sentence is still the opening");
+  assert.deepEqual(open([{ id: "s1", sentences: [words(20)], pause_after: [{ after_sentence: 0, seconds: 4 }] }, { id: "s2", sentences: [words(13)] }]), [0],
+    "a scripted hold counts toward the 15 s");
+  assert.deepEqual(open([{ id: "s1", sentences: [words(5)] }, { id: "s2", sentences: [words(5)] }, { id: "s3", sentences: [words(5)] }, { id: "s4", sentences: [words(5)] }]), [0, 1, 2],
+    "never past max_scenes, even when time is left");
+});
+
+test("read_opening: the recipe's opening by default; a brief's format_recipe.opening tempo 1 switches it off", { skip: !havePython }, () => {
+  const recipe = JSON.parse(readFileSync(path.join(ROOT, "pipeline", "shared", "formats", "default.json"), "utf8")).opening;
+  const dir = mkdtempSync(path.join(process.env.TEMP || os.tmpdir(), "mv-open-"));
+  try {
+    const unit = path.join(dir, "short");
+    mkdirSync(unit);
+    assert.equal(py(`from pathlib import Path\nprint(json.dumps(mv.read_opening(Path(r"${unit}"))))`).tempo, recipe.tempo, "no brief → the recipe");
+    writeFileSync(path.join(dir, "brief.json"), JSON.stringify({ format_recipe: { opening: { tempo: 1 } } }));
+    assert.equal(py(`from pathlib import Path\nprint(json.dumps(mv.read_opening(Path(r"${unit}"))))`), null, "a Short inherits its long's switch-off");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("plan_segments: without a key rate, key takes change nothing (back-compatible)", { skip: !havePython }, () => {
   const out = py("print(json.dumps(mv.plan_segments(3, {0: 0.4}, {1}, '+3%', None)))");
   assert.deepEqual(out, [[[0], "+3%", 0.4], [[1, 2], "+3%", 0.0]]);
@@ -198,29 +239,6 @@ test("recipe_pacing: formats/default.json voice wins over the config rate", { sk
   const out = py("print(json.dumps(mv.recipe_pacing('+0%')))");
   const recipe = JSON.parse(readFileSync(path.join(ROOT, "pipeline", "shared", "formats", "default.json"), "utf8")).voice;
   assert.deepEqual(out, [recipe.rate, recipe.rate_key]);
-});
-
-/** Run a snippet with make_voice_azure.py's helpers in scope (as `az`). */
-function pyAzure(snippet) {
-  return py(
-    [
-      `spec2=importlib.util.spec_from_file_location("az", r"${path.join(ROOT, "scripts", "make_voice_azure.py")}")`,
-      "az=importlib.util.module_from_spec(spec2); spec2.loader.exec_module(az)",
-      snippet,
-    ].join("\n"),
-  );
-}
-
-test("azure build_ssml: no pauses / key takes → the single prosody it always sent", { skip: !havePython }, () => {
-  const scenes = JSON.stringify([{ id: "s1", sentences: ["One.", "Two & three."] }]);
-  const out = pyAzure(`print(json.dumps(az.build_ssml(json.loads('''${scenes}'''), 'V', '+3%')))`);
-  assert.equal(out, "<speak version='1.0' xml:lang='en-US'><voice name='V'><prosody rate='+3%'>One. Two &amp; three.</prosody></voice></speak>");
-});
-
-test("azure build_ssml keeps the draft's pauses as <break>s (split at Azure's 5s cap) and slows key takes", { skip: !havePython }, () => {
-  const scenes = JSON.stringify([{ id: "s1", sentences: ["A.", "B.", "C."], key_takes: [1], pause_after: [{ after_sentence: 1, seconds: 6.2 }] }]);
-  const out = pyAzure(`print(json.dumps(az.build_ssml(json.loads('''${scenes}'''), 'V', '-6%', '-11%')))`);
-  assert.match(out, /<prosody rate='-6%'>A\.<\/prosody><prosody rate='-11%'>B\.<\/prosody><break time='5000ms'\/><break time='1200ms'\/><prosody rate='-6%'>C\.<\/prosody>/);
 });
 
 // MEASURED 2026-10-09: edge-tts pads a short request to ~1.87s, so a lone key take carries ~1s of
