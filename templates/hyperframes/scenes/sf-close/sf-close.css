@@ -1,0 +1,5 @@
+/* sf-close — the line, then the question; both over the backdrop band above the machine */
+#kick { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(56px * var(--u)); }
+#q { top: calc(56px * var(--u)); font-size: calc(48px * var(--u)); }
+.portrait #kick { top: calc(80px * var(--u)); font-size: calc(58px * var(--u)); }
+.portrait #q { top: calc(80px * var(--u)); white-space: normal; width: calc(960px * var(--u)); box-sizing: border-box; font-size: calc(52px * var(--u)); }

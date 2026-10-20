@@ -1,0 +1,8 @@
+/* sf-both — each label over its own instrument (landscape); stacked in the top band (portrait). */
+#lbL { left: calc(84px * var(--u)); top: calc(56px * var(--u)); }
+#lbR { right: calc(84px * var(--u)); top: calc(56px * var(--u)); }
+#c1, #c2 { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(170px * var(--u)); font-size: calc(24px * var(--u)); }
+#lim { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(170px * var(--u)); }
+.portrait #lbL { left: calc(60px * var(--u)); top: calc(56px * var(--u)); }
+.portrait #lbR { right: auto; left: calc(60px * var(--u)); top: calc(160px * var(--u)); }
+.portrait #c1, .portrait #c2, .portrait #lim { top: calc(270px * var(--u)); white-space: normal; max-width: calc(960px * var(--u)); }

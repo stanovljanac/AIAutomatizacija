@@ -1,0 +1,4 @@
+/* sf-jobs — tags at the top, over the wall, clear of the dial in the shot; MUTED over the orders watcher (right) */
+#bk, #or, #sun { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#mut { right: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+.portrait #bk, .portrait #or, .portrait #sun, .portrait #mut { right: auto; left: calc(60px * var(--u)); top: calc(70px * var(--u)); }

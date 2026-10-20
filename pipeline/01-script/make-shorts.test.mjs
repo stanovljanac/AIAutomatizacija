@@ -65,6 +65,18 @@ test("checkCuts: unknown, missing-plan, reused scenes and the Short length rule 
   assert.match(checkCuts(LONG, PLAN, []).problems[0], /no short_cuts/);
 });
 
+test("checkCuts measures what the Short will say: the opening's words, at the long's own pace", () => {
+  const cut = { title: "C", scenes: ["s1", "s5"] };                 // 4 sentences × 14 words = 56 words
+  const at = (opt, c = cut) => checkCuts(LONG, PLAN, [c], opt);
+  assert.ok(at({}).problems.some((p) => /~21s/.test(p)), "56 words at 160 wpm = 21 s");
+  assert.deepEqual(at({ secondsPerWord: 0.9 }).problems, [], "56 words at the measured 0.9 s/word = 50 s");
+  assert.equal(Math.round(at({ secondsPerWord: 0.9 }).cuts[0].seconds), 50);
+  // an opening replaces the first sentence (14 words) — a 40-word opening adds 26 words
+  const opening = Array.from({ length: 40 }, (_, i) => `w${i}`).join(" ");
+  assert.equal(Math.round(at({ secondsPerWord: 0.5 }, { ...cut, opening }).cuts[0].seconds), Math.round((56 - 14 + 40) * 0.5));
+  assert.equal(Math.round(at({}, { ...cut, opening }).cuts[0].seconds), Math.round(((56 - 14 + 40) * 60) / 160));
+});
+
 test("makeShortUnit: narration verbatim, renumbered, first scene is the hook-class opener, plan reused", () => {
   const { script, plan, source } = makeShortUnit({ longScript: LONG, longPlan: PLAN, cut: { title: "Cut", scenes: ["s3", "s4"] }, id: "030-t/short-2" });
   assert.equal(script.id, "030-t/short-2");
@@ -243,6 +255,15 @@ test("assignUnits skips a hand-built unit and re-uses a derived one", async () =
     fs.mkdirSync(path.join(topic, "short-2"));
     fs.writeFileSync(path.join(topic, "short-2", SOURCE_FILE), "{}");
     assert.deepEqual(assignUnits(topic, 2), ["short-2", "short-3"], "a derived unit is re-derived in place");
+  });
+});
+
+test("assignUnits: the _TEMPLATE short/ skeleton (log.md, empty voice/ + video/) is a free unit", async () => {
+  await withTempDir(async (root) => {
+    const topic = makeRoot(root, { handBuiltShort: false });
+    for (const d of ["voice", "video"]) { fs.mkdirSync(path.join(topic, "short", d), { recursive: true }); fs.writeFileSync(path.join(topic, "short", d, ".gitkeep"), ""); }
+    fs.writeFileSync(path.join(topic, "short", "log.md"), "# Log — <video title>\n");
+    assert.deepEqual(assignUnits(topic, 2), ["short", "short-2"]);
   });
 });
 

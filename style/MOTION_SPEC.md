@@ -335,6 +335,13 @@ of a 1920 frame, a thin strip on a phone.
   every word read against the background), **fill** (the subject uses the frame, not its top half).
   Only then set `props.portrait_ok: true`; `05-qa/check.mjs` fails a Short cut from the long while
   any reused landscape scene is unsigned.
+- **Frame a portrait `HM` shot by arithmetic, then look (026, all six cut scenes).** At the object
+  plane the visible half-height is **0.194·d** in both framings; the half-width is **0.345·d** in
+  landscape and **0.109·d** in portrait (d = camera distance). Parts standing proud of the plate read
+  bigger — keep ~0.3 units of margin. A HUD shot keeps its plates in a band ABOVE the object and the
+  **bottom 16% clear** (the Shorts UI sits there). A layout that is wide by nature (a circuit, a pair
+  side by side) does not get a wider shot in portrait — it gets a portrait LAYOUT (026 s8: the bell
+  moved above the job box; s6: the identical pair stacks), so the subject fills the height.
 
 - **A 9:16 hero object carries 55–65% of frame height.** Grow UPWARD and let the camera give ground
   only as fast as it must, so the object still visibly outgrows the shot (022 Short: 47% → 60%).
@@ -619,7 +626,11 @@ svakakvi delovi automobila, vraća, izvlači… a mi pravimo 3D chatove teksta s
 - **Chat windows and text panels floating in 3D are out** as a scene's subject.
 
 **The kit** (`templates/hyperframes/_lib/hf-mech.js` + `hf-mech.css`; load after `hf-world.js`, which
-stays untouched). A video's own object is a second file on top of it (025: `hf-movement.js`).
+stays untouched). A video's own object is a second file on top of it (025: `hf-movement.js`; 026:
+`hf-watch.js` — several objects, one per scene set: THE LINE, THE WATCHER, THE VAULT, THE CAB, THE
+LEDGER, TRAYS — which is how 026 got 2–4 sets without a second kit). An object a scene moves or scales
+with its `root` must keep anything world-space in step: a clipping plane is built from the root's
+position and scale (`lipPlane()`), never from the object's local layout numbers.
 - `HM.create()` — renderer, a prefiltered **studio environment**, the light rig, a graded backdrop with
   the house grid, and the post chain (bloom, depth of field, ACES, grade, grain).
 - **Object motion blur by accumulation:** `ctx.render(t, pose, cam)` averages N sub-frames across the

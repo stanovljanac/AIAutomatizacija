@@ -41,4 +41,6 @@ lesson with no evidence stays `draft` forever.
 - [A Short is a cut of its long — reuse the scenes, re-voice the words, and pay for it in portrait framing](2026-10-17-a-short-is-a-cut-of-its-long.md) — lesson, stable
 - [A loop that waits for a hand-typed id never runs — read the channel, not our copy of it](2026-10-17-read-the-channel-not-our-copy-of-it.md) — lesson, stable
 - [A portrait branch written blind is not a portrait — look at the tall frame before a Short reaches the owner](2026-10-18-a-portrait-branch-written-blind-is-not-a-portrait.md) — lesson, stable
+- [An agent experiment leaks whatever the agent can read — hide the answer behind a real interface](2026-10-18-an-agent-experiment-leaks-what-the-agent-can-read.md) — lesson, stable
+- [A 3D clip can record an empty canvas — at its head and inside it; scan every clip](2026-10-20-a-3d-clip-can-open-before-its-3d-loads.md) — lesson, stable
 <!-- AUTO-INDEX:END -->

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-17",
-  "fetched": "2026-10-17",
+  "updated": "2026-10-19",
+  "fetched": "2026-10-19",
   "playlists": {
     "PLS3E2qEMmF3g": {
       "title": "Desk Lessons",
@@ -59,10 +59,10 @@
   },
   "reach": {
     "report_type": "channel_reach_basic_a1",
-    "job_id": null,
-    "job_created": null,
+    "job_id": "fca5152b-58ca-4850-ab43-69adf31d405c",
+    "job_created": "2026-10-19",
     "ingested": [],
-    "status": "api disabled"
+    "status": "waiting for the first report (~48h after the job was created)"
   },
   "videos": {
     "lWOBtSHlntM": {
@@ -74,7 +74,7 @@
       "content_key": "025-always-on-agents/short",
       "key_source": "manual",
       "metrics": {
-        "fetched": "2026-10-17"
+        "fetched": "2026-10-19"
       }
     },
     "hZ8WbNMAzwc": {
@@ -86,7 +86,7 @@
       "content_key": "025-always-on-agents",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17"
+        "fetched": "2026-10-19"
       }
     },
     "uCDpkEJ9Pdg": {
@@ -98,16 +98,16 @@
       "content_key": "024-frozen/short",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
-        "views": 228,
-        "watch_minutes": 44,
-        "avg_view_seconds": 27,
-        "retention_pct": 47.35,
+        "fetched": "2026-10-19",
+        "views": 229,
+        "watch_minutes": 45,
+        "avg_view_seconds": 28,
+        "retention_pct": 47.93,
         "subs_gained": 1,
         "traffic": {
           "NO_LINK_OTHER": 0,
           "YT_SEARCH": 1,
-          "YT_OTHER_PAGE": 3,
+          "YT_OTHER_PAGE": 4,
           "NOTIFICATION": 2,
           "SHORTS": 222
         }
@@ -122,16 +122,17 @@
       "content_key": "024-frozen",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
-        "views": 12,
-        "watch_minutes": 2,
-        "avg_view_seconds": 127,
-        "retention_pct": 96.64,
+        "fetched": "2026-10-19",
+        "views": 15,
+        "watch_minutes": 4,
+        "avg_view_seconds": 66,
+        "retention_pct": 50.57000000000001,
         "subs_gained": 0,
         "traffic": {
-          "NO_LINK_OTHER": 0,
-          "SUBSCRIBER": 10,
+          "NO_LINK_OTHER": 1,
+          "SUBSCRIBER": 11,
           "YT_SEARCH": 1,
+          "PLAYLIST": 1,
           "NOTIFICATION": 1
         }
       }
@@ -145,7 +146,7 @@
       "content_key": "023-attention/short",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 9,
         "watch_minutes": 4,
         "avg_view_seconds": 53,
@@ -168,7 +169,7 @@
       "content_key": "023-attention",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 17,
         "watch_minutes": 6,
         "avg_view_seconds": 189,
@@ -191,7 +192,7 @@
       "content_key": "022-context-window/short",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 313,
         "watch_minutes": 15,
         "avg_view_seconds": 17,
@@ -216,7 +217,7 @@
       "content_key": "022-context-window",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 2,
         "watch_minutes": 6,
         "avg_view_seconds": 375,
@@ -238,7 +239,7 @@
       "content_key": "021-what-is-a-token/short",
       "key_source": "manual",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 56,
         "watch_minutes": 8,
         "avg_view_seconds": 28,
@@ -263,7 +264,7 @@
       "content_key": "021-what-is-a-token",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 9,
         "watch_minutes": 8,
         "avg_view_seconds": 73,
@@ -286,7 +287,7 @@
       "content_key": "019-next-word-engine/short",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 31,
         "watch_minutes": 4,
         "avg_view_seconds": 35,
@@ -310,7 +311,7 @@
       "content_key": "018-life-story",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 11,
         "watch_minutes": 9,
         "avg_view_seconds": 58,
@@ -335,7 +336,7 @@
       "content_key": "017-fine-print-watch",
       "key_source": "manual",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 95,
         "watch_minutes": 20,
         "avg_view_seconds": 33,
@@ -361,7 +362,7 @@
       "content_key": "014-worst-hour",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 36,
         "watch_minutes": 9,
         "avg_view_seconds": 35,
@@ -388,7 +389,7 @@
       "content_key": "013-fail-loud",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 295,
         "watch_minutes": 81,
         "avg_view_seconds": 52,
@@ -415,7 +416,7 @@
       "content_key": "012-studio-reveal/short",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 46,
         "watch_minutes": 8,
         "avg_view_seconds": 31,
@@ -441,7 +442,7 @@
       "content_key": "012-studio-reveal",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 29,
         "watch_minutes": 42,
         "avg_view_seconds": 87,
@@ -467,7 +468,7 @@
       "content_key": "011-read-my-inbox",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 30,
         "watch_minutes": 8,
         "avg_view_seconds": 83,
@@ -492,7 +493,7 @@
       "content_key": "010-point-of-trust/short",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 133,
         "watch_minutes": 8,
         "avg_view_seconds": 22,
@@ -517,7 +518,7 @@
       "content_key": "010-point-of-trust",
       "key_source": "manual",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 10,
         "watch_minutes": 20,
         "avg_view_seconds": 123,
@@ -540,7 +541,7 @@
       "content_key": "009-boring-money-leak",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 25,
         "watch_minutes": 11,
         "avg_view_seconds": 69,
@@ -566,7 +567,7 @@
       "content_key": "008-receipt-to-spreadsheet",
       "key_source": "manual",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 15,
         "watch_minutes": 31,
         "avg_view_seconds": 124,
@@ -590,7 +591,7 @@
       "content_key": "007-fable-rise-and-fall",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 7,
         "watch_minutes": 11,
         "avg_view_seconds": 97,
@@ -614,7 +615,7 @@
       "content_key": null,
       "key_source": "none",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 39,
         "watch_minutes": 6,
         "avg_view_seconds": 30,
@@ -639,7 +640,7 @@
       "content_key": "007-fable-rise-and-fall/short",
       "key_source": "manual",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 62,
         "watch_minutes": 9,
         "avg_view_seconds": 40,
@@ -664,7 +665,7 @@
       "content_key": "006-validated-cleanup-system/short",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 153,
         "watch_minutes": 13,
         "avg_view_seconds": 14,
@@ -689,7 +690,7 @@
       "content_key": "006-validated-cleanup-system",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 10,
         "watch_minutes": 16,
         "avg_view_seconds": 97,
@@ -712,7 +713,7 @@
       "content_key": "004-claude-vs-chatgpt-spreadsheets/short",
       "key_source": "manual",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 69,
         "watch_minutes": 8,
         "avg_view_seconds": 28,
@@ -737,7 +738,7 @@
       "content_key": "004-claude-vs-chatgpt-spreadsheets",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 11,
         "watch_minutes": 18,
         "avg_view_seconds": 123,
@@ -762,7 +763,7 @@
       "content_key": "003-short",
       "key_source": "manual",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 216,
         "watch_minutes": 21,
         "avg_view_seconds": 17,
@@ -787,7 +788,7 @@
       "content_key": "003-five-tasks-ai-secretary",
       "key_source": "manual",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 6,
         "watch_minutes": 21,
         "avg_view_seconds": 212,
@@ -810,7 +811,7 @@
       "content_key": "002-what-is-ai-automation",
       "key_source": "title",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 11,
         "watch_minutes": 9,
         "avg_view_seconds": 53,
@@ -834,7 +835,7 @@
       "content_key": "002-short",
       "key_source": "manual",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "views": 24,
         "watch_minutes": 4,
         "avg_view_seconds": 24,

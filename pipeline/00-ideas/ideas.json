@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-17",
+  "updated": "2026-10-19",
   "ideas": [
     {
       "id": "inbox-ai-week-long",
@@ -24,7 +24,7 @@
         "origin": "manual",
         "added": "2026-07-08"
       },
-      "adjusted_score": 92,
+      "adjusted_score": 91,
       "search_demand": {
         "phrase": "ai inbox management",
         "status": "verified",
@@ -57,7 +57,7 @@
         "origin": "manual",
         "added": "2026-07-14"
       },
-      "adjusted_score": 92,
+      "adjusted_score": 91,
       "search_demand": {
         "phrase": "n8n email automation",
         "status": "verified",
@@ -78,46 +78,11 @@
       "score": 85,
       "status": "backlog",
       "produced_video_id": null,
-      "adjusted_score": 90,
+      "adjusted_score": 89,
       "search_demand": {
         "phrase": "google sheets invoice",
         "status": "verified",
         "depth": 5,
-        "checked": "2026-10-17",
-        "source": "youtube-autocomplete"
-      }
-    },
-    {
-      "id": "desk-lessons-attention",
-      "title": "AI Doesn't Focus. It Spends.",
-      "search_term": "what is attention in ai",
-      "task": "other",
-      "sector": "general",
-      "subject": "llm-mental-model",
-      "series": "Desk Lessons",
-      "tool": "None (concept video; GPT-2 used only as the open measuring instrument, as tiktoken was in 021/022)",
-      "archetype": "ideas",
-      "angle_hint": "Not 'it focuses on the important words'. The scores over everything you handed it sum to exactly 1, every time — attention is a fixed budget that must be fully spent, so nothing you add is free and you steer it by deleting, not by emphasising.",
-      "score": 89,
-      "status": "produced",
-      "lane": "desk-notes",
-      "value_type": [
-        "corrects-misbelief",
-        "teaches-system",
-        "surprising-truth",
-        "saves-time"
-      ],
-      "takeaway": "Attention is a fixed budget, not a spotlight — the model's scores always add up to 1, so every extra page you paste is subtracted from the line that matters. To make an AI focus, delete, don't emphasise.",
-      "value_score": 8.9,
-      "value_band": "owner",
-      "source": {
-        "origin": "manual"
-      },
-      "produced_video_id": "023-attention",
-      "search_demand": {
-        "phrase": "what is attention in ai",
-        "status": "verified",
-        "depth": 1,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -206,47 +171,11 @@
       "score": 81,
       "status": "backlog",
       "produced_video_id": null,
-      "adjusted_score": 86,
+      "adjusted_score": 85,
       "search_demand": {
         "phrase": "ai meeting notes",
         "status": "verified",
         "depth": 5,
-        "checked": "2026-10-17",
-        "source": "youtube-autocomplete"
-      }
-    },
-    {
-      "id": "agent-fine-print-watch",
-      "title": "I Gave an AI Agent One Job: Watch the Fine Print",
-      "search_term": "ai monitor terms of service changes",
-      "task": "lookups-reports",
-      "sector": "general",
-      "tool": "AI agent (model-agnostic) + any change-watch source (a saved page / a doc / an RSS or diff feed); kept modular",
-      "archetype": "ideas",
-      "lane": "desk-notes",
-      "series": "The AI Agent",
-      "angle_hint": "Ep. 1 of 'The AI Agent'. An agent is a DECISION layer, not a scraper. A dumb diff-watcher spams you on every character change; the agent reads the change, decides whether it MATTERS, and hands you only the ones that do — with a reason. Money shot = a DECISION CARD (old vs new clause + AI verdict: impact + reason), not a scanning animation. Human-approval posture: it flags, you decide. subject = change-detection/policy; bridges to 016 (automate the deciding).",
-      "score": 85,
-      "status": "produced",
-      "subject": "change-detection/policy",
-      "value_type": [
-        "teaches-system",
-        "avoids-mistake",
-        "corrects-misbelief"
-      ],
-      "takeaway": "An AI agent isn't a scraper that flags every change — it's a decision layer that reads a change, judges whether it matters, and hands you the call. Automate the deciding, keep the approval.",
-      "value_score": 9,
-      "value_band": "qualify",
-      "produced_video_id": "017-fine-print-watch",
-      "source": {
-        "origin": "manual",
-        "added": "2026-07-15"
-      },
-      "search_demand": {
-        "phrase": "ai monitor terms of service changes",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [],
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -282,6 +211,32 @@
       }
     },
     {
+      "id": "agent-stop-line",
+      "title": "AI Agents Make Mistakes. One Line Makes Them Undoable.",
+      "search_term": "scheduled ai agent mistakes",
+      "task": "outbound-comms",
+      "sector": "general",
+      "subject": "execution/actions",
+      "series": "Desk Loops",
+      "lane": "desk-loops",
+      "tool": "Model- and tool-agnostic (a headless agent as the measuring instrument; OpenAI Dots, Claude routines, Cursor automations named as news)",
+      "archetype": "ideas",
+      "angle_hint": "You cannot stop an agent from making mistakes, but you can decide where they land: ten runs with a one-line job sent 73 unapproved emails; ten runs with a stop line ('Never send. Drafts only.') sent zero, and the same slips landed in drafts.",
+      "score": 85,
+      "status": "produced",
+      "value_type": [
+        "avoids-mistake",
+        "teaches-system",
+        "surprising-truth"
+      ],
+      "takeaway": "Before an agent runs without you, write its stop line: swap every action it cannot take back for the twin it can (send -> draft, delete -> move, pay -> prepare, publish -> private), and where there is no twin, the action waits for you. You cannot prompt away a slip, but one line decides whether a slip is a draft you delete or an email you can never recall.",
+      "produced_video_id": "025-always-on-agents",
+      "source": {
+        "origin": "manual",
+        "added": "2026-10-17"
+      }
+    },
+    {
       "id": "ai-vs-macros-excel",
       "title": "AI vs a 10-Year-Old Excel Macro",
       "search_term": "chatgpt vba",
@@ -308,41 +263,6 @@
       }
     },
     {
-      "id": "automation-maintenance-story",
-      "title": "Your Automation Will Break — Here's How Mine Told Me",
-      "search_term": "automation stopped working",
-      "task": "other",
-      "sector": "general",
-      "tool": "AI (model-agnostic) + validation & alerts",
-      "archetype": "diagram",
-      "lane": "ai-how-to",
-      "angle_hint": "ONLY REAL INCIDENTS — never invented (accuracy rule). Candidates from the studio log: 008 Gemini free-tier 503s, review-loop rejections, QA catches; plus whatever Phase-B automations actually break. Produce as a LONG only after the freelance cluster has lived; if a good incident lands earlier, a desk-notes Short is allowed immediately. Frame: failure-design (validation, alerts, fallbacks, human gates), not war stories.",
-      "score": 84,
-      "status": "produced",
-      "value_type": [
-        "avoids-mistake",
-        "teaches-system"
-      ],
-      "takeaway": "Every automation breaks eventually — the design goal is that it tells you, loudly, instead of failing silently.",
-      "produced_video_id": "013-fail-loud",
-      "source": {
-        "origin": "manual",
-        "added": "2026-07-08"
-      },
-      "search_demand": {
-        "phrase": "automation stopped working",
-        "status": "unverified",
-        "depth": 0,
-        "alternatives": [
-          "automation not working iphone",
-          "automation not working",
-          "automation troubleshooting"
-        ],
-        "checked": "2026-10-17",
-        "source": "youtube-autocomplete"
-      }
-    },
-    {
       "id": "best-model-for-automation",
       "title": "Best AI Model for Automating Office Work",
       "search_term": "best ai for office work",
@@ -361,6 +281,34 @@
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
+    },
+    {
+      "id": "silent-failure-heartbeat",
+      "title": "Why AI Agents Fail Silently — and the 2 Lines That Catch It",
+      "search_term": "why ai agents fail",
+      "task": "lookups-reports",
+      "sector": "general",
+      "subject": "failure-detection/silent-runs",
+      "series": "Desk Loops",
+      "lane": "desk-loops",
+      "tool": "Model- and tool-agnostic (a headless agent as the measuring instrument; Healthchecks.io free tier and Uptime Kuma push monitors named as free watchers; n8n Error Trigger named as what error alerts can and cannot see)",
+      "archetype": "ideas",
+      "angle_hint": "Error alerts catch the failures that were already loud. A scheduled agent whose source goes quiet reports \"No new requests\" — measured; GitLab 2017 lost its backups the same way (the alert email itself was rejected). Flip the default: make success prove itself, and let silence be the alarm.",
+      "score": 84,
+      "status": "in-progress",
+      "produced_video_id": "026-silent-failures",
+      "source": {
+        "origin": "manual",
+        "added": "2026-10-18"
+      },
+      "search_demand": {
+        "phrase": "why ai agents fail",
+        "status": "verified",
+        "depth": 1,
+        "checked": "2026-10-18",
+        "source": "youtube-autocomplete"
+      },
+      "adjusted_score": 83
     },
     {
       "id": "clean-imported-data-excel",
@@ -405,27 +353,6 @@
       }
     },
     {
-      "id": "auto-generate-quotes",
-      "title": "Auto-Generate Price Quotes from a Template",
-      "search_term": "quotation template",
-      "task": "documents",
-      "sector": "sales",
-      "tool": "Apps Script",
-      "archetype": "mini-demo",
-      "angle_hint": "Faster quotes close more deals — speed is the feature.",
-      "score": 77,
-      "status": "backlog",
-      "produced_video_id": null,
-      "adjusted_score": 82,
-      "search_demand": {
-        "phrase": "quotation template",
-        "status": "verified",
-        "depth": 5,
-        "checked": "2026-10-17",
-        "source": "youtube-autocomplete"
-      }
-    },
-    {
       "id": "ai-vs-human-stopwatch-race",
       "title": "I Raced AI Against Myself on a Boring Task",
       "search_term": "ai vs human challenge",
@@ -457,22 +384,22 @@
       }
     },
     {
-      "id": "recurring-invoice-system",
-      "title": "Build a Recurring-Invoice System (No Code)",
-      "search_term": "recurring invoices",
+      "id": "auto-generate-quotes",
+      "title": "Auto-Generate Price Quotes from a Template",
+      "search_term": "quotation template",
       "task": "documents",
-      "sector": "accounting",
-      "tool": "Make",
-      "archetype": "diagram",
-      "angle_hint": "Subscriptions for any business, without subscription software.",
-      "score": 76,
+      "sector": "sales",
+      "tool": "Apps Script",
+      "archetype": "mini-demo",
+      "angle_hint": "Faster quotes close more deals — speed is the feature.",
+      "score": 77,
       "status": "backlog",
       "produced_video_id": null,
       "adjusted_score": 81,
       "search_demand": {
-        "phrase": "recurring invoices",
+        "phrase": "quotation template",
         "status": "verified",
-        "depth": 3,
+        "depth": 5,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -493,6 +420,27 @@
         "phrase": "make vs zapier vs n8n",
         "status": "verified",
         "depth": 1,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      }
+    },
+    {
+      "id": "recurring-invoice-system",
+      "title": "Build a Recurring-Invoice System (No Code)",
+      "search_term": "recurring invoices",
+      "task": "documents",
+      "sector": "accounting",
+      "tool": "Make",
+      "archetype": "diagram",
+      "angle_hint": "Subscriptions for any business, without subscription software.",
+      "score": 76,
+      "status": "backlog",
+      "produced_video_id": null,
+      "adjusted_score": 80,
+      "search_demand": {
+        "phrase": "recurring invoices",
+        "status": "verified",
+        "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -579,36 +527,6 @@
       }
     },
     {
-      "id": "client-mess-onboarding",
-      "title": "AI Onboarded Me onto a Client's Mess",
-      "search_term": "client onboarding automation",
-      "task": "lookups-reports",
-      "sector": "general",
-      "tool": "AI (model-agnostic) + client files (synthetic)",
-      "archetype": "mini-demo",
-      "lane": "ai-how-to",
-      "angle_hint": "Dev idea reframed for freelancers (the dev/OSS lane stays parked — Phase 3). Every freelancer inherits a client's messy folder/inbox/spreadsheet on day one. Point AI at the mess READ-ONLY first: inventory, map, list of dangers before touching anything. Synthetic client data only.",
-      "score": 80,
-      "status": "backlog",
-      "value_type": [
-        "saves-time",
-        "surprising-truth"
-      ],
-      "takeaway": "AI's best onboarding trick isn't writing — it's reading: point it at the mess and get the map before you touch anything.",
-      "produced_video_id": null,
-      "source": {
-        "origin": "manual",
-        "added": "2026-07-08"
-      },
-      "search_demand": {
-        "phrase": "client onboarding automation",
-        "status": "verified",
-        "depth": 3,
-        "checked": "2026-10-17",
-        "source": "youtube-autocomplete"
-      }
-    },
-    {
       "id": "before-coffee-automation-montage",
       "title": "What My Automations Did Before I Finished My Coffee",
       "search_term": "automate your life",
@@ -637,6 +555,37 @@
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
+    },
+    {
+      "id": "client-mess-onboarding",
+      "title": "AI Onboarded Me onto a Client's Mess",
+      "search_term": "client onboarding automation",
+      "task": "lookups-reports",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + client files (synthetic)",
+      "archetype": "mini-demo",
+      "lane": "ai-how-to",
+      "angle_hint": "Dev idea reframed for freelancers (the dev/OSS lane stays parked — Phase 3). Every freelancer inherits a client's messy folder/inbox/spreadsheet on day one. Point AI at the mess READ-ONLY first: inventory, map, list of dangers before touching anything. Synthetic client data only.",
+      "score": 80,
+      "status": "backlog",
+      "value_type": [
+        "saves-time",
+        "surprising-truth"
+      ],
+      "takeaway": "AI's best onboarding trick isn't writing — it's reading: point it at the mess and get the map before you touch anything.",
+      "produced_video_id": null,
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      },
+      "search_demand": {
+        "phrase": "client onboarding automation",
+        "status": "verified",
+        "depth": 3,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      },
+      "adjusted_score": 79
     },
     {
       "id": "crm-followup-automation",
@@ -674,26 +623,6 @@
         "phrase": "how to automate your business",
         "status": "verified",
         "depth": 3,
-        "checked": "2026-10-17",
-        "source": "youtube-autocomplete"
-      }
-    },
-    {
-      "id": "spreadsheet-to-dashboard",
-      "title": "Auto-Build a Dashboard from Raw Data",
-      "search_term": "google sheets dashboard",
-      "task": "lookups-reports",
-      "sector": "general",
-      "tool": "Google Sheets",
-      "archetype": "mini-demo",
-      "angle_hint": "Stop rebuilding the same chart every Monday.",
-      "score": 78,
-      "status": "backlog",
-      "produced_video_id": null,
-      "search_demand": {
-        "phrase": "google sheets dashboard",
-        "status": "verified",
-        "depth": 10,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
@@ -749,6 +678,27 @@
       }
     },
     {
+      "id": "spreadsheet-to-dashboard",
+      "title": "Auto-Build a Dashboard from Raw Data",
+      "search_term": "google sheets dashboard",
+      "task": "lookups-reports",
+      "sector": "general",
+      "tool": "Google Sheets",
+      "archetype": "mini-demo",
+      "angle_hint": "Stop rebuilding the same chart every Monday.",
+      "score": 78,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "google sheets dashboard",
+        "status": "verified",
+        "depth": 10,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      },
+      "adjusted_score": 77
+    },
+    {
       "id": "auto-categorize-expenses",
       "title": "Auto-Categorize Bank Transactions",
       "search_term": "categorize expenses in excel",
@@ -787,7 +737,8 @@
         "depth": 1,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
-      }
+      },
+      "adjusted_score": 76
     },
     {
       "id": "mail-merge-certificates",
@@ -801,7 +752,7 @@
       "score": 72,
       "status": "backlog",
       "produced_video_id": null,
-      "adjusted_score": 77,
+      "adjusted_score": 76,
       "search_demand": {
         "phrase": "bulk certificate generator",
         "status": "verified",
@@ -852,6 +803,51 @@
       }
     },
     {
+      "id": "automation-maintenance-story",
+      "title": "Your Automation Will Break — Here's How Mine Told Me",
+      "search_term": "automation stopped working",
+      "task": "other",
+      "sector": "general",
+      "tool": "AI (model-agnostic) + validation & alerts",
+      "archetype": "diagram",
+      "lane": "ai-how-to",
+      "angle_hint": "ONLY REAL INCIDENTS — never invented (accuracy rule). Candidates from the studio log: 008 Gemini free-tier 503s, review-loop rejections, QA catches; plus whatever Phase-B automations actually break. Produce as a LONG only after the freelance cluster has lived; if a good incident lands earlier, a desk-notes Short is allowed immediately. Frame: failure-design (validation, alerts, fallbacks, human gates), not war stories.",
+      "score": 84,
+      "status": "produced",
+      "value_type": [
+        "avoids-mistake",
+        "teaches-system"
+      ],
+      "takeaway": "Every automation breaks eventually — the design goal is that it tells you, loudly, instead of failing silently.",
+      "produced_video_id": "013-fail-loud",
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-08"
+      },
+      "search_demand": {
+        "phrase": "automation stopped working",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [
+          "automation not working iphone",
+          "automation not working",
+          "automation troubleshooting"
+        ],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      },
+      "metrics": {
+        "fetched": "2026-10-19",
+        "youtube_video_id": "2Xm-n0K7pIM",
+        "views": 295,
+        "avg_view_seconds": 52,
+        "retention_pct": 87.87,
+        "subs_gained": 1
+      },
+      "performance": 66,
+      "adjusted_score": 75
+    },
+    {
       "id": "inventory-low-stock-alert",
       "title": "Get an Alert When Stock Runs Low",
       "search_term": "low stock alert",
@@ -869,7 +865,8 @@
         "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
-      }
+      },
+      "adjusted_score": 74
     },
     {
       "id": "email-to-spreadsheet",
@@ -927,7 +924,7 @@
       "produced_video_id": "011-read-my-inbox",
       "youtube_video_id": "-pBNgF-zPgU",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "youtube_video_id": "-pBNgF-zPgU",
         "views": 30,
         "avg_view_seconds": 83,
@@ -990,26 +987,6 @@
       }
     },
     {
-      "id": "timesheet-summary",
-      "title": "Auto-Summarize Timesheets into Payroll",
-      "search_term": "timesheet automation",
-      "task": "lookups-reports",
-      "sector": "accounting",
-      "tool": "Google Sheets",
-      "archetype": "ideas",
-      "angle_hint": "Payroll math is exactly the kind of boring a computer loves.",
-      "score": 72,
-      "status": "backlog",
-      "produced_video_id": null,
-      "search_demand": {
-        "phrase": "timesheet automation",
-        "status": "verified",
-        "depth": 1,
-        "checked": "2026-10-17",
-        "source": "youtube-autocomplete"
-      }
-    },
-    {
       "id": "auto-thank-you-emails",
       "title": "Auto-Send Thank-You Emails After a Purchase",
       "search_term": "post purchase email",
@@ -1057,7 +1034,7 @@
         "origin": "manual"
       },
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "youtube_video_id": "rkLKEh6iJnE",
         "views": 2,
         "avg_view_seconds": 375,
@@ -1096,6 +1073,27 @@
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
+    },
+    {
+      "id": "timesheet-summary",
+      "title": "Auto-Summarize Timesheets into Payroll",
+      "search_term": "timesheet automation",
+      "task": "lookups-reports",
+      "sector": "accounting",
+      "tool": "Google Sheets",
+      "archetype": "ideas",
+      "angle_hint": "Payroll math is exactly the kind of boring a computer loves.",
+      "score": 72,
+      "status": "backlog",
+      "produced_video_id": null,
+      "search_demand": {
+        "phrase": "timesheet automation",
+        "status": "verified",
+        "depth": 1,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      },
+      "adjusted_score": 71
     },
     {
       "id": "spreadsheet-data-validation",
@@ -1171,7 +1169,7 @@
       "score": 66,
       "status": "backlog",
       "produced_video_id": null,
-      "adjusted_score": 71,
+      "adjusted_score": 70,
       "search_demand": {
         "phrase": "document automation",
         "status": "verified",
@@ -1218,7 +1216,8 @@
         "depth": 3,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
-      }
+      },
+      "adjusted_score": 69
     },
     {
       "id": "pharmacy-refill-reminders",
@@ -1372,6 +1371,42 @@
       "parked_reason": "No search phrase with this intent (2026-10-17): 'automate booking waitlist', 'waitlist automation', 'waitlist system', 'waiting list google sheets' are not typed; 'waiting list' / 'waitlist' are music and Amazon Flex searches."
     },
     {
+      "id": "desk-lessons-llm-next-word",
+      "title": "AI is never unsure. That's the bug.",
+      "search_term": "why is chatgpt confidently wrong",
+      "task": "other",
+      "sector": "general",
+      "subject": "llm-mental-model",
+      "series": "Desk Lessons",
+      "lane": "desk-notes",
+      "tool": "None — this is a concept/mental-model Short, not a how-to. No product named; the subject is the base LLM itself (model-agnostic; ChatGPT used only as the recognizable stand-in in the hook).",
+      "archetype": "ideas",
+      "angle_hint": "Not 'it predicts the next word' but what that costs you: a base LLM builds a right answer and a made-up one the same way, so it sounds equally sure either way. Confidence is not a truth signal.",
+      "score": 88,
+      "status": "produced",
+      "value_type": [
+        "corrects-misbelief",
+        "avoids-mistake",
+        "teaches-system"
+      ],
+      "takeaway": "An AI's confidence is not evidence it's right. A base LLM builds true answers and made-up ones the same way — one likely word at a time, with no facts it looks up and nothing measuring truth — so it sounds equally sure either way. Stop reading a fluent, confident tone as 'it knows'; treat every answer as a very good guess you still verify.",
+      "produced_video_id": "019-next-word-engine",
+      "source": {
+        "origin": "manual",
+        "added": "2026-10-17"
+      },
+      "metrics": {
+        "fetched": "2026-10-19",
+        "youtube_video_id": "xnVng9WfKok",
+        "views": 31,
+        "avg_view_seconds": 35,
+        "retention_pct": 61.44,
+        "subs_gained": 0
+      },
+      "performance": 44,
+      "adjusted_score": 66
+    },
+    {
       "id": "five-tasks-ai-secretary",
       "title": "5 Tasks an AI Can Do Like a Secretary",
       "search_term": "ai secretary tasks",
@@ -1385,7 +1420,7 @@
       "produced_video_id": "003-five-tasks-ai-secretary",
       "adjusted_score": 64,
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "youtube_video_id": "7JXXjFZe0QM",
         "views": 6,
         "avg_view_seconds": 212,
@@ -1393,6 +1428,51 @@
         "subs_gained": 0
       },
       "performance": 42
+    },
+    {
+      "id": "desk-lessons-attention",
+      "title": "AI Doesn't Focus. It Spends.",
+      "search_term": "what is attention in ai",
+      "task": "other",
+      "sector": "general",
+      "subject": "llm-mental-model",
+      "series": "Desk Lessons",
+      "tool": "None (concept video; GPT-2 used only as the open measuring instrument, as tiktoken was in 021/022)",
+      "archetype": "ideas",
+      "angle_hint": "Not 'it focuses on the important words'. The scores over everything you handed it sum to exactly 1, every time — attention is a fixed budget that must be fully spent, so nothing you add is free and you steer it by deleting, not by emphasising.",
+      "score": 89,
+      "status": "produced",
+      "lane": "desk-notes",
+      "value_type": [
+        "corrects-misbelief",
+        "teaches-system",
+        "surprising-truth",
+        "saves-time"
+      ],
+      "takeaway": "Attention is a fixed budget, not a spotlight — the model's scores always add up to 1, so every extra page you paste is subtracted from the line that matters. To make an AI focus, delete, don't emphasise.",
+      "value_score": 8.9,
+      "value_band": "owner",
+      "source": {
+        "origin": "manual"
+      },
+      "produced_video_id": "023-attention",
+      "search_demand": {
+        "phrase": "what is attention in ai",
+        "status": "verified",
+        "depth": 1,
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      },
+      "metrics": {
+        "fetched": "2026-10-19",
+        "youtube_video_id": "DPXmsLBjyyw",
+        "views": 17,
+        "avg_view_seconds": 189,
+        "retention_pct": 50.1,
+        "subs_gained": 0
+      },
+      "performance": 36,
+      "adjusted_score": 63
     },
     {
       "id": "attendance-tracker",
@@ -1414,6 +1494,42 @@
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
       }
+    },
+    {
+      "id": "desk-lessons-frozen-weights",
+      "title": "Correcting Your AI Teaches It Nothing",
+      "search_term": "does ai learn from your conversations",
+      "task": "other",
+      "sector": "general",
+      "subject": "llm-mental-model",
+      "series": "Desk Lessons",
+      "lane": "desk-notes",
+      "tool": "None — concept video, model-agnostic. GPT-2 small (open, local CPU) is the measuring instrument only, exactly as in 023.",
+      "archetype": "ideas",
+      "angle_hint": "A correction in a chat is not a lesson, it is one more page the model reads. Weights are set once in training and frozen; measured on an open model, 100 corrections changed 0 of its numbers.",
+      "score": 89,
+      "status": "produced",
+      "value_type": [
+        "corrects-misbelief",
+        "teaches-system",
+        "surprising-truth"
+      ],
+      "takeaway": "Your corrections live in the chat window, not in the model. A mistake you have fixed twice is an instruction: put it in saved instructions, a project file, or the top of your prompt, where it is read every time.",
+      "produced_video_id": "024-frozen",
+      "source": {
+        "origin": "manual",
+        "added": "2026-10-17"
+      },
+      "metrics": {
+        "fetched": "2026-10-19",
+        "youtube_video_id": "rKTadKQ4CYU",
+        "views": 15,
+        "avg_view_seconds": 66,
+        "retention_pct": 50.57000000000001,
+        "subs_gained": 0
+      },
+      "performance": 36,
+      "adjusted_score": 63
     },
     {
       "id": "duplicate-file-finder",
@@ -1457,6 +1573,52 @@
       }
     },
     {
+      "id": "agent-fine-print-watch",
+      "title": "I Gave an AI Agent One Job: Watch the Fine Print",
+      "search_term": "ai monitor terms of service changes",
+      "task": "lookups-reports",
+      "sector": "general",
+      "tool": "AI agent (model-agnostic) + any change-watch source (a saved page / a doc / an RSS or diff feed); kept modular",
+      "archetype": "ideas",
+      "lane": "desk-notes",
+      "series": "The AI Agent",
+      "angle_hint": "Ep. 1 of 'The AI Agent'. An agent is a DECISION layer, not a scraper. A dumb diff-watcher spams you on every character change; the agent reads the change, decides whether it MATTERS, and hands you only the ones that do — with a reason. Money shot = a DECISION CARD (old vs new clause + AI verdict: impact + reason), not a scanning animation. Human-approval posture: it flags, you decide. subject = change-detection/policy; bridges to 016 (automate the deciding).",
+      "score": 85,
+      "status": "produced",
+      "subject": "change-detection/policy",
+      "value_type": [
+        "teaches-system",
+        "avoids-mistake",
+        "corrects-misbelief"
+      ],
+      "takeaway": "An AI agent isn't a scraper that flags every change — it's a decision layer that reads a change, judges whether it matters, and hands you the call. Automate the deciding, keep the approval.",
+      "value_score": 9,
+      "value_band": "qualify",
+      "produced_video_id": "017-fine-print-watch",
+      "source": {
+        "origin": "manual",
+        "added": "2026-07-15"
+      },
+      "search_demand": {
+        "phrase": "ai monitor terms of service changes",
+        "status": "unverified",
+        "depth": 0,
+        "alternatives": [],
+        "checked": "2026-10-17",
+        "source": "youtube-autocomplete"
+      },
+      "metrics": {
+        "fetched": "2026-10-19",
+        "youtube_video_id": "qglzqGydJV4",
+        "views": 95,
+        "avg_view_seconds": 33,
+        "retention_pct": 35.85,
+        "subs_gained": 0
+      },
+      "performance": 33,
+      "adjusted_score": 59
+    },
+    {
       "id": "municipal-permit-tracker",
       "title": "Track Permit Requests Automatically",
       "search_term": "task tracker excel",
@@ -1474,7 +1636,8 @@
         "depth": 6,
         "checked": "2026-10-17",
         "source": "youtube-autocomplete"
-      }
+      },
+      "adjusted_score": 59
     },
     {
       "id": "expense-receipt-to-sheet",
@@ -1490,7 +1653,7 @@
       "produced_video_id": "008-receipt-to-spreadsheet",
       "adjusted_score": 57,
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "youtube_video_id": "smW-2hwz4QM",
         "views": 15,
         "avg_view_seconds": 124,
@@ -1512,7 +1675,7 @@
       "status": "produced",
       "produced_video_id": "004-claude-vs-chatgpt-spreadsheets",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "youtube_video_id": "8leAPqVdC20",
         "views": 11,
         "avg_view_seconds": 123,
@@ -1545,7 +1708,7 @@
         "added": "2026-07-08"
       },
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "youtube_video_id": "9W9pWYEzjmM",
         "views": 29,
         "avg_view_seconds": 87,
@@ -1583,7 +1746,7 @@
         "origin": "manual"
       },
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "youtube_video_id": "foexgrUcbXI",
         "views": 9,
         "avg_view_seconds": 73,
@@ -1606,7 +1769,7 @@
       "status": "produced",
       "produced_video_id": "006-validated-cleanup-system",
       "metrics": {
-        "fetched": "2026-10-17",
+        "fetched": "2026-10-19",
         "youtube_video_id": "eZXUIn9GZTI",
         "views": 10,
         "avg_view_seconds": 97,
@@ -1615,84 +1778,6 @@
       },
       "performance": 24,
       "adjusted_score": 54
-    },
-    {
-      "id": "desk-lessons-llm-next-word",
-      "title": "AI is never unsure. That's the bug.",
-      "search_term": "why is chatgpt confidently wrong",
-      "task": "other",
-      "sector": "general",
-      "subject": "llm-mental-model",
-      "series": "Desk Lessons",
-      "lane": "desk-notes",
-      "tool": "None — this is a concept/mental-model Short, not a how-to. No product named; the subject is the base LLM itself (model-agnostic; ChatGPT used only as the recognizable stand-in in the hook).",
-      "archetype": "ideas",
-      "angle_hint": "Not 'it predicts the next word' but what that costs you: a base LLM builds a right answer and a made-up one the same way, so it sounds equally sure either way. Confidence is not a truth signal.",
-      "score": 88,
-      "status": "produced",
-      "value_type": [
-        "corrects-misbelief",
-        "avoids-mistake",
-        "teaches-system"
-      ],
-      "takeaway": "An AI's confidence is not evidence it's right. A base LLM builds true answers and made-up ones the same way — one likely word at a time, with no facts it looks up and nothing measuring truth — so it sounds equally sure either way. Stop reading a fluent, confident tone as 'it knows'; treat every answer as a very good guess you still verify.",
-      "produced_video_id": "019-next-word-engine",
-      "source": {
-        "origin": "manual",
-        "added": "2026-10-17"
-      }
-    },
-    {
-      "id": "desk-lessons-frozen-weights",
-      "title": "Correcting Your AI Teaches It Nothing",
-      "search_term": "does ai learn from your conversations",
-      "task": "other",
-      "sector": "general",
-      "subject": "llm-mental-model",
-      "series": "Desk Lessons",
-      "lane": "desk-notes",
-      "tool": "None — concept video, model-agnostic. GPT-2 small (open, local CPU) is the measuring instrument only, exactly as in 023.",
-      "archetype": "ideas",
-      "angle_hint": "A correction in a chat is not a lesson, it is one more page the model reads. Weights are set once in training and frozen; measured on an open model, 100 corrections changed 0 of its numbers.",
-      "score": 89,
-      "status": "produced",
-      "value_type": [
-        "corrects-misbelief",
-        "teaches-system",
-        "surprising-truth"
-      ],
-      "takeaway": "Your corrections live in the chat window, not in the model. A mistake you have fixed twice is an instruction: put it in saved instructions, a project file, or the top of your prompt, where it is read every time.",
-      "produced_video_id": "024-frozen",
-      "source": {
-        "origin": "manual",
-        "added": "2026-10-17"
-      }
-    },
-    {
-      "id": "agent-stop-line",
-      "title": "AI Agents Make Mistakes. One Line Makes Them Undoable.",
-      "search_term": "scheduled ai agent mistakes",
-      "task": "outbound-comms",
-      "sector": "general",
-      "subject": "execution/actions",
-      "series": "Desk Loops",
-      "lane": "desk-loops",
-      "tool": "Model- and tool-agnostic (a headless agent as the measuring instrument; OpenAI Dots, Claude routines, Cursor automations named as news)",
-      "archetype": "ideas",
-      "angle_hint": "You cannot stop an agent from making mistakes, but you can decide where they land: ten runs with a one-line job sent 73 unapproved emails; ten runs with a stop line ('Never send. Drafts only.') sent zero, and the same slips landed in drafts.",
-      "score": 85,
-      "status": "produced",
-      "value_type": [
-        "avoids-mistake",
-        "teaches-system",
-        "surprising-truth"
-      ],
-      "takeaway": "Before an agent runs without you, write its stop line: swap every action it cannot take back for the twin it can (send -> draft, delete -> move, pay -> prepare, publish -> private), and where there is no twin, the action waits for you. You cannot prompt away a slip, but one line decides whether a slip is a draft you delete or an email you can never recall.",
-      "produced_video_id": "025-always-on-agents",
-      "source": {
-        "origin": "manual",
-        "added": "2026-10-17"
-      }
     }
   ]
 }

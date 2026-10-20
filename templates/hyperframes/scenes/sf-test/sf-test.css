@@ -1,0 +1,10 @@
+/* sf-test — HUD layout (landscape, then portrait). Plates over chassis/backdrop only. */
+#own { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#two { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#chip { right: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#demo { right: calc(84px * var(--u)); top: calc(122px * var(--u)); }
+#scope { right: calc(84px * var(--u)); top: calc(176px * var(--u)); }
+.portrait #own, .portrait #two { left: calc(60px * var(--u)); top: calc(70px * var(--u)); }
+.portrait #chip { right: auto; left: calc(60px * var(--u)); top: calc(70px * var(--u)); }
+.portrait #demo { right: auto; left: calc(60px * var(--u)); top: calc(126px * var(--u)); }
+.portrait #scope { right: auto; left: calc(60px * var(--u)); top: calc(178px * var(--u)); }

@@ -58,11 +58,17 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
 /** The HF scene name a plan entry renders, or null for a Remotion template. */
 const hfSceneOf = (entry) => (entry?.engine === "hyperframes" ? entry?.props?.hf_scene ?? null : null);
 
+const countWords = (text) => (text || "").trim().split(/\s+/).filter(Boolean).length;
+
 /**
  * PURE: check the cuts against the long script + plan and the Short length rule.
+ * The length is what the Short will SAY: an `opening` replaces the first scene's first sentence, so its
+ * words count instead of that sentence's. `secondsPerWord` is the long's measured pace (alignment
+ * duration / words) when there is one — the house voice is slower than `wpm` since D-068, and a cut
+ * measured at 160 wpm came out ~9% short of what the voice actually takes (026).
  * @returns {{ problems: string[], cuts: Array<{seconds, scenes}> }}  problems empty = derivable
  */
-export function checkCuts(longScript, longPlan, cuts, { min = 45, max = 120, wpm = 160 } = {}) {
+export function checkCuts(longScript, longPlan, cuts, { min = 45, max = 120, wpm = 160, secondsPerWord = null } = {}) {
   const problems = [];
   const byId = new Map((longScript.scenes ?? []).map((s) => [s.id, s]));
   const planIds = new Set((longPlan?.scenes ?? []).map((p) => p.scene_id));
@@ -84,7 +90,10 @@ export function checkCuts(longScript, longPlan, cuts, { min = 45, max = 120, wpm
       scenes.push(s);
     }
     const all = cut?.hook?.narration ? [{ narration: cut.hook.narration }, ...scenes] : scenes;
-    const seconds = estimateSeconds(all, wpm);
+    const opened = cut?.opening && scenes.length ? countWords(cut.opening) - countWords(scenes[0].sentences?.[0]) : 0;
+    const seconds = secondsPerWord
+      ? (all.reduce((n, s) => n + countWords(s.narration), 0) + opened) * secondsPerWord
+      : estimateSeconds(all, wpm) + (opened * 60) / wpm;
     if (seconds < min || seconds > max) problems.push(`${label}: ~${Math.round(seconds)}s of narration — a Short runs ${min}-${max}s`);
     if (!cut?.title) problems.push(`${label}: no title`);
     out.push({ seconds, scenes: ids });
@@ -331,15 +340,17 @@ function writeIfChanged(file, doc) {
 }
 
 /**
- * The unit each cut goes to: units in order, skipping a unit that exists and was hand-built (no
- * short_source.json) — a derived unit is re-derived in place.
+ * The unit each cut goes to: units in order, skipping a unit that exists and was hand-built (a
+ * script.json but no short_source.json) — a derived unit is re-derived in place. The `_TEMPLATE`
+ * skeleton every topic starts with (`short/` holding only log.md + empty voice/ and video/) is no unit
+ * yet, so the first cut lands in `short/` (026 would otherwise have started at short-2).
  */
 export function assignUnits(topicDir, count) {
   const units = [];
   for (let n = 1; n <= 9 && units.length < count; n++) {
     const name = shortUnitName(n);
     const dir = path.join(topicDir, name);
-    const handBuilt = fs.existsSync(dir) && fs.readdirSync(dir).length > 0 && !fs.existsSync(path.join(dir, SOURCE_FILE));
+    const handBuilt = fs.existsSync(path.join(dir, "script.json")) && !fs.existsSync(path.join(dir, SOURCE_FILE));
     if (!handBuilt) units.push(name);
   }
   if (units.length < count) throw new Error(`only ${units.length} free Short unit(s) for ${count} cut(s)`);
@@ -361,7 +372,8 @@ export function deriveShorts({ root = ROOT, id, dryRun = false, fps = 30, script
   const longAlignment = readSoft(path.join(topicDir, "alignment.json"));
   const cuts = longScript.short_cuts ?? [];
   const timings = deriveRenderTimings(fmtFor(topicDir), { fps, vertical: true });
-  const { problems, cuts: sized } = checkCuts(longScript, longPlan, cuts, { min: timings.shortLen.min, max: timings.shortLen.max });
+  const spw = longAlignment?.words?.length && longAlignment.duration > 0 ? longAlignment.duration / longAlignment.words.length : null;
+  const { problems, cuts: sized } = checkCuts(longScript, longPlan, cuts, { min: timings.shortLen.min, max: timings.shortLen.max, secondsPerWord: spw });
   if (problems.length) return { ok: false, problems, units: [] };
 
   const names = assignUnits(topicDir, cuts.length);

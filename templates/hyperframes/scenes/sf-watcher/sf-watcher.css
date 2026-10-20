@@ -1,0 +1,10 @@
+/* sf-watcher — HUD layout. The tool chips stand flat at the left while the watcher holds the right. */
+#ok, #late { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+.sf-tools { left: calc(64px * var(--u)); top: calc(190px * var(--u)); width: calc(800px * var(--u)); box-sizing: border-box;
+  padding: calc(18px * var(--u)) calc(24px * var(--u)); border-top: calc(4px * var(--u)) solid var(--gold); }
+.sf-tools .t { padding: calc(10px * var(--u)) 0; border-bottom: calc(1.5px * var(--u)) solid rgba(146,178,214,0.16); }
+.sf-tools .t b { display: block; font-size: calc(42px * var(--u)); font-weight: 800; color: var(--gold-2); }
+.sf-tools .t span { display: block; margin-top: calc(4px * var(--u)); font-size: calc(27px * var(--u)); font-weight: 600; color: #b9cadb; }
+.sf-tools .src { margin-top: calc(10px * var(--u)); font-size: calc(19px * var(--u)); font-weight: 600; color: #6f8499; }
+.portrait #ok, .portrait #late { left: calc(60px * var(--u)); top: calc(70px * var(--u)); }
+.portrait .sf-tools { left: calc(48px * var(--u)); right: calc(48px * var(--u)); width: auto; top: calc(56px * var(--u)); }

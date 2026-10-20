@@ -38,6 +38,7 @@ import { isShortUnit } from "../shared/lib/units.mjs";
 import { deriveRenderTimings } from "./lib/timings.mjs";
 import { sceneWindow } from "./lib/transitions.mjs";
 import { portraitProblems, sceneSources } from "./lib/portrait.mjs";
+import { parseLuma } from "../../scripts/repair-dropouts.mjs";
 
 /**
  * PURE: timeline (seconds) → HyperFrames render jobs. No fs. Each job carries the fixed VARIABLES
@@ -147,16 +148,78 @@ export function buildEntryCommand(job, { varsFile }) {
  *
  * @param {object} job @param {string} inFile @param {string} outFile
  */
-export function buildNormaliseCommand(job, { inFile, outFile }) {
+export function buildNormaliseCommand(job, { inFile, outFile, leadFill = 0, holes = [] }) {
+  // holes: interior black runs (interiorBlackRuns) are dropped and `fps` repeats the frame before each
+  // one into the gap — the frame count is unchanged
+  const drop = holes.map(([a, b]) => `between(n\\,${a}\\,${b})`).join("+");
+  const fill = holes.length ? `select='not(${drop})',fps=${job.fps},` : "";
+  // leadFill: the boot-black frames at the head (bootBlackFrames) are cut and the first LIVE frame is
+  // cloned into their place — the clip keeps its exact frame count, so the scene window still fits 1:1
+  // (fps BEFORE tpad: without a frame rate on the trimmed stream tpad adds nothing — measured, the clip came out 2 short)
+  const head = leadFill > 0 ? `trim=start_frame=${leadFill},setpts=PTS-STARTPTS,fps=${job.fps},tpad=start=${leadFill}:start_mode=clone,` : "";
   return {
     cmd: "ffmpeg",
     args: [
       "-v", "error", "-i", inFile,
-      "-vf", `tpad=stop_mode=clone:stop_duration=0.25,fps=${job.fps}`,
+      "-vf", `${fill}${head}tpad=stop_mode=clone:stop_duration=0.25,fps=${job.fps}`,
       "-c:v", "libx264", "-preset", MASTER_PRESET, "-crf", String(MASTER_CRF),   // an input to the master: no quality below it
       "-pix_fmt", "yuv420p", "-vsync", "cfr", "-an",
       "-movflags", "+faststart", "-y", outFile,
     ],
+  };
+}
+
+/**
+ * PURE: how many LEADING frames of a fresh clip are boot-black.
+ *
+ * WHY (measured 2026-10-20 on 026). A 3D scene loads Three.js with an async import(); HyperFrames does
+ * not wait for it, so the frames it captures before the import resolves are an empty canvas. 026's
+ * s1/s3/s4 clips opened on two black frames (s1 is the video's first frame: the hook would have opened
+ * on black), a draft portrait render under load on sixteen, and 025's s11 clip had one. At a hard
+ * cut that is a black flash on the beat. The signature is a run of near-black frames at the very head
+ * followed by a JUMP to a lit frame; a scene that genuinely opens dark ramps up and is left alone.
+ *
+ * @param {number[]} luma  YAVG per frame from the head of the clip
+ * @returns {number} frames to replace (0 = the clip opens live)
+ */
+export function bootBlackFrames(luma, { black = 20, live = 30, maxLead = 30 } = {}) {
+  let n = 0;
+  while (n < luma.length && typeof luma[n] === "number" && luma[n] < black) n++;
+  if (n === 0 || n > maxLead || n >= luma.length) return 0;
+  return luma[n] >= live ? n : 0;
+}
+
+/**
+ * PURE: runs of black frames INSIDE a clip — the 3D canvas came back empty for 1-5 frames while the HUD
+ * still drew (026: s3 3 frames, s6 5, s7/s9/s14 single ones; 025 had five singles that repair-dropouts
+ * later took for compositor dropouts). A run counts when it is short and BOTH frames around it are far
+ * brighter; the head is bootBlackFrames' job and a run that reaches the end is left alone.
+ *
+ * @param {number[]} luma  YAVG per frame of the whole clip
+ * @returns {Array<[number, number]>} inclusive frame ranges, ascending
+ */
+export function interiorBlackRuns(luma, { black = 25, jump = 15, maxRun = 12 } = {}) {
+  const runs = [];
+  let i = 0;
+  while (i < luma.length && luma[i] < black) i++;          // skip the head
+  for (; i < luma.length; i++) {
+    if (!(luma[i] < black)) continue;
+    let j = i;
+    while (j + 1 < luma.length && luma[j + 1] < black) j++;
+    const peak = Math.max(...luma.slice(i, j + 1)), before = luma[i - 1], after = luma[j + 1];
+    if (j - i + 1 <= maxRun && typeof after === "number" && before - peak >= jump && after - peak >= jump) runs.push([i, j]);
+    i = j;
+  }
+  return runs;
+}
+
+/** PURE: the ffmpeg pass that reads the luma of a clip (stdout, metadata lines); `frames` limits it to the head. */
+export function buildLumaScanCommand({ inFile, frames = null }) {
+  return {
+    cmd: "ffmpeg",
+    args: ["-v", "error", "-i", inFile, ...(frames ? ["-frames:v", String(frames)] : []),
+      "-vf", "scale=160:90,signalstats,metadata=print:key=lavfi.signalstats.YAVG:file=-",
+      "-f", "null", "-"],
   };
 }
 
@@ -278,7 +341,15 @@ export function renderHyperframesScenes({ root, cdir, jobs, force = false, spawn
     // normalise the container so Remotion's compositor can seek every frame of it (see
     // buildNormaliseCommand). Done in place via a temp file so the cache key stays the variables.
     const tmpFile = `${outFile}.norm.mp4`;
-    const nc = buildNormaliseCommand(job, { inFile: outFile, outFile: tmpFile });
+    // …and replace any boot-black head with the first live frame (see bootBlackFrames)
+    const sc = buildLumaScanCommand({ inFile: outFile });
+    const sres = spawn(sc.cmd, q(sc.args), { cwd: hfRoot, env: childEnv, encoding: "utf8", shell: winShell, maxBuffer: 16 * 1024 * 1024 });
+    const luma = parseLuma(`${sres?.stdout ?? ""}${sres?.stderr ?? ""}`);
+    const leadFill = bootBlackFrames(luma);
+    const holes = interiorBlackRuns(luma);
+    if (leadFill) console.log(`FIX ${job.sceneId} — ${leadFill} boot-black frame(s) at the head (Three.js not loaded yet) → the first live frame fills them`);
+    if (holes.length) console.log(`FIX ${job.sceneId} — empty 3D canvas at frame(s) ${holes.map(([a, b]) => (a === b ? a : `${a}-${b}`)).join(", ")} → the frame before fills them`);
+    const nc = buildNormaliseCommand(job, { inFile: outFile, outFile: tmpFile, leadFill, holes });
     const nres = spawn(nc.cmd, q(nc.args), { cwd: hfRoot, env: childEnv, encoding: "utf8", shell: winShell });
     if (nres.status === 0 && existsSync(tmpFile)) {
       rmSync(outFile, { force: true });

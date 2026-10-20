@@ -49,3 +49,4 @@ strategist-scene standard in [MOTION_SPEC §0](../../../style/MOTION_SPEC.md);
 - [Title-card scenes get rejected — every scene must visualize its subject](2026-06-28-title-card-scenes-get-rejected.md)
 - [Don't break a reframe's momentum with a spoken stat — demote it to a sourced chip](2026-07-07-dont-break-momentum-with-a-spoken-stat.md)
 - [A well-written script cannot save a weak story — score story strength at the idea](2026-07-12-story-strength-scored-at-the-idea.md)
+- [An agent experiment leaks whatever the agent can read — hide the answer behind a real interface](2026-10-18-an-agent-experiment-leaks-what-the-agent-can-read.md)

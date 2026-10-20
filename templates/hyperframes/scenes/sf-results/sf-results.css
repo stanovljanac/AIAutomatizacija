@@ -1,0 +1,17 @@
+/* sf-results — the results panel (left), the drawers tag, the take. Opaque plates; numbers tabular. */
+.sf-res { left: calc(60px * var(--u)); top: calc(60px * var(--u)); width: calc(640px * var(--u)); box-sizing: border-box;
+  padding: calc(20px * var(--u)) calc(26px * var(--u)) calc(18px * var(--u)); border-top: calc(5px * var(--u)) solid var(--gold); }
+.sf-res .hd { font-size: calc(20px * var(--u)); font-weight: 800; letter-spacing: calc(2.6px * var(--u)); text-transform: uppercase; color: #8fa8c0; margin-bottom: calc(10px * var(--u)); }
+.sf-res .hd b { color: var(--gold-2); }
+.sf-res .r { display: grid; grid-template-columns: calc(200px * var(--u)) calc(120px * var(--u)) 1fr; align-items: baseline; gap: calc(12px * var(--u)); padding: calc(7px * var(--u)) 0; border-top: calc(1.5px * var(--u)) solid rgba(146,178,214,0.16); }
+.sf-res .k { font-size: calc(25px * var(--u)); font-weight: 800; color: #d6e2ee; }
+.sf-res .n { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: calc(40px * var(--u)); font-weight: 700; color: var(--gold-2); }
+.sf-res .r.ok .n { color: #8ff0c2; }
+.sf-res .s { font-size: calc(19px * var(--u)); font-weight: 600; color: #8fa8c0; }
+.sf-res .ew { margin-top: calc(10px * var(--u)); font-size: calc(18px * var(--u)); font-weight: 600; color: #a9bdd1; }
+.sf-res .ch { margin-top: calc(6px * var(--u)); font-size: calc(17px * var(--u)); font-weight: 700; color: #6f8499; letter-spacing: calc(0.6px * var(--u)); text-transform: uppercase; }
+#days { right: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#take { top: calc(80px * var(--u)); }
+.portrait .sf-res { left: calc(48px * var(--u)); right: calc(48px * var(--u)); width: auto; top: calc(56px * var(--u)); }
+.portrait #days { right: auto; left: calc(60px * var(--u)); top: calc(70px * var(--u)); }
+.portrait #take { top: calc(100px * var(--u)); font-size: calc(64px * var(--u)); }

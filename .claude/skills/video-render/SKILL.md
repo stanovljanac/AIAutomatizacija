@@ -202,6 +202,14 @@ window moves), or when the intro/outro/caption layer changed.
   **frozen** mp4. `detectDeadRender` scans the render log for the 404 / `[Browser:PAGEERROR]` /
   "timelines not registered" signals, **deletes** the clip (else the next run skips it as cached-and-fine)
   and throws. If you ever see that error, fix the scene's asset paths — do not delete the guard.
+- **A 3D clip can open before its 3D has loaded (026, 2026-10-20).** HyperFrames does not wait for
+  `HF3.boot`'s async `import()`, so under load the first frames are an empty (black) canvas — 026's
+  s1/s3/s4 opened on two, 025's s11 clip on one (its master came out clean). `compile-hyperframes` now measures the head of
+  every fresh clip and clones the first live frame over a boot-black run (`bootBlackFrames`; frame count
+  unchanged; logged as `FIX <scene>`). The same pass fills 1-12-frame black runs INSIDE a clip (the
+  WebGL canvas came back empty while the HUD drew — 026 had runs of 3 and 5, which `repair-dropouts`
+  cannot see because it only flags single frames). A clip or master rendered before that fix: scan the
+  whole file for frames below YAVG 25 and fill them. Lesson `2026-10-20-a-3d-clip-can-open-before-its-3d-loads`.
 
 ## Dynamic scenes (D-022)
 - **Visual density follows the narration.** A short line can be one calm template; a beat

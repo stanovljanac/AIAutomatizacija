@@ -1,0 +1,5 @@
+/* sf-old — HUD layout (landscape, then portrait). */
+#meter { right: calc(84px * var(--u)); top: calc(130px * var(--u)); }
+#runs { right: calc(84px * var(--u)); top: calc(366px * var(--u)); }
+.portrait #meter { right: auto; left: calc(60px * var(--u)); top: calc(118px * var(--u)); }
+.portrait #runs { right: auto; left: calc(60px * var(--u)); top: calc(336px * var(--u)); }

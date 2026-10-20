@@ -1,0 +1,3 @@
+/* sf-hook — the one line the hook installs. Top right over the chassis, clear of the agent's tag. */
+#kick { top: calc(64px * var(--u)); }
+.portrait #kick { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(120px * var(--u)); font-size: calc(58px * var(--u)); }

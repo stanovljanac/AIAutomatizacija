@@ -1,0 +1,3 @@
+/* sf-zero — the key take: top left over the backdrop, clear of the trays. */
+#kick { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+.portrait #kick { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(80px * var(--u)); font-size: calc(56px * var(--u)); }

@@ -43,6 +43,8 @@ Under the root **AI Decision Automation**, an idea is one of four kinds of decis
 | **024** — Does AI Learn From Your Chats? I Corrected One 100 Times | `llm-mental-model` | Desk Lessons (Ep. 5) · desk-notes | long + Short; fifth rung, the one 023 signs off into (… → 023 how the fixed total is divided → 024 why none of it changes when you correct it: weights are set in training and frozen). The first fully-3D video and the pacing test that set D-068. Signs off into Ep. 6, sampling (same numbers, different answers) |
 | **025** — AI Agents Make Mistakes. One Line Makes Them Undoable. | `execution/actions` | Desk Loops | long; the first video outside Desk Lessons since 020 and the first `execution/actions` slot: an unattended agent's job needs a stop line (send → draft, delete → move, pay → prepare, publish → private; no twin → it asks). Measured on 30 unattended runs. First mechanical, face-on video (D-069). |
 
+| **026** — Why AI Agents Fail Silently (in production, Gate ② 2026-10-18) | `failure-detection/silent-runs` | Desk Loops | long + 3 Shorts cut from it; the first Failure Detection slot and 025's sequel (025 = what an agent may do alone → 026 = how you know it did anything): a calm zero carries no evidence, so the job proves it looked (PROOF + ALARM lines) and a watcher outside it treats silence as the alarm. Measured on 74 unattended runs. Cluster-mate of 013's Short (fail loud = the job runs and lies; 026 = it reports nothing, or never runs). |
+
 **Open territory** (branches with no video yet): most of Change Detection, all of Failure
 Detection, most of Execution. Bias new ideas here for reach without cannibalizing 011/016.
 

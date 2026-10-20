@@ -1,0 +1,6 @@
+/* sf-never — HUD layout (landscape, then portrait). */
+#none { right: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#reg { right: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#cnt { left: calc(84px * var(--u)); top: calc(48px * var(--u)); }
+.portrait #none, .portrait #reg { right: auto; left: calc(60px * var(--u)); top: calc(70px * var(--u)); }
+.portrait #cnt { left: calc(60px * var(--u)); top: calc(70px * var(--u)); }

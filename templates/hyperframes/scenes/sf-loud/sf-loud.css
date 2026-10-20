@@ -1,0 +1,9 @@
+/* sf-loud — HUD layout (landscape, then portrait). */
+#chip { right: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#meter { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#runs { left: calc(84px * var(--u)); top: calc(300px * var(--u)); }
+#n8n { left: calc(84px * var(--u)); top: calc(390px * var(--u)); }
+.portrait #chip { right: auto; left: calc(60px * var(--u)); top: calc(56px * var(--u)); }
+.portrait #meter { left: calc(60px * var(--u)); top: calc(118px * var(--u)); }
+.portrait #runs { left: calc(60px * var(--u)); top: calc(336px * var(--u)); }
+.portrait #n8n { left: calc(60px * var(--u)); top: calc(410px * var(--u)); }

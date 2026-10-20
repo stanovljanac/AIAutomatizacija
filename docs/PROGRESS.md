@@ -19,6 +19,61 @@ Format:
 
 ---
 
+## 2026-10-19/20 — 026 produced: a new object kit, 16 scenes in both framings, render + 3 Shorts
+- who: agent (owner: Gate ② approved with four conditions via an external review, then "nastavi").
+- did: kit `templates/hyperframes/_lib/hf-watch.js` — six objects for 2–4 scene sets (THE LINE, THE
+  WATCHER, THE VAULT, THE CAB, THE LEDGER, TRAYS) — and 16 scenes `sf-*`, each with a portrait branch.
+  Draft look-dev on contact sheets fixed: an invisible heartbeat token (closed chute → open half-pipe),
+  a hammer that stopped short of its bell, square paper behind round faces (`paper({round})`), plates
+  over parts, cut-off framings, a belt falling over the cells. Pinned in `hf-watch.test.mjs` (every kit
+  file and scene script must parse; hammer meets bell; belt clears the cells).
+- did: `render/plan.mjs` → scene-plan.json (premises read from each scene's header; 20 accent/whoosh
+  cues, none in the two quiet failures). Portrait stills of every scene the Shorts reuse looked at and
+  signed (`portrait_ok`: s5 s6 s7 s8 s9 s9b s10) after reframes (s6 pair stacks, s8 circuit stands
+  tall, s10 PROOF window clear of the panel). MOTION_SPEC §10: the portrait framing arithmetic.
+- fixed (code): `compile-hyperframes` fills a **boot-black head** — HyperFrames captures before
+  Three.js' async import resolves (026 s1/s3/s4: 2 black frames; 025 s11 clip had 1; the 025 master was re-scanned and is clean) — and short
+  **black runs inside a clip** (empty WebGL canvas while the HUD drew: 026 s3 ×3, s6 ×5, singles in
+  s7/s9/s14; 025's five "compositor dropouts" were these) → lesson
+  `2026-10-20-a-3d-clip-can-open-before-its-3d-loads`. The 026 master: s1–s4 re-spliced
+  (patch-scenes, 10,410 frames verified) and the interior runs filled → 0 frames below YAVG 25,
+  repair-dropouts clean, frame-gate 16/16 (detail 7.3% / coverage 45.2%), check.mjs 10/10. `make-shorts` measures a cut at the long's own
+  pace and counts its `opening` (two of three 026 cuts were refused at 160 wpm), and treats the
+  `_TEMPLATE` short/ skeleton as a free unit. Cut 1 now runs s5+s6+s9 (~55 s).
+- did: three Shorts cut from the long (make-shorts, edge draft voice, portrait HF, composite):
+  `short` 55.8 s (s5+s6+s9), `short-2` 48.8 s (s7+s8), `short-3` 60.2 s (an authored hook — the s1 calm
+  report — + s9b+s10; its first cut opened on 5 s of a half-empty frame). Each: repair-dropouts clean,
+  frame-gate pass, check.mjs 9/9, subtitles.srt. Thumbnails: 2 prompts (visual-prompts.json) + 3
+  extracted stills. `npm test` 993/993.
+- next: **owner Gate ③** — `content/026-silent-failures/video/final.mp4` + the three `short*/video/final.mp4`.
+  On approval: Azure final voice → re-align → `render/plan.mjs` → `compile-hyperframes --force` →
+  composite → `finalize.mjs` (1440p) → publish package (chapters off the render); the Shorts likewise.
+  Long slot Tue 2026-10-27. F: has ~30 GB free (earlier 026 renders in `video/_v1/`, 5 GB).
+
+## 2026-10-18 — 026 "Why AI Agents Fail Silently" scripted, at Gate ② (Desk Loops, Failure Detection)
+- who: agent (owner: "make the next video; test the playlists; the decision is yours").
+- did: picked **Desk Loops** — the thinnest playlist (1 long + 1 Short; 025 moved there would make it the
+  first playlist besides Desk Lessons with 3 longs for the 3E test) — and the empty **Failure Detection**
+  branch (`failure-detection/silent-runs`), next to 013's Short (88 % retention, the channel's best-held).
+  Idea `silent-failure-heartbeat` added (in-progress); "why ai agents fail" verified by autocomplete.
+- did: research (`content/026-silent-failures/research.md`): GitLab's 2017 postmortem (pg_dump 9.2 vs 9.6;
+  the failure emails rejected — "we were never aware of the backups failing, until it was too late"), the
+  dead man's handle, Healthchecks.io (free plan, BSD), Uptime Kuma (Push, MIT), n8n Error Trigger.
+- did: **experiment** (`measure/`, 99 scored headless runs + 12 aborted on the owner's session limit): a
+  scheduled morning-report agent, the website form behind its tool broken three ways. Plain job: error 5/5 at
+  the top; stale batch spotted 5/5 but headlined "0 new"; **empty 10/10 "No new quote requests"** (Sonnet
+  3/3), never another day checked. + the two lines as shipped (PROOF/ALARM, `JOBS.generic`): empty 10/10,
+  stale 5/5, error 5/5, healthy 5/5 with no false alarm; 7 of 10 empty runs went back to check earlier days
+  unasked. Pilots exposed two harness leaks (the agent read a stub tool's source; the CLI's real
+  date vs the prompt's) → lesson `2026-10-18-an-agent-experiment-leaks-what-the-agent-can-read`.
+- did: idea-pass 8.6 / 8.3 (band owner; owner pre-delegated) → script (16 scenes, ~5:45, 3 `short_cuts`:
+  s5+s6, s7+s8, s9b+s10) → fact-check (25 claims, 24 verified, 1 corrected) → panel 8.2 → 8.3 → 8.6, all
+  gates true, cap reached with no major open. `script.preview.md` is the readable view.
+- next: **owner GATE ② — read `content/026-silent-failures/script.preview.md`.** On approval: SEO package,
+  voice, storyboard with 2–4 scene sets authored in both framings (D-074 1C, D-075 portrait look), render,
+  QA. Target long slot Tue 2026-10-27. Owner may want to add 025 to the Desk Loops playlist.
+- blockers: none. Nothing committed.
+
 ## 2026-10-18 — The 023 cuts rejected: no Shorts from 022–025, a portrait branch needs a looked-at sign-off — D-075
 - who: agent (owner: deleted 023 `short-2`/`short-3` — "katastrofalni", overlapping, unclear, poor
   contrast; skip the old videos, cut from the next one; delete 020; keep 005/016).

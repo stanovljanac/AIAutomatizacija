@@ -1,0 +1,18 @@
+/* sf-quiet — HUD layout. Plates come from _lib/hf-world.css + hf-mech.css. Landscape first, then the portrait branch.
+   Every plate sits over chassis or backdrop, never over a part the beat is about (the sheet, the job plate, a tag). */
+#chip { right: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#demo { right: calc(84px * var(--u)); top: calc(122px * var(--u)); }
+#empty { left: calc(84px * var(--u)); top: calc(520px * var(--u)); }
+#meter { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#runs { left: calc(84px * var(--u)); top: calc(300px * var(--u)); }
+#days { right: calc(84px * var(--u)); top: calc(196px * var(--u)); }
+#big { left: calc(84px * var(--u)); top: calc(390px * var(--u)); }
+
+/* PORTRAIT (1080×1920): the plates stack in the band above the chassis (top ~28%); the bottom 16% stays clear */
+.portrait #chip { right: auto; left: calc(60px * var(--u)); top: calc(56px * var(--u)); }
+.portrait #demo { right: auto; left: calc(60px * var(--u)); top: calc(108px * var(--u)); }
+.portrait #empty { left: calc(60px * var(--u)); top: calc(170px * var(--u)); }
+.portrait #meter { left: calc(60px * var(--u)); top: calc(162px * var(--u)); }
+.portrait #runs { left: calc(60px * var(--u)); top: calc(378px * var(--u)); }
+.portrait #days { right: auto; left: calc(60px * var(--u)); top: calc(452px * var(--u)); }
+.portrait #big { left: calc(60px * var(--u)); top: calc(452px * var(--u)); }

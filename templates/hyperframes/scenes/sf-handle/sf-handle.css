@@ -1,0 +1,7 @@
+/* sf-handle — HUD layout (landscape, then portrait). */
+#src { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#let, #proof { left: calc(84px * var(--u)); top: calc(170px * var(--u)); }
+#kick { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+.portrait #src { left: calc(60px * var(--u)); top: calc(70px * var(--u)); }
+.portrait #let, .portrait #proof { left: calc(60px * var(--u)); top: calc(178px * var(--u)); }
+.portrait #kick { right: auto; left: 0; margin: 0 auto; width: max-content; right: 0; top: calc(70px * var(--u)); font-size: calc(56px * var(--u)); }

@@ -1,0 +1,11 @@
+/* sf-vault — HUD layout (landscape, then portrait). Tags over backdrop; the quote centred above the vault. */
+#date { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#wrong { right: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#why { left: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#dmarc { right: calc(84px * var(--u)); top: calc(64px * var(--u)); }
+#quote { left: 0; right: 0; margin: 0 auto; width: calc(1180px * var(--u)); top: calc(56px * var(--u)); box-sizing: border-box; }
+#cost { left: 0; right: 0; margin: 0 auto; width: max-content; top: calc(40px * var(--u)); }
+.portrait #date, .portrait #why, .portrait #cost { left: calc(60px * var(--u)); top: calc(70px * var(--u)); }
+.portrait #wrong, .portrait #dmarc { right: auto; left: calc(60px * var(--u)); top: calc(70px * var(--u)); }
+.portrait #quote { width: calc(960px * var(--u)); top: calc(70px * var(--u)); }
+.portrait #quote .q { font-size: calc(46px * var(--u)); }

@@ -14,6 +14,9 @@ import {
   buildEntryCommand,
   buildRenderCommand,
   buildNormaliseCommand,
+  buildLumaScanCommand,
+  bootBlackFrames,
+  interiorBlackRuns,
   copyHyperframesClips,
   detectDeadRender,
   jobVariables,
@@ -188,6 +191,7 @@ function fakeSpawn(calls, { status = 0, produceFile = true } = {}) {
     }
     if (cmd === "ffmpeg") {
       // the compositor-safe normalisation pass: writes its -y target, never counted as a render
+      if (args.includes("null")) return { status: 0, stdout: "" };   // the luma scan writes nothing
       fs.writeFileSync(args[args.length - 1], "fake-normalised-mp4");
       return { status: 0 };
     }
@@ -253,6 +257,65 @@ test("renderHyperframesScenes throws when a zero-exit render produced no mp4", a
       () => renderHyperframesScenes({ root: dir, cdir, jobs, spawn: fakeSpawn([], { produceFile: false }) }),
       /not produced/
     );
+  });
+});
+
+// ── boot-black heads: Three.js not loaded when the first frames were captured (026) ───────────────
+
+test("bootBlackFrames: a black run at the head followed by a jump to a lit frame — and nothing else", () => {
+  assert.equal(bootBlackFrames([17, 17, 106.9, 110, 112]), 2, "026 s1");
+  assert.equal(bootBlackFrames([17, ...Array(15).fill(17), 83.8, 83.1]), 16, "the s9 portrait draft under load");
+  assert.equal(bootBlackFrames([64.8, 64.9, 65]), 0, "opens live");
+  assert.equal(bootBlackFrames([10, 14, 18, 22, 26, 30]), 0, "a scene that genuinely opens dark and ramps up");
+  assert.equal(bootBlackFrames(Array(40).fill(17)), 0, "an all-dark head is not a boot race — never touched");
+  assert.equal(bootBlackFrames([]), 0);
+});
+
+test("buildNormaliseCommand: a boot-black head is cut and the first live frame cloned into it (frame count kept)", () => {
+  const { jobs } = buildHyperframesJobs(syntheticTimeline());
+  const plain = buildNormaliseCommand(jobs[0], { inFile: "I.mp4", outFile: "O.mp4" });
+  assert.equal(plain.args[plain.args.indexOf("-vf") + 1], "tpad=stop_mode=clone:stop_duration=0.25,fps=30");
+  const fixed = buildNormaliseCommand(jobs[0], { inFile: "I.mp4", outFile: "O.mp4", leadFill: 2 });
+  assert.equal(fixed.args[fixed.args.indexOf("-vf") + 1], "trim=start_frame=2,setpts=PTS-STARTPTS,fps=30,tpad=start=2:start_mode=clone,tpad=stop_mode=clone:stop_duration=0.25,fps=30");
+  const scan = buildLumaScanCommand({ inFile: "I.mp4" });
+  assert.ok(!scan.args.includes("-frames:v"), "the whole clip is scanned");
+  assert.equal(buildLumaScanCommand({ inFile: "I.mp4", frames: 31 }).args.includes("-frames:v"), true);
+  assert.ok(scan.args.includes("null"), "a null muxer: nothing is written");
+  const holes = buildNormaliseCommand(jobs[0], { inFile: "I.mp4", outFile: "O.mp4", holes: [[144, 146], [570, 570]] });
+  assert.equal(holes.args[holes.args.indexOf("-vf") + 1], String.raw`select='not(between(n\,144\,146)+between(n\,570\,570))',fps=30,tpad=stop_mode=clone:stop_duration=0.25,fps=30`);
+});
+
+test("interiorBlackRuns: short black runs between lit frames — never the head, the tail, or a dark scene", () => {
+  const lit = (n) => Array(n).fill(100);
+  assert.deepEqual(interiorBlackRuns([...lit(5), 18, 18, 18, ...lit(5), 21, ...lit(3)]), [[5, 7], [13, 13]], "026 s3 (3 frames) and a single");
+  assert.deepEqual(interiorBlackRuns([17, 17, ...lit(5), 18, ...lit(2)]), [[7, 7]], "the head is bootBlackFrames' job");
+  assert.deepEqual(interiorBlackRuns([...lit(4), 18, 18]), [], "a run that reaches the end is left alone");
+  assert.deepEqual(interiorBlackRuns([...lit(3), ...Array(20).fill(18), ...lit(3)]), [], "a long dark stretch is a choice, not a dropout");
+  assert.deepEqual(interiorBlackRuns([30, 32, 22, 31, 30]), [], "a dim scene dipping a little is not a hole");
+});
+
+test("renderHyperframesScenes fills a boot-black head during normalisation", async () => {
+  await withTempDir(async (dir) => {
+    const cdir = path.join(dir, "content", "004-x");
+    fs.mkdirSync(cdir, { recursive: true });
+    const { jobs } = buildHyperframesJobs(syntheticTimeline());
+    const ffmpegCalls = [];
+    const luma = [17, 17, 100, 101, 102].map((v, i) => `frame:${i}    pts:${i}   pts_time:${(i / 30).toFixed(6)}\nlavfi.signalstats.YAVG=${v}`).join("\n");
+    const spawn = (cmd, args) => {
+      if (cmd === "node") return { status: 0, stdout: "compositions/render-entry.html\n" };
+      if (cmd === "ffmpeg") {
+        ffmpegCalls.push(args);
+        if (args.includes("null")) return { status: 0, stdout: luma };
+        if (args.includes("null")) return { status: 0, stdout: "" };   // the luma scan writes nothing
+        fs.writeFileSync(args[args.length - 1], "fake-normalised-mp4");
+        return { status: 0 };
+      }
+      fs.writeFileSync(args[args.indexOf("--output") + 1], "fake-mp4");
+      return { status: 0 };
+    };
+    renderHyperframesScenes({ root: dir, cdir, jobs, spawn });
+    const norm = ffmpegCalls.find((a) => !a.includes("null"));
+    assert.match(norm[norm.indexOf("-vf") + 1], /^trim=start_frame=2,setpts=PTS-STARTPTS,fps=30,tpad=start=2:start_mode=clone,/);
   });
 });
 
@@ -359,6 +422,7 @@ test("[REGRESSION] renderHyperframesScenes re-renders when hf_scene changes even
           return { status: 0, stdout: "compositions/render-entry.html\n" };
         }
         if (cmd === "ffmpeg") {
+          if (args.includes("null")) return { status: 0, stdout: "" };   // the luma scan writes nothing
           fs.writeFileSync(args[args.length - 1], "fake-normalised-mp4");
           return { status: 0 };
         }
@@ -415,6 +479,7 @@ test("[REGRESSION] renderHyperframesScenes childEnv is a fresh object (never ali
         return { status: 0, stdout: "compositions/render-entry.html\n" };
       }
       if (cmd === "ffmpeg") {
+        if (args.includes("null")) return { status: 0, stdout: "" };   // the luma scan writes nothing
         fs.writeFileSync(args[args.length - 1], "fake-normalised-mp4");
         return { status: 0 };
       }
@@ -589,6 +654,7 @@ test("[REGRESSION] renderHyperframesScenes skip logic works when output path con
           return { status: 0, stdout: "compositions/render-entry.html\n" };
         }
         if (cmd === "ffmpeg") {
+          if (args.includes("null")) return { status: 0, stdout: "" };   // the luma scan writes nothing
           fs.writeFileSync(args[args.length - 1], "fake-normalised-mp4");
           return { status: 0 };
         }
